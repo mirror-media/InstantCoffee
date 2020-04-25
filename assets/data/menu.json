@@ -1,0 +1,20 @@
+[
+    {
+        "_id": "latest",
+        "title": "最新新聞",
+        "focus": true,
+        "type": "fixed"
+    },
+    {
+        "_id": "popular",
+        "title": "熱門",
+        "focus": false,
+        "type": "fixed"
+    },
+    {
+        "_id": "personal",
+        "title": "專屬為你",
+        "focus": false,
+        "type": "fixed"
+    }
+]
