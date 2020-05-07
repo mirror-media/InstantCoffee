@@ -29,7 +29,7 @@ class Section {
       name: json["name"],
       title: json["title"],
       description: json["description"],
-      order: json["sortOrder"],
+      order: json["sortOrder"] == null ? json["order"] : json["sortOrder"],
       focus: false,
       type: type,
     );

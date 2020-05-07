@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
+import 'package:readr_app/PersonalSetting.dart';
+
 import 'helpers/Constants.dart';
 import 'models/Record.dart';
 import 'models/Section.dart';
@@ -17,7 +20,7 @@ class LatestPage extends StatefulWidget {
 }
 
 class _LatestPageState extends State<LatestPage> {
-
+  final LocalStorage storage = new LocalStorage('setting');
   final TextEditingController _filter = new TextEditingController();
 
   LatestList _records = new LatestList();
@@ -40,15 +43,16 @@ class _LatestPageState extends State<LatestPage> {
 
     _records.records = new List();
     _filteredRecords.records = new List();
-    sectionItems.sections = new List();
+    //sectionItems.sections = new List();
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
-
+    this.sectionItems = storage.getItem("sections");
     _getSections();
     _getLatests();
   }
 
-  void _getSections() async {
+   void _getSections() async {
+    sectionItems = new SectionList();
     SectionList allSections = new SectionList();
     allSections = await SectionService().loadSections();
     this.sectionItems.sections = [];
@@ -56,6 +60,7 @@ class _LatestPageState extends State<LatestPage> {
       for (Section section in allSections.sections) {
         this.sectionItems.sections.add(section);
       }
+      this.storage.setItem("sections", this.sectionItems.toJson());
     });
   }
 
@@ -98,16 +103,20 @@ class _LatestPageState extends State<LatestPage> {
 
   Widget _buildNavigation(BuildContext context) {
     List<Widget> items = new List();
-    for (Section section in sectionItems.sections) { 
-      items.add(_buildNavigationItem(context, section));
+    if (sectionItems.sections != null) {
+      for (Section section in sectionItems.sections) { 
+        items.add(_buildNavigationItem(context, section));
+      }
+      return new Container(
+        height: 60,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: items,
+        )
+      );
+    } else {
+      return Container();
     }
-    return new Container(
-      height: 60,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: items,
-      )
-    );
   }
 
   Widget _buildNavigationItem(BuildContext context, Section section) {
@@ -123,7 +132,7 @@ class _LatestPageState extends State<LatestPage> {
       elevation: 0.1,
       leading: IconButton(
         icon: Icon(Icons.brightness_low),
-        onPressed: () => {},
+        onPressed: () => { Navigator.push(context, MaterialPageRoute(builder: (context) => PersonalSetting())) },
       ),
       backgroundColor: appColor,
       centerTitle: true,
@@ -249,10 +258,8 @@ class _LatestPageState extends State<LatestPage> {
       this.endpoint = latestAPI;
     } else if (id == 'popular') {
       this.endpoint = popularListAPI;
-      print(this.endpoint);
     } else if (id == 'personal') {
       this.endpoint = listingBase + '&where={"sections":{"\$in":["596441604bbe120f002a3197", "57dfe399ee85930e00cad4d6"]}}';
-      print(this.endpoint);
     }
 
     setState(() {

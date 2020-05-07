@@ -1,0 +1,20 @@
+{
+    "breaking": {"type": "switch", "title": "重大新聞快訊、激烈天氣", "value": true},
+    "choices": {"type": "switch", "title": "編輯精選", "value": true},
+    "horoscope": {"type": "switch", "title": "訂閱星座運勢 - 每週在專屬於你會自動更新", "value": true, 
+        "subitems": {
+            "Aries": {"type": "checkbox", "title": "牡羊座", "value": true},
+            "Taurus": {"type": "checkbox", "title": "金牛座", "value": true},
+            "Gemini": {"type": "checkbox", "title": "雙子座", "value": true},
+            "Cancer": {"type": "checkbox", "title": "巨蟹座", "value": true},
+            "Leo": {"type": "checkbox", "title": "獅子座", "value": true},
+            "Virgo": {"type": "checkbox", "title": "處女座", "value": true},
+            "Libra": {"type": "checkbox", "title": "天秤座", "value": true},
+            "Scorpio": {"type": "checkbox", "title": "天蠍座", "value": true},
+            "Sagittarius": {"type": "checkbox", "title": "射手座", "value": true},
+            "Capricorn": {"type": "checkbox", "title": "摩羯座", "value": true},
+            "Aquarius": {"type": "checkbox", "title": "水瓶座", "value": true},
+            "Pisces": {"type": "checkbox", "title": "牡羊座", "value": true}
+        }
+    }
+}
