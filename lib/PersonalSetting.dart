@@ -27,15 +27,24 @@ class _PersonalSetting extends State<PersonalSetting> {
   void initState() {
     // TODO: implement initState
     this.notificationSetting = storage.getItem("notification");
-    this.sectionItems = SectionList.fromJson(json.decode(storage.getItem("sections")));
-    
+
     if (this.notificationSetting == null) {
       _initNotification();
     }
-    if (this.sectionItems == null) {
-      _getSections();
-    }
+    
     super.initState();
+  }
+
+  void _sortSections() {
+    setState(() {
+      SectionList allSections = sectionItems;
+      allSections.sections.sort((a,b) => a.order.compareTo(b.order));
+      for (int i = 0; i < allSections.sections.length; i++) {
+        allSections.sections[i].setOrder(i);
+      }
+      sectionItems = allSections;
+      storage.setItem("sections", this.sectionItems.toJson());
+    });
   }
   
   void _initNotification() async {
@@ -48,31 +57,31 @@ class _PersonalSetting extends State<PersonalSetting> {
   }
 
   void _getSections() async {
-    sectionItems = new SectionList();
     SectionList allSections = new SectionList();
     allSections = await SectionService().loadSections();
-    this.sectionItems.sections = [];
-    setState(() {
-      allSections.sections.sort((a,b) => a.order.compareTo(b.order));
-      int order = 1;
-      for (Section section in allSections.sections) {
-        section.order = order;
-        this.sectionItems.sections.add(section);
-        order++;
+    setState( () {
+      if (allSections != null) {
+        this.sectionItems = allSections;
       }
-      this.storage.setItem("sections", this.sectionItems.toJson());
+      _sortSections();
     });
   }
 
   Widget build(BuildContext context) {
+        String storageSection = storage.getItem("sections");
+    if (storageSection != null) {
+      this.sectionItems = SectionList.fromJson(json.decode(storageSection));
+    }
     return Scaffold(
       appBar: _buildBar(context),
-      body:   _buildNotificationSetting()         
+      body:   _buildNotificationSetting(context)         
     );
   }
 
-  List<Widget> _buildOrderSections() {
+  List<Widget> _buildOrderSections(BuildContext context) {
     List<Widget> reorderSections = new List<Widget>();
+    _sortSections();
+    sectionItems.sections.sort((a,b) => a.order.compareTo(b.order));
       for (Section sectionItem in this.sectionItems.sections) {
         reorderSections.add(Row(key: ValueKey(sectionItem.name), children: [Text(sectionItem.title), Icon(Icons.menu)],));
       }
@@ -83,26 +92,28 @@ class _PersonalSetting extends State<PersonalSetting> {
     setState(() {
       for (int i = 0; i < sectionItems.sections.length; i++) {
         if (sectionItems.sections[i].order == oldIndex) {
-          sectionItems.sections[i].order == newIndex;
+          sectionItems.sections[i].setOrder(newIndex);
         } else {
           if (oldIndex > newIndex) {
-            if (sectionItems.sections[i].order >= newIndex) {
-              sectionItems.sections[i].order++;
+            if (sectionItems.sections[i].order >= newIndex && sectionItems.sections[i].order < oldIndex) {
+              sectionItems.sections[i].setOrder(sectionItems.sections[i].order+1);
             }
           } else if (oldIndex < newIndex) {
-            if (sectionItems.sections[i].order > oldIndex && sectionItems.sections[i].order < newIndex) {
-              sectionItems.sections[i].order--;
+            if (sectionItems.sections[i].order > oldIndex && sectionItems.sections[i].order <= newIndex) {
+              sectionItems.sections[i].setOrder(sectionItems.sections[i].order-1);
             }
           }
         }
       }
+      storage.setItem("sections", sectionItems.toJson());
     });
-    for (Section section in sectionItems.sections) {
-      print(section.title + section.order.toString());
-    }
+    // for (Section section in sectionItems.sections) {
+    //   print(section.title + section.order.toString());
+    // }
+
   }
 
-  Widget _buildNotificationSetting() {
+  Widget _buildNotificationSetting(BuildContext context) {
     List<Widget> notificationSwitch = new List<Widget>();
     if (notificationSetting != null) {    
       this.notificationSetting.forEach(
@@ -112,7 +123,7 @@ class _PersonalSetting extends State<PersonalSetting> {
       return  ReorderableColumn(
         header: Column( children: notificationSwitch ),
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: _buildOrderSections(),
+        children: _buildOrderSections(context),
         onReorder: (int oldIndex, int newIndex) { _onReorder(oldIndex, newIndex); } );
       //);
       //return notificationSwitch;

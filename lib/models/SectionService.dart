@@ -22,6 +22,7 @@ class SectionService {
     String jsonFixed = await rootBundle.loadString('assets/data/menu.json');
     final fixedMenu = json.decode(jsonFixed);
     SectionList fixedSections = new SectionList.fromJson(fixedMenu);
+    //SectionList fixedSections = new SectionList();
     for (Section sec in sessions.sections) {
       fixedSections.sections.add(sec);
     }

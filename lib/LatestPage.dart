@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/PersonalSetting.dart';
@@ -32,6 +34,7 @@ class _LatestPageState extends State<LatestPage> {
   String endpoint = latestAPI;
   String loadmoreUrl = '';
   int page = 1;
+  String sectionJson;
 
   Icon _searchIcon = new Icon(Icons.search);
 
@@ -39,16 +42,21 @@ class _LatestPageState extends State<LatestPage> {
 
   @override
   void initState() {
-    super.initState();
 
     _records.records = new List();
     _filteredRecords.records = new List();
     //sectionItems.sections = new List();
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
-    this.sectionItems = storage.getItem("sections");
     _getSections();
+    
+    
+    //else {
+    //  _getSections();
+    //}
+
     _getLatests();
+    super.initState();
   }
 
    void _getSections() async {
@@ -60,7 +68,6 @@ class _LatestPageState extends State<LatestPage> {
       for (Section section in allSections.sections) {
         this.sectionItems.sections.add(section);
       }
-      this.storage.setItem("sections", this.sectionItems.toJson());
     });
   }
 
@@ -86,7 +93,15 @@ class _LatestPageState extends State<LatestPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
+      drawer: SizedBox(
+        width: size.width,
+        child: Drawer(
+          child: new PersonalSetting(),
+        ),
+      ),
+      //key: _scaffoldKey,
       appBar: _buildBar(context),
       backgroundColor: appColor,
       body: Column(
@@ -104,9 +119,16 @@ class _LatestPageState extends State<LatestPage> {
   Widget _buildNavigation(BuildContext context) {
     List<Widget> items = new List();
     if (sectionItems.sections != null) {
-      for (Section section in sectionItems.sections) { 
-        items.add(_buildNavigationItem(context, section));
-      }
+      setState(() {
+        sectionJson = storage.getItem("sections");
+        if (sectionJson != null) {
+          sectionItems = SectionList.fromJson(json.decode(sectionJson));
+        }
+        sectionItems.sections.sort((a,b) => a.order.compareTo(b.order));
+        for (Section section in sectionItems.sections) { 
+          items.add(_buildNavigationItem(context, section));
+        }
+      });
       return new Container(
         height: 60,
         child: ListView(
@@ -121,7 +143,7 @@ class _LatestPageState extends State<LatestPage> {
 
   Widget _buildNavigationItem(BuildContext context, Section section) {
     return new RaisedButton(
-      onPressed: () => _switch(section.id, section.type),
+      onPressed: () => _switch(section.key, section.type),
       child: Text(
         section.title,
     ));
@@ -130,10 +152,13 @@ class _LatestPageState extends State<LatestPage> {
   Widget _buildBar(BuildContext context) {
     return new AppBar(
       elevation: 0.1,
+      /*
       leading: IconButton(
         icon: Icon(Icons.brightness_low),
+        //onPressed: () => { _scaffoldKey.currentState.openDrawer() },
         onPressed: () => { Navigator.push(context, MaterialPageRoute(builder: (context) => PersonalSetting())) },
       ),
+      */
       backgroundColor: appColor,
       centerTitle: true,
       title: _appBarTitle,

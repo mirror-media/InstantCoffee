@@ -12,6 +12,7 @@ class SectionList {
   factory SectionList.fromJson(List<dynamic> parsedJson) {
      List<Section> sections = new List<Section>();
 
+//print(parsedJson);
      sections = parsedJson.map((i) => Section.fromJson(i)).toList();
 
       return new SectionList(
@@ -27,7 +28,7 @@ class SectionList {
         item["name"] = section.name;
         item["title"] = section.title;
         item["order"] = section.order;
-        item["id"] = section.id;
+        item["key"] = section.key;
         item["type"] = section.type;
         item["description"] = section.description;
         sectionItems.add(item);
@@ -37,6 +38,15 @@ class SectionList {
       return "";
     }
     
+  }
+
+  void sortSections() {
+    SectionList allSections = this;
+    allSections.sections.sort((a,b) => a.order.compareTo(b.order));
+    for (int i = 0; i < allSections.sections.length; i++) {
+      allSections.sections[i].setOrder(i);
+    }
+    this.sections = allSections.sections;
   }
 
 }

@@ -33,6 +33,8 @@ dependencies:
   webview_flutter: ^0.3.20+2
   localstorage: ^3.0.2+5
   reorderables: ^0.3.2
+  provider: ^4.1.0
+  get: ^2.7.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
