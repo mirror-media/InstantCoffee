@@ -3,6 +3,7 @@ import "Record.dart";
 import "Category.dart";
 import "Tag.dart";
 import "PeopleList.dart";
+import "ParagrpahList.dart";
 
 class Story {
   String title;
@@ -13,7 +14,6 @@ class Story {
   String createTime;
   String heroImage;
   List<Record> relatedStory;
-  String brief;
   String heroCaption;
   String extendByline;
   List<Tag> tags;
@@ -22,6 +22,8 @@ class Story {
   PeopleList cameraMen;
   PeopleList designers;
   PeopleList engineers;
+  ParagraphList brief;
+  ParagraphList content;
   List<Category> categories;
   SectionList sections;
   bool isAdult;
@@ -36,10 +38,11 @@ class Story {
     this.createTime,
     this.heroImage,
     this.relatedStory,
-    this.brief,
     this.heroCaption,
     this.extendByline,
     this.tags,
+    this.brief,
+    this.content,
     this.writers,
     this.photographers,
     this.cameraMen,
@@ -59,6 +62,8 @@ class Story {
     PeopleList designersBuilder = PeopleList.fromJson(json["designers"]);
     PeopleList engineersBuilder = PeopleList.fromJson(json["engineers"]);
     SectionList sectionBuilder = SectionList.fromJson(json["sections"]); 
+    ParagraphList brief = ParagraphList.fromJson(json["brief"]["apiData"]);
+    ParagraphList content = ParagraphList.fromJson(json["content"]["apiData"]);
     String photoUrl = 'https://www.mirrormedia.mg/assets/mirrormedia/notImage.png';
     List<Record> relatedBuilder = List();
     List<Category> categoryBuilder = List();
@@ -98,6 +103,8 @@ class Story {
         heroCaption: json["heroCaption"] == null ? '' : json["heroCaption"],
         extendByline: json["extend_byline"],
         relatedStory: relatedBuilder,
+        brief: brief,
+        content: content,
         writers: writersBuilder,
         photographers: photographersBuilder,
         cameraMen: cameraMenBuilder,

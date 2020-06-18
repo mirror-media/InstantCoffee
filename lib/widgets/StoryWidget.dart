@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:readr_app/models/ParagrpahList.dart';
 import 'package:readr_app/models/People.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:convert';
 import "../models/StoryService.dart";
 import "../models/Record.dart";
 import "../models/Story.dart";
 import "../models/Tag.dart";
-import '../StoryPage.dart';
+import "../models/Paragraph.dart";
+import "../models/Category.dart";
+import "../ListingPage.dart";
 
 class StoryWidget extends StatefulWidget{
   final String slug;
@@ -21,11 +25,13 @@ class _StoryWidget extends State<StoryWidget> {
   
   String slug;
   Story story;
+  ScrollController _controller;
 
   @override 
   void initState() {
     super.initState();
     getStory(widget.slug);
+    _controller = ScrollController();
   }
 
   void getStory(String slug) async {
@@ -42,6 +48,7 @@ class _StoryWidget extends State<StoryWidget> {
       return new CircularProgressIndicator();
     } else {
       return new ListView(
+        controller: _controller,
         children: <Widget>[
           Card(
             elevation: 0,
@@ -53,14 +60,18 @@ class _StoryWidget extends State<StoryWidget> {
                 new Image(
                   image: NetworkImage(story.heroImage),
                 ),
-                new Text(story.heroCaption),
+                new Text(story.heroCaption, style: TextStyle(fontFamily: 'Open Sans', fontSize: 16, height: 1.6)),
               ],
             ),
           ),
           Row(
             children: [
-              new Text("娛樂頭條"),
-              new Text(story.publishedDate),
+              //TODO: add category
+              _buildCategory(context),
+              Expanded(
+                flex: 2,
+                child: Text(story.publishedDate, textAlign: TextAlign.right, style: TextStyle(fontFamily: 'Open Sans', fontSize: 16, height: 1.8)),
+              ),
             ],
           ),
           Card(
@@ -72,12 +83,105 @@ class _StoryWidget extends State<StoryWidget> {
               Text(story.title, style: TextStyle(fontFamily: 'Open Sans', fontSize: 28), textAlign: TextAlign.left),
           ),
           _buildAuthors(context),
+          _buildContent(context, "brief"),
+          _buildContent(context, "content"),
           _buildTags(context),
           _buildRelatedWidget(context, story.relatedStory),
           
         ]
       );
     }
+  }
+
+  Widget _buildCategory(BuildContext context) {
+    List<Category> categories = story.categories;
+    if (categories.length > 0) {
+      return RaisedButton(
+          onPressed: () => _connectTagPage(categories[0].id),
+          child: Text(
+          categories[0].title,
+      ));
+    }
+    return Text("娛樂頭條", style: TextStyle(fontFamily: 'Open Sans', fontSize: 16, height: 1.8));
+  }
+
+  List<Widget> _buildParagraph(BuildContext context, String block) {
+    ParagraphList article = new ParagraphList();
+    if (block == 'brief') {
+      article = story.brief;
+    } else if (block == 'content') {
+      article = story.content;
+    }
+    List<Widget> content = List();
+    if (article.paragraphs.length > 0) {
+      for (Paragraph p in article.paragraphs) {
+        switch(p.type) {
+          case 'unstyled': {
+            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 20, height: 1.8)));
+          } 
+          break;
+          case 'blockquote': {
+            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 20, height: 1.8)));
+          }
+          break;
+          case 'header-one': {
+            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 26, height: 1.8, fontWeight: FontWeight.bold)));
+          }
+          break;
+          case 'header-two': {
+            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 25, height: 1.8, fontWeight: FontWeight.bold), textAlign: TextAlign.left));
+          }
+          break;
+          case 'header-three': {
+            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 24, height: 1.8, fontWeight: FontWeight.bold)));
+          }
+          break;
+          case 'header-four': {
+            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 23, height: 1.8)));
+          }
+          break;
+          case 'header-five': {
+            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 22, height: 1.8)));
+          }
+          break;
+          case 'header-six': {
+            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 21, height: 1.8)));
+          }
+          break;
+          case 'ordered-list-item': {
+            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 20, height: 1.8)));
+          }
+          break;
+          case 'paragraph': {
+            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 20, height: 1.8)));
+          }
+          break;
+          case 'unordered-list-item': {
+            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 20, height: 1.8)));
+          }
+          break;
+          case 'image': {
+            content.add(Image(image: NetworkImage(p.content)));
+          }
+          break;
+          case 'infobox': {
+            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 21, height: 1.8)));
+          }
+          break;
+          case 'embeddedcode': {
+            content.add(Container(height: 500, child: WebView(initialUrl: Uri.dataFromString('<html><body><iframe src="' + p.content +'"></iframe></body></html>', mimeType: 'text/html').toString(), javascriptMode: JavascriptMode.unrestricted)));
+          }
+          break;
+        }
+      }
+    }
+    return content;
+  }
+
+  Widget _buildContent(BuildContext context, String block) {
+    return Column(
+      children: _buildParagraph(context, block),
+    );
   }
 
   Widget _buildTags (BuildContext context) {
@@ -92,28 +196,31 @@ class _StoryWidget extends State<StoryWidget> {
           tag.name,
       )));
       }
-      return Row(children: tagElement);
+      return Wrap(children: tagElement);
     }
   }
 
-  _connectTagPage(String tagID) {
+  void _connectTagPage(String tagID) {
     // load the [age]
+    Navigator.push(
+      context, MaterialPageRoute(builder: (context) => new ListingPage())
+    );
   }
 
   Widget _buildAuthors (BuildContext context) {
     List<Widget> authorItems = List();
     if (story.writers.peoples.length > 0) {
-      authorItems.add(Text("記者："));
+      authorItems.add(Text("記者：", style: TextStyle(fontFamily: 'Open Sans', fontSize: 18, height: 1.6)));
     }
     for (People author in story.writers.peoples) {
-      Widget credit = new Card(child: Text(author.name));
+      Widget credit = new Card(child: Text(author.name, style: TextStyle(fontFamily: 'Open Sans', fontSize: 18, height: 1.6)));
       authorItems.add(credit);
     }
     if (story.photographers.peoples.length > 0) {
-      authorItems.add(Text("攝影："));
+      authorItems.add(Text("攝影：", style: TextStyle(fontFamily: 'Open Sans', fontSize: 18, height: 1.6)));
     }
     for (People author in story.photographers.peoples) {
-      Widget credit = new Card(child: Text(author.name));
+      Widget credit = new Card(child: Text(author.name, style: TextStyle(fontFamily: 'Open Sans', fontSize: 18, height: 1.6)));
       authorItems.add(credit);
     }
     return Row(
@@ -159,6 +266,7 @@ class _StoryWidget extends State<StoryWidget> {
           ),
           onTap: () {
             getStory(relatedItem.slug);
+            _controller.jumpTo(1);
           },
         ),
       ),

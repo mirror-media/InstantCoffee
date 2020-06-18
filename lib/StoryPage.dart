@@ -1,7 +1,5 @@
 import "package:flutter/material.dart";
-import 'helpers/URLLauncher.dart';
-import "models/Story.dart";
-
+import 'helpers/Constants.dart';
 import "widgets/StoryWidget.dart";
 
 class StoryPage extends StatelessWidget {
@@ -13,7 +11,7 @@ class StoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        backgroundColor: Color.fromRGBO(29, 159, 184, 1.0),
+        backgroundColor: themeColor,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),

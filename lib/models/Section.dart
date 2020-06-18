@@ -1,5 +1,5 @@
 class Section {
-  String id;
+  String key;
   String name;
   String title;
   String description;
@@ -8,7 +8,7 @@ class Section {
   String type;
 
   Section({
-    this.id,
+    this.key,
     this.name,
     this.title,
     this.description,
@@ -25,13 +25,17 @@ class Section {
       type = "section";
     }
     return Section(
-      id: json["_id"],
+      key: json["_id"] == null ? json["key"] : json["_id"],
       name: json["name"],
       title: json["title"],
       description: json["description"],
-      order: json["sortOrder"],
+      order: json["sortOrder"] == null ? json["order"] : json["sortOrder"],
       focus: false,
       type: type,
     );
-  }  
+  } 
+
+  void setOrder(int newOrder) {
+    this.order = newOrder;
+  }
 }

@@ -10,7 +10,6 @@ class LatestList {
   factory LatestList.fromJson(List<dynamic> parsedJson) {
  
     List<Record> records = new List<Record>();
-    print(parsedJson.runtimeType);
  
     records = parsedJson.map((i) => Record.fromJson(i)).toList();
  

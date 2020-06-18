@@ -1,20 +1,26 @@
 [
     {
         "_id": "latest",
+        "name": "latest",
         "title": "最新新聞",
         "focus": true,
+        "sortOrder": 0,
         "type": "fixed"
     },
     {
         "_id": "popular",
+        "name": "popular",
         "title": "熱門",
         "focus": false,
+        "sortOrder": 0,
         "type": "fixed"
     },
     {
         "_id": "personal",
+        "name": "personal",
         "title": "專屬為你",
         "focus": false,
+        "sortOrder": 0,
         "type": "fixed"
     }
 ]
