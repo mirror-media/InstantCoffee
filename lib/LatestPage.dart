@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:readr_app/PersonalSetting.dart';
+import 'package:readr_app/NotificationSettingsPage.dart';
 
 import 'helpers/Constants.dart';
 import 'models/Record.dart';
@@ -93,15 +93,8 @@ class _LatestPageState extends State<LatestPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
-      drawer: SizedBox(
-        width: size.width,
-        child: Drawer(
-          child: new PersonalSetting(),
-        ),
-      ),
-      //key: _scaffoldKey,
       appBar: _buildBar(context),
       backgroundColor: appColor,
       body: Column(
@@ -152,13 +145,16 @@ class _LatestPageState extends State<LatestPage> {
   Widget _buildBar(BuildContext context) {
     return new AppBar(
       elevation: 0.1,
-      /*
       leading: IconButton(
-        icon: Icon(Icons.brightness_low),
-        //onPressed: () => { _scaffoldKey.currentState.openDrawer() },
-        onPressed: () => { Navigator.push(context, MaterialPageRoute(builder: (context) => PersonalSetting())) },
-      ),
-      */
+        icon: Icon(Icons.settings),
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NotificationSettingsPage(),
+            fullscreenDialog: true,
+          ),
+        ),
+      ), 
       backgroundColor: appColor,
       centerTitle: true,
       title: _appBarTitle,
