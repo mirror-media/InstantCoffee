@@ -1,14 +1,14 @@
 import 'package:readr_app/models/NotificationSettingList.dart';
 
-class NotifcationSetting
+class NotificationSetting
 {
   final String type;
   final String title;
   final String topic;
   bool value;
-  final List<NotifcationSetting> notificationSettingList;
+  final List<NotificationSetting> notificationSettingList;
 
-  NotifcationSetting({
+  NotificationSetting({
     this.type, 
     this.title,
     this.topic,
@@ -16,12 +16,12 @@ class NotifcationSetting
     this.notificationSettingList,
   });
 
-  factory NotifcationSetting.fromJson(Map<String, dynamic> json){
+  factory NotificationSetting.fromJson(Map<String, dynamic> json){
     if(json == null)
     {
       return null;
     }
-    return new NotifcationSetting(
+    return new NotificationSetting(
       type: json['type'],
       title: json['title'],
       topic: json['topic'],

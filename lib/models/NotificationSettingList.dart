@@ -3,19 +3,19 @@ import 'dart:convert';
 import 'package:readr_app/models/NotificationSetting.dart';
 
 class NotificationSettingList {
-  static List<NotifcationSetting> fromJson(List<dynamic> parsedJson){
+  static List<NotificationSetting> fromJson(List<dynamic> parsedJson){
     if(parsedJson == null)
     {
       return null;
     }
     
-    List<NotifcationSetting> notificationSettingList = new List<NotifcationSetting>();
-    notificationSettingList = parsedJson.map((i)=>NotifcationSetting.fromJson(i)).toList();
+    List<NotificationSetting> notificationSettingList = new List<NotificationSetting>();
+    notificationSettingList = parsedJson.map((i)=>NotificationSetting.fromJson(i)).toList();
 
     return notificationSettingList;
   }
 
-  static List<NotifcationSetting> parseResponseBody(String body){
+  static List<NotificationSetting> parseResponseBody(String body){
     final jsonData = json.decode(body);
     return NotificationSettingList.fromJson(jsonData);
   }
@@ -27,17 +27,17 @@ class NotificationSettingList {
     }
 
     List<Map<String, dynamic>> jsonList = new List<Map<String, dynamic>>();
-    notificationSettingList.forEach((notifcationSetting){
-      if(notifcationSetting is NotifcationSetting)
+    notificationSettingList.forEach((notificationSetting){
+      if(notificationSetting is NotificationSetting)
       {
         jsonList.add(
-          notifcationSetting.toJson()
+          notificationSetting.toJson()
         );
       }
       else
       {
         jsonList.add(
-          notifcationSetting
+          notificationSetting
         );
       }
     });

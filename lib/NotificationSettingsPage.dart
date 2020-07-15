@@ -17,7 +17,7 @@ class NotificationSettingsPage extends StatefulWidget {
 
 class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   final LocalStorage storage = new LocalStorage('setting');
-  List<NotifcationSetting> notificationSettingList = new List<NotifcationSetting>();
+  List<NotificationSetting> notificationSettingList = new List<NotificationSetting>();
   SectionList sectionItems = new SectionList();
 
   @override
@@ -102,7 +102,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     );
   }
 
-  Widget _buildNotificationSettingListSection(BuildContext context, List<NotifcationSetting> notificationSettingList) {
+  Widget _buildNotificationSettingListSection(BuildContext context, List<NotificationSetting> notificationSettingList) {
     if(notificationSettingList == null)
     {
       return Center(child: CircularProgressIndicator());
@@ -148,7 +148,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     );
   }
 
-  Widget _buildCheckbox(BuildContext context, List<NotifcationSetting> checkboxList, int count, double ratio) {
+  Widget _buildCheckbox(BuildContext context, List<NotificationSetting> checkboxList, int count, double ratio) {
 
     return GridView.builder(
       shrinkWrap: true,
