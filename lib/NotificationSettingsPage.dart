@@ -135,12 +135,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                 });
                 storage.setItem("notification", NotificationSettingList.toJson(this.notificationSettingList));
               },
-              children: 
-              notificationSettingList[listViewIndex].notificationSettingList == null 
-              ? []
-              : [
-                  _buildCheckbox(context, notificationSettingList[listViewIndex].notificationSettingList, 4, 2.0)
-                ],
+              children: _renderCheckBoxChildren(context, notificationSettingList[listViewIndex]),
             ),
           ),
         );
@@ -148,10 +143,24 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     );
   }
 
-  Widget _buildCheckbox(BuildContext context, List<NotificationSetting> checkboxList, int count, double ratio) {
+  List<Widget> _renderCheckBoxChildren(BuildContext context, NotificationSetting notificationSetting) {
+    if(notificationSetting.id == 'horoscopes')
+    {
+      return [ _buildCheckbox(context, notificationSetting.notificationSettingList, false, 4, 2.0) ];
+    }
+    else if(notificationSetting.id == 'subscriptionChannels')
+    {
+      return [ _buildCheckbox(context, notificationSetting.notificationSettingList, true, 2, 4) ];
+    }
+    
+    return[];
+  }
+
+  Widget _buildCheckbox(BuildContext context, List<NotificationSetting> checkboxList, bool isRepeatable, int count, double ratio) {
 
     return GridView.builder(
       shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
       itemCount: checkboxList.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: count,
@@ -161,10 +170,17 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
         return InkWell(
           onTap: () {
             setState(() {
-              checkboxList.forEach((element) { element.value = false; });
-
-              checkboxList[checkboxIndex].value = true;
-            }); 
+              if(isRepeatable)
+              {
+                checkboxList[checkboxIndex].value = !checkboxList[checkboxIndex].value;
+              }
+              else
+              {
+                checkboxList.forEach((element) { element.value = false; });
+                checkboxList[checkboxIndex].value = true;
+              }
+            });
+  
             storage.setItem("notification", NotificationSettingList.toJson(this.notificationSettingList));
           },
           child: IgnorePointer(
