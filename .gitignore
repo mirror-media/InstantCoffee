@@ -22,3 +22,5 @@ doc/api/
 
 #for internal constants
 lib/helpers/Constants.dart 
+.flutter-plugins
+.flutter-plugins-dependencies

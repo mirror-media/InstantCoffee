@@ -1,0 +1,24 @@
+{
+    "defaultNotificationList": 
+        [
+            {"type": "switch", "title": "新聞快訊和天氣", "topic": "breaking", "value": false},
+            {"type": "switch", "title": "編輯精選", "topic": "choices", "value": false},
+            {
+                "type": "switch", "title": "訂閱星座運勢 - 每週在專屬於你會自動更新屬於你的星座運勢", "value": false, 
+                "notificationSettingList": [
+                    {"type": "checkbox", "title": "牡羊座", "topic": "Aries", "value": false},
+                    {"type": "checkbox", "title": "金牛座", "topic": "Taurus", "value": false},
+                    {"type": "checkbox", "title": "雙子座", "topic": "Gemini", "value": false},
+                    {"type": "checkbox", "title": "巨蟹座", "topic": "Cancer", "value": false},
+                    {"type": "checkbox", "title": "獅子座", "topic": "Leo", "value": false},
+                    {"type": "checkbox", "title": "處女座", "topic": "Virgo", "value": false},
+                    {"type": "checkbox", "title": "天秤座", "topic": "Libra", "value": false},
+                    {"type": "checkbox", "title": "天蠍座", "topic": "Scorpio", "value": false},
+                    {"type": "checkbox", "title": "射手座", "topic": "Sagittarius", "value": false},
+                    {"type": "checkbox", "title": "摩羯座", "topic": "Capricorn", "value": false},
+                    {"type": "checkbox", "title": "水瓶座", "topic": "Aquarius", "value": false},
+                    {"type": "checkbox", "title": "牡羊座", "topic": "Pisces", "value": false}
+                ]
+            }
+        ]
+}
