@@ -6,12 +6,12 @@ import '../models/LatestList.dart';
 import '../models/LatestService.dart';
 import '../StoryPage.dart';
 
-class ListingWidget extends StatefulWidget{
+class ListingWidget extends StatefulWidget {
   final String endpoint;
-  const ListingWidget ({ key, this.endpoint }) : super(key: key);
+  const ListingWidget({key, this.endpoint}) : super(key: key);
 
-  @override 
-  _ListingWidget createState () {
+  @override
+  _ListingWidget createState() {
     return _ListingWidget();
   }
 }
@@ -27,7 +27,7 @@ class _ListingWidget extends State<ListingWidget> {
   String _searchText = "";
   Widget _appBarTitle = new Text(appTitle);
 
-  @override 
+  @override
   void initState() {
     super.initState();
     _controller = ScrollController();
@@ -37,7 +37,7 @@ class _ListingWidget extends State<ListingWidget> {
   }
 
   void _getLatests() async {
-    LatestService latestService = new LatestService(); 
+    LatestService latestService = new LatestService();
     LatestList latests = await latestService.loadLatests(widget.endpoint);
     this.loadmoreUrl = latestService.getNext();
     print("loadmore: " + this.loadmoreUrl);
@@ -64,18 +64,22 @@ class _ListingWidget extends State<ListingWidget> {
 
   Widget _buildList(BuildContext context) {
     if (!(_searchText.isEmpty)) {
-    _filteredRecords.records = new List();
+      _filteredRecords.records = new List();
       for (int i = 0; i < _records.records.length; i++) {
-        if (_records.records[i].title.toLowerCase().contains(_searchText.toLowerCase())
-            || _records.records[i].slug.toLowerCase().contains(_searchText.toLowerCase())) {
+        if (_records.records[i].title
+                .toLowerCase()
+                .contains(_searchText.toLowerCase()) ||
+            _records.records[i].slug
+                .toLowerCase()
+                .contains(_searchText.toLowerCase())) {
           _filteredRecords.records.add(_records.records[i]);
         }
       }
-    } 
+    }
 
     List<Widget> storyList = new List();
     for (int i = 0; i < _filteredRecords.records.length; i++) {
-      storyList.add(_buildListItem(context,_filteredRecords.records[i]));
+      storyList.add(_buildListItem(context, _filteredRecords.records[i]));
     }
     return ListView(
       controller: _controller,
@@ -85,7 +89,7 @@ class _ListingWidget extends State<ListingWidget> {
   }
 
   _scrollListener() {
-    if (_controller.position.pixels == _controller.position.maxScrollExtent ) {
+    if (_controller.position.pixels == _controller.position.maxScrollExtent) {
       if (this.loadmoreUrl != '') {
         this.endpoint = apiBase + this.loadmoreUrl;
         _getLatests();
@@ -110,23 +114,23 @@ class _ListingWidget extends State<ListingWidget> {
             style: TextStyle(color: Colors.black, height: 1.8, fontSize: 19),
           ),
           trailing: Container(
-              padding: EdgeInsets.only(right: 5.0),
-              child: Hero(
-                  tag: record.title,
-                  child: Image(
-                    image: NetworkImage(record.photo),
-                    fit: BoxFit.fitWidth,
-                    colorBlendMode: BlendMode.darken,
-                  )
-              ),
+            padding: EdgeInsets.only(right: 5.0),
+            child: Hero(
+                tag: record.title,
+                child: Image(
+                  image: NetworkImage(record.photo),
+                  fit: BoxFit.fitWidth,
+                  colorBlendMode: BlendMode.darken,
+                )),
           ),
           onTap: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => new StoryPage(slug: record.slug)));
+                context,
+                MaterialPageRoute(
+                    builder: (context) => new StoryPage(slug: record.slug)));
           },
         ),
       ),
     );
   }
-
 }

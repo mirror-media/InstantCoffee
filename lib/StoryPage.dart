@@ -3,7 +3,6 @@ import 'helpers/Constants.dart';
 import "widgets/StoryWidget.dart";
 
 class StoryPage extends StatelessWidget {
- 
   final String slug;
   const StoryPage({Key key, this.slug}) : super(key: key);
 

@@ -14,8 +14,8 @@ class PeopleList {
       peoples = parsedJson.map((i) => People.fromJson(i)).toList();
     }
 
-      return new PeopleList(
-        peoples: peoples,
-      );
+    return new PeopleList(
+      peoples: peoples,
+    );
   }
 }

@@ -11,23 +11,22 @@ import "../models/Paragraph.dart";
 import "../models/Category.dart";
 import "../ListingPage.dart";
 
-class StoryWidget extends StatefulWidget{
+class StoryWidget extends StatefulWidget {
   final String slug;
-  const StoryWidget ({ key, this.slug }) : super(key: key);
+  const StoryWidget({key, this.slug}) : super(key: key);
 
-  @override 
-  _StoryWidget createState () {
+  @override
+  _StoryWidget createState() {
     return _StoryWidget();
   }
 }
 
 class _StoryWidget extends State<StoryWidget> {
-  
   String slug;
   Story story;
   ScrollController _controller;
 
-  @override 
+  @override
   void initState() {
     super.initState();
     getStory(widget.slug);
@@ -42,54 +41,55 @@ class _StoryWidget extends State<StoryWidget> {
     });
   }
 
-
   Widget build(BuildContext context) {
     if (story == null) {
       return new CircularProgressIndicator();
     } else {
-      return new ListView(
-        controller: _controller,
-        children: <Widget>[
-          Card(
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(0),
-            ),
-            child: Column(
-              children: <Widget>[
-                new Image(
-                  image: NetworkImage(story.heroImage),
-                ),
-                new Text(story.heroCaption, style: TextStyle(fontFamily: 'Open Sans', fontSize: 16, height: 1.6)),
-              ],
-            ),
+      return new ListView(controller: _controller, children: <Widget>[
+        Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
           ),
-          Row(
-            children: [
-              //TODO: add category
-              _buildCategory(context),
-              Expanded(
-                flex: 2,
-                child: Text(story.publishedDate, textAlign: TextAlign.right, style: TextStyle(fontFamily: 'Open Sans', fontSize: 16, height: 1.8)),
+          child: Column(
+            children: <Widget>[
+              new Image(
+                image: NetworkImage(story.heroImage),
               ),
+              new Text(story.heroCaption,
+                  style: TextStyle(
+                      fontFamily: 'Open Sans', fontSize: 16, height: 1.6)),
             ],
           ),
-          Card(
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(0),
+        ),
+        Row(
+          children: [
+            //TODO: add category
+            _buildCategory(context),
+            Expanded(
+              flex: 2,
+              child: Text(story.publishedDate,
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                      fontFamily: 'Open Sans', fontSize: 16, height: 1.8)),
             ),
-            child: 
-              Text(story.title, style: TextStyle(fontFamily: 'Open Sans', fontSize: 28), textAlign: TextAlign.left),
+          ],
+        ),
+        Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
           ),
-          _buildAuthors(context),
-          _buildContent(context, "brief"),
-          _buildContent(context, "content"),
-          _buildTags(context),
-          _buildRelatedWidget(context, story.relatedStory),
-          
-        ]
-      );
+          child: Text(story.title,
+              style: TextStyle(fontFamily: 'Open Sans', fontSize: 28),
+              textAlign: TextAlign.left),
+        ),
+        _buildAuthors(context),
+        _buildContent(context, "brief"),
+        _buildContent(context, "content"),
+        _buildTags(context),
+        _buildRelatedWidget(context, story.relatedStory),
+      ]);
     }
   }
 
@@ -99,10 +99,11 @@ class _StoryWidget extends State<StoryWidget> {
       return RaisedButton(
           onPressed: () => _connectTagPage(categories[0].id),
           child: Text(
-          categories[0].title,
-      ));
+            categories[0].title,
+          ));
     }
-    return Text("娛樂頭條", style: TextStyle(fontFamily: 'Open Sans', fontSize: 16, height: 1.8));
+    return Text("娛樂頭條",
+        style: TextStyle(fontFamily: 'Open Sans', fontSize: 16, height: 1.8));
   }
 
   List<Widget> _buildParagraph(BuildContext context, String block) {
@@ -115,63 +116,120 @@ class _StoryWidget extends State<StoryWidget> {
     List<Widget> content = List();
     if (article.paragraphs.length > 0) {
       for (Paragraph p in article.paragraphs) {
-        switch(p.type) {
-          case 'unstyled': {
-            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 20, height: 1.8)));
-          } 
-          break;
-          case 'blockquote': {
-            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 20, height: 1.8)));
-          }
-          break;
-          case 'header-one': {
-            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 26, height: 1.8, fontWeight: FontWeight.bold)));
-          }
-          break;
-          case 'header-two': {
-            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 25, height: 1.8, fontWeight: FontWeight.bold), textAlign: TextAlign.left));
-          }
-          break;
-          case 'header-three': {
-            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 24, height: 1.8, fontWeight: FontWeight.bold)));
-          }
-          break;
-          case 'header-four': {
-            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 23, height: 1.8)));
-          }
-          break;
-          case 'header-five': {
-            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 22, height: 1.8)));
-          }
-          break;
-          case 'header-six': {
-            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 21, height: 1.8)));
-          }
-          break;
-          case 'ordered-list-item': {
-            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 20, height: 1.8)));
-          }
-          break;
-          case 'paragraph': {
-            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 20, height: 1.8)));
-          }
-          break;
-          case 'unordered-list-item': {
-            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 20, height: 1.8)));
-          }
-          break;
-          case 'image': {
-            content.add(Image(image: NetworkImage(p.content)));
-          }
-          break;
-          case 'infobox': {
-            content.add(Text(p.content, style: TextStyle(fontFamily: 'Open Sans', fontSize: 21, height: 1.8)));
-          }
-          break;
-          case 'embeddedcode': {
-            content.add(Container(height: 500, child: WebView(initialUrl: Uri.dataFromString('<html><body><iframe src="' + p.content +'"></iframe></body></html>', mimeType: 'text/html').toString(), javascriptMode: JavascriptMode.unrestricted)));
-          }
-          break;
+        switch (p.type) {
+          case 'unstyled':
+            {
+              content.add(Text(p.content,
+                  style: TextStyle(
+                      fontFamily: 'Open Sans', fontSize: 20, height: 1.8)));
+            }
+            break;
+          case 'blockquote':
+            {
+              content.add(Text(p.content,
+                  style: TextStyle(
+                      fontFamily: 'Open Sans', fontSize: 20, height: 1.8)));
+            }
+            break;
+          case 'header-one':
+            {
+              content.add(Text(p.content,
+                  style: TextStyle(
+                      fontFamily: 'Open Sans',
+                      fontSize: 26,
+                      height: 1.8,
+                      fontWeight: FontWeight.bold)));
+            }
+            break;
+          case 'header-two':
+            {
+              content.add(Text(p.content,
+                  style: TextStyle(
+                      fontFamily: 'Open Sans',
+                      fontSize: 25,
+                      height: 1.8,
+                      fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.left));
+            }
+            break;
+          case 'header-three':
+            {
+              content.add(Text(p.content,
+                  style: TextStyle(
+                      fontFamily: 'Open Sans',
+                      fontSize: 24,
+                      height: 1.8,
+                      fontWeight: FontWeight.bold)));
+            }
+            break;
+          case 'header-four':
+            {
+              content.add(Text(p.content,
+                  style: TextStyle(
+                      fontFamily: 'Open Sans', fontSize: 23, height: 1.8)));
+            }
+            break;
+          case 'header-five':
+            {
+              content.add(Text(p.content,
+                  style: TextStyle(
+                      fontFamily: 'Open Sans', fontSize: 22, height: 1.8)));
+            }
+            break;
+          case 'header-six':
+            {
+              content.add(Text(p.content,
+                  style: TextStyle(
+                      fontFamily: 'Open Sans', fontSize: 21, height: 1.8)));
+            }
+            break;
+          case 'ordered-list-item':
+            {
+              content.add(Text(p.content,
+                  style: TextStyle(
+                      fontFamily: 'Open Sans', fontSize: 20, height: 1.8)));
+            }
+            break;
+          case 'paragraph':
+            {
+              content.add(Text(p.content,
+                  style: TextStyle(
+                      fontFamily: 'Open Sans', fontSize: 20, height: 1.8)));
+            }
+            break;
+          case 'unordered-list-item':
+            {
+              content.add(Text(p.content,
+                  style: TextStyle(
+                      fontFamily: 'Open Sans', fontSize: 20, height: 1.8)));
+            }
+            break;
+          case 'image':
+            {
+              content.add(Image(image: NetworkImage(p.content)));
+            }
+            break;
+          case 'infobox':
+            {
+              content.add(Text(p.content,
+                  style: TextStyle(
+                      fontFamily: 'Open Sans', fontSize: 21, height: 1.8)));
+            }
+            break;
+          case 'embeddedcode':
+            {
+              content.add(Container(
+                  height: 500,
+                  child: WebView(
+                      initialUrl: Uri.dataFromString(
+                              '<html><body><iframe src="' +
+                                  p.content +
+                                  '"></iframe></body></html>',
+                              mimeType: 'text/html')
+                          .toString(),
+                      javascriptMode: JavascriptMode.unrestricted)));
+            }
+            break;
         }
       }
     }
@@ -184,17 +242,17 @@ class _StoryWidget extends State<StoryWidget> {
     );
   }
 
-  Widget _buildTags (BuildContext context) {
+  Widget _buildTags(BuildContext context) {
     if (story.tags == null) {
       return Text('foo');
     } else {
       List<Widget> tagElement = List();
       for (Tag tag in story.tags) {
         tagElement.add(RaisedButton(
-          onPressed: () => _connectTagPage(tag.id),
-          child: Text(
-          tag.name,
-      )));
+            onPressed: () => _connectTagPage(tag.id),
+            child: Text(
+              tag.name,
+            )));
       }
       return Wrap(children: tagElement);
     }
@@ -203,35 +261,44 @@ class _StoryWidget extends State<StoryWidget> {
   void _connectTagPage(String tagID) {
     // load the [age]
     Navigator.push(
-      context, MaterialPageRoute(builder: (context) => new ListingPage())
-    );
+        context, MaterialPageRoute(builder: (context) => new ListingPage()));
   }
 
-  Widget _buildAuthors (BuildContext context) {
+  Widget _buildAuthors(BuildContext context) {
     List<Widget> authorItems = List();
     if (story.writers.peoples.length > 0) {
-      authorItems.add(Text("記者：", style: TextStyle(fontFamily: 'Open Sans', fontSize: 18, height: 1.6)));
+      authorItems.add(Text("記者：",
+          style:
+              TextStyle(fontFamily: 'Open Sans', fontSize: 18, height: 1.6)));
     }
     for (People author in story.writers.peoples) {
-      Widget credit = new Card(child: Text(author.name, style: TextStyle(fontFamily: 'Open Sans', fontSize: 18, height: 1.6)));
+      Widget credit = new Card(
+          child: Text(author.name,
+              style: TextStyle(
+                  fontFamily: 'Open Sans', fontSize: 18, height: 1.6)));
       authorItems.add(credit);
     }
     if (story.photographers.peoples.length > 0) {
-      authorItems.add(Text("攝影：", style: TextStyle(fontFamily: 'Open Sans', fontSize: 18, height: 1.6)));
+      authorItems.add(Text("攝影：",
+          style:
+              TextStyle(fontFamily: 'Open Sans', fontSize: 18, height: 1.6)));
     }
     for (People author in story.photographers.peoples) {
-      Widget credit = new Card(child: Text(author.name, style: TextStyle(fontFamily: 'Open Sans', fontSize: 18, height: 1.6)));
+      Widget credit = new Card(
+          child: Text(author.name,
+              style: TextStyle(
+                  fontFamily: 'Open Sans', fontSize: 18, height: 1.6)));
       authorItems.add(credit);
     }
     return Row(
       children: authorItems,
     );
   }
-  
-  Widget _buildRelatedWidget (BuildContext context,  List<Record> relateds) {
+
+  Widget _buildRelatedWidget(BuildContext context, List<Record> relateds) {
     List<Widget> relatedList = new List();
     for (int i = 0; i < relateds.length; i++) {
-      relatedList.add(_buildRelatedItem(context,relateds[i]));
+      relatedList.add(_buildRelatedItem(context, relateds[i]));
     }
     return Column(
       children: relatedList,
@@ -239,7 +306,7 @@ class _StoryWidget extends State<StoryWidget> {
   }
 
   Widget _buildRelatedItem(BuildContext context, Record relatedItem) {
-      return Card(
+    return Card(
       key: ValueKey(relatedItem.title),
       //elevation: 8.0,
       color: Colors.white,
@@ -254,15 +321,14 @@ class _StoryWidget extends State<StoryWidget> {
             style: TextStyle(color: Colors.black, height: 1.8, fontSize: 19),
           ),
           trailing: Container(
-              padding: EdgeInsets.only(right: 5.0),
-              child: Hero(
-                  tag: relatedItem.title,
-                  child: Image(
-                    image: NetworkImage(relatedItem.photo),
-                    fit: BoxFit.fitWidth,
-                    colorBlendMode: BlendMode.darken,
-                  )
-              ),
+            padding: EdgeInsets.only(right: 5.0),
+            child: Hero(
+                tag: relatedItem.title,
+                child: Image(
+                  image: NetworkImage(relatedItem.photo),
+                  fit: BoxFit.fitWidth,
+                  colorBlendMode: BlendMode.darken,
+                )),
           ),
           onTap: () {
             getStory(relatedItem.slug);
@@ -273,4 +339,3 @@ class _StoryWidget extends State<StoryWidget> {
     );
   }
 }
-

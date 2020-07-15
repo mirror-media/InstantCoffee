@@ -3,9 +3,7 @@ import 'helpers/Constants.dart';
 import 'models/SectionList.dart';
 import 'widgets/ListingWidget.dart';
 
-
 class ListingPage extends StatefulWidget {
-
   @override
   _AuthorPageState createState() {
     return _AuthorPageState();
@@ -13,7 +11,6 @@ class ListingPage extends StatefulWidget {
 }
 
 class _AuthorPageState extends State<ListingPage> {
-
   SectionList sectionItems = new SectionList();
   String endpoint = latestAPI;
   String loadmoreUrl = '';
@@ -21,7 +18,6 @@ class _AuthorPageState extends State<ListingPage> {
 
   Widget listing;
   Widget _appBarTitle = new Text(appTitle);
-  
 
   @override
   void initState() {
@@ -52,5 +48,4 @@ class _AuthorPageState extends State<ListingPage> {
       ],
     );
   }
-
 }

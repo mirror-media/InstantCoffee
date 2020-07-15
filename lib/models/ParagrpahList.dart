@@ -14,8 +14,8 @@ class ParagraphList {
       paragraphs = parsedJson.map((i) => Paragraph.fromJson(i)).toList();
     }
 
-      return new ParagraphList(
-        paragraphs: paragraphs,
-      );
+    return new ParagraphList(
+      paragraphs: paragraphs,
+    );
   }
 }
