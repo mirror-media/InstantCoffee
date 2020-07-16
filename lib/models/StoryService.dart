@@ -3,7 +3,8 @@ import "../helpers/Constants.dart";
 
 class StoryService {
   Future<String> _loadPostAPI(String slug) async {
-    String endpoint = apiBase + 'posts?where={"slug":"' + slug + '"}&related=full';
+    String endpoint =
+        apiBase + 'posts?where={"slug":"' + slug + '"}&related=full';
     final response = await http.get(endpoint);
     if (response.statusCode == 200) {
       return response.body;
@@ -15,5 +16,5 @@ class StoryService {
   Future<String> loadStory(String slug) async {
     String jsonString = await _loadPostAPI(slug);
     return jsonString;
-  } 
+  }
 }

@@ -1,23 +1,50 @@
 {
     "defaultNotificationList": 
         [
-            {"type": "switch", "title": "新聞快訊和天氣", "topic": "breaking", "value": false},
-            {"type": "switch", "title": "編輯精選", "topic": "choices", "value": false},
+            {"type": "switch", "id": "breaking", "title": "新聞快訊和天氣", "topic": "breaking", "value": false},
+            {"type": "switch", "id": "choices", "title": "編輯精選", "topic": "choices", "value": false},
             {
-                "type": "switch", "title": "訂閱星座運勢 - 每週在專屬於你會自動更新屬於你的星座運勢", "value": false, 
+                "type": "switch", "id": "horoscopes", "title": "訂閱星座運勢 - 每週在專屬於你會自動更新屬於你的星座運勢", "value": false, 
                 "notificationSettingList": [
-                    {"type": "checkbox", "title": "牡羊座", "topic": "Aries", "value": false},
-                    {"type": "checkbox", "title": "金牛座", "topic": "Taurus", "value": false},
-                    {"type": "checkbox", "title": "雙子座", "topic": "Gemini", "value": false},
-                    {"type": "checkbox", "title": "巨蟹座", "topic": "Cancer", "value": false},
-                    {"type": "checkbox", "title": "獅子座", "topic": "Leo", "value": false},
-                    {"type": "checkbox", "title": "處女座", "topic": "Virgo", "value": false},
-                    {"type": "checkbox", "title": "天秤座", "topic": "Libra", "value": false},
-                    {"type": "checkbox", "title": "天蠍座", "topic": "Scorpio", "value": false},
-                    {"type": "checkbox", "title": "射手座", "topic": "Sagittarius", "value": false},
-                    {"type": "checkbox", "title": "摩羯座", "topic": "Capricorn", "value": false},
-                    {"type": "checkbox", "title": "水瓶座", "topic": "Aquarius", "value": false},
-                    {"type": "checkbox", "title": "牡羊座", "topic": "Pisces", "value": false}
+                    {"type": "checkbox", "id": "Aries", "title": "牡羊座", "topic": "Aries", "value": false},
+                    {"type": "checkbox", "id": "Taurus", "title": "金牛座", "topic": "Taurus", "value": false},
+                    {"type": "checkbox", "id": "Gemini", "title": "雙子座", "topic": "Gemini", "value": false},
+                    {"type": "checkbox", "id": "Cancer", "title": "巨蟹座", "topic": "Cancer", "value": false},
+                    {"type": "checkbox", "id": "Leo", "title": "獅子座", "topic": "Leo", "value": false},
+                    {"type": "checkbox", "id": "Virgo", "title": "處女座", "topic": "Virgo", "value": false},
+                    {"type": "checkbox", "id": "Libra", "title": "天秤座", "topic": "Libra", "value": false},
+                    {"type": "checkbox", "id": "Scorpio", "title": "天蠍座", "topic": "Scorpio", "value": false},
+                    {"type": "checkbox", "id": "Sagittarius", "title": "射手座", "topic": "Sagittarius", "value": false},
+                    {"type": "checkbox", "id": "Capricorn", "title": "摩羯座", "topic": "Capricorn", "value": false},
+                    {"type": "checkbox", "id": "Aquarius", "title": "水瓶座", "topic": "Aquarius", "value": false},
+                    {"type": "checkbox", "id": "Pisces", "title": "牡羊座", "topic": "Pisces", "value": false}
+                ]
+            },
+            {
+                "type": "switch", "id": "subscriptionChannels", "title": "訂閱頻道推送 - 當頻道有最新文章時，搶先推播", "value": false, 
+                "notificationSettingList": [
+                    {"type": "checkbox", "id": "latest", "title": "焦點", "topic": "latest", "value": false},
+                    {"type": "checkbox", "id": "society", "title": "社會", "topic": "society", "value": false},
+                    {"type": "checkbox", "id": "entertainment headlines", "title": "娛樂頭條", "topic": "entertainment headlines", "value": false},
+                    {"type": "checkbox", "id": "movie and drama", "title": "影劇專欄", "topic": "movie and drama", "value": false},
+                    {"type": "checkbox", "id": "celebrity", "title": "鏡大咖", "topic": "celebrity", "value": false},
+                    {"type": "checkbox", "id": "money", "title": "理財", "topic": "money", "value": false},
+                    {"type": "checkbox", "id": "somebody", "title": "人物專訪", "topic": "somebody", "value": false},
+                    {"type": "checkbox", "id": "financial mogul", "title": "財經人物", "topic": "financial mogul", "value": false},
+                    {"type": "checkbox", "id": "wine", "title": "好酒情報 ", "topic": "wine", "value": false},
+                    {"type": "checkbox", "id": "travel", "title": "旅遊", "topic": "travel", "value": false},
+                    {"type": "checkbox", "id": "mafada", "title": "瑪法達", "topic": "mafada", "value": false},
+                    {"type": "checkbox", "id": "car", "title": "汽車", "topic": "car", "value": false},
+                    {"type": "checkbox", "id": "watch", "title": "鐘錶", "topic": "watch", "value": false},
+                    {"type": "checkbox", "id": "political", "title": "政治", "topic": "political", "value": false},
+                    {"type": "checkbox", "id": "life", "title": "生活", "topic": "life", "value": false},
+                    {"type": "checkbox", "id": "entertainment perspective", "title": "娛樂透視", "topic": "entertainment perspective", "value": false},
+                    {"type": "checkbox", "id": "game", "title": "動漫遊戲", "topic": "game", "value": false},
+                    {"type": "checkbox", "id": "finance", "title": "財經", "topic": "finance", "value": false},
+                    {"type": "checkbox", "id": "author", "title": "作家特寫", "topic": "author", "value": false},
+                    {"type": "checkbox", "id": "food", "title": "美食", "topic": "food", "value": false},
+                    {"type": "checkbox", "id": "culture", "title": "文化", "topic": "culture", "value": false},
+                    {"type": "checkbox", "id": "exposed", "title": "鏡爆", "topic": "exposed", "value": false}
                 ]
             }
         ]

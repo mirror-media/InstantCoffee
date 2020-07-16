@@ -3,15 +3,15 @@ class Paragraph {
   String content;
   String type;
   String caption;
- 
+
   Paragraph({
     this.styles,
     this.content,
     this.type,
     this.caption,
   });
- 
-  factory Paragraph.fromJson(Map<String, dynamic> json){
+
+  factory Paragraph.fromJson(Map<String, dynamic> json) {
     String content;
     String caption;
     if (json["type"] == 'image') {
@@ -28,12 +28,11 @@ class Paragraph {
     } else {
       content = json["content"].join("\n");
     }
-    
+
     return new Paragraph(
-        type: json['type'],
-        content: content,
-        caption: caption,
+      type: json['type'],
+      content: content,
+      caption: caption,
     );
   }
 }
- 

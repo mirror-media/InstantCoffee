@@ -12,17 +12,20 @@ import 'models/SectionList.dart';
 
 class NotificationSettingsPage extends StatefulWidget {
   @override
-  _NotificationSettingsPageState createState() => _NotificationSettingsPageState();
+  _NotificationSettingsPageState createState() =>
+      _NotificationSettingsPageState();
 }
 
 class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   final LocalStorage storage = new LocalStorage('setting');
-  List<NotificationSetting> notificationSettingList = new List<NotificationSetting>();
+  List<NotificationSetting> notificationSettingList =
+      new List<NotificationSetting>();
   SectionList sectionItems = new SectionList();
 
   @override
   void initState() {
-    this.notificationSettingList = NotificationSettingList.fromJson(this.storage.getItem("notification"));
+    this.notificationSettingList =
+        NotificationSettingList.fromJson(this.storage.getItem("notification"));
 
     if (this.notificationSettingList == null) {
       _initNotification();
@@ -31,11 +34,13 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   }
 
   void _initNotification() async {
-    var jsonSetting = await rootBundle.loadString('assets/data/defaultNotificationList.json');
+    var jsonSetting =
+        await rootBundle.loadString('assets/data/defaultNotificationList.json');
     var jsonSettingList = json.decode(jsonSetting)['defaultNotificationList'];
 
     setState(() {
-      this.notificationSettingList = NotificationSettingList.fromJson(jsonSettingList);
+      this.notificationSettingList =
+          NotificationSettingList.fromJson(jsonSettingList);
       this.storage.setItem("notification", jsonSettingList);
     });
   }
@@ -45,12 +50,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     return Scaffold(
       appBar: _buildBar(context),
       backgroundColor: appColor,
-      body: ListView(
-        children: [
-          _buildDescriptionSection(context),
-          _buildNotificationSettingListSection(context, this.notificationSettingList),
-        ]
-      ),
+      body: ListView(children: [
+        _buildDescriptionSection(context),
+        _buildNotificationSettingListSection(
+            context, this.notificationSettingList),
+      ]),
     );
   }
 
@@ -59,11 +63,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),
         onPressed: () => Navigator.of(context).pop(),
-      ), 
+      ),
       centerTitle: true,
       title: Text(
         settingPageTitle,
-        style: TextStyle(color: Colors.black,fontSize: 24.0),
+        style: TextStyle(color: Colors.black, fontSize: 24.0),
       ),
       backgroundColor: Colors.grey[50],
       actions: [
@@ -102,12 +106,12 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     );
   }
 
-  Widget _buildNotificationSettingListSection(BuildContext context, List<NotificationSetting> notificationSettingList) {
-    if(notificationSettingList == null)
-    {
+  Widget _buildNotificationSettingListSection(
+      BuildContext context, List<NotificationSetting> notificationSettingList) {
+    if (notificationSettingList == null) {
       return Center(child: CircularProgressIndicator());
     }
-    
+
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -121,26 +125,26 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
               initiallyExpanded: notificationSettingList[listViewIndex].value,
               leading: null,
               title: ListTile(
-                title: Text(notificationSettingList[listViewIndex].title,),
+                title: Text(
+                  notificationSettingList[listViewIndex].title,
+                ),
               ),
               trailing: IgnorePointer(
                 child: CupertinoSwitch(
-                  value: notificationSettingList[listViewIndex].value, 
-                  onChanged: (bool value) {}
-                ),
+                    value: notificationSettingList[listViewIndex].value,
+                    onChanged: (bool value) {}),
               ),
-              onExpansionChanged: (bool value){
+              onExpansionChanged: (bool value) {
                 setState(() {
-                  notificationSettingList[listViewIndex].value = value; 
+                  notificationSettingList[listViewIndex].value = value;
                 });
-                storage.setItem("notification", NotificationSettingList.toJson(this.notificationSettingList));
+                storage.setItem(
+                    "notification",
+                    NotificationSettingList.toJson(
+                        this.notificationSettingList));
               },
-              children: 
-              notificationSettingList[listViewIndex].notificationSettingList == null 
-              ? []
-              : [
-                  _buildCheckbox(context, notificationSettingList[listViewIndex].notificationSettingList, 4, 2.0)
-                ],
+              children: _renderCheckBoxChildren(
+                  context, notificationSettingList[listViewIndex]),
             ),
           ),
         );
@@ -148,38 +152,65 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     );
   }
 
-  Widget _buildCheckbox(BuildContext context, List<NotificationSetting> checkboxList, int count, double ratio) {
+  List<Widget> _renderCheckBoxChildren(
+      BuildContext context, NotificationSetting notificationSetting) {
+    if (notificationSetting.id == 'horoscopes') {
+      return [
+        _buildCheckbox(
+            context, notificationSetting.notificationSettingList, false, 4, 2.0)
+      ];
+    } else if (notificationSetting.id == 'subscriptionChannels') {
+      return [
+        _buildCheckbox(
+            context, notificationSetting.notificationSettingList, true, 2, 4)
+      ];
+    }
 
+    return [];
+  }
+
+  Widget _buildCheckbox(
+      BuildContext context,
+      List<NotificationSetting> checkboxList,
+      bool isRepeatable,
+      int count,
+      double ratio) {
     return GridView.builder(
-      shrinkWrap: true,
-      itemCount: checkboxList.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: count,
-        childAspectRatio: ratio,
-      ),
-      itemBuilder: (context, checkboxIndex) {
-        return InkWell(
-          onTap: () {
-            setState(() {
-              checkboxList.forEach((element) { element.value = false; });
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: checkboxList.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: count,
+          childAspectRatio: ratio,
+        ),
+        itemBuilder: (context, checkboxIndex) {
+          return InkWell(
+            onTap: () {
+              setState(() {
+                if (isRepeatable) {
+                  checkboxList[checkboxIndex].value =
+                      !checkboxList[checkboxIndex].value;
+                } else {
+                  checkboxList.forEach((element) {
+                    element.value = false;
+                  });
+                  checkboxList[checkboxIndex].value = true;
+                }
+              });
 
-              checkboxList[checkboxIndex].value = true;
-            }); 
-            storage.setItem("notification", NotificationSettingList.toJson(this.notificationSettingList));
-          },
-          child: IgnorePointer(
-            child: Row(
-              children:[
+              storage.setItem("notification",
+                  NotificationSettingList.toJson(this.notificationSettingList));
+            },
+            child: IgnorePointer(
+              child: Row(children: [
                 Checkbox(
-                  value: checkboxList[checkboxIndex].value, 
-                  onChanged: (value) {}, 
+                  value: checkboxList[checkboxIndex].value,
+                  onChanged: (value) {},
                 ),
                 Text(checkboxList[checkboxIndex].title),
-              ]
+              ]),
             ),
-          ),
-        );
-      }
-    );
+          );
+        });
   }
 }

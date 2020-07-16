@@ -33,7 +33,7 @@ class Section {
       focus: false,
       type: type,
     );
-  } 
+  }
 
   void setOrder(int newOrder) {
     this.order = newOrder;

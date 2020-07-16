@@ -14,7 +14,6 @@ import 'models/LatestService.dart';
 import 'StoryPage.dart';
 
 class LatestPage extends StatefulWidget {
-
   @override
   _LatestPageState createState() {
     return _LatestPageState();
@@ -42,15 +41,13 @@ class _LatestPageState extends State<LatestPage> {
 
   @override
   void initState() {
-
     _records.records = new List();
     _filteredRecords.records = new List();
     //sectionItems.sections = new List();
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
     _getSections();
-    
-    
+
     //else {
     //  _getSections();
     //}
@@ -59,7 +56,7 @@ class _LatestPageState extends State<LatestPage> {
     super.initState();
   }
 
-   void _getSections() async {
+  void _getSections() async {
     sectionItems = new SectionList();
     SectionList allSections = new SectionList();
     allSections = await SectionService().loadSections();
@@ -72,7 +69,7 @@ class _LatestPageState extends State<LatestPage> {
   }
 
   void _getLatests() async {
-    LatestService latestService = new LatestService(); 
+    LatestService latestService = new LatestService();
     LatestList latests = await latestService.loadLatests(this.endpoint);
     this.loadmoreUrl = latestService.getNext();
     if (this.page == 1) {
@@ -93,7 +90,6 @@ class _LatestPageState extends State<LatestPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: _buildBar(context),
       backgroundColor: appColor,
@@ -117,18 +113,17 @@ class _LatestPageState extends State<LatestPage> {
         if (sectionJson != null) {
           sectionItems = SectionList.fromJson(json.decode(sectionJson));
         }
-        sectionItems.sections.sort((a,b) => a.order.compareTo(b.order));
-        for (Section section in sectionItems.sections) { 
+        sectionItems.sections.sort((a, b) => a.order.compareTo(b.order));
+        for (Section section in sectionItems.sections) {
           items.add(_buildNavigationItem(context, section));
         }
       });
       return new Container(
-        height: 60,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: items,
-        )
-      );
+          height: 60,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: items,
+          ));
     } else {
       return Container();
     }
@@ -136,10 +131,10 @@ class _LatestPageState extends State<LatestPage> {
 
   Widget _buildNavigationItem(BuildContext context, Section section) {
     return new RaisedButton(
-      onPressed: () => _switch(section.key, section.type),
-      child: Text(
-        section.title,
-    ));
+        onPressed: () => _switch(section.key, section.type),
+        child: Text(
+          section.title,
+        ));
   }
 
   Widget _buildBar(BuildContext context) {
@@ -154,7 +149,7 @@ class _LatestPageState extends State<LatestPage> {
             fullscreenDialog: true,
           ),
         ),
-      ), 
+      ),
       backgroundColor: appColor,
       centerTitle: true,
       title: _appBarTitle,
@@ -172,36 +167,41 @@ class _LatestPageState extends State<LatestPage> {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-          context, MaterialPageRoute(builder: (context) => new StoryPage(slug: leading.slug)));
+            context,
+            MaterialPageRoute(
+                builder: (context) => new StoryPage(slug: leading.slug)));
       },
       child: Card(
-        child: Column(
-          children: [
-            Image.network(leading.photo),
-            Text(leading.title),
-          ],
-        )
-      ),
+          child: Column(
+        children: [
+          Image.network(leading.photo),
+          Text(leading.title),
+        ],
+      )),
     );
   }
 
   Widget _buildList(BuildContext context) {
     if (!(_searchText.isEmpty)) {
-    _filteredRecords.records = new List();
+      _filteredRecords.records = new List();
       for (int i = 0; i < _records.records.length; i++) {
-        if (_records.records[i].title.toLowerCase().contains(_searchText.toLowerCase())
-            || _records.records[i].slug.toLowerCase().contains(_searchText.toLowerCase())) {
+        if (_records.records[i].title
+                .toLowerCase()
+                .contains(_searchText.toLowerCase()) ||
+            _records.records[i].slug
+                .toLowerCase()
+                .contains(_searchText.toLowerCase())) {
           _filteredRecords.records.add(_records.records[i]);
         }
       }
-    } 
+    }
 
     List<Widget> storyList = new List();
     for (int i = 0; i < _filteredRecords.records.length; i++) {
       if (_searchText.isEmpty && i == 0) {
         storyList.add(_buildLeading(context, _filteredRecords.records[i]));
       } else {
-        storyList.add(_buildListItem(context,_filteredRecords.records[i]));
+        storyList.add(_buildListItem(context, _filteredRecords.records[i]));
       }
     }
     return ListView(
@@ -212,7 +212,7 @@ class _LatestPageState extends State<LatestPage> {
   }
 
   _scrollListener() {
-    if (_controller.position.pixels == _controller.position.maxScrollExtent ) {
+    if (_controller.position.pixels == _controller.position.maxScrollExtent) {
       if (this.loadmoreUrl != '') {
         this.endpoint = apiBase + this.loadmoreUrl;
         _getLatests();
@@ -237,19 +237,20 @@ class _LatestPageState extends State<LatestPage> {
             style: TextStyle(color: Colors.black, height: 1.8, fontSize: 19),
           ),
           trailing: Container(
-              padding: EdgeInsets.only(right: 5.0),
-              child: Hero(
-                  tag: record.title,
-                  child: Image(
-                    image: NetworkImage(record.photo),
-                    fit: BoxFit.fitWidth,
-                    colorBlendMode: BlendMode.darken,
-                  )
-              ),
+            padding: EdgeInsets.only(right: 5.0),
+            child: Hero(
+                tag: record.title,
+                child: Image(
+                  image: NetworkImage(record.photo),
+                  fit: BoxFit.fitWidth,
+                  colorBlendMode: BlendMode.darken,
+                )),
           ),
           onTap: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => new StoryPage(slug: record.slug)));
+                context,
+                MaterialPageRoute(
+                    builder: (context) => new StoryPage(slug: record.slug)));
           },
         ),
       ),
@@ -274,13 +275,14 @@ class _LatestPageState extends State<LatestPage> {
   _switch(String id, String type) {
     this.page = 1;
     if (type == 'section') {
-      this.endpoint = listingBase + '&where={%22sections%22:{%22\$in%22:["' + id + '"]}}';
+      this.endpoint =
+          listingBase + '&where={%22sections%22:{%22\$in%22:["' + id + '"]}}';
     } else if (id == 'latest') {
       this.endpoint = latestAPI;
     } else if (id == 'popular') {
       this.endpoint = popularListAPI;
     } else if (id == 'personal') {
-      this.endpoint = listingBase + '&where={"sections":{"\$in":["596441604bbe120f002a3197", "57dfe399ee85930e00cad4d6"]}}';
+      this.endpoint = listingBaseSearchByPersonAndFoodSection;
     }
 
     setState(() {
