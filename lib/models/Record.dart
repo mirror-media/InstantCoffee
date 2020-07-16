@@ -1,3 +1,5 @@
+import 'package:readr_app/helpers/Constants.dart';
+
 class Record {
   String title;
   String slug;
@@ -14,8 +16,7 @@ class Record {
   factory Record.fromJson(Map<String, dynamic> json) {
     String origTitle = json['title'];
     String type;
-    String photoUrl =
-        'https://www.mirrormedia.mg/assets/mirrormedia/notImage.png';
+    String photoUrl = mirrorMediaNotImageUrl;
     final title = origTitle.replaceAll('　', "\n");
     if (json.containsKey('heroImage') && json['heroImage'] != null) {
       photoUrl = json['heroImage']['image']['resizedTargets']['mobile']['url'];

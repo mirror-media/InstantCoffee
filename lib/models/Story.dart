@@ -1,3 +1,4 @@
+import 'package:readr_app/helpers/Constants.dart';
 import 'package:readr_app/models/SectionList.dart';
 import "Record.dart";
 import "Category.dart";
@@ -65,8 +66,7 @@ class Story {
     SectionList sectionBuilder = SectionList.fromJson(json["sections"]);
     ParagraphList brief = ParagraphList.fromJson(json["brief"]["apiData"]);
     ParagraphList content = ParagraphList.fromJson(json["content"]["apiData"]);
-    String photoUrl =
-        'https://www.mirrormedia.mg/assets/mirrormedia/notImage.png';
+    String photoUrl = mirrorMediaNotImageUrl;
     List<Record> relatedBuilder = List();
     List<Category> categoryBuilder = List();
     List<Tag> tagBuilder = List();

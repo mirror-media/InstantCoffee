@@ -282,8 +282,7 @@ class _LatestPageState extends State<LatestPage> {
     } else if (id == 'popular') {
       this.endpoint = popularListAPI;
     } else if (id == 'personal') {
-      this.endpoint = listingBase +
-          '&where={"sections":{"\$in":["596441604bbe120f002a3197", "57dfe399ee85930e00cad4d6"]}}';
+      this.endpoint = listingBaseSearchByPersonAndFoodSection;
     }
 
     setState(() {
