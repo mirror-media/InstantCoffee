@@ -22,10 +22,10 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
   @override
   void initState() {
-    this._notificationSettingList =
-        NotificationSettingList.fromJson(this._storage.getItem("notification"));
+    _notificationSettingList =
+        NotificationSettingList.fromJson(_storage.getItem("notification"));
 
-    if (this._notificationSettingList == null) {
+    if (_notificationSettingList == null) {
       _initNotification();
     }
     super.initState();
@@ -37,9 +37,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     var jsonSettingList = json.decode(jsonSetting)['defaultNotificationList'];
 
     setState(() {
-      this._notificationSettingList =
+      _notificationSettingList =
           NotificationSettingList.fromJson(jsonSettingList);
-      this._storage.setItem("notification", jsonSettingList);
+      _storage.setItem("notification", jsonSettingList);
     });
   }
 
@@ -51,7 +51,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       body: ListView(children: [
         _buildDescriptionSection(context),
         _buildNotificationSettingListSection(
-            context, this._notificationSettingList),
+            context, _notificationSettingList),
       ]),
     );
   }
@@ -139,7 +139,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                 _storage.setItem(
                     "notification",
                     NotificationSettingList.toJson(
-                        this._notificationSettingList));
+                        _notificationSettingList));
               },
               children: _renderCheckBoxChildren(
                   context, notificationSettingList[listViewIndex]),
@@ -197,7 +197,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
               });
 
               _storage.setItem("notification",
-                  NotificationSettingList.toJson(this._notificationSettingList));
+                  NotificationSettingList.toJson(_notificationSettingList));
             },
             child: IgnorePointer(
               child: Row(children: [
