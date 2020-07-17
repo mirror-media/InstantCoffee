@@ -16,9 +16,9 @@ class NotificationSettingsPage extends StatefulWidget {
 }
 
 class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
-  final LocalStorage _storage = new LocalStorage('setting');
-  List<NotificationSetting> _notificationSettingList =
-      new List<NotificationSetting>();
+  final LocalStorage _storage = LocalStorage('setting');
+  List<NotificationSetting> _notificationSettingList = 
+      List<NotificationSetting>();
 
   @override
   void initState() {
@@ -57,7 +57,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   }
 
   Widget _buildBar(BuildContext context) {
-    return new AppBar(
+    return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),
         onPressed: () => Navigator.of(context).pop(),
