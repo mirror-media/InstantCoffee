@@ -6,7 +6,7 @@ class NotificationSetting {
   final String title;
   final String topic;
   bool value;
-  final List<NotificationSetting> notificationSettingList;
+  final NotificationSettingList notificationSettingList;
 
   NotificationSetting({
     this.type,
@@ -38,7 +38,6 @@ class NotificationSetting {
         'title': title,
         'topic': topic,
         'value': value,
-        'notificationSettingList':
-            NotificationSettingList.toJson(notificationSettingList),
+        'notificationSettingList': notificationSettingList?.toJson(),
       };
 }

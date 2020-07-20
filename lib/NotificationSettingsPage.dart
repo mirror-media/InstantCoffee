@@ -4,11 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:localstorage/localstorage.dart';
+
 import 'package:readr_app/models/NotificationSetting.dart';
 import 'package:readr_app/models/NotificationSettingList.dart';
-
-import 'helpers/Constants.dart';
-import 'models/SectionList.dart';
+import 'package:readr_app/helpers/Constants.dart';
 
 class NotificationSettingsPage extends StatefulWidget {
   @override
@@ -17,17 +16,15 @@ class NotificationSettingsPage extends StatefulWidget {
 }
 
 class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
-  final LocalStorage storage = new LocalStorage('setting');
-  List<NotificationSetting> notificationSettingList =
-      new List<NotificationSetting>();
-  SectionList sectionItems = new SectionList();
+  final LocalStorage _storage = LocalStorage('setting');
+  NotificationSettingList _notificationSettingList = NotificationSettingList();
 
   @override
   void initState() {
-    this.notificationSettingList =
-        NotificationSettingList.fromJson(this.storage.getItem("notification"));
+    _notificationSettingList =
+        NotificationSettingList.fromJson(_storage.getItem("notification"));
 
-    if (this.notificationSettingList == null) {
+    if (_notificationSettingList == null) {
       _initNotification();
     }
     super.initState();
@@ -39,9 +36,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     var jsonSettingList = json.decode(jsonSetting)['defaultNotificationList'];
 
     setState(() {
-      this.notificationSettingList =
+      _notificationSettingList =
           NotificationSettingList.fromJson(jsonSettingList);
-      this.storage.setItem("notification", jsonSettingList);
+      _storage.setItem("notification", jsonSettingList);
     });
   }
 
@@ -52,14 +49,13 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       backgroundColor: appColor,
       body: ListView(children: [
         _buildDescriptionSection(context),
-        _buildNotificationSettingListSection(
-            context, this.notificationSettingList),
+        _buildNotificationSettingListSection(context, _notificationSettingList),
       ]),
     );
   }
 
   Widget _buildBar(BuildContext context) {
-    return new AppBar(
+    return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),
         onPressed: () => Navigator.of(context).pop(),
@@ -138,10 +134,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                 setState(() {
                   notificationSettingList[listViewIndex].value = value;
                 });
-                storage.setItem(
-                    "notification",
-                    NotificationSettingList.toJson(
-                        this.notificationSettingList));
+                _storage.setItem(
+                    "notification", _notificationSettingList.toJson());
               },
               children: _renderCheckBoxChildren(
                   context, notificationSettingList[listViewIndex]),
@@ -198,8 +192,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                 }
               });
 
-              storage.setItem("notification",
-                  NotificationSettingList.toJson(this.notificationSettingList));
+              _storage.setItem(
+                  "notification", _notificationSettingList.toJson());
             },
             child: IgnorePointer(
               child: Row(children: [
