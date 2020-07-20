@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/Constants.dart';
 import 'package:readr_app/HomePage.dart';
-import 'LatestPage.dart';
-//import 'HomePage.dart';
 
 void main() {
   runApp(MirrorApp());
@@ -10,7 +8,7 @@ void main() {
 
 class MirrorApp extends StatelessWidget {
   final routes = <String, WidgetBuilder>{
-    latestPageTag: (context) => LatestPage(),
+    latestPageTag: (context) => HomePage(),
   };
 
   @override
@@ -21,8 +19,7 @@ class MirrorApp extends StatelessWidget {
       theme: new ThemeData(
         primaryColor: appColor,
       ),
-      home: LatestPage(),
-      //home: HomePage(),
+      home: HomePage(),
       routes: routes,
     );
   }

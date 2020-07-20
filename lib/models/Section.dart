@@ -35,6 +35,15 @@ class Section {
     );
   }
 
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'title': title,
+        'order': order,
+        'key': key,
+        'type': type,
+        'description': description,
+      };
+
   void setOrder(int newOrder) {
     this.order = newOrder;
   }

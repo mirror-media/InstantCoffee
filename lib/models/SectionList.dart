@@ -1,50 +1,63 @@
 import 'dart:convert';
 
-import 'Section.dart';
+import 'package:readr_app/models/CustomizedList.dart';
+import 'package:readr_app/models/Section.dart';
 
-class SectionList {
-  List<Section> sections = new List();
-
-  SectionList({
-    this.sections,
-  });
+class SectionList extends CustomizedList<Section> {
+  // constructor
+  SectionList();
 
   factory SectionList.fromJson(List<dynamic> parsedJson) {
-    List<Section> sections = new List<Section>();
+    if (parsedJson == null) {
+      return null;
+    }
 
-//print(parsedJson);
-    sections = parsedJson.map((i) => Section.fromJson(i)).toList();
+    SectionList sections = SectionList();
+    List parseList = parsedJson.map((i) => Section.fromJson(i)).toList();
+    parseList.forEach((element) {
+      sections.add(element);
+    });
 
-    return new SectionList(
-      sections: sections,
-    );
+    return sections;
   }
 
-  String toJson() {
+  factory SectionList.parseResponseBody(String body) {
+    final jsonData = json.decode(body);
+
+    return SectionList.fromJson(jsonData);
+  }
+
+  // your custom methods
+  List<Map<dynamic, dynamic>> toJson() {
     List<Map> sectionItems = new List();
-    if (this.sections != null) {
-      for (Section section in this.sections) {
-        Map item = new Map();
-        item["name"] = section.name;
-        item["title"] = section.title;
-        item["order"] = section.order;
-        item["key"] = section.key;
-        item["type"] = section.type;
-        item["description"] = section.description;
-        sectionItems.add(item);
-      }
-      return json.encode(sectionItems);
-    } else {
-      return "";
+    if (l == null) {
+      return null;
     }
+
+    for (Section section in l) {
+      sectionItems.add(section.toJson());
+    }
+    return sectionItems;
+  }
+
+  String toJsonString() {
+    List<Map> sectionItems = new List();
+    if (l == null) {
+      return null;
+    }
+
+    for (Section section in l) {
+      sectionItems.add(section.toJson());
+    }
+    return json.encode(sectionItems);
   }
 
   void sortSections() {
     SectionList allSections = this;
-    allSections.sections.sort((a, b) => a.order.compareTo(b.order));
-    for (int i = 0; i < allSections.sections.length; i++) {
-      allSections.sections[i].setOrder(i);
+    allSections.sort((a, b) => a.order.compareTo(b.order));
+    for (int i = 0; i < allSections.length; i++) {
+      allSections[i].setOrder(i);
     }
-    this.sections = allSections.sections;
+    l = allSections;
   }
 }

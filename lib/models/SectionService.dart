@@ -1,8 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:readr_app/models/SectionList.dart';
 import '../helpers/Constants.dart';
 import 'dart:convert';
-import 'SectionList.dart';
 import 'Section.dart';
 
 class SectionService {
@@ -23,9 +23,7 @@ class SectionService {
     final fixedMenu = json.decode(jsonFixed);
     SectionList fixedSections = new SectionList.fromJson(fixedMenu);
     //SectionList fixedSections = new SectionList();
-    for (Section sec in sessions.sections) {
-      fixedSections.sections.add(sec);
-    }
+    fixedSections.addAll(sessions);
 
     return fixedSections;
   }
