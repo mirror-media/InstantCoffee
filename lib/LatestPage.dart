@@ -60,10 +60,9 @@ class _LatestPageState extends State<LatestPage> {
     sectionItems = new SectionList();
     SectionList allSections = new SectionList();
     allSections = await SectionService().loadSections();
-    this.sectionItems.sections = [];
     setState(() {
-      for (Section section in allSections.sections) {
-        this.sectionItems.sections.add(section);
+      for (Section section in allSections) {
+        this.sectionItems.add(section);
       }
     });
   }
@@ -107,14 +106,14 @@ class _LatestPageState extends State<LatestPage> {
 
   Widget _buildNavigation(BuildContext context) {
     List<Widget> items = new List();
-    if (sectionItems.sections != null) {
+    if (sectionItems != null) {
       setState(() {
         sectionJson = storage.getItem("sections");
         if (sectionJson != null) {
           sectionItems = SectionList.fromJson(json.decode(sectionJson));
         }
-        sectionItems.sections.sort((a, b) => a.order.compareTo(b.order));
-        for (Section section in sectionItems.sections) {
+        sectionItems.sort((a, b) => a.order.compareTo(b.order));
+        for (Section section in sectionItems) {
           items.add(_buildNavigationItem(context, section));
         }
       });
