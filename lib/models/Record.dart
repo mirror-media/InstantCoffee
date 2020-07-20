@@ -34,12 +34,9 @@ class Record {
         'slug': slug,
         'publishedDate': publishedDate,
         'heroImage': {
-          'image' : 
-          {
-            'resizedTargets' : 
-            {
-              'mobile' : 
-              {'url' : photo }
+          'image': {
+            'resizedTargets': {
+              'mobile': {'url': photo}
             }
           }
         },

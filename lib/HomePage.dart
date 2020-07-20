@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     super.initState();
   }
 
-  _loadingData() async{
+  _loadingData() async {
     await _setSections();
     _initializeTabController();
   }
@@ -46,7 +46,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void _initializeTabController() {
-
     _tabs.clear();
     _tabWidgets.clear();
 
@@ -62,9 +61,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ),
       );
 
-      _tabWidgets.add(
-        TabContent(section: section,)
-      );
+      _tabWidgets.add(TabContent(
+        section: section,
+      ));
     });
     /*
     if(_sectionItems != null && _records != null)
@@ -93,7 +92,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: _buildBar(context),
       body: _sectionItems == null

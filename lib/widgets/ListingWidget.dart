@@ -66,10 +66,12 @@ class _ListingWidget extends State<ListingWidget> {
     if (!(_searchText.isEmpty)) {
       _filteredRecords = new List();
       for (int i = 0; i < _records.length; i++) {
-        if (_records[i].title
+        if (_records[i]
+                .title
                 .toLowerCase()
                 .contains(_searchText.toLowerCase()) ||
-            _records[i].slug
+            _records[i]
+                .slug
                 .toLowerCase()
                 .contains(_searchText.toLowerCase())) {
           _filteredRecords.add(_records[i]);

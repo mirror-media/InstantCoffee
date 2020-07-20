@@ -12,7 +12,7 @@ class TabContent extends StatefulWidget {
   TabContent({
     @required this.section,
   });
-  
+
   @override
   _TabContentState createState() => _TabContentState();
 }
@@ -33,8 +33,7 @@ class _TabContentState extends State<TabContent> {
   _switch(String id, String type) {
     _page = 1;
     if (type == 'section') {
-      _endpoint =
-          listingBase + '&where={"sections":{"\$in":["' + id + '"]}}';
+      _endpoint = listingBase + '&where={"sections":{"\$in":["' + id + '"]}}';
     } else if (id == 'latest') {
       _endpoint = latestAPI;
     } else if (id == 'popular') {
@@ -56,8 +55,7 @@ class _TabContentState extends State<TabContent> {
       _records.clear();
     }
     _page++;
-    if(mounted)
-    {
+    if (mounted) {
       setState(() {
         _records = RecordList();
         for (int i = 0; i < latests.length; i++) {
@@ -66,21 +64,19 @@ class _TabContentState extends State<TabContent> {
       });
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return _records == null
-    ? Center(child: CircularProgressIndicator())
-    : ListView.builder(
-        itemCount: _records.length,
-        itemBuilder: (context, index) {
-          if(index == 0)
-          {
-            return _buildTheFirstItem(context, _records[index]);
-          }
-          return _buildListItem(context, _records[index]);
-        }
-      );
+        ? Center(child: CircularProgressIndicator())
+        : ListView.builder(
+            itemCount: _records.length,
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                return _buildTheFirstItem(context, _records[index]);
+              }
+              return _buildListItem(context, _records[index]);
+            });
   }
 
   Widget _buildTheFirstItem(BuildContext context, Record record) {
@@ -90,7 +86,7 @@ class _TabContentState extends State<TabContent> {
       child: Column(
         children: [
           CachedNetworkImage(
-            height: width/16*9,
+            height: width / 16 * 9,
             width: width,
             imageUrl: record.photo,
             placeholder: (context, url) => CircularProgressIndicator(),
@@ -104,7 +100,10 @@ class _TabContentState extends State<TabContent> {
               style: TextStyle(fontSize: 20),
             ),
           ),
-          Divider(thickness: 1, color: Colors.black,),
+          Divider(
+            thickness: 1,
+            color: Colors.black,
+          ),
         ],
       ),
       onTap: () {
@@ -117,7 +116,7 @@ class _TabContentState extends State<TabContent> {
   }
 
   Widget _buildListItem(BuildContext context, Record record) {
-    var width = MediaQuery.of(context).size.width; 
+    var width = MediaQuery.of(context).size.width;
 
     return InkWell(
       child: Padding(
@@ -132,7 +131,9 @@ class _TabContentState extends State<TabContent> {
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
-                SizedBox(width: 16,),
+                SizedBox(
+                  width: 16,
+                ),
                 CachedNetworkImage(
                   height: 90,
                   width: 90,
@@ -143,7 +144,10 @@ class _TabContentState extends State<TabContent> {
                 ),
               ],
             ),
-            Divider(thickness: 1, color: Colors.black,),
+            Divider(
+              thickness: 1,
+              color: Colors.black,
+            ),
           ],
         ),
       ),
