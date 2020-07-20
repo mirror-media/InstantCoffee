@@ -1,43 +1,56 @@
 import 'dart:convert';
 
+import 'package:readr_app/models/CustomizedList.dart';
 import 'package:readr_app/models/NotificationSetting.dart';
 
-class NotificationSettingList {
-  static List<NotificationSetting> fromJson(List<dynamic> parsedJson) {
+class NotificationSettingList extends CustomizedList<NotificationSetting> {
+  // constructor
+  NotificationSettingList();
+
+  factory NotificationSettingList.fromJson(List<dynamic> parsedJson) {
     if (parsedJson == null) {
       return null;
     }
 
-    List<NotificationSetting> notificationSettingList =
-        new List<NotificationSetting>();
-    notificationSettingList =
+    NotificationSettingList notificationSettings = NotificationSettingList();
+    List parseList =
         parsedJson.map((i) => NotificationSetting.fromJson(i)).toList();
+    parseList.forEach((element) {
+      notificationSettings.add(element);
+    });
 
-    return notificationSettingList;
+    return notificationSettings;
   }
 
-  static List<NotificationSetting> parseResponseBody(String body) {
+  factory NotificationSettingList.parseResponseBody(String body) {
     final jsonData = json.decode(body);
+
     return NotificationSettingList.fromJson(jsonData);
   }
 
-  static List<Map<String, dynamic>> toJson(
-      List<dynamic> notificationSettingList) {
-    if (notificationSettingList == null) {
+  // your custom methods
+  List<Map<dynamic, dynamic>> toJson() {
+    List<Map> notificationSettings = new List();
+    if (l == null) {
       return null;
     }
 
-    List<Map<String, dynamic>> jsonList = new List<Map<String, dynamic>>();
-    notificationSettingList.forEach((notificationSetting) {
-      if (notificationSetting is NotificationSetting) {
-        jsonList.add(notificationSetting.toJson());
-      } else {
-        jsonList.add(notificationSetting);
-      }
-    });
-    if (jsonList == null) {
-      return [];
+    for (NotificationSetting notificationSetting in l) {
+      notificationSettings.add(notificationSetting.toJson());
     }
-    return jsonList;
+    //return json.encode(notificationSettings);
+    return notificationSettings;
+  }
+
+  String toJsonString() {
+    List<Map> notificationSettings = new List();
+    if (l == null) {
+      return null;
+    }
+
+    for (NotificationSetting notificationSetting in l) {
+      notificationSettings.add(notificationSetting.toJson());
+    }
+    return json.encode(notificationSettings);
   }
 }

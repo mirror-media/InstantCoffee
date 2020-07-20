@@ -17,8 +17,7 @@ class NotificationSettingsPage extends StatefulWidget {
 
 class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   final LocalStorage _storage = LocalStorage('setting');
-  List<NotificationSetting> _notificationSettingList = 
-      List<NotificationSetting>();
+  NotificationSettingList _notificationSettingList = NotificationSettingList();
 
   @override
   void initState() {
@@ -50,8 +49,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       backgroundColor: appColor,
       body: ListView(children: [
         _buildDescriptionSection(context),
-        _buildNotificationSettingListSection(
-            context, _notificationSettingList),
+        _buildNotificationSettingListSection(context, _notificationSettingList),
       ]),
     );
   }
@@ -137,9 +135,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   notificationSettingList[listViewIndex].value = value;
                 });
                 _storage.setItem(
-                    "notification",
-                    NotificationSettingList.toJson(
-                        _notificationSettingList));
+                    "notification", _notificationSettingList.toJson());
               },
               children: _renderCheckBoxChildren(
                   context, notificationSettingList[listViewIndex]),
@@ -196,8 +192,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                 }
               });
 
-              _storage.setItem("notification",
-                  NotificationSettingList.toJson(_notificationSettingList));
+              _storage.setItem(
+                  "notification", _notificationSettingList.toJson());
             },
             child: IgnorePointer(
               child: Row(children: [
