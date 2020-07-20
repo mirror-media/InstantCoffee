@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/NotificationSettingsPage.dart';
+import 'package:readr_app/models/RecordList.dart';
+import 'package:readr_app/models/RecordService.dart';
 
 import 'helpers/Constants.dart';
 import 'models/Record.dart';
 import 'models/Section.dart';
 import 'models/SectionList.dart';
 import 'models/SectionService.dart';
-import 'models/LatestList.dart';
-import 'models/LatestService.dart';
 import 'StoryPage.dart';
 
 class LatestPage extends StatefulWidget {
@@ -24,8 +24,8 @@ class _LatestPageState extends State<LatestPage> {
   final LocalStorage storage = new LocalStorage('setting');
   final TextEditingController _filter = new TextEditingController();
 
-  LatestList _records = new LatestList();
-  LatestList _filteredRecords = new LatestList();
+  RecordList _records = new RecordList();
+  RecordList _filteredRecords = new RecordList();
   SectionList sectionItems = new SectionList();
   ScrollController _controller;
 
@@ -41,8 +41,8 @@ class _LatestPageState extends State<LatestPage> {
 
   @override
   void initState() {
-    _records.records = new List();
-    _filteredRecords.records = new List();
+    _records = new RecordList();
+    _filteredRecords = new RecordList();
     //sectionItems.sections = new List();
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
@@ -68,21 +68,21 @@ class _LatestPageState extends State<LatestPage> {
   }
 
   void _getLatests() async {
-    LatestService latestService = new LatestService();
-    LatestList latests = await latestService.loadLatests(this.endpoint);
-    this.loadmoreUrl = latestService.getNext();
+    RecordService recordService = new RecordService();
+    RecordList latests = await recordService.loadLatests(this.endpoint);
+    this.loadmoreUrl = recordService.getNext();
     if (this.page == 1) {
-      this._records.records = [];
-      this._filteredRecords.records = [];
+      this._records.clear();
+      this._filteredRecords.clear();
     }
     this.page++;
 
     setState(() {
       Record record = new Record();
-      for (int i = 0; i < latests.records.length; i++) {
-        record = latests.records[i];
-        this._filteredRecords.records.add(record);
-        this._records.records.add(record);
+      for (int i = 0; i < latests.length; i++) {
+        record = latests[i];
+        this._filteredRecords.add(record);
+        this._records.add(record);
       }
     });
   }
@@ -182,25 +182,25 @@ class _LatestPageState extends State<LatestPage> {
 
   Widget _buildList(BuildContext context) {
     if (!(_searchText.isEmpty)) {
-      _filteredRecords.records = new List();
-      for (int i = 0; i < _records.records.length; i++) {
-        if (_records.records[i].title
+      _filteredRecords = new RecordList();
+      for (int i = 0; i < _records.length; i++) {
+        if (_records[i].title
                 .toLowerCase()
                 .contains(_searchText.toLowerCase()) ||
-            _records.records[i].slug
+            _records[i].slug
                 .toLowerCase()
                 .contains(_searchText.toLowerCase())) {
-          _filteredRecords.records.add(_records.records[i]);
+          _filteredRecords.add(_records[i]);
         }
       }
     }
 
     List<Widget> storyList = new List();
-    for (int i = 0; i < _filteredRecords.records.length; i++) {
+    for (int i = 0; i < _filteredRecords.length; i++) {
       if (_searchText.isEmpty && i == 0) {
-        storyList.add(_buildLeading(context, _filteredRecords.records[i]));
+        storyList.add(_buildLeading(context, _filteredRecords[i]));
       } else {
-        storyList.add(_buildListItem(context, _filteredRecords.records[i]));
+        storyList.add(_buildListItem(context, _filteredRecords[i]));
       }
     }
     return ListView(
@@ -291,9 +291,9 @@ class _LatestPageState extends State<LatestPage> {
   }
 
   void _resetRecords() {
-    this._filteredRecords.records = new List();
-    for (Record record in _records.records) {
-      this._filteredRecords.records.add(record);
+    this._filteredRecords = new RecordList();
+    for (Record record in _records) {
+      this._filteredRecords.add(record);
     }
   }
 

@@ -1,8 +1,8 @@
-import 'LatestList.dart';
+import 'RecordList.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class LatestService {
+class RecordService {
   String nextPage = '';
 
   Future<String> _loadLatestsAsset(String endpoint) async {
@@ -15,7 +15,7 @@ class LatestService {
     }
   }
 
-  Future<LatestList> loadLatests(String endpoint) async {
+  Future<RecordList> loadLatests(String endpoint) async {
     String jsonString = await _loadLatestsAsset(endpoint);
     final jsonResponse = json.decode(jsonString);
     var jsonObject;
@@ -39,7 +39,7 @@ class LatestService {
     } else {
       jsonObject = [];
     }
-    LatestList records = new LatestList.fromJson(jsonObject);
+    RecordList records = new RecordList.fromJson(jsonObject);
     return records;
   }
 

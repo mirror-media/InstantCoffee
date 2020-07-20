@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:readr_app/models/RecordList.dart';
+import 'package:readr_app/models/RecordService.dart';
 import '../helpers/Constants.dart';
 import '../models/Record.dart';
 import '../models/SectionList.dart';
-import '../models/LatestList.dart';
-import '../models/LatestService.dart';
 import '../StoryPage.dart';
 
 class ListingWidget extends StatefulWidget {
@@ -20,8 +20,8 @@ class _ListingWidget extends State<ListingWidget> {
   String endpoint;
   ScrollController _controller;
   String loadmoreUrl = '';
-  LatestList _records = new LatestList();
-  LatestList _filteredRecords = new LatestList();
+  RecordList _records = new RecordList();
+  RecordList _filteredRecords = new RecordList();
   SectionList sectionItems = new SectionList();
   int page = 1;
   String _searchText = "";
@@ -37,22 +37,22 @@ class _ListingWidget extends State<ListingWidget> {
   }
 
   void _getLatests() async {
-    LatestService latestService = new LatestService();
-    LatestList latests = await latestService.loadLatests(widget.endpoint);
-    this.loadmoreUrl = latestService.getNext();
+    RecordService recordService = new RecordService();
+    RecordList latests = await recordService.loadLatests(widget.endpoint);
+    this.loadmoreUrl = recordService.getNext();
     print("loadmore: " + this.loadmoreUrl);
     if (this.page == 1) {
-      this._records.records = [];
-      this._filteredRecords.records = [];
+      this._records.clear();
+      this._filteredRecords.clear();
     }
     this.page++;
 
     setState(() {
       Record record = new Record();
-      for (int i = 0; i < latests.records.length; i++) {
-        record = latests.records[i];
-        this._filteredRecords.records.add(record);
-        this._records.records.add(record);
+      for (int i = 0; i < latests.length; i++) {
+        record = latests[i];
+        this._filteredRecords.add(record);
+        this._records.add(record);
       }
     });
   }
@@ -64,22 +64,22 @@ class _ListingWidget extends State<ListingWidget> {
 
   Widget _buildList(BuildContext context) {
     if (!(_searchText.isEmpty)) {
-      _filteredRecords.records = new List();
-      for (int i = 0; i < _records.records.length; i++) {
-        if (_records.records[i].title
+      _filteredRecords = new List();
+      for (int i = 0; i < _records.length; i++) {
+        if (_records[i].title
                 .toLowerCase()
                 .contains(_searchText.toLowerCase()) ||
-            _records.records[i].slug
+            _records[i].slug
                 .toLowerCase()
                 .contains(_searchText.toLowerCase())) {
-          _filteredRecords.records.add(_records.records[i]);
+          _filteredRecords.add(_records[i]);
         }
       }
     }
 
     List<Widget> storyList = new List();
-    for (int i = 0; i < _filteredRecords.records.length; i++) {
-      storyList.add(_buildListItem(context, _filteredRecords.records[i]));
+    for (int i = 0; i < _filteredRecords.length; i++) {
+      storyList.add(_buildListItem(context, _filteredRecords[i]));
     }
     return ListView(
       controller: _controller,

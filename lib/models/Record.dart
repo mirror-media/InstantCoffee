@@ -28,4 +28,20 @@ class Record {
       photo: photoUrl,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        'slug': slug,
+        'publishedDate': publishedDate,
+        'heroImage': {
+          'image' : 
+          {
+            'resizedTargets' : 
+            {
+              'mobile' : 
+              {'url' : photo }
+            }
+          }
+        },
+      };
 }
