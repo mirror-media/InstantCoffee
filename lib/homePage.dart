@@ -54,8 +54,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _tabs.clear();
     _tabWidgets.clear();
 
-    for(int i=0; i<_sectionItems.length; i++)
-    {
+    for (int i = 0; i < _sectionItems.length; i++) {
       Section section = _sectionItems[i];
       _tabs.add(
         Tab(
@@ -80,13 +79,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _tabController = TabController(
       vsync: this,
       length: _sectionItems.length,
-      initialIndex: _tabController == null ? initialTabIndex : _tabController.index,
+      initialIndex:
+          _tabController == null ? initialTabIndex : _tabController.index,
     );
   }
 
   _scrollToTop(int index) {
-    _scrollControllerList[index].animateTo(_scrollControllerList[index].position.minScrollExtent,
-        duration: Duration(milliseconds: 1000), curve: Curves.easeIn);
+    _scrollControllerList[index].animateTo(
+        _scrollControllerList[index].position.minScrollExtent,
+        duration: Duration(milliseconds: 1000),
+        curve: Curves.easeIn);
     setState(() {});
   }
 
@@ -94,7 +96,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void dispose() {
     _tabController?.dispose();
 
-    _scrollControllerList.forEach((scrollController) { scrollController.dispose(); });
+    _scrollControllerList.forEach((scrollController) {
+      scrollController.dispose();
+    });
     super.dispose();
   }
 
@@ -117,9 +121,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       labelColor: Colors.black,
                       tabs: _tabs.toList(),
                       controller: _tabController,
-                      onTap: (int index){
-                        if(initialTabIndex == index)
-                        {
+                      onTap: (int index) {
+                        if (initialTabIndex == index) {
                           _scrollToTop(index);
                         }
                         initialTabIndex = index;

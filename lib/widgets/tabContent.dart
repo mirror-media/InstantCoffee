@@ -59,8 +59,7 @@ class _TabContentState extends State<TabContent> {
     }
     _page++;
 
-    if(_records == null)
-    {
+    if (_records == null) {
       _records = RecordList();
     }
 
@@ -72,7 +71,8 @@ class _TabContentState extends State<TabContent> {
   }
 
   _loadingMore() {
-    if (widget.scrollController.position.pixels == widget.scrollController.position.maxScrollExtent) {
+    if (widget.scrollController.position.pixels ==
+        widget.scrollController.position.maxScrollExtent) {
       if (_loadmoreUrl != '') {
         _endpoint = apiBase + _loadmoreUrl;
         _setRecords();
