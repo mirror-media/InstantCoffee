@@ -9,8 +9,10 @@ import 'package:readr_app/models/section.dart';
 
 class TabContent extends StatefulWidget {
   final Section section;
+  final ScrollController scrollController;
   TabContent({
     @required this.section,
+    @required this.scrollController,
   });
 
   @override
@@ -70,6 +72,7 @@ class _TabContentState extends State<TabContent> {
     return _records == null
         ? Center(child: CircularProgressIndicator())
         : ListView.builder(
+            controller: widget.scrollController,
             itemCount: _records.length,
             itemBuilder: (context, index) {
               if (index == 0) {

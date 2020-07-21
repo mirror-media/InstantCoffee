@@ -13,6 +13,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  ScrollController _scrollController;
+
   // tab text
   SectionList _sectionItems;
 
@@ -23,6 +25,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    _scrollController = ScrollController();
+
     _loadingData();
     super.initState();
   }
@@ -63,6 +67,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
       _tabWidgets.add(TabContent(
         section: section,
+        scrollController: _scrollController,
       ));
     });
     /*
@@ -82,6 +87,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       length: _sectionItems.length,
       initialIndex: _tabController == null ? 0 : _tabController.index,
     );
+  }
+
+  _scrollToTop() {
+    _scrollController.animateTo(_scrollController.position.minScrollExtent,
+        duration: Duration(milliseconds: 1000), curve: Curves.easeIn);
+    setState(() {});
   }
 
   @override
@@ -109,6 +120,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       labelColor: Colors.black,
                       tabs: _tabs.toList(),
                       controller: _tabController,
+                      onTap: (int index){
+                        if(_tabController.index == index)
+                        {
+                          _scrollToTop();
+                        }
+                      },
                     ),
                   ),
                 ),
