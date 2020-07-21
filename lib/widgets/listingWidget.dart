@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:readr_app/models/RecordList.dart';
-import 'package:readr_app/models/RecordService.dart';
-import '../helpers/Constants.dart';
-import '../models/Record.dart';
-import '../models/SectionList.dart';
-import '../StoryPage.dart';
+import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/models/recordService.dart';
+import '../helpers/constants.dart';
+import '../models/record.dart';
+import '../models/sectionList.dart';
+import '../storyPage.dart';
 
 class ListingWidget extends StatefulWidget {
   final String endpoint;

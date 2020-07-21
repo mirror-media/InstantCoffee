@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:readr_app/StoryPage.dart';
-import 'package:readr_app/helpers/Constants.dart';
-import 'package:readr_app/models/Record.dart';
-import 'package:readr_app/models/RecordList.dart';
-import 'package:readr_app/models/RecordService.dart';
-import 'package:readr_app/models/Section.dart';
+import 'package:readr_app/storyPage.dart';
+import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/models/record.dart';
+import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/models/recordService.dart';
+import 'package:readr_app/models/section.dart';
 
 class TabContent extends StatefulWidget {
   final Section section;

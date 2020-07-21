@@ -1,5 +1,5 @@
 import "package:http/http.dart" as http;
-import "../helpers/Constants.dart";
+import '../helpers/constants.dart';
 
 class StoryService {
   Future<String> _loadPostAPI(String slug) async {

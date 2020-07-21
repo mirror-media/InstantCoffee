@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:readr_app/models/SectionList.dart';
-import 'package:readr_app/models/Section.dart';
-import 'package:readr_app/models/SectionService.dart';
-import 'package:readr_app/widgets/TabContent.dart';
+import 'package:readr_app/models/sectionList.dart';
+import 'package:readr_app/models/section.dart';
+import 'package:readr_app/models/sectionService.dart';
+import 'package:readr_app/widgets/tabContent.dart';
 
-import 'NotificationSettingsPage.dart';
-import 'helpers/Constants.dart';
+import 'notificationSettingsPage.dart';
+import 'helpers/constants.dart';
 
 class HomePage extends StatefulWidget {
   @override

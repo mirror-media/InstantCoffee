@@ -21,6 +21,6 @@ doc/api/
 *.js.map
 
 #for internal constants
-lib/helpers/Constants.dart 
+lib/helpers/constants.dart 
 .flutter-plugins
 .flutter-plugins-dependencies

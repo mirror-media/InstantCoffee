@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:readr_app/models/CustomizedList.dart';
-import 'package:readr_app/models/Section.dart';
+import 'package:readr_app/models/customizedList.dart';
+import 'package:readr_app/models/section.dart';
 
 class SectionList extends CustomizedList<Section> {
   // constructor

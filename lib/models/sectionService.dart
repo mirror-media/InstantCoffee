@@ -1,9 +1,9 @@
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:readr_app/models/SectionList.dart';
-import '../helpers/Constants.dart';
+import 'package:readr_app/models/sectionList.dart';
+import '../helpers/constants.dart';
 import 'dart:convert';
-import 'Section.dart';
+import 'section.dart';
 
 class SectionService {
   Future<String> _fetchSectionData() async {

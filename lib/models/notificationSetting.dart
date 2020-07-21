@@ -1,4 +1,4 @@
-import 'package:readr_app/models/NotificationSettingList.dart';
+import 'package:readr_app/models/notificationSettingList.dart';
 
 class NotificationSetting {
   final String type;

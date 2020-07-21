@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:readr_app/models/CustomizedList.dart';
-import 'package:readr_app/models/NotificationSetting.dart';
+import 'package:readr_app/models/customizedList.dart';
+import 'package:readr_app/models/notificationSetting.dart';
 
 class NotificationSettingList extends CustomizedList<NotificationSetting> {
   // constructor

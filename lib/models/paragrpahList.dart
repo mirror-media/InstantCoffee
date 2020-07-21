@@ -1,4 +1,4 @@
-import 'package:readr_app/models/Paragraph.dart';
+import 'package:readr_app/models/paragraph.dart';
 
 class ParagraphList {
   List<Paragraph> paragraphs = new List();

@@ -1,4 +1,4 @@
-import 'People.dart';
+import 'people.dart';
 
 class PeopleList {
   List<People> peoples = new List();

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:readr_app/models/SectionList.dart';
+import 'package:readr_app/models/sectionList.dart';
 
 class SectionsStateProvider extends ChangeNotifier {
   SectionList _updatedSection = new SectionList();

@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:localstorage/localstorage.dart';
 
-import 'package:readr_app/models/NotificationSetting.dart';
-import 'package:readr_app/models/NotificationSettingList.dart';
-import 'package:readr_app/helpers/Constants.dart';
+import 'package:readr_app/models/notificationSetting.dart';
+import 'package:readr_app/models/notificationSettingList.dart';
+import 'package:readr_app/helpers/constants.dart';
 
 class NotificationSettingsPage extends StatefulWidget {
   @override

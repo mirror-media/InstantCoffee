@@ -1,10 +1,10 @@
-import 'package:readr_app/helpers/Constants.dart';
-import 'package:readr_app/models/SectionList.dart';
-import "Record.dart";
-import "Category.dart";
-import "Tag.dart";
-import "PeopleList.dart";
-import "ParagrpahList.dart";
+import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/models/sectionList.dart';
+import 'record.dart';
+import 'category.dart';
+import 'tag.dart';
+import 'peopleList.dart';
+import 'paragrpahList.dart';
 
 class Story {
   String title;

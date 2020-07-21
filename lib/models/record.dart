@@ -1,4 +1,4 @@
-import 'package:readr_app/helpers/Constants.dart';
+import 'package:readr_app/helpers/constants.dart';
 
 class Record {
   String title;
