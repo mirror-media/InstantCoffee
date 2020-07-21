@@ -98,6 +98,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void dispose() {
     _tabController?.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 

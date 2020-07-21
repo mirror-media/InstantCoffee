@@ -28,6 +28,7 @@ class _TabContentState extends State<TabContent> {
 
   @override
   void initState() {
+    widget.scrollController.addListener(_loadingMore);
     _switch(widget.section.key, widget.section.type);
     super.initState();
   }
@@ -57,13 +58,25 @@ class _TabContentState extends State<TabContent> {
       _records.clear();
     }
     _page++;
+
+    if(_records == null)
+    {
+      _records = RecordList();
+    }
+
     if (mounted) {
       setState(() {
-        _records = RecordList();
-        for (int i = 0; i < latests.length; i++) {
-          _records.add(latests[i]);
-        }
+        _records.addAll(latests);
       });
+    }
+  }
+
+  _loadingMore() {
+    if (widget.scrollController.position.pixels == widget.scrollController.position.maxScrollExtent) {
+      if (_loadmoreUrl != '') {
+        _endpoint = apiBase + _loadmoreUrl;
+        _setRecords();
+      }
     }
   }
 
