@@ -13,19 +13,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  ScrollController _scrollController;
+  List<ScrollController> _scrollControllerList;
 
   // tab text
   SectionList _sectionItems;
 
   /// tab controller
+  int initialTabIndex = 0;
   TabController _tabController;
   List<Tab> _tabs = List<Tab>();
   List<Widget> _tabWidgets = List<Widget>();
 
   @override
   void initState() {
-    _scrollController = ScrollController();
+    _scrollControllerList = List<ScrollController>();
 
     _loadingData();
     super.initState();
@@ -53,7 +54,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _tabs.clear();
     _tabWidgets.clear();
 
-    _sectionItems.forEach((section) {
+    for(int i=0; i<_sectionItems.length; i++)
+    {
+      Section section = _sectionItems[i];
       _tabs.add(
         Tab(
           child: Text(
@@ -65,32 +68,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ),
       );
 
+      _scrollControllerList.add(ScrollController());
+
       _tabWidgets.add(TabContent(
         section: section,
-        scrollController: _scrollController,
+        scrollController: _scrollControllerList[i],
       ));
-    });
-    /*
-    if(_sectionItems != null && _records != null)
-    {
-      _tabWidgets[0] = ListView.builder(
-        itemCount: _records == null ? 0 : _records.length,
-        itemBuilder: (context, index) {
-          return Card(child: Text(_records[index].title));
-        }
-      );
     }
-    */
+
     // set controller
     _tabController = TabController(
       vsync: this,
       length: _sectionItems.length,
-      initialIndex: _tabController == null ? 0 : _tabController.index,
+      initialIndex: _tabController == null ? initialTabIndex : _tabController.index,
     );
   }
 
-  _scrollToTop() {
-    _scrollController.animateTo(_scrollController.position.minScrollExtent,
+  _scrollToTop(int index) {
+    _scrollControllerList[index].animateTo(_scrollControllerList[index].position.minScrollExtent,
         duration: Duration(milliseconds: 1000), curve: Curves.easeIn);
     setState(() {});
   }
@@ -98,7 +93,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void dispose() {
     _tabController?.dispose();
-    _scrollController.dispose();
+
+    _scrollControllerList.forEach((scrollController) { scrollController.dispose(); });
     super.dispose();
   }
 
@@ -122,10 +118,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       tabs: _tabs.toList(),
                       controller: _tabController,
                       onTap: (int index){
-                        if(_tabController.index == index)
+                        if(initialTabIndex == index)
                         {
-                          _scrollToTop();
+                          _scrollToTop(index);
                         }
+                        initialTabIndex = index;
                       },
                     ),
                   ),
