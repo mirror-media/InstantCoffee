@@ -1,4 +1,4 @@
-import 'RecordList.dart';
+import 'recordList.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

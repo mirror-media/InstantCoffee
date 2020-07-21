@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:readr_app/models/CustomizedList.dart';
-import 'package:readr_app/models/Record.dart';
+import 'package:readr_app/models/customizedList.dart';
+import 'package:readr_app/models/record.dart';
 
 class RecordList extends CustomizedList<Record> {
   // constructor

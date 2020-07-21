@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:readr_app/models/ParagrpahList.dart';
-import 'package:readr_app/models/People.dart';
+import 'package:readr_app/models/paragrpahList.dart';
+import 'package:readr_app/models/people.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:convert';
-import "../models/StoryService.dart";
-import "../models/Record.dart";
-import "../models/Story.dart";
-import "../models/Tag.dart";
-import "../models/Paragraph.dart";
-import "../models/Category.dart";
-import "../ListingPage.dart";
+import '../models/storyService.dart';
+import '../models/record.dart';
+import '../models/story.dart';
+import '../models/tag.dart';
+import '../models/paragraph.dart';
+import '../models/category.dart';
+import '../listingPage.dart';
 
 class StoryWidget extends StatefulWidget {
   final String slug;

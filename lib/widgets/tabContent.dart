@@ -1,16 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:readr_app/StoryPage.dart';
-import 'package:readr_app/helpers/Constants.dart';
-import 'package:readr_app/models/Record.dart';
-import 'package:readr_app/models/RecordList.dart';
-import 'package:readr_app/models/RecordService.dart';
-import 'package:readr_app/models/Section.dart';
+import 'package:readr_app/storyPage.dart';
+import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/models/record.dart';
+import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/models/recordService.dart';
+import 'package:readr_app/models/section.dart';
 
 class TabContent extends StatefulWidget {
   final Section section;
+  final ScrollController scrollController;
   TabContent({
     @required this.section,
+    @required this.scrollController,
   });
 
   @override
@@ -26,6 +28,7 @@ class _TabContentState extends State<TabContent> {
 
   @override
   void initState() {
+    widget.scrollController.addListener(_loadingMore);
     _switch(widget.section.key, widget.section.type);
     super.initState();
   }
@@ -55,13 +58,25 @@ class _TabContentState extends State<TabContent> {
       _records.clear();
     }
     _page++;
+
+    if (_records == null) {
+      _records = RecordList();
+    }
+
     if (mounted) {
       setState(() {
-        _records = RecordList();
-        for (int i = 0; i < latests.length; i++) {
-          _records.add(latests[i]);
-        }
+        _records.addAll(latests);
       });
+    }
+  }
+
+  _loadingMore() {
+    if (widget.scrollController.position.pixels ==
+        widget.scrollController.position.maxScrollExtent) {
+      if (_loadmoreUrl != '') {
+        _endpoint = apiBase + _loadmoreUrl;
+        _setRecords();
+      }
     }
   }
 
@@ -70,6 +85,7 @@ class _TabContentState extends State<TabContent> {
     return _records == null
         ? Center(child: CircularProgressIndicator())
         : ListView.builder(
+            controller: widget.scrollController,
             itemCount: _records.length,
             itemBuilder: (context, index) {
               if (index == 0) {
@@ -89,8 +105,17 @@ class _TabContentState extends State<TabContent> {
             height: width / 16 * 9,
             width: width,
             imageUrl: record.photo,
-            placeholder: (context, url) => CircularProgressIndicator(),
-            errorWidget: (context, url, error) => Icon(Icons.error),
+            placeholder: (context, url) => Container(
+              height: width / 16 * 9,
+              width: width,
+              color: Colors.grey,
+            ),
+            errorWidget: (context, url, error) => Container(
+              height: width / 16 * 9,
+              width: width,
+              color: Colors.grey,
+              child: Icon(Icons.error),
+            ),
             fit: BoxFit.cover,
           ),
           Padding(
@@ -138,8 +163,17 @@ class _TabContentState extends State<TabContent> {
                   height: 90,
                   width: 90,
                   imageUrl: record.photo,
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  placeholder: (context, url) => Container(
+                    height: 90,
+                    width: 90,
+                    color: Colors.grey,
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    height: 90,
+                    width: 90,
+                    color: Colors.grey,
+                    child: Icon(Icons.error),
+                  ),
                   fit: BoxFit.cover,
                 ),
               ],

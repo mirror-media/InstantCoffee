@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
-import 'helpers/Constants.dart';
-import "widgets/StoryWidget.dart";
+import 'helpers/constants.dart';
+import 'widgets/storyWidget.dart';
 
 class StoryPage extends StatelessWidget {
   final String slug;
