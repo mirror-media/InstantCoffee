@@ -24,6 +24,7 @@ class TabContent extends StatefulWidget {
 
 class _TabContentState extends State<TabContent> {
   String _endpoint = latestAPI;
+  bool isLoading = false;
   String _loadmoreUrl = '';
   int _page = 1;
   // tab widget list
@@ -69,6 +70,7 @@ class _TabContentState extends State<TabContent> {
     if (mounted) {
       setState(() {
         _records.addAll(latests);
+        isLoading = false;
       });
     }
   }
@@ -76,7 +78,8 @@ class _TabContentState extends State<TabContent> {
   _loadingMore() {
     if (widget.scrollController.position.pixels ==
         widget.scrollController.position.maxScrollExtent) {
-      if (_loadmoreUrl != '') {
+      if (_loadmoreUrl != '' && !isLoading) {
+        isLoading = true;
         _endpoint = apiBase + _loadmoreUrl;
         _setRecords();
       }
