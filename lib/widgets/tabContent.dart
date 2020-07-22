@@ -6,13 +6,16 @@ import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/models/recordService.dart';
 import 'package:readr_app/models/section.dart';
+import 'package:readr_app/widgets/editorChoiceCarousel.dart';
 
 class TabContent extends StatefulWidget {
   final Section section;
   final ScrollController scrollController;
+  final bool needCarousel;
   TabContent({
     @required this.section,
     @required this.scrollController,
+    this.needCarousel = false,
   });
 
   @override
@@ -89,8 +92,12 @@ class _TabContentState extends State<TabContent> {
             itemCount: _records.length,
             itemBuilder: (context, index) {
               if (index == 0) {
+                if(widget.needCarousel) {
+                  return EditorChoiceCarousel();
+                }
                 return _buildTheFirstItem(context, _records[index]);
               }
+
               return _buildListItem(context, _records[index]);
             });
   }
