@@ -46,7 +46,6 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      backgroundColor: appColor,
       body: ListView(children: [
         _buildDescriptionSection(context),
         _buildNotificationSettingListSection(context, _notificationSettingList),
@@ -65,7 +64,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
         settingPageTitle,
         style: TextStyle(color: Colors.black, fontSize: 24.0),
       ),
-      backgroundColor: Colors.grey[50],
+      backgroundColor: appColor,
       actions: [
         IconButton(
           icon: Icon(Icons.search),
