@@ -55,25 +55,25 @@ class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
 
   List<Widget> _buildList(double width, RecordList recordList) {
     List<Widget> resultList = List<Widget>();
-    for(int i=0; i<recordList.length; i++)
-    {
-      resultList.add(
-        InkWell(
-          child: SizedBox(
-            width: width,
-            child: MarqueeWidget(
-              child: Text(recordList[i].title, style: TextStyle(fontSize: 20),),
-              animationDuration: Duration(milliseconds: 4000),
+    for (int i = 0; i < recordList.length; i++) {
+      resultList.add(InkWell(
+        child: SizedBox(
+          width: width,
+          child: MarqueeWidget(
+            child: Text(
+              recordList[i].title,
+              style: TextStyle(fontSize: 20),
             ),
+            animationDuration: Duration(milliseconds: 4000),
           ),
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => StoryPage(slug: recordList[i].slug)));
-          },
-        )
-      );
+        ),
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => StoryPage(slug: recordList[i].slug)));
+        },
+      ));
     }
 
     return resultList;

@@ -15,7 +15,6 @@ class EditorChoiceCarousel extends StatefulWidget {
 }
 
 class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
-
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -33,7 +32,7 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
             ),
           );
   }
-  
+
   List<Widget> _imageSliders(double width, RecordList editorChoiceList) {
     return editorChoiceList
         .map(

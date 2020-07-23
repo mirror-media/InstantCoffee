@@ -41,7 +41,7 @@ class _TabContentState extends State<TabContent> {
 
   @override
   void initState() {
-    if(widget.needCarousel) {
+    if (widget.needCarousel) {
       _setEditorChoiceList();
     }
 
@@ -54,8 +54,7 @@ class _TabContentState extends State<TabContent> {
   void _setEditorChoiceList() async {
     String jsonString = await EditorChoiceService().loadData();
     final jsonObject = json.decode(jsonString);
-    if(mounted)
-    {
+    if (mounted) {
       setState(() {
         _editorChoiceList = RecordList.fromJson(jsonObject["choices"]);
       });
@@ -128,7 +127,9 @@ class _TabContentState extends State<TabContent> {
             itemBuilder: (context, index) {
               if (index == 0) {
                 if (widget.needCarousel) {
-                  return EditorChoiceCarousel(editorChoiceList: _editorChoiceList,);
+                  return EditorChoiceCarousel(
+                    editorChoiceList: _editorChoiceList,
+                  );
                 }
                 return _buildTheFirstItem(context, _records[index]);
               }

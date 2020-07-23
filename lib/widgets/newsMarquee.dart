@@ -29,7 +29,6 @@ class _NewsMarqueeState extends State<NewsMarquee> {
 
   @override
   Widget build(BuildContext context) {
-
     return _newsMarqueeList == null
         ? Container()
         : Padding(

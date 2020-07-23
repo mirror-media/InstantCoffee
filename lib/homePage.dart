@@ -87,8 +87,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   _scrollToTop(int index) {
-    if(_scrollControllerList[index].hasClients)
-    {
+    if (_scrollControllerList[index].hasClients) {
       _scrollControllerList[index].animateTo(
           _scrollControllerList[index].position.minScrollExtent,
           duration: Duration(milliseconds: 1000),
