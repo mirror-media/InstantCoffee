@@ -93,11 +93,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           _scrollControllerList[index].position.minScrollExtent,
           duration: Duration(milliseconds: 1000),
           curve: Curves.easeIn);
-      /*
-      if(mounted) {
-        setState(() {});
-      }
-      */
     }
   }
 
