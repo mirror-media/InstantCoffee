@@ -87,11 +87,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   _scrollToTop(int index) {
-    _scrollControllerList[index].animateTo(
-        _scrollControllerList[index].position.minScrollExtent,
-        duration: Duration(milliseconds: 1000),
-        curve: Curves.easeIn);
-    setState(() {});
+    if(_scrollControllerList[index].hasClients)
+    {
+      _scrollControllerList[index].animateTo(
+          _scrollControllerList[index].position.minScrollExtent,
+          duration: Duration(milliseconds: 1000),
+          curve: Curves.easeIn);
+      /*
+      if(mounted) {
+        setState(() {});
+      }
+      */
+    }
   }
 
   @override
