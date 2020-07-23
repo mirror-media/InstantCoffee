@@ -45,6 +45,10 @@ dependencies:
   cached_network_image: ^2.2.0+1
   # share url
   share: ^0.6.3+5
+  # A Flutter widget that scrolls text infinitely.
+  marquee: ^1.5.2
+  # carousel slider in flutter
+  carousel_slider: ^2.2.1
 
 dev_dependencies:
   flutter_test:

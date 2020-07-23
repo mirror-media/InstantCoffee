@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:readr_app/models/sectionList.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/models/sectionService.dart';
+//import 'package:readr_app/widgets/newsMarquee.dart';
 import 'package:readr_app/widgets/tabContent.dart';
 
 import 'notificationSettingsPage.dart';
@@ -72,6 +73,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       _tabWidgets.add(TabContent(
         section: section,
         scrollController: _scrollControllerList[i],
+        needCarousel: i==0,
       ));
     }
 
@@ -130,6 +132,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
+                //NewsMarquee(),
                 Expanded(
                   child: TabBarView(
                     controller: _tabController,

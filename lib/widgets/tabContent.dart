@@ -1,18 +1,26 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:readr_app/helpers/boolBloc.dart';
 import 'package:readr_app/storyPage.dart';
 import 'package:readr_app/helpers/constants.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/models/recordService.dart';
 import 'package:readr_app/models/section.dart';
+import 'package:readr_app/widgets/editorChoiceCarousel.dart';
 
 class TabContent extends StatefulWidget {
   final Section section;
   final ScrollController scrollController;
+  final bool needCarousel;
   TabContent({
     @required this.section,
     @required this.scrollController,
+    this.needCarousel = false,
   });
 
   @override
@@ -21,6 +29,7 @@ class TabContent extends StatefulWidget {
 
 class _TabContentState extends State<TabContent> {
   String _endpoint = latestAPI;
+  BoolBloc _loadingBloc = BoolBloc();
   String _loadmoreUrl = '';
   int _page = 1;
   // tab widget list
@@ -28,6 +37,7 @@ class _TabContentState extends State<TabContent> {
 
   @override
   void initState() {
+    _loadingBloc.setFlag(false);
     widget.scrollController.addListener(_loadingMore);
     _switch(widget.section.key, widget.section.type);
     super.initState();
@@ -64,20 +74,31 @@ class _TabContentState extends State<TabContent> {
     }
 
     if (mounted) {
-      setState(() {
-        _records.addAll(latests);
-      });
+      _records.addAll(latests);
+
+      if (_loadingBloc.flag) {
+        _loadingBloc.change(false);
+      }
+      setState(() {});
     }
   }
 
   _loadingMore() {
     if (widget.scrollController.position.pixels ==
         widget.scrollController.position.maxScrollExtent) {
-      if (_loadmoreUrl != '') {
+      if (_loadmoreUrl != '' && !_loadingBloc.flag) {
+        //print(_loadmoreUrl);
+        _loadingBloc.change(true);
         _endpoint = apiBase + _loadmoreUrl;
         _setRecords();
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _loadingBloc.dispose();
+    super.dispose();
   }
 
   @override
@@ -89,7 +110,31 @@ class _TabContentState extends State<TabContent> {
             itemCount: _records.length,
             itemBuilder: (context, index) {
               if (index == 0) {
+                if (widget.needCarousel) {
+                  return EditorChoiceCarousel();
+                }
                 return _buildTheFirstItem(context, _records[index]);
+              }
+
+              if (index == _records.length - 1) {
+                return Column(
+                  children: [
+                    _buildListItem(context, _records[index]),
+                    StreamBuilder<bool>(
+                      initialData: _loadingBloc.flag,
+                      stream: _loadingBloc.controller.stream,
+                      builder: (context, snapshot) {
+                        if (snapshot.data) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CupertinoActivityIndicator(),
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
+                  ],
+                );
               }
               return _buildListItem(context, _records[index]);
             });
