@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:readr_app/helpers/boolBloc.dart';
+import 'package:readr_app/models/editorChoiceService.dart';
 import 'package:readr_app/storyPage.dart';
 import 'package:readr_app/helpers/constants.dart';
 import 'package:readr_app/models/record.dart';
@@ -32,15 +34,32 @@ class _TabContentState extends State<TabContent> {
   BoolBloc _loadingBloc = BoolBloc();
   String _loadmoreUrl = '';
   int _page = 1;
+
+  RecordList _editorChoiceList;
   // tab widget list
   RecordList _records;
 
   @override
   void initState() {
+    if(widget.needCarousel) {
+      _setEditorChoiceList();
+    }
+
     _loadingBloc.setFlag(false);
     widget.scrollController.addListener(_loadingMore);
     _switch(widget.section.key, widget.section.type);
     super.initState();
+  }
+
+  void _setEditorChoiceList() async {
+    String jsonString = await EditorChoiceService().loadData();
+    final jsonObject = json.decode(jsonString);
+    if(mounted)
+    {
+      setState(() {
+        _editorChoiceList = RecordList.fromJson(jsonObject["choices"]);
+      });
+    }
   }
 
   _switch(String id, String type) {
@@ -55,9 +74,7 @@ class _TabContentState extends State<TabContent> {
       _endpoint = listingBaseSearchByPersonAndFoodSection;
     }
 
-    setState(() {
-      _setRecords();
-    });
+    _setRecords();
   }
 
   Future<void> _setRecords() async {
@@ -111,7 +128,7 @@ class _TabContentState extends State<TabContent> {
             itemBuilder: (context, index) {
               if (index == 0) {
                 if (widget.needCarousel) {
-                  return EditorChoiceCarousel();
+                  return EditorChoiceCarousel(editorChoiceList: _editorChoiceList,);
                 }
                 return _buildTheFirstItem(context, _records[index]);
               }
