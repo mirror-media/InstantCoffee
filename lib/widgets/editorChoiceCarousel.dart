@@ -15,12 +15,6 @@ class EditorChoiceCarousel extends StatefulWidget {
 class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
   RecordList _editorChoiceList;
 
-  List<Widget> _imageSliders(double width, RecordList editorChoiceList){
-    return editorChoiceList.map(
-      (item) => CarouselDisplayWidget(record: item, width: width),
-    ).toList();
-  }
-  
   @override
   void initState() {
     _setEditorChoiceList();
@@ -40,17 +34,25 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     return _editorChoiceList == null
-    ? Container()
-    : CarouselSlider(
-        items: _imageSliders(width, _editorChoiceList),
-        options: CarouselOptions(
-          viewportFraction: 1.0,
-          //aspectRatio: 2.0,
-          autoPlay: true,
-          autoPlayInterval: Duration(seconds: 8),
-          enlargeCenterPage: true,
-          onPageChanged: (index, reason) {},
-        ),
-      );
+        ? Container()
+        : CarouselSlider(
+            items: _imageSliders(width, _editorChoiceList),
+            options: CarouselOptions(
+              viewportFraction: 1.0,
+              //aspectRatio: 2.0,
+              autoPlay: true,
+              autoPlayInterval: Duration(seconds: 8),
+              enlargeCenterPage: true,
+              onPageChanged: (index, reason) {},
+            ),
+          );
+  }
+  
+  List<Widget> _imageSliders(double width, RecordList editorChoiceList) {
+    return editorChoiceList
+        .map(
+          (item) => CarouselDisplayWidget(record: item, width: width),
+        )
+        .toList();
   }
 }

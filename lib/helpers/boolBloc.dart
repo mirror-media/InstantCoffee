@@ -1,6 +1,6 @@
 import 'dart:async';
 
-class BoolBloc{
+class BoolBloc {
   StreamController<bool> controller = StreamController<bool>.broadcast();
   //StreamController<bool> get controller => _controller;
 
@@ -8,8 +8,7 @@ class BoolBloc{
   bool get flag => _flag;
 
   void change(bool value) {
-    if(!controller.isClosed)
-    {
+    if (!controller.isClosed) {
       _flag = value;
       controller.sink.add(value);
     }
@@ -20,8 +19,7 @@ class BoolBloc{
   }
 
   void sinkToAdd(bool value) {
-    if(!controller.isClosed)
-    {
+    if (!controller.isClosed) {
       controller.sink.add(value);
     }
   }

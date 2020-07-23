@@ -26,17 +26,17 @@ class CarouselDisplayWidget extends StatelessWidget {
               child: _displayTag(record),
             ),
           ),
-          Align( 
+          Align(
             alignment: Alignment.bottomCenter,
             child: _displayTitle(record),
           ),
         ],
       ),
-      onTap: (){
+      onTap: () {
         Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => StoryPage(slug: record.slug)));
+            context,
+            MaterialPageRoute(
+                builder: (context) => StoryPage(slug: record.slug)));
       },
     );
   }
@@ -81,13 +81,15 @@ class CarouselDisplayWidget extends StatelessWidget {
 
   Widget _displayTitle(Record record) {
     return Container(
-      height: width / 16 * 9 / 3 ,
+      height: width / 16 * 9 / 3,
       color: Colors.black.withOpacity(0.6),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
         child: Center(
           child: Text(
-            record.title.length > 35 ? record.title.substring(0,35) + ' ...' : record.title,
+            record.title.length > 35
+                ? record.title.substring(0, 35) + ' ...'
+                : record.title,
             style: TextStyle(
               color: Colors.white,
               fontSize: 20.0,

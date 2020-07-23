@@ -76,8 +76,7 @@ class _TabContentState extends State<TabContent> {
     if (mounted) {
       _records.addAll(latests);
 
-      if(_loadingBloc.flag)
-      {
+      if (_loadingBloc.flag) {
         _loadingBloc.change(false);
       }
       setState(() {});
@@ -107,40 +106,38 @@ class _TabContentState extends State<TabContent> {
     return _records == null
         ? Center(child: CircularProgressIndicator())
         : ListView.builder(
-              controller: widget.scrollController,
-              itemCount: _records.length,
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  if(widget.needCarousel) {
-                    return EditorChoiceCarousel();
-                  }
-                  return _buildTheFirstItem(context, _records[index]);
+            controller: widget.scrollController,
+            itemCount: _records.length,
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                if (widget.needCarousel) {
+                  return EditorChoiceCarousel();
                 }
-                
-                if(index == _records.length-1)
-                {
-                  return Column(
-                    children: [
-                      _buildListItem(context, _records[index]),
-                      StreamBuilder<bool>(
-                        initialData: _loadingBloc.flag,
-                        stream: _loadingBloc.controller.stream,
-                        builder: (context, snapshot) {
-                          if(snapshot.data)
-                          {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CupertinoActivityIndicator(),
-                            );
-                          }
-                          return Container();
-                        },
-                      ),
-                    ],
-                  );
-                }
-                return _buildListItem(context, _records[index]);
-              });
+                return _buildTheFirstItem(context, _records[index]);
+              }
+
+              if (index == _records.length - 1) {
+                return Column(
+                  children: [
+                    _buildListItem(context, _records[index]),
+                    StreamBuilder<bool>(
+                      initialData: _loadingBloc.flag,
+                      stream: _loadingBloc.controller.stream,
+                      builder: (context, snapshot) {
+                        if (snapshot.data) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CupertinoActivityIndicator(),
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
+                  ],
+                );
+              }
+              return _buildListItem(context, _records[index]);
+            });
   }
 
   Widget _buildTheFirstItem(BuildContext context, Record record) {
