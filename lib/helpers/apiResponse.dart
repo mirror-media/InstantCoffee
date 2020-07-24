@@ -19,9 +19,4 @@ class ApiResponse<T> {
   }
 }
 
-enum Status { 
-  LOADING,
-  LOADINGMORE,
-  COMPLETED,
-  ERROR
-}
+enum Status { LOADING, LOADINGMORE, COMPLETED, ERROR }

@@ -21,7 +21,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> get(String baseUrl, String endpoint) async {
-    getByUrl(baseUrl+endpoint);
+    getByUrl(baseUrl + endpoint);
   }
 
   Future<dynamic> postByUrl(String url, dynamic body) async {
@@ -39,7 +39,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> post(String baseUrl, String endpoint, dynamic body) async {
-    postByUrl(baseUrl+endpoint, body);
+    postByUrl(baseUrl + endpoint, body);
   }
 
   Future<dynamic> putByUrl(String url, dynamic body) async {
@@ -58,7 +58,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> put(String baseUrl, String endpoint, dynamic body) async {
-    putByUrl(baseUrl+endpoint, body);
+    putByUrl(baseUrl + endpoint, body);
   }
 
   Future<dynamic> deleteByUrl(String url) async {
@@ -76,7 +76,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> delete(String baseUrl, String endpoint) async {
-    deleteByUrl(baseUrl+endpoint);
+    deleteByUrl(baseUrl + endpoint);
   }
 }
 
