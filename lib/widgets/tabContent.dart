@@ -109,8 +109,7 @@ class _TabContentState extends State<TabContent> {
     return ListView(
       controller: widget.scrollController,
       children: [
-        if(widget.needCarousel)
-        ...[
+        if (widget.needCarousel) ...[
           EditorChoiceCarousel(
             editorChoiceList: _editorChoiceList,
           ),
@@ -119,24 +118,24 @@ class _TabContentState extends State<TabContent> {
             child: _buildTagText(),
           ),
         ],
-          
         ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: recordList.length,
-          itemBuilder: (context, index) {
-            if (index == 0 && !widget.needCarousel) {
-              return _buildTheFirstItem(context, recordList[index]);
-            }
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: recordList.length,
+            itemBuilder: (context, index) {
+              if (index == 0 && !widget.needCarousel) {
+                return _buildTheFirstItem(context, recordList[index]);
+              }
 
-            return Column(
-              children: [
-                _buildListItem(context, recordList[index]),
-                if (index == recordList.length - 1 && status == Status.LOADINGMORE)
-                  CupertinoActivityIndicator(),
-              ],
-            );
-          }),
+              return Column(
+                children: [
+                  _buildListItem(context, recordList[index]),
+                  if (index == recordList.length - 1 &&
+                      status == Status.LOADINGMORE)
+                    CupertinoActivityIndicator(),
+                ],
+              );
+            }),
       ],
     );
   }
