@@ -1,19 +1,18 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:readr_app/blocs/tabContentBloc.dart';
+import 'package:readr_app/helpers/apiResponse.dart';
 
-import 'package:readr_app/helpers/boolBloc.dart';
 import 'package:readr_app/models/editorChoiceService.dart';
 import 'package:readr_app/storyPage.dart';
-import 'package:readr_app/helpers/constants.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
-import 'package:readr_app/models/recordService.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/widgets/editorChoiceCarousel.dart';
+import 'package:readr_app/widgets/errorStatelessWidget.dart';
 
 class TabContent extends StatefulWidget {
   final Section section;
@@ -30,24 +29,20 @@ class TabContent extends StatefulWidget {
 }
 
 class _TabContentState extends State<TabContent> {
-  String _endpoint = latestAPI;
-  BoolBloc _loadingBloc = BoolBloc();
-  String _loadmoreUrl = '';
-  int _page = 1;
-
+  TabContentBloc _tabContentBloc;
   RecordList _editorChoiceList;
-  // tab widget list
-  RecordList _records;
 
   @override
   void initState() {
+    _tabContentBloc = TabContentBloc(widget.section.key, widget.section.type);
+
+    widget.scrollController.addListener(() {
+      _tabContentBloc.loadingMore(widget.scrollController);
+    });
+
     if (widget.needCarousel) {
       _setEditorChoiceList();
     }
-
-    _loadingBloc.setFlag(false);
-    widget.scrollController.addListener(_loadingMore);
-    _switch(widget.section.key, widget.section.type);
     super.initState();
   }
 
@@ -61,101 +56,76 @@ class _TabContentState extends State<TabContent> {
     }
   }
 
-  _switch(String id, String type) {
-    _page = 1;
-    if (type == 'section') {
-      _endpoint = listingBase + '&where={"sections":{"\$in":["' + id + '"]}}';
-    } else if (id == 'latest') {
-      _endpoint = latestAPI;
-    } else if (id == 'popular') {
-      _endpoint = popularListAPI;
-    } else if (id == 'personal') {
-      _endpoint = listingBaseSearchByPersonAndFoodSection;
-    }
-
-    _setRecords();
-  }
-
-  Future<void> _setRecords() async {
-    RecordService recordService = RecordService();
-    RecordList latests = await recordService.loadLatests(_endpoint);
-    _loadmoreUrl = recordService.getNext();
-    if (_page == 1 && _records != null) {
-      _records.clear();
-    }
-    _page++;
-
-    if (_records == null) {
-      _records = RecordList();
-    }
-
-    if (mounted) {
-      _records.addAll(latests);
-
-      if (_loadingBloc.flag) {
-        _loadingBloc.change(false);
-      }
-      setState(() {});
-    }
-  }
-
-  _loadingMore() {
-    if (widget.scrollController.position.pixels ==
-        widget.scrollController.position.maxScrollExtent) {
-      if (_loadmoreUrl != '' && !_loadingBloc.flag) {
-        //print(_loadmoreUrl);
-        _loadingBloc.change(true);
-        _endpoint = apiBase + _loadmoreUrl;
-        _setRecords();
-      }
-    }
-  }
-
   @override
   void dispose() {
-    _loadingBloc.dispose();
+    _tabContentBloc.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _records == null
-        ? Center(child: CircularProgressIndicator())
-        : ListView.builder(
-            controller: widget.scrollController,
-            itemCount: _records.length,
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                if (widget.needCarousel) {
-                  return EditorChoiceCarousel(
-                    editorChoiceList: _editorChoiceList,
-                  );
-                }
-                return _buildTheFirstItem(context, _records[index]);
-              }
+    return RefreshIndicator(
+      onRefresh: () async {
+        _tabContentBloc.refreshTheList(widget.section.key, widget.section.type);
+      },
+      child: StreamBuilder<ApiResponse<RecordList>>(
+        stream: _tabContentBloc.recordListStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            switch (snapshot.data.status) {
+              case Status.LOADING:
+                return Center(child: CircularProgressIndicator());
+                break;
 
-              if (index == _records.length - 1) {
-                return Column(
-                  children: [
-                    _buildListItem(context, _records[index]),
-                    StreamBuilder<bool>(
-                      initialData: _loadingBloc.flag,
-                      stream: _loadingBloc.controller.stream,
-                      builder: (context, snapshot) {
-                        if (snapshot.data) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: CupertinoActivityIndicator(),
-                          );
-                        }
-                        return Container();
-                      },
-                    ),
-                  ],
+              case Status.LOADINGMORE:
+              case Status.COMPLETED:
+                RecordList recordList = snapshot.data.data == null
+                    ? _tabContentBloc.records
+                    : snapshot.data.data;
+                return _buildTheRecordList(
+                    context, recordList, snapshot.data.status);
+                break;
+
+              case Status.ERROR:
+                return ErrorStatelessWidget(
+                  errorMessage: snapshot.data.message,
+                  onRetryPressed: () => _tabContentBloc.fetchRecordList(),
                 );
-              }
-              return _buildListItem(context, _records[index]);
-            });
+                break;
+            }
+          }
+          return Container();
+        },
+      ),
+    );
+  }
+
+  Widget _buildTheRecordList(
+      BuildContext context, RecordList recordList, Status status) {
+    return ListView.builder(
+        controller: widget.scrollController,
+        itemCount: recordList.length,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            if (widget.needCarousel) {
+              return EditorChoiceCarousel(
+                editorChoiceList: _editorChoiceList,
+              );
+            }
+            return _buildTheFirstItem(context, recordList[index]);
+          }
+
+          if (index == recordList.length - 1 && status == Status.LOADINGMORE) {
+            return Column(
+              children: [
+                _buildListItem(context, recordList[index]),
+                CupertinoActivityIndicator(),
+              ],
+            );
+          }
+
+          return _buildListItem(context, recordList[index]);
+        });
   }
 
   Widget _buildTheFirstItem(BuildContext context, Record record) {
@@ -204,8 +174,6 @@ class _TabContentState extends State<TabContent> {
   }
 
   Widget _buildListItem(BuildContext context, Record record) {
-    var width = MediaQuery.of(context).size.width;
-
     return InkWell(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
