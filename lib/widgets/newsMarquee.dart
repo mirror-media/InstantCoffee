@@ -33,20 +33,8 @@ class _NewsMarqueeState extends State<NewsMarquee> {
         ? Container()
         : Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.hearing,
-                  size: 32,
-                ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: NewsMarqueeWidget(
-                    recordList: _newsMarqueeList,
-                  ),
-                ),
-              ],
+            child: NewsMarqueeWidget(
+              recordList: _newsMarqueeList,
             ),
           );
   }
