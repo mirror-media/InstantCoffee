@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/tabContentBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
+import 'package:readr_app/helpers/constants.dart';
 
 import 'package:readr_app/models/editorChoiceService.dart';
 import 'package:readr_app/storyPage.dart';
@@ -105,30 +106,50 @@ class _TabContentState extends State<TabContent> {
 
   Widget _buildTheRecordList(
       BuildContext context, RecordList recordList, Status status) {
-    return ListView.builder(
-        controller: widget.scrollController,
-        itemCount: recordList.length,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            if (widget.needCarousel) {
-              return EditorChoiceCarousel(
-                editorChoiceList: _editorChoiceList,
-              );
+    return ListView(
+      controller: widget.scrollController,
+      children: [
+        if(widget.needCarousel)
+        ...[
+          EditorChoiceCarousel(
+            editorChoiceList: _editorChoiceList,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+            child: _buildTagText(),
+          ),
+        ],
+          
+        ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: recordList.length,
+          itemBuilder: (context, index) {
+            if (index == 0 && !widget.needCarousel) {
+              return _buildTheFirstItem(context, recordList[index]);
             }
-            return _buildTheFirstItem(context, recordList[index]);
-          }
 
-          if (index == recordList.length - 1 && status == Status.LOADINGMORE) {
             return Column(
               children: [
                 _buildListItem(context, recordList[index]),
-                CupertinoActivityIndicator(),
+                if (index == recordList.length - 1 && status == Status.LOADINGMORE)
+                  CupertinoActivityIndicator(),
               ],
             );
-          }
+          }),
+      ],
+    );
+  }
 
-          return _buildListItem(context, recordList[index]);
-        });
+  Widget _buildTagText() {
+    return Text(
+      '最新文章',
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: appColor,
+      ),
+    );
   }
 
   Widget _buildTheFirstItem(BuildContext context, Record record) {
