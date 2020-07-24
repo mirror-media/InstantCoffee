@@ -10,7 +10,7 @@ class StoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        backgroundColor: themeColor,
+        backgroundColor: appColor,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
