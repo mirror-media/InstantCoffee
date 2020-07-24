@@ -38,7 +38,7 @@ class _ListingWidget extends State<ListingWidget> {
 
   void _getLatests() async {
     RecordService recordService = new RecordService();
-    RecordList latests = await recordService.loadLatests(widget.endpoint);
+    RecordList latests = await recordService.fetchRecordList(widget.endpoint);
     this.loadmoreUrl = recordService.getNext();
     print("loadmore: " + this.loadmoreUrl);
     if (this.page == 1) {

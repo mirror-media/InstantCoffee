@@ -1,23 +1,15 @@
-import 'recordList.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:readr_app/helpers/apiBaseHelper.dart';
+import 'package:readr_app/models/recordList.dart';
+
 class RecordService {
+  ApiBaseHelper _helper = ApiBaseHelper();
+
   String nextPage = '';
 
-  Future<String> _loadLatestsAsset(String endpoint) async {
-    //return await rootBundle.loadString('assets/data/records.json');
-    final response = await http.get(endpoint);
-    if (response.statusCode == 200) {
-      return response.body;
-    } else {
-      return "{'status': 'error', 'message': 'API return error'}";
-    }
-  }
-
-  Future<RecordList> loadLatests(String endpoint) async {
-    String jsonString = await _loadLatestsAsset(endpoint);
-    final jsonResponse = json.decode(jsonString);
+  Future<RecordList> fetchRecordList(String url) async {
+    final jsonResponse = await _helper.getByUrl(url);
     var jsonObject;
 
     if (jsonResponse.containsKey("_links") &&
@@ -40,6 +32,7 @@ class RecordService {
       jsonObject = [];
     }
     RecordList records = new RecordList.fromJson(jsonObject);
+    //await Future.delayed(Duration(seconds: 3));
     return records;
   }
 
