@@ -7,16 +7,16 @@ import 'package:readr_app/helpers/appException.dart';
 
 class ApiBaseHelper {
   Future<dynamic> getByUrl(String url) async {
-    print('Api Get, url $url');
+    print('Call Api Get, url $url');
     var responseJson;
     try {
       final response = await http.get(url);
       responseJson = _returnResponse(response);
     } on SocketException {
-      print('No net');
+      print('No Internet connection');
       throw FetchDataException('No Internet connection');
     }
-    print('api get recieved!');
+    print('Api get done.');
     return responseJson;
   }
 
@@ -25,16 +25,16 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> postByUrl(String url, dynamic body) async {
-    print('Api Post, url $url');
+    print('Call Api Post, url $url');
     var responseJson;
     try {
       final response = await http.post(url, body: body);
       responseJson = _returnResponse(response);
     } on SocketException {
-      print('No net');
+      print('No Internet connection');
       throw FetchDataException('No Internet connection');
     }
-    print('api post.');
+    print('Api post done.');
     return responseJson;
   }
 
@@ -43,16 +43,16 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> putByUrl(String url, dynamic body) async {
-    print('Api Put, url $url');
+    print('Call Api Put, url $url');
     var responseJson;
     try {
       final response = await http.put(url, body: body);
       responseJson = _returnResponse(response);
     } on SocketException {
-      print('No net');
+      print('No Internet connection');
       throw FetchDataException('No Internet connection');
     }
-    print('api put.');
+    print('Api put done.');
     print(responseJson.toString());
     return responseJson;
   }
@@ -62,16 +62,16 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> deleteByUrl(String url) async {
-    print('Api delete, url $url');
+    print('Call Api delete, url $url');
     var apiResponse;
     try {
       final response = await http.delete(url);
       apiResponse = _returnResponse(response);
     } on SocketException {
-      print('No net');
+      print('No Internet connection');
       throw FetchDataException('No Internet connection');
     }
-    print('api delete.');
+    print('Api delete done.');
     return apiResponse;
   }
 
@@ -84,7 +84,6 @@ dynamic _returnResponse(http.Response response) {
   switch (response.statusCode) {
     case 200:
       var responseJson = json.decode(response.body.toString());
-      print(responseJson);
       return responseJson;
     case 400:
       throw BadRequestException(response.body.toString());
