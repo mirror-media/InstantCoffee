@@ -14,13 +14,5 @@
         "focus": false,
         "sortOrder": 0,
         "type": "fixed"
-    },
-    {
-        "_id": "personal",
-        "name": "personal",
-        "title": "專屬為你",
-        "focus": false,
-        "sortOrder": 0,
-        "type": "fixed"
     }
 ]
