@@ -5,9 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/tabContentBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
+import 'package:readr_app/helpers/constants.dart';
 
 import 'package:readr_app/models/editorChoiceService.dart';
-import 'package:readr_app/storyPage.dart';
+import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/models/section.dart';
@@ -36,14 +37,16 @@ class _TabContentState extends State<TabContent> {
   void initState() {
     _tabContentBloc = TabContentBloc(widget.section.key, widget.section.type);
 
-    widget.scrollController.addListener(() {
-      _tabContentBloc.loadingMore(widget.scrollController);
-    });
+    widget.scrollController.addListener(_loadingMore);
 
     if (widget.needCarousel) {
       _setEditorChoiceList();
     }
     super.initState();
+  }
+
+  _loadingMore() {
+    _tabContentBloc.loadingMore(widget.scrollController);
   }
 
   void _setEditorChoiceList() async {
@@ -58,6 +61,7 @@ class _TabContentState extends State<TabContent> {
 
   @override
   void dispose() {
+    widget.scrollController.removeListener(_loadingMore);
     _tabContentBloc.dispose();
     super.dispose();
   }
@@ -102,30 +106,49 @@ class _TabContentState extends State<TabContent> {
 
   Widget _buildTheRecordList(
       BuildContext context, RecordList recordList, Status status) {
-    return ListView.builder(
-        controller: widget.scrollController,
-        itemCount: recordList.length,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            if (widget.needCarousel) {
-              return EditorChoiceCarousel(
-                editorChoiceList: _editorChoiceList,
+    return ListView(
+      controller: widget.scrollController,
+      children: [
+        if (widget.needCarousel) ...[
+          EditorChoiceCarousel(
+            editorChoiceList: _editorChoiceList,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+            child: _buildTagText(),
+          ),
+        ],
+        ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: recordList.length,
+            itemBuilder: (context, index) {
+              if (index == 0 && !widget.needCarousel) {
+                return _buildTheFirstItem(context, recordList[index]);
+              }
+
+              return Column(
+                children: [
+                  _buildListItem(context, recordList[index]),
+                  if (index == recordList.length - 1 &&
+                      status == Status.LOADINGMORE)
+                    CupertinoActivityIndicator(),
+                ],
               );
-            }
-            return _buildTheFirstItem(context, recordList[index]);
-          }
+            }),
+      ],
+    );
+  }
 
-          if (index == recordList.length - 1 && status == Status.LOADINGMORE) {
-            return Column(
-              children: [
-                _buildListItem(context, recordList[index]),
-                CupertinoActivityIndicator(),
-              ],
-            );
-          }
-
-          return _buildListItem(context, recordList[index]);
-        });
+  Widget _buildTagText() {
+    return Text(
+      '最新文章',
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: appColor,
+      ),
+    );
   }
 
   Widget _buildTheFirstItem(BuildContext context, Record record) {

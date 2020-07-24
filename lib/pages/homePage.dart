@@ -6,7 +6,7 @@ import 'package:readr_app/widgets/newsMarquee.dart';
 import 'package:readr_app/widgets/tabContent.dart';
 
 import 'notificationSettingsPage.dart';
-import 'helpers/constants.dart';
+import '../helpers/constants.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -119,9 +119,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     color: Color.fromARGB(255, 229, 229, 229),
                     child: TabBar(
                       isScrollable: true,
-                      indicatorColor: Colors.black,
+                      indicatorColor: appColor,
                       unselectedLabelColor: Colors.grey,
-                      labelColor: Colors.black,
+                      labelColor: appColor,
                       tabs: _tabs.toList(),
                       controller: _tabController,
                       onTap: (int index) {

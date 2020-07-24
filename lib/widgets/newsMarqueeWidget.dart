@@ -1,7 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:readr_app/helpers/constants.dart';
 import 'package:readr_app/models/recordList.dart';
-import 'package:readr_app/storyPage.dart';
+import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/widgets/marqueeWidget.dart';
 
 class NewsMarqueeWidget extends StatefulWidget {
@@ -62,7 +63,7 @@ class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
           child: MarqueeWidget(
             child: Text(
               recordList[i].title,
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 20, color: appColor),
             ),
             animationDuration: Duration(milliseconds: 4000),
           ),

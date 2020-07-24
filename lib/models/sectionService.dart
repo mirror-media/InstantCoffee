@@ -3,7 +3,6 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:readr_app/models/sectionList.dart';
 import '../helpers/constants.dart';
 import 'dart:convert';
-import 'section.dart';
 
 class SectionService {
   Future<String> _fetchSectionData() async {

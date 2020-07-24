@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'helpers/uRLLauncher.dart';
-import 'models/story.dart';
+import '../helpers/uRLLauncher.dart';
+import '../models/story.dart';
 
 class DetailPage extends StatelessWidget {
   final Story record;
