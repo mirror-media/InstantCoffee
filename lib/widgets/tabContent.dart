@@ -36,14 +36,16 @@ class _TabContentState extends State<TabContent> {
   void initState() {
     _tabContentBloc = TabContentBloc(widget.section.key, widget.section.type);
 
-    widget.scrollController.addListener(() {
-      _tabContentBloc.loadingMore(widget.scrollController);
-    });
+    widget.scrollController.addListener(_loadingMore);
 
     if (widget.needCarousel) {
       _setEditorChoiceList();
     }
     super.initState();
+  }
+
+  _loadingMore() {
+    _tabContentBloc.loadingMore(widget.scrollController);
   }
 
   void _setEditorChoiceList() async {
@@ -58,6 +60,7 @@ class _TabContentState extends State<TabContent> {
 
   @override
   void dispose() {
+    widget.scrollController.removeListener(_loadingMore);
     _tabContentBloc.dispose();
     super.dispose();
   }
