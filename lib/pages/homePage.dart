@@ -6,7 +6,7 @@ import 'package:readr_app/widgets/newsMarquee.dart';
 import 'package:readr_app/widgets/tabContent.dart';
 
 import 'notificationSettingsPage.dart';
-import 'helpers/constants.dart';
+import '../helpers/constants.dart';
 
 class HomePage extends StatefulWidget {
   @override

@@ -8,7 +8,7 @@ import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/constants.dart';
 
 import 'package:readr_app/models/editorChoiceService.dart';
-import 'package:readr_app/storyPage.dart';
+import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/models/section.dart';

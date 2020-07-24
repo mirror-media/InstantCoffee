@@ -4,7 +4,7 @@ import 'package:readr_app/models/recordService.dart';
 import '../helpers/constants.dart';
 import '../models/record.dart';
 import '../models/sectionList.dart';
-import '../storyPage.dart';
+import '../pages/storyPage.dart';
 
 class ListingWidget extends StatefulWidget {
   final String endpoint;

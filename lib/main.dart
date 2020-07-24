@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/constants.dart';
-import 'package:readr_app/homePage.dart';
+import 'package:readr_app/pages/homePage.dart';
 
 void main() {
   runApp(MirrorApp());

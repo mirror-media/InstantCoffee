@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/constants.dart';
 import 'package:readr_app/models/recordList.dart';
-import 'package:readr_app/storyPage.dart';
+import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/widgets/marqueeWidget.dart';
 
 class NewsMarqueeWidget extends StatefulWidget {

@@ -9,7 +9,7 @@ import '../models/story.dart';
 import '../models/tag.dart';
 import '../models/paragraph.dart';
 import '../models/category.dart';
-import '../listingPage.dart';
+import '../pages/listingPage.dart';
 
 class StoryWidget extends StatefulWidget {
   final String slug;

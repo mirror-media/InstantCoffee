@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'helpers/constants.dart';
-import 'models/sectionList.dart';
-import 'widgets/listingWidget.dart';
+import '../helpers/constants.dart';
+import '../models/sectionList.dart';
+import '../widgets/listingWidget.dart';
 
 class ListingPage extends StatefulWidget {
   @override
