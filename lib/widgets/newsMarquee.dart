@@ -40,8 +40,7 @@ class _NewsMarqueeState extends State<NewsMarquee> {
 
             case Status.LOADINGMORE:
             case Status.COMPLETED:
-
-              if(recordList == null) {
+              if (recordList == null) {
                 return Container();
               }
 
