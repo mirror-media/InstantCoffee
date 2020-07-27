@@ -1,13 +1,10 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:readr_app/blocs/tabContentBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/constants.dart';
-
-import 'package:readr_app/models/editorChoiceService.dart';
 import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
@@ -31,32 +28,19 @@ class TabContent extends StatefulWidget {
 
 class _TabContentState extends State<TabContent> {
   TabContentBloc _tabContentBloc;
-  RecordList _editorChoiceList;
 
   @override
   void initState() {
-    _tabContentBloc = TabContentBloc(widget.section.key, widget.section.type);
+    _tabContentBloc = TabContentBloc(
+        widget.section.key, widget.section.type, widget.needCarousel);
 
     widget.scrollController.addListener(_loadingMore);
 
-    if (widget.needCarousel) {
-      _setEditorChoiceList();
-    }
     super.initState();
   }
 
   _loadingMore() {
     _tabContentBloc.loadingMore(widget.scrollController);
-  }
-
-  void _setEditorChoiceList() async {
-    String jsonString = await EditorChoiceService().loadData();
-    final jsonObject = json.decode(jsonString);
-    if (mounted) {
-      setState(() {
-        _editorChoiceList = RecordList.fromJson(jsonObject["choices"]);
-      });
-    }
   }
 
   @override
@@ -70,12 +54,15 @@ class _TabContentState extends State<TabContent> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        _tabContentBloc.refreshTheList(widget.section.key, widget.section.type);
+        _tabContentBloc.refreshTheList(
+            widget.section.key, widget.section.type, widget.needCarousel);
       },
-      child: StreamBuilder<ApiResponse<RecordList>>(
+      child: StreamBuilder<ApiResponse<TabContentState>>(
         stream: _tabContentBloc.recordListStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            TabContentState tabContentState = snapshot.data.data;
+
             switch (snapshot.data.status) {
               case Status.LOADING:
                 return Center(child: CircularProgressIndicator());
@@ -83,11 +70,15 @@ class _TabContentState extends State<TabContent> {
 
               case Status.LOADINGMORE:
               case Status.COMPLETED:
-                RecordList recordList = snapshot.data.data == null
+                RecordList recordList = tabContentState == null
                     ? _tabContentBloc.records
-                    : snapshot.data.data;
-                return _buildTheRecordList(
-                    context, recordList, snapshot.data.status);
+                    : tabContentState.recordList;
+                RecordList editorChoiceList = tabContentState == null
+                    ? null
+                    : tabContentState.editorChoiceList;
+
+                return _buildTheRecordList(context, recordList,
+                    editorChoiceList, snapshot.data.status);
                 break;
 
               case Status.ERROR:
@@ -104,14 +95,14 @@ class _TabContentState extends State<TabContent> {
     );
   }
 
-  Widget _buildTheRecordList(
-      BuildContext context, RecordList recordList, Status status) {
+  Widget _buildTheRecordList(BuildContext context, RecordList recordList,
+      RecordList editorChoiceList, Status status) {
     return ListView(
       controller: widget.scrollController,
       children: [
         if (widget.needCarousel) ...[
           EditorChoiceCarousel(
-            editorChoiceList: _editorChoiceList,
+            editorChoiceList: editorChoiceList,
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
