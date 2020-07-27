@@ -3,38 +3,68 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/models/editorChoiceService.dart';
 import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/models/recordService.dart';
 
 class TabContentBloc {
   RecordList _records;
+  RecordList _editorChoices;
+
   String _endpoint = latestAPI;
   bool isLoading = false;
   String _loadmoreUrl = '';
   int _page = 1;
 
   RecordService _recordService;
+  EditorChoiceService _editorChoiceService;
 
   StreamController _recordListController;
 
   RecordList get records => _records;
+  RecordList get editorChoices => _editorChoices;
 
-  StreamSink<ApiResponse<RecordList>> get recordListSink =>
+  StreamSink<ApiResponse<TabContentState>> get recordListSink =>
       _recordListController.sink;
 
-  Stream<ApiResponse<RecordList>> get recordListStream =>
+  Stream<ApiResponse<TabContentState>> get recordListStream =>
       _recordListController.stream;
 
-  TabContentBloc(String id, String type) {
+  TabContentBloc(String id, String type, bool needCarousel) {
     _records = RecordList();
     _recordService = RecordService();
-    _recordListController = StreamController<ApiResponse<RecordList>>();
-    switchTab(id, type);
+
+    if(needCarousel) {
+      _editorChoices = RecordList();
+      _editorChoiceService = EditorChoiceService();
+    }
+
+    _recordListController = StreamController<ApiResponse<TabContentState>>();
+    switchTab(id, type, needCarousel: needCarousel);
   }
 
-  sinkToAdd(ApiResponse<RecordList> value) {
+  sinkToAdd(ApiResponse<TabContentState> value) {
     if (!_recordListController.isClosed) {
       recordListSink.add(value);
+    }
+  }
+
+  fetchEditorChoiceAndRecordList() async {
+    sinkToAdd(ApiResponse.loading('Fetching Tab Content'));
+
+    try {
+      RecordList editorChoices = await _editorChoiceService.fetchRecordList();
+      RecordList latests = await _recordService.fetchRecordList(_endpoint);
+      _editorChoices.addAll(editorChoices);
+      _records.addAll(latests);
+
+      _loadmoreUrl = _recordService.getNext();
+      _page++;
+    
+      sinkToAdd(ApiResponse.completed(TabContentState(editorChoiceList: _editorChoices, recordList: _records)));
+    } catch (e) {
+      sinkToAdd(ApiResponse.error(e.toString()));
+      print(e);
     }
   }
 
@@ -56,20 +86,20 @@ class TabContentBloc {
 
       _records.addAll(latests);
       isLoading = false;
-      sinkToAdd(ApiResponse.completed(_records));
+      sinkToAdd(ApiResponse.completed(TabContentState(editorChoiceList: _editorChoices, recordList: _records)));
     } catch (e) {
       sinkToAdd(ApiResponse.error(e.toString()));
       print(e);
     }
   }
 
-  refreshTheList(String id, String type) {
+  refreshTheList(String id, String type, bool needCarousel) {
     _records.clear();
     _page = 1;
-    switchTab(id, type);
+    switchTab(id, type, needCarousel: needCarousel);
   }
 
-  switchTab(String id, String type) {
+  switchTab(String id, String type, {bool needCarousel = false}) {
     _page = 1;
     if (type == 'section') {
       _endpoint = listingBase + '&where={"sections":{"\$in":["' + id + '"]}}';
@@ -81,7 +111,12 @@ class TabContentBloc {
       _endpoint = listingBaseSearchByPersonAndFoodSection;
     }
 
-    fetchRecordList();
+    if(needCarousel) {
+      fetchEditorChoiceAndRecordList();
+    }
+    else {
+      fetchRecordList();
+    }
   }
 
   loadingMore(ScrollController scrollController) {
@@ -99,4 +134,14 @@ class TabContentBloc {
   dispose() {
     _recordListController?.close();
   }
+}
+
+class TabContentState {
+  final RecordList editorChoiceList;
+  final RecordList recordList;
+  
+  TabContentState({
+    this.editorChoiceList,
+    this.recordList,
+  });
 }
