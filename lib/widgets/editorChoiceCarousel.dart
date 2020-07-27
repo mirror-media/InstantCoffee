@@ -18,7 +18,8 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    return widget.editorChoiceList == null || widget.editorChoiceList.length == 0
+    return widget.editorChoiceList == null ||
+            widget.editorChoiceList.length == 0
         ? Container()
         : CarouselSlider(
             items: _imageSliders(width, widget.editorChoiceList),

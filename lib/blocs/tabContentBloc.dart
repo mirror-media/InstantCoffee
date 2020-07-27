@@ -34,7 +34,7 @@ class TabContentBloc {
     _records = RecordList();
     _recordService = RecordService();
 
-    if(needCarousel) {
+    if (needCarousel) {
       _editorChoices = RecordList();
       _editorChoiceService = EditorChoiceService();
     }
@@ -60,8 +60,9 @@ class TabContentBloc {
 
       _loadmoreUrl = _recordService.getNext();
       _page++;
-    
-      sinkToAdd(ApiResponse.completed(TabContentState(editorChoiceList: _editorChoices, recordList: _records)));
+
+      sinkToAdd(ApiResponse.completed(TabContentState(
+          editorChoiceList: _editorChoices, recordList: _records)));
     } catch (e) {
       sinkToAdd(ApiResponse.error(e.toString()));
       print(e);
@@ -86,7 +87,8 @@ class TabContentBloc {
 
       _records.addAll(latests);
       isLoading = false;
-      sinkToAdd(ApiResponse.completed(TabContentState(editorChoiceList: _editorChoices, recordList: _records)));
+      sinkToAdd(ApiResponse.completed(TabContentState(
+          editorChoiceList: _editorChoices, recordList: _records)));
     } catch (e) {
       sinkToAdd(ApiResponse.error(e.toString()));
       print(e);
@@ -111,10 +113,9 @@ class TabContentBloc {
       _endpoint = listingBaseSearchByPersonAndFoodSection;
     }
 
-    if(needCarousel) {
+    if (needCarousel) {
       fetchEditorChoiceAndRecordList();
-    }
-    else {
+    } else {
       fetchRecordList();
     }
   }
@@ -139,7 +140,7 @@ class TabContentBloc {
 class TabContentState {
   final RecordList editorChoiceList;
   final RecordList recordList;
-  
+
   TabContentState({
     this.editorChoiceList,
     this.recordList,

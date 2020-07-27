@@ -31,7 +31,8 @@ class _TabContentState extends State<TabContent> {
 
   @override
   void initState() {
-    _tabContentBloc = TabContentBloc(widget.section.key, widget.section.type, widget.needCarousel);
+    _tabContentBloc = TabContentBloc(
+        widget.section.key, widget.section.type, widget.needCarousel);
 
     widget.scrollController.addListener(_loadingMore);
 
@@ -53,7 +54,8 @@ class _TabContentState extends State<TabContent> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        _tabContentBloc.refreshTheList(widget.section.key, widget.section.type, widget.needCarousel);
+        _tabContentBloc.refreshTheList(
+            widget.section.key, widget.section.type, widget.needCarousel);
       },
       child: StreamBuilder<ApiResponse<TabContentState>>(
         stream: _tabContentBloc.recordListStream,
@@ -75,8 +77,8 @@ class _TabContentState extends State<TabContent> {
                     ? null
                     : tabContentState.editorChoiceList;
 
-                return _buildTheRecordList(
-                    context, recordList, editorChoiceList, snapshot.data.status);
+                return _buildTheRecordList(context, recordList,
+                    editorChoiceList, snapshot.data.status);
                 break;
 
               case Status.ERROR:
@@ -93,8 +95,8 @@ class _TabContentState extends State<TabContent> {
     );
   }
 
-  Widget _buildTheRecordList(
-      BuildContext context, RecordList recordList, RecordList editorChoiceList, Status status) {
+  Widget _buildTheRecordList(BuildContext context, RecordList recordList,
+      RecordList editorChoiceList, Status status) {
     return ListView(
       controller: widget.scrollController,
       children: [
