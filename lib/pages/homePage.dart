@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               case Status.COMPLETED:
                 SectionList sectionList = snapshot.data.data;
                 _initializeTabController(sectionList);
-                
+
                 return _buildTabs(_tabs, _tabWidgets, _tabController);
                 break;
 
@@ -151,7 +151,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildTabs(List<Tab> tabs, List<Widget> tabWidgets, TabController tabController) {
+  Widget _buildTabs(
+      List<Tab> tabs, List<Widget> tabWidgets, TabController tabController) {
     return Column(
       children: [
         Container(
