@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:readr_app/blocs/sectionBloc.dart';
+import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/models/sectionList.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/models/sectionService.dart';
@@ -15,9 +17,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   List<ScrollController> _scrollControllerList;
-
-  // tab text
-  SectionList _sectionItems;
+  SectionBloc _sectionBloc;
 
   /// tab controller
   int initialTabIndex = 0;
@@ -28,35 +28,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     _scrollControllerList = List<ScrollController>();
-
-    _loadingData();
+    _sectionBloc = SectionBloc();
     super.initState();
   }
 
-  _loadingData() async {
-    await _setSections();
-    _initializeTabController();
-  }
-
-  Future<void> _setSections() async {
-    SectionList resultSectionList = SectionList();
-    SectionList allSections = SectionList();
-    allSections = await SectionService().loadSections();
-    for (Section section in allSections) {
-      resultSectionList.add(section);
-    }
-
-    setState(() {
-      _sectionItems = resultSectionList;
-    });
-  }
-
-  void _initializeTabController() {
+  _initializeTabController(SectionList sectionItems) {
     _tabs.clear();
     _tabWidgets.clear();
 
-    for (int i = 0; i < _sectionItems.length; i++) {
-      Section section = _sectionItems[i];
+    for (int i = 0; i < sectionItems.length; i++) {
+      Section section = sectionItems[i];
       _tabs.add(
         Tab(
           child: Text(
@@ -80,7 +61,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     // set controller
     _tabController = TabController(
       vsync: this,
-      length: _sectionItems.length,
+      length: sectionItems.length,
       initialIndex:
           _tabController == null ? initialTabIndex : _tabController.index,
     );
@@ -102,6 +83,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _scrollControllerList.forEach((scrollController) {
       scrollController.dispose();
     });
+
+    _sectionBloc.dispose();
     super.dispose();
   }
 
@@ -109,39 +92,31 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      body: _sectionItems == null
-          ? Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Container(
-                  constraints: BoxConstraints(maxHeight: 150.0),
-                  child: Material(
-                    color: Color.fromARGB(255, 229, 229, 229),
-                    child: TabBar(
-                      isScrollable: true,
-                      indicatorColor: appColor,
-                      unselectedLabelColor: Colors.grey,
-                      labelColor: appColor,
-                      tabs: _tabs.toList(),
-                      controller: _tabController,
-                      onTap: (int index) {
-                        if (initialTabIndex == index) {
-                          _scrollToTop(index);
-                        }
-                        initialTabIndex = index;
-                      },
-                    ),
-                  ),
-                ),
-                NewsMarquee(),
-                Expanded(
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: _tabWidgets.toList(),
-                  ),
-                ),
-              ],
-            ),
+      body: StreamBuilder<ApiResponse<SectionList>>(
+        stream: _sectionBloc.sectionListStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            switch (snapshot.data.status) {
+              case Status.LOADING:
+                return Center(child: CircularProgressIndicator());
+                break;
+
+              case Status.LOADINGMORE:
+              case Status.COMPLETED:
+                SectionList sectionList = snapshot.data.data;
+                _initializeTabController(sectionList);
+
+                return _buildTabs(_tabs, _tabWidgets, _tabController);
+                break;
+
+              case Status.ERROR:
+                return Container();
+                break;
+            }
+          }
+          return Container();
+        },
+      ),
     );
   }
 
@@ -171,6 +146,41 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           icon: Icon(Icons.person),
           tooltip: 'Personal',
           onPressed: () => {},
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTabs(
+      List<Tab> tabs, List<Widget> tabWidgets, TabController tabController) {
+    return Column(
+      children: [
+        Container(
+          constraints: BoxConstraints(maxHeight: 150.0),
+          child: Material(
+            color: Color.fromARGB(255, 229, 229, 229),
+            child: TabBar(
+              isScrollable: true,
+              indicatorColor: appColor,
+              unselectedLabelColor: Colors.grey,
+              labelColor: appColor,
+              tabs: tabs.toList(),
+              controller: tabController,
+              onTap: (int index) {
+                if (initialTabIndex == index) {
+                  _scrollToTop(index);
+                }
+                initialTabIndex = index;
+              },
+            ),
+          ),
+        ),
+        NewsMarquee(),
+        Expanded(
+          child: TabBarView(
+            controller: tabController,
+            children: tabWidgets.toList(),
+          ),
         ),
       ],
     );

@@ -1,27 +1,19 @@
-import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/models/sectionList.dart';
 import '../helpers/constants.dart';
 import 'dart:convert';
 
 class SectionService {
-  Future<String> _fetchSectionData() async {
-    final response = await http.get(sectionAPI);
-    if (response.statusCode == 200) {
-      return response.body;
-    } else {
-      return "{'status': 'error', 'message': 'API return error'}";
-    }
-  }
+  ApiBaseHelper _helper = ApiBaseHelper();
 
-  Future<SectionList> loadSections() async {
-    String jsonParsed = await _fetchSectionData();
-    final jsonObject = json.decode(jsonParsed);
-    SectionList sessions = new SectionList.fromJson(jsonObject["_items"]);
+  Future<SectionList> fetchSectionList() async {
+    final jsonResponse = await _helper.getByUrl(sectionAPI);
+
+    SectionList sessions = SectionList.fromJson(jsonResponse["_items"]);
     String jsonFixed = await rootBundle.loadString('assets/data/menu.json');
     final fixedMenu = json.decode(jsonFixed);
     SectionList fixedSections = new SectionList.fromJson(fixedMenu);
-    //SectionList fixedSections = new SectionList();
     fixedSections.addAll(sessions);
 
     return fixedSections;
