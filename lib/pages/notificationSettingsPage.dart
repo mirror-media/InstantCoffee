@@ -62,7 +62,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       centerTitle: true,
       title: Text(
         settingPageTitle,
-        style: TextStyle(color: Colors.black, fontSize: 24.0),
+        style: TextStyle(color: Colors.white, fontSize: 24.0),
       ),
       backgroundColor: appColor,
       actions: [
@@ -200,7 +200,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   value: checkboxList[checkboxIndex].value,
                   onChanged: (value) {},
                 ),
-                Text(checkboxList[checkboxIndex].title),
+                Expanded(child: Text(checkboxList[checkboxIndex].title)),
               ]),
             ),
           );
