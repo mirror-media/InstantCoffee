@@ -8,8 +8,8 @@ class StoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
+    return Scaffold(
+      appBar: AppBar(
         backgroundColor: appColor,
         actions: <Widget>[
           IconButton(
@@ -19,7 +19,7 @@ class StoryPage extends StatelessWidget {
           )
         ],
       ),
-      body: new StoryWidget(slug: this.slug),
+      body: StoryWidget(slug: this.slug),
     );
   }
 

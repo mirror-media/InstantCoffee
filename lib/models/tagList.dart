@@ -1,20 +1,20 @@
 import 'dart:convert';
 
 import 'package:readr_app/models/customizedList.dart';
-import 'package:readr_app/models/people.dart';
+import 'package:readr_app/models/tag.dart';
 
-class PeopleList extends CustomizedList<People> {
+
+class TagList extends CustomizedList<Tag> {
   // constructor
-  PeopleList();
+  TagList();
 
-
-  factory PeopleList.fromJson(List<dynamic> parsedJson) {
+  factory TagList.fromJson(List<dynamic> parsedJson) {
     if (parsedJson == null) {
       return null;
     }
 
-    PeopleList objects = PeopleList();
-    List parseList = parsedJson.map((i) => People.fromJson(i)).toList();
+    TagList objects = TagList();
+    List parseList = parsedJson.map((i) => Tag.fromJson(i)).toList();
     parseList.forEach((element) {
       objects.add(element);
     });
@@ -22,10 +22,10 @@ class PeopleList extends CustomizedList<People> {
     return objects;
   }
 
-  factory PeopleList.parseResponseBody(String body) {
+  factory TagList.parseResponseBody(String body) {
     final jsonData = json.decode(body);
 
-    return PeopleList.fromJson(jsonData);
+    return TagList.fromJson(jsonData);
   }
 
   // your custom methods
@@ -35,7 +35,7 @@ class PeopleList extends CustomizedList<People> {
       return null;
     }
 
-    for (People object in l) {
+    for (Tag object in l) {
       objects.add(object.toJson());
     }
     return objects;
@@ -47,7 +47,7 @@ class PeopleList extends CustomizedList<People> {
       return null;
     }
 
-    for (People object in l) {
+    for (Tag object in l) {
       objects.add(object.toJson());
     }
     return json.encode(objects);

@@ -8,11 +8,15 @@ class Tag {
   });
 
   factory Tag.fromJson(Map<String, dynamic> json) {
-    String id = json['_id'];
 
-    return new Tag(
-      id: id,
+    return Tag(
+      id: json['_id'],
       name: json['name'],
     );
   }
+
+  Map<String, dynamic> toJson() => {
+      '_id': id,
+      'name': name,
+    };
 }

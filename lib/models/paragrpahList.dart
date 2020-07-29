@@ -1,21 +1,29 @@
+import 'dart:convert';
+
+import 'package:readr_app/models/customizedList.dart';
 import 'package:readr_app/models/paragraph.dart';
 
-class ParagraphList {
-  List<Paragraph> paragraphs = new List();
-
-  ParagraphList({
-    this.paragraphs,
-  });
+class ParagraphList extends CustomizedList<Paragraph> {
+  // constructor
+  ParagraphList();
 
   factory ParagraphList.fromJson(List<dynamic> parsedJson) {
-    List<Paragraph> paragraphs = new List<Paragraph>();
-
-    if (parsedJson != null) {
-      paragraphs = parsedJson.map((i) => Paragraph.fromJson(i)).toList();
+    if (parsedJson == null) {
+      return null;
     }
 
-    return new ParagraphList(
-      paragraphs: paragraphs,
-    );
+    ParagraphList objects = ParagraphList();
+    List parseList = parsedJson.map((i) => Paragraph.fromJson(i)).toList();
+    parseList.forEach((element) {
+      objects.add(element);
+    });
+
+    return objects;
+  }
+
+  factory ParagraphList.parseResponseBody(String body) {
+    final jsonData = json.decode(body);
+
+    return ParagraphList.fromJson(jsonData);
   }
 }

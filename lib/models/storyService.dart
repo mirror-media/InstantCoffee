@@ -1,20 +1,16 @@
-import "package:http/http.dart" as http;
-import '../helpers/constants.dart';
+import 'package:readr_app/helpers/apiBaseHelper.dart';
+import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/models/story.dart';
 
 class StoryService {
-  Future<String> _loadPostAPI(String slug) async {
-    String endpoint =
-        apiBase + 'posts?where={"slug":"' + slug + '"}&related=full';
-    final response = await http.get(endpoint);
-    if (response.statusCode == 200) {
-      return response.body;
-    } else {
-      return "{'status': 'error', 'message': 'API return error'}";
-    }
-  }
+  ApiBaseHelper _helper = ApiBaseHelper();
 
-  Future<String> loadStory(String slug) async {
-    String jsonString = await _loadPostAPI(slug);
-    return jsonString;
+  Future<Story> fetchStoryList(String slug) async {
+    String endpoint =
+        apiBase + 'posts?where={"slug":"' + slug + '","isAudioSiteOnly":false' + '}&related=full&clean=content';
+
+    final jsonResponse = await _helper.getByUrl(endpoint);
+    Story story = new Story.fromJson(jsonResponse["_items"][0]);
+    return story;
   }
 }

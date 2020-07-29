@@ -1,10 +1,13 @@
 import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/models/category.dart';
+import 'package:readr_app/models/categoryList.dart';
+import 'package:readr_app/models/paragrpahList.dart';
+import 'package:readr_app/models/peopleList.dart';
+import 'package:readr_app/models/record.dart';
+import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/models/sectionList.dart';
-import 'record.dart';
-import 'category.dart';
-import 'tag.dart';
-import 'peopleList.dart';
-import 'paragrpahList.dart';
+import 'package:readr_app/models/tag.dart';
+import 'package:readr_app/models/tagList.dart';
 
 class Story {
   String title;
@@ -14,10 +17,10 @@ class Story {
   String updatedAt;
   String createTime;
   String heroImage;
-  List<Record> relatedStory;
+  RecordList relatedStory;
   String heroCaption;
   String extendByline;
-  List<Tag> tags;
+  TagList tags;
   PeopleList writers;
   PeopleList photographers;
   PeopleList cameraMen;
@@ -25,7 +28,7 @@ class Story {
   PeopleList engineers;
   ParagraphList brief;
   ParagraphList content;
-  List<Category> categories;
+  CategoryList categories;
   SectionList sections;
   bool isAdult;
   String state;
@@ -67,9 +70,9 @@ class Story {
     ParagraphList brief = ParagraphList.fromJson(json["brief"]["apiData"]);
     ParagraphList content = ParagraphList.fromJson(json["content"]["apiData"]);
     String photoUrl = mirrorMediaNotImageUrl;
-    List<Record> relatedBuilder = List();
-    List<Category> categoryBuilder = List();
-    List<Tag> tagBuilder = List();
+    RecordList relatedBuilder = RecordList();
+    CategoryList categoryBuilder = CategoryList();
+    TagList tagBuilder = TagList();
     final title = origTitle.replaceAll('　', "\n");
     if (json["relateds"] != null) {
       for (int i = 0; i < json["relateds"].length; i++) {

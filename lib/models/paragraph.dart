@@ -19,7 +19,7 @@ class Paragraph {
       caption = json["content"][0]["description"];
     } else if (json["type"] == 'header-two') {
       content = json["content"].join("\n");
-      content = content.replaceAll(new RegExp(r'<.*?strong.*?>'), '');
+      content = content.replaceAll(RegExp(r'<.*?strong.*?>'), '');
     } else if (json["type"] == 'infobox') {
       content = json["content"][0]["title"] + "\n" + json["content"][0]["body"];
     } else if (json["type"] == 'embeddedcode') {
@@ -29,7 +29,7 @@ class Paragraph {
       content = json["content"].join("\n");
     }
 
-    return new Paragraph(
+    return Paragraph(
       type: json['type'],
       content: content,
       caption: caption,
