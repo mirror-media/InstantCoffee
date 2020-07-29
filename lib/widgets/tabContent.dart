@@ -188,6 +188,9 @@ class _TabContentState extends State<TabContent> {
   }
 
   Widget _buildListItem(BuildContext context, Record record) {
+    var width = MediaQuery.of(context).size.width;
+    double imageSize = 25*(width-32)/100;
+
     return InkWell(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
@@ -205,17 +208,17 @@ class _TabContentState extends State<TabContent> {
                   width: 16,
                 ),
                 CachedNetworkImage(
-                  height: 90,
-                  width: 90,
+                  height: imageSize,
+                  width: imageSize,
                   imageUrl: record.photo,
                   placeholder: (context, url) => Container(
-                    height: 90,
-                    width: 90,
+                    height: imageSize,
+                    width: imageSize,
                     color: Colors.grey,
                   ),
                   errorWidget: (context, url, error) => Container(
-                    height: 90,
-                    width: 90,
+                    height: imageSize,
+                    width: imageSize,
                     color: Colors.grey,
                     child: Icon(Icons.error),
                   ),
