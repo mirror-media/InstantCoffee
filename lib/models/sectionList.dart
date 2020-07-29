@@ -12,13 +12,13 @@ class SectionList extends CustomizedList<Section> {
       return null;
     }
 
-    SectionList sections = SectionList();
+    SectionList objects = SectionList();
     List parseList = parsedJson.map((i) => Section.fromJson(i)).toList();
     parseList.forEach((element) {
-      sections.add(element);
+      objects.add(element);
     });
 
-    return sections;
+    return objects;
   }
 
   factory SectionList.parseResponseBody(String body) {
@@ -29,27 +29,27 @@ class SectionList extends CustomizedList<Section> {
 
   // your custom methods
   List<Map<dynamic, dynamic>> toJson() {
-    List<Map> sectionItems = new List();
+    List<Map> objects = List();
     if (l == null) {
       return null;
     }
 
-    for (Section section in l) {
-      sectionItems.add(section.toJson());
+    for (Section object in l) {
+      objects.add(object.toJson());
     }
-    return sectionItems;
+    return objects;
   }
 
   String toJsonString() {
-    List<Map> sectionItems = new List();
+    List<Map> objects = List();
     if (l == null) {
       return null;
     }
 
-    for (Section section in l) {
-      sectionItems.add(section.toJson());
+    for (Section object in l) {
+      objects.add(object.toJson());
     }
-    return json.encode(sectionItems);
+    return json.encode(objects);
   }
 
   void sortSections() {
