@@ -7,7 +7,6 @@ class PeopleList extends CustomizedList<People> {
   // constructor
   PeopleList();
 
-
   factory PeopleList.fromJson(List<dynamic> parsedJson) {
     if (parsedJson == null) {
       return null;

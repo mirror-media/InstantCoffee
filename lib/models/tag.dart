@@ -8,7 +8,6 @@ class Tag {
   });
 
   factory Tag.fromJson(Map<String, dynamic> json) {
-
     return Tag(
       id: json['_id'],
       name: json['name'],
@@ -16,7 +15,7 @@ class Tag {
   }
 
   Map<String, dynamic> toJson() => {
-      '_id': id,
-      'name': name,
-    };
+        '_id': id,
+        'name': name,
+      };
 }

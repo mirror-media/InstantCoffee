@@ -36,7 +36,7 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
   void dispose() {
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -54,11 +54,14 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
                 alignment: Alignment.centerLeft,
                 child: InkWell(
                   child: SizedBox(
-                    width: width*0.1,
+                    width: width * 0.1,
                     height: width / 16 * 9,
-                    child: Icon(Icons.arrow_back_ios, color: Colors.white,),
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                    ),
                   ),
-                  onTap: (){
+                  onTap: () {
                     _carouselController.previousPage();
                   },
                 ),
@@ -67,11 +70,14 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
                 alignment: Alignment.centerRight,
                 child: InkWell(
                   child: SizedBox(
-                    width: width*0.1,
+                    width: width * 0.1,
                     height: width / 16 * 9,
-                    child: Icon(Icons.arrow_forward_ios, color: Colors.white,),
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white,
+                    ),
                   ),
-                  onTap: (){
+                  onTap: () {
                     _carouselController.nextPage();
                   },
                 ),

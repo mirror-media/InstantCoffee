@@ -189,7 +189,7 @@ class _TabContentState extends State<TabContent> {
 
   Widget _buildListItem(BuildContext context, Record record) {
     var width = MediaQuery.of(context).size.width;
-    double imageSize = 25*(width-32)/100;
+    double imageSize = 25 * (width - 32) / 100;
 
     return InkWell(
       child: Padding(

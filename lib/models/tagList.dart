@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:readr_app/models/customizedList.dart';
 import 'package:readr_app/models/tag.dart';
 
-
 class TagList extends CustomizedList<Tag> {
   // constructor
   TagList();
