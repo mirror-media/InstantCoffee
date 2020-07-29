@@ -23,11 +23,12 @@ class NewsMarqueeWidget extends StatefulWidget {
 }
 
 class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
+  CarouselController _carouselController;
   CarouselOptions _options;
-  CarouselController _carouselController = CarouselController();
 
   @override
   void initState() {
+    _carouselController = CarouselController();
     _options = CarouselOptions(
       scrollPhysics: NeverScrollableScrollPhysics(),
       height: 32,
@@ -63,7 +64,7 @@ class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
           child: MarqueeWidget(
             child: Text(
               recordList[i].title,
-              style: TextStyle(fontSize: 20, color: appColor),
+              style: TextStyle(fontSize: 18, color: appColor),
             ),
             animationDuration: Duration(milliseconds: 4000),
           ),
