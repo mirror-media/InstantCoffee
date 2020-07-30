@@ -29,26 +29,26 @@ class RecordList extends CustomizedList<Record> {
 
   // your custom methods
   List<Map<dynamic, dynamic>> toJson() {
-    List<Map> records = new List();
+    List<Map> recordMaps = List();
     if (l == null) {
       return null;
     }
 
     for (Record record in l) {
-      records.add(record.toJson());
+      recordMaps.add(record.toJson());
     }
-    return records;
+    return recordMaps;
   }
 
   String toJsonString() {
-    List<Map> records = new List();
+    List<Map> recordMaps = List();
     if (l == null) {
       return null;
     }
 
     for (Record record in l) {
-      records.add(record.toJson());
+      recordMaps.add(record.toJson());
     }
-    return json.encode(records);
+    return json.encode(recordMaps);
   }
 }

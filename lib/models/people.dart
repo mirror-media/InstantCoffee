@@ -8,11 +8,14 @@ class People {
   });
 
   factory People.fromJson(Map<String, dynamic> json) {
-    String id = json['_id'];
-
-    return new People(
-      id: id,
+    return People(
+      id: json['_id'],
       name: json['name'],
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        '_id': id,
+        'name': name,
+      };
 }

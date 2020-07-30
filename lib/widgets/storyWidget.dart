@@ -34,11 +34,8 @@ class _StoryWidget extends State<StoryWidget> {
   }
 
   void getStory(String slug) async {
-    String jsonString = await new StoryService().loadStory(slug);
-    final jsonObject = json.decode(jsonString);
-    setState(() {
-      story = new Story.fromJson(jsonObject["_items"][0]);
-    });
+    story = await StoryService().fetchStoryList(slug);
+    setState(() {});
   }
 
   Widget build(BuildContext context) {
@@ -114,8 +111,8 @@ class _StoryWidget extends State<StoryWidget> {
       article = story.content;
     }
     List<Widget> content = List();
-    if (article.paragraphs.length > 0) {
-      for (Paragraph p in article.paragraphs) {
+    if (article.length > 0) {
+      for (Paragraph p in article) {
         switch (p.type) {
           case 'unstyled':
             {
@@ -266,24 +263,24 @@ class _StoryWidget extends State<StoryWidget> {
 
   Widget _buildAuthors(BuildContext context) {
     List<Widget> authorItems = List();
-    if (story.writers.peoples.length > 0) {
+    if (story.writers.length > 0) {
       authorItems.add(Text("記者：",
           style:
               TextStyle(fontFamily: 'Open Sans', fontSize: 18, height: 1.6)));
     }
-    for (People author in story.writers.peoples) {
+    for (People author in story.writers) {
       Widget credit = new Card(
           child: Text(author.name,
               style: TextStyle(
                   fontFamily: 'Open Sans', fontSize: 18, height: 1.6)));
       authorItems.add(credit);
     }
-    if (story.photographers.peoples.length > 0) {
+    if (story.photographers.length > 0) {
       authorItems.add(Text("攝影：",
           style:
               TextStyle(fontFamily: 'Open Sans', fontSize: 18, height: 1.6)));
     }
-    for (People author in story.photographers.peoples) {
+    for (People author in story.photographers) {
       Widget credit = new Card(
           child: Text(author.name,
               style: TextStyle(

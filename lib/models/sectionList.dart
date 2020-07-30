@@ -29,27 +29,27 @@ class SectionList extends CustomizedList<Section> {
 
   // your custom methods
   List<Map<dynamic, dynamic>> toJson() {
-    List<Map> sectionItems = new List();
+    List<Map> sectionMaps = List();
     if (l == null) {
       return null;
     }
 
     for (Section section in l) {
-      sectionItems.add(section.toJson());
+      sectionMaps.add(section.toJson());
     }
-    return sectionItems;
+    return sectionMaps;
   }
 
   String toJsonString() {
-    List<Map> sectionItems = new List();
+    List<Map> sectionMaps = List();
     if (l == null) {
       return null;
     }
 
     for (Section section in l) {
-      sectionItems.add(section.toJson());
+      sectionMaps.add(section.toJson());
     }
-    return json.encode(sectionItems);
+    return json.encode(sectionMaps);
   }
 
   void sortSections() {
