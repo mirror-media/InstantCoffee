@@ -12,13 +12,13 @@ class ParagraphList extends CustomizedList<Paragraph> {
       return null;
     }
 
-    ParagraphList objects = ParagraphList();
+    ParagraphList paragraphs = ParagraphList();
     List parseList = parsedJson.map((i) => Paragraph.fromJson(i)).toList();
     parseList.forEach((element) {
-      objects.add(element);
+      paragraphs.add(element);
     });
 
-    return objects;
+    return paragraphs;
   }
 
   factory ParagraphList.parseResponseBody(String body) {

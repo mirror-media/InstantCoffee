@@ -12,13 +12,13 @@ class RecordList extends CustomizedList<Record> {
       return null;
     }
 
-    RecordList objects = RecordList();
+    RecordList records = RecordList();
     List parseList = parsedJson.map((i) => Record.fromJson(i)).toList();
     parseList.forEach((element) {
-      objects.add(element);
+      records.add(element);
     });
 
-    return objects;
+    return records;
   }
 
   factory RecordList.parseResponseBody(String body) {
@@ -29,26 +29,26 @@ class RecordList extends CustomizedList<Record> {
 
   // your custom methods
   List<Map<dynamic, dynamic>> toJson() {
-    List<Map> objects = List();
+    List<Map> recordMaps = List();
     if (l == null) {
       return null;
     }
 
-    for (Record object in l) {
-      objects.add(object.toJson());
+    for (Record record in l) {
+      recordMaps.add(record.toJson());
     }
-    return objects;
+    return recordMaps;
   }
 
   String toJsonString() {
-    List<Map> objects = List();
+    List<Map> recordMaps = List();
     if (l == null) {
       return null;
     }
 
-    for (Record object in l) {
-      objects.add(object.toJson());
+    for (Record record in l) {
+      recordMaps.add(record.toJson());
     }
-    return json.encode(objects);
+    return json.encode(recordMaps);
   }
 }

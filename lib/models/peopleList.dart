@@ -12,13 +12,13 @@ class PeopleList extends CustomizedList<People> {
       return null;
     }
 
-    PeopleList objects = PeopleList();
+    PeopleList peoples = PeopleList();
     List parseList = parsedJson.map((i) => People.fromJson(i)).toList();
     parseList.forEach((element) {
-      objects.add(element);
+      peoples.add(element);
     });
 
-    return objects;
+    return peoples;
   }
 
   factory PeopleList.parseResponseBody(String body) {
@@ -29,26 +29,26 @@ class PeopleList extends CustomizedList<People> {
 
   // your custom methods
   List<Map<dynamic, dynamic>> toJson() {
-    List<Map> objects = List();
+    List<Map> peopleMaps = List();
     if (l == null) {
       return null;
     }
 
-    for (People object in l) {
-      objects.add(object.toJson());
+    for (People people in l) {
+      peopleMaps.add(people.toJson());
     }
-    return objects;
+    return peopleMaps;
   }
 
   String toJsonString() {
-    List<Map> objects = List();
+    List<Map> peopleMaps = List();
     if (l == null) {
       return null;
     }
 
-    for (People object in l) {
-      objects.add(object.toJson());
+    for (People people in l) {
+      peopleMaps.add(people.toJson());
     }
-    return json.encode(objects);
+    return json.encode(peopleMaps);
   }
 }

@@ -12,13 +12,13 @@ class TagList extends CustomizedList<Tag> {
       return null;
     }
 
-    TagList objects = TagList();
+    TagList tags = TagList();
     List parseList = parsedJson.map((i) => Tag.fromJson(i)).toList();
     parseList.forEach((element) {
-      objects.add(element);
+      tags.add(element);
     });
 
-    return objects;
+    return tags;
   }
 
   factory TagList.parseResponseBody(String body) {
@@ -29,26 +29,26 @@ class TagList extends CustomizedList<Tag> {
 
   // your custom methods
   List<Map<dynamic, dynamic>> toJson() {
-    List<Map> objects = List();
+    List<Map> tagMaps = List();
     if (l == null) {
       return null;
     }
 
-    for (Tag object in l) {
-      objects.add(object.toJson());
+    for (Tag tag in l) {
+      tagMaps.add(tag.toJson());
     }
-    return objects;
+    return tagMaps;
   }
 
   String toJsonString() {
-    List<Map> objects = List();
+    List<Map> tagMaps = List();
     if (l == null) {
       return null;
     }
 
-    for (Tag object in l) {
-      objects.add(object.toJson());
+    for (Tag tag in l) {
+      tagMaps.add(tag.toJson());
     }
-    return json.encode(objects);
+    return json.encode(tagMaps);
   }
 }

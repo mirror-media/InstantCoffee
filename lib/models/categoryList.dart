@@ -12,13 +12,13 @@ class CategoryList extends CustomizedList<Category> {
       return null;
     }
 
-    CategoryList objects = CategoryList();
+    CategoryList categories = CategoryList();
     List parseList = parsedJson.map((i) => Category.fromJson(i)).toList();
     parseList.forEach((element) {
-      objects.add(element);
+      categories.add(element);
     });
 
-    return objects;
+    return categories;
   }
 
   factory CategoryList.parseResponseBody(String body) {

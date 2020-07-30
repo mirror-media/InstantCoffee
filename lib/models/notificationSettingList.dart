@@ -12,14 +12,14 @@ class NotificationSettingList extends CustomizedList<NotificationSetting> {
       return null;
     }
 
-    NotificationSettingList objects = NotificationSettingList();
+    NotificationSettingList notificationSettings= NotificationSettingList();
     List parseList =
         parsedJson.map((i) => NotificationSetting.fromJson(i)).toList();
     parseList.forEach((element) {
-      objects.add(element);
+      notificationSettings.add(element);
     });
 
-    return objects;
+    return notificationSettings;
   }
 
   factory NotificationSettingList.parseResponseBody(String body) {
@@ -30,26 +30,26 @@ class NotificationSettingList extends CustomizedList<NotificationSetting> {
 
   // your custom methods
   List<Map<dynamic, dynamic>> toJson() {
-    List<Map> objects = List();
+    List<Map> notificationSettingMaps = List();
     if (l == null) {
       return null;
     }
 
-    for (NotificationSetting object in l) {
-      objects.add(object.toJson());
+    for (NotificationSetting notificationSetting in l) {
+      notificationSettingMaps.add(notificationSetting.toJson());
     }
-    return objects;
+    return notificationSettingMaps;
   }
 
   String toJsonString() {
-    List<Map> objects = List();
+    List<Map> notificationSettingMaps = List();
     if (l == null) {
       return null;
     }
 
-    for (NotificationSetting object in l) {
-      objects.add(object.toJson());
+    for (NotificationSetting notificationSetting in l) {
+      notificationSettingMaps.add(notificationSetting.toJson());
     }
-    return json.encode(objects);
+    return json.encode(notificationSettingMaps);
   }
 }
