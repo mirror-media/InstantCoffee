@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -12,9 +14,42 @@ import 'package:readr_app/models/paragraph.dart';
 class ParagraphFormat {
   Widget parseTheParagraph(Paragraph paragraph, BuildContext context) {
     switch(paragraph.type) {
+      case 'header-one': {
+        if(paragraph.contents.length > 0) {
+          return parseTheTextToHtmlWidget('<h1>' + paragraph.contents[0].data + '</h1>', null);
+        }
+        return Container();
+      }
+      case 'header-two': {
+        if(paragraph.contents.length > 0) {
+          return parseTheTextToHtmlWidget('<h2>' + paragraph.contents[0].data + '</h2>', null);
+        }
+        return Container();
+      }
+      case 'code-block':
       case 'unstyled': {
         if(paragraph.contents.length > 0) {
           return parseTheTextToHtmlWidget(paragraph.contents[0].data, null);
+        }
+        return Container();
+      }
+      case 'blockquote': {
+        if(paragraph.contents.length > 0) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Transform.rotate(
+                angle: 180 * math.pi / 180,
+                child: Icon(
+                  Icons.format_quote,
+                  size: 48,
+                  color: appColor,
+                ),
+              ),
+              SizedBox(width: 8),
+              Expanded(child: parseTheTextToHtmlWidget(paragraph.contents[0].data, null)),
+            ],
+          );
         }
         return Container();
       }
