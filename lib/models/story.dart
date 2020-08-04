@@ -27,7 +27,8 @@ class Story {
   PeopleList designers;
   PeopleList engineers;
   ParagraphList brief;
-  ParagraphList content;
+  ParagraphList apiDatas;
+  String contentHtml;
   CategoryList categories;
   SectionList sections;
   bool isAdult;
@@ -46,7 +47,8 @@ class Story {
     this.extendByline,
     this.tags,
     this.brief,
-    this.content,
+    this.apiDatas,
+    this.contentHtml,
     this.writers,
     this.photographers,
     this.cameraMen,
@@ -68,7 +70,7 @@ class Story {
     PeopleList engineersBuilder = PeopleList.fromJson(json["engineers"]);
     SectionList sectionBuilder = SectionList.fromJson(json["sections"]);
     ParagraphList brief = ParagraphList.fromJson(json["brief"]["apiData"]);
-    ParagraphList content = ParagraphList.fromJson(json["content"]["apiData"]);
+    ParagraphList apiDatas = ParagraphList.fromJson(json["content"]["apiData"]);
     String photoUrl = mirrorMediaNotImageUrl;
     RecordList relatedBuilder = RecordList();
     CategoryList categoryBuilder = CategoryList();
@@ -114,7 +116,8 @@ class Story {
       extendByline: json["extend_byline"],
       relatedStory: relatedBuilder,
       brief: brief,
-      content: content,
+      apiDatas: apiDatas,
+      contentHtml: json["content"]["html"],
       writers: writersBuilder,
       photographers: photographersBuilder,
       cameraMen: cameraMenBuilder,
