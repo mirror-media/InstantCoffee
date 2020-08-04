@@ -54,6 +54,14 @@ class ParagraphFormat {
         return Container();
       }
       break;
+      case 'ordered-list-item': {
+        return _buildOrderListWidget(paragraph.contents);
+      }
+      break;
+       case 'unordered-list-item': {
+        return _buildUnorderListWidget(paragraph.contents);
+      }
+      break;
       case 'image': {
         var width = MediaQuery.of(context).size.width-32;
         var height = width / 16 * 9;
@@ -83,6 +91,52 @@ class ParagraphFormat {
         height: 1.8,
         color: color,
       ),
+    );
+  }
+
+  Widget _buildOrderListWidget(ContentList contentList) {
+    // api data is strange [[...]]
+    String dataString = contentList[0].data.substring(1, contentList[0].data.length-2);
+    List<String> dataList = dataString.split(', ');
+    
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: dataList.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          leading: Text(
+            (index+1).toString()+'.',
+            style: TextStyle(
+              fontSize: 20,
+              height: 1.8,
+            ),
+          ),
+          title: parseTheTextToHtmlWidget(dataList[index], null),
+        );
+      }
+    );
+  }
+
+  Widget _buildUnorderListWidget(ContentList contentList) {
+    
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: contentList.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          leading: Container(
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+              color: Colors.black,
+              shape: BoxShape.circle,
+            ),
+          ),
+          title: parseTheTextToHtmlWidget(contentList[index].data, null),
+        );
+      }
     );
   }
 
