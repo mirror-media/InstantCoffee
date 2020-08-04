@@ -11,19 +11,19 @@ class StoryPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: appColor,
-        actions: <Widget>[
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        actions: [
           IconButton(
-            icon: Icon(Icons.search),
-            tooltip: 'Search',
-            onPressed: () => doSearch(),
+            icon: Icon(Icons.share),
+            tooltip: 'share',
+            onPressed: (){},
           )
         ],
       ),
-      body: StoryWidget(slug: this.slug),
+      body: StoryWidget(slug: slug),
     );
-  }
-
-  doSearch() {
-    return null;
   }
 }

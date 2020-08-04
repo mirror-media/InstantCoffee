@@ -31,9 +31,9 @@ dependencies:
   # http ajax call
   http: ^0.12.0+4
   # launching a URL in the mobile platform
-  url_launcher: ^4.0.3
+  url_launcher: ^5.5.0
   # webview
-  webview_flutter: ^0.3.20+2
+  webview_flutter: ^0.3.22+1
   # local storage
   localstorage: ^3.0.2+5
   # drag and drop object
@@ -49,6 +49,8 @@ dependencies:
   marquee: ^1.5.2
   # carousel slider in flutter
   carousel_slider: ^2.2.1
+  # widget from html
+  flutter_widget_from_html: ^0.4.2
 
 dev_dependencies:
   flutter_test:
