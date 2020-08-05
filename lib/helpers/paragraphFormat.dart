@@ -54,11 +54,11 @@ class ParagraphFormat {
       }
       break;
       case 'ordered-list-item': {
-        return _buildOrderListWidget(paragraph.contents);
+        return buildOrderListWidget(paragraph.contents);
       }
       break;
        case 'unordered-list-item': {
-        return _buildUnorderListWidget(paragraph.contents);
+        return buildUnorderListWidget(paragraph.contents);
       }
       break;
       case 'image': {
@@ -97,10 +97,21 @@ class ParagraphFormat {
     );
   }
 
-  Widget _buildOrderListWidget(ContentList contentList) {
-    // api data is strange [[...]]
-    String dataString = contentList[0].data.substring(1, contentList[0].data.length-2);
-    List<String> dataList = dataString.split(', ');
+  List<String> _convertStrangedataList(ContentList contentList) {
+    List<String> resultList = List<String>();
+    if(contentList.length == 1 && contentList[0].data[0] == '[') {
+      // api data is strange [[...]]
+      String dataString = contentList[0].data.substring(1, contentList[0].data.length-2);
+      resultList = dataString.split(', ');
+    }
+    else {
+      contentList.forEach((content) { resultList.add(content.data); });
+    }
+    return resultList;
+  }
+
+  Widget buildOrderListWidget(ContentList contentList) {
+    List<String> dataList = _convertStrangedataList(contentList);
     
     return ListView.builder(
       shrinkWrap: true,
@@ -121,12 +132,13 @@ class ParagraphFormat {
     );
   }
 
-  Widget _buildUnorderListWidget(ContentList contentList) {
-    
+  Widget buildUnorderListWidget(ContentList contentList) {
+    List<String> dataList = _convertStrangedataList(contentList);
+
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: contentList.length,
+      itemCount: dataList.length,
       itemBuilder: (context, index) {
         return ListTile(
           leading: Container(
@@ -137,11 +149,12 @@ class ParagraphFormat {
               shape: BoxShape.circle,
             ),
           ),
-          title: parseTheTextToHtmlWidget(contentList[index].data, null),
+          title: parseTheTextToHtmlWidget(dataList[index], null),
         );
       }
     );
   }
+
   Widget buildSlideshowWidget(ContentList contentList, double width, double height) {
     double theSmallestRatio;
     contentList.forEach(
