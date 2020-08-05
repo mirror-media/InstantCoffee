@@ -79,8 +79,7 @@ class ParagraphFormat {
       break;
       case 'slideshow': {
         var width = MediaQuery.of(context).size.width-32;
-        var height = width / 16 * 9;
-        return buildSlideshowWidget(paragraph.contents, width, height);
+        return buildSlideshowWidget(paragraph.contents, width);
       }
       break;
       default: {
@@ -161,7 +160,7 @@ class ParagraphFormat {
     );
   }
 
-  Widget buildSlideshowWidget(ContentList contentList, double width, double height) {
+  Widget buildSlideshowWidget(ContentList contentList, double width) {
     double theSmallestRatio;
     contentList.forEach(
       (content) { 
