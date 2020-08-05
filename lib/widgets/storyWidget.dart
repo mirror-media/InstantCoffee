@@ -25,10 +25,9 @@ class StoryWidget extends StatefulWidget {
 }
 
 class _StoryWidget extends State<StoryWidget> {
-  String slug;
-  Story story;
+  Story _story;
   ScrollController _controller;
-  Color sectionColor = appColor;
+  Color _sectionColor = appColor;
 
   @override
   void initState() {
@@ -38,8 +37,8 @@ class _StoryWidget extends State<StoryWidget> {
   }
 
   void getStory(String slug) async {
-    story = await StoryService().fetchStoryList(slug);
-    setSectionColor(story);
+    _story = await StoryService().fetchStoryList(slug);
+    setSectionColor(_story);
     setState(() {});
   }
 
@@ -50,7 +49,7 @@ class _StoryWidget extends State<StoryWidget> {
     }
     
     if(sectionColorMaps.containsKey(sectionName)) {
-      sectionColor = Color(sectionColorMaps[sectionName]);
+      _sectionColor = Color(sectionColorMaps[sectionName]);
     }
   }
 
@@ -58,8 +57,8 @@ class _StoryWidget extends State<StoryWidget> {
     var width = MediaQuery.of(context).size.width;
     var height = width / 16 * 9;
     
-    if (story == null) {
-      return CircularProgressIndicator();
+    if (_story == null) {
+      return Center(child: CircularProgressIndicator());
     } else {
       return ListView(
         controller: _controller, 
@@ -74,8 +73,11 @@ class _StoryWidget extends State<StoryWidget> {
           SizedBox(height: 16),
           _buildBrief(),
           _buildContent(context),
+          SizedBox(height: 32),
+          _buildUpdateDateWidget(),
+          SizedBox(height: 16),
           _buildTagWidget(context),
-          _buildRelatedWidget(context, story.relatedStory),
+          _buildRelatedWidget(context, _story.relatedStory),
         ]
       );
     }
@@ -84,11 +86,11 @@ class _StoryWidget extends State<StoryWidget> {
   Widget _buildHeroWidget(double width, double height) {
     return Column(
       children: [
-        if(story.heroImage != '')
+        if(_story.heroImage != '')
           CachedNetworkImage(
             height: height,
             width: width,
-            imageUrl: story.heroImage,
+            imageUrl: _story.heroImage,
             placeholder: (context, url) => Container(
               height: height,
               width: width,
@@ -102,11 +104,11 @@ class _StoryWidget extends State<StoryWidget> {
             ),
             fit: BoxFit.cover,
           ),
-        if(story.heroCaption != '')
+        if(_story.heroCaption != '')
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
             child: Text(
-              story.heroCaption,
+              _story.heroCaption,
               style: TextStyle(fontSize: 16),
             ),
           ),
@@ -124,8 +126,8 @@ class _StoryWidget extends State<StoryWidget> {
         children: [
           _buildCategory(context),
           Text(
-            dateTimeFormat.changeDatabaseStringToDisplayString(story.publishedDate, 'yyyy.MM.d HH:mm'),
-            style: TextStyle(fontSize: 16, color: Colors.grey[600], fontStyle: FontStyle.italic,),
+            dateTimeFormat.changeDatabaseStringToDisplayString(_story.publishedDate, 'yyyy.MM.dd HH:mm'),
+            style: TextStyle(fontSize: 16, color: Colors.grey[600], /*fontStyle: FontStyle.italic,*/),
           ),
         ],
       ),
@@ -133,7 +135,7 @@ class _StoryWidget extends State<StoryWidget> {
   }
 
   Widget _buildCategory(BuildContext context) {
-    List<Category> categories = story.categories;
+    List<Category> categories = _story.categories;
 
     return InkWell(
       child: Row(
@@ -141,7 +143,7 @@ class _StoryWidget extends State<StoryWidget> {
           Container(
             width: 10,
             height: 20,
-            color: sectionColor,
+            color: _sectionColor,
           ),
           SizedBox(width: 10),
           Text(
@@ -158,7 +160,7 @@ class _StoryWidget extends State<StoryWidget> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
       child: Text(
-        story.title,
+        _story.title,
         style: TextStyle(fontFamily: 'Open Sans', fontSize: 28),
       ),
     );
@@ -177,11 +179,11 @@ class _StoryWidget extends State<StoryWidget> {
       ),
     );
 
-    if (story.writers.length > 0) {
+    if (_story.writers.length > 0) {
       authorItems.add(Text("文"));
       authorItems.add(myVerticalDivider);
 
-      for (People author in story.writers) {
+      for (People author in _story.writers) {
         authorItems.add(
           Padding(
             padding: const EdgeInsets.only(right: 4.0),
@@ -192,10 +194,10 @@ class _StoryWidget extends State<StoryWidget> {
       authorItems.add(SizedBox(width: 12.0,));
     }
     
-    if (story.photographers.length > 0) {
+    if (_story.photographers.length > 0) {
       authorItems.add(Text("攝影"));
       authorItems.add(myVerticalDivider);
-      for (People author in story.photographers) {
+      for (People author in _story.photographers) {
         authorItems.add(
           Padding(
             padding: const EdgeInsets.only(right: 4.0),
@@ -215,7 +217,7 @@ class _StoryWidget extends State<StoryWidget> {
   }
 
   Widget _buildBrief() {
-    ParagraphList articles = story.brief;
+    ParagraphList articles = _story.brief;
   
     if (articles.length > 0) {
       ParagraphFormat paragraphFormat = ParagraphFormat();
@@ -243,7 +245,7 @@ class _StoryWidget extends State<StoryWidget> {
       return Padding(
         padding: const EdgeInsets.all(16),
         child: Container(
-          color: sectionColor,
+          color: _sectionColor,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(32.0, 16.0, 32.0, 16.0),
             child: Column(
@@ -262,7 +264,7 @@ class _StoryWidget extends State<StoryWidget> {
     ParagraphFormat paragraphFormat = ParagraphFormat();
     List<Widget> paragraphWidgets = List<Widget>();
 
-    for(Paragraph paragraph in story.apiDatas) {
+    for(Paragraph paragraph in _story.apiDatas) {
       paragraphWidgets.add(
         Padding(
           padding: const EdgeInsets.only(top: 16.0),
@@ -272,7 +274,10 @@ class _StoryWidget extends State<StoryWidget> {
     }
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(children: paragraphWidgets,),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: paragraphWidgets,
+      ),
     );
   }
 
@@ -300,19 +305,19 @@ class _StoryWidget extends State<StoryWidget> {
   }
 
   Widget _buildTags(BuildContext context) {
-    if (story.tags == null) {
+    if (_story.tags == null) {
       return Container();
     } else {
       List<Widget> tagWidgets = List();
-      for(int i=0; i<story.tags.length; i++) {
+      for(int i=0; i<_story.tags.length; i++) {
         tagWidgets.add(
           Text(
-            '#'+story.tags[i].name,
+            '#'+_story.tags[i].name,
             style: TextStyle(fontSize: 18, color: appColor),
           ),
         );
 
-        if(i != story.tags.length-1)
+        if(i != _story.tags.length-1)
         {
           tagWidgets.add(
             Text(
@@ -332,6 +337,35 @@ class _StoryWidget extends State<StoryWidget> {
     // load the [age]
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => ListingPage()));
+  }
+
+  _buildUpdateDateWidget() {
+    DateTimeFormat dateTimeFormat = DateTimeFormat();
+
+    // VerticalDivider is broken? so use Container 
+    var myVerticalDivider = Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+      child: Container(
+        color: Colors.black, 
+        width: 1, 
+        height: 16,
+      ),
+    );
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          '更新時間',
+          style: TextStyle(fontSize: 16),
+        ),
+        myVerticalDivider,
+        Text(
+          dateTimeFormat.changeDatabaseStringToDisplayString(_story.updatedAt, 'yyyy.MM.dd HH:mm'),
+          style: TextStyle(fontSize: 16),
+        ),
+      ],
+    );
   }
 
   Widget _buildRelatedWidget(BuildContext context, List<Record> relateds) {
