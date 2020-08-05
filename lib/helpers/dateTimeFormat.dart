@@ -1,6 +1,8 @@
 import 'package:intl/intl.dart';
 
 class DateTimeFormat {
+  /// format type: 
+  /// https://api.flutter.dev/flutter/intl/DateFormat-class.html
   String changeDatabaseStringToDisplayString(String data, String formatType) {
     int gmtHour = DateTime.now().timeZoneOffset.inHours;
     
