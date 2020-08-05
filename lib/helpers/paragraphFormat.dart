@@ -41,12 +41,18 @@ class ParagraphFormat {
                 angle: 180 * math.pi / 180,
                 child: Icon(
                   Icons.format_quote,
-                  size: 48,
+                  size: 60,
                   color: appColor,
                 ),
               ),
               SizedBox(width: 8),
               Expanded(child: parseTheTextToHtmlWidget(paragraph.contents[0].data, null)),
+              SizedBox(width: 8),
+              Icon(
+                Icons.format_quote,
+                size: 60,
+                color: appColor,
+              ),
             ],
           );
         }
