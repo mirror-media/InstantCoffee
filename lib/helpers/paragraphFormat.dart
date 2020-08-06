@@ -82,6 +82,13 @@ class ParagraphFormat {
         return buildSlideshowWidget(paragraph.contents, width);
       }
       break;
+      case 'youtube': {
+        return buildYoutubeWidget(
+          paragraph.contents[0].data,
+          paragraph.contents[0].description,
+        );
+      }
+      break;
       default: {
         return Container();
       }
@@ -231,6 +238,23 @@ class ParagraphFormat {
             },
           ),
         ),
+      ],
+    );
+  }
+
+  Widget buildYoutubeWidget(String youtubeId, String description) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        WebView('https://www.youtube.com/embed/$youtubeId', aspectRatio: 16/9),
+        if(description != '')
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Text(
+              description,
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          ),
       ],
     );
   }
