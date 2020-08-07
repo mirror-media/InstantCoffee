@@ -26,6 +26,13 @@ class Content {
           description: json['description'],
         );
       }
+      else if(json['filetype'] != null) {
+        return Content(
+          data: json['url'],
+          aspectRatio: null,
+          description: json['title'] + ';' + json['description'],
+        );
+      }
 
       return Content(data: null, aspectRatio: null, description: null);
     }

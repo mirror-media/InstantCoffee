@@ -9,6 +9,7 @@ import 'package:readr_app/helpers/constants.dart';
 import 'package:readr_app/models/contentList.dart';
 import 'package:readr_app/models/paragraph.dart';
 import 'package:readr_app/widgets/imageDescriptionWidget.dart';
+import 'package:readr_app/widgets/mMVideoPlayer.dart';
 
 class ParagraphFormat {
   Widget parseTheParagraph(Paragraph paragraph, BuildContext context) {
@@ -86,6 +87,12 @@ class ParagraphFormat {
         return buildYoutubeWidget(
           paragraph.contents[0].data,
           paragraph.contents[0].description,
+        );
+      }
+      case 'video': {
+        return MMVideoPlayer(
+          videourl: paragraph.contents[0].data,
+          aspectRatio: 16/9,
         );
       }
       break;
