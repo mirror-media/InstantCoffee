@@ -33,6 +33,13 @@ class Content {
           description: json['title'] + ';' + json['description'],
         );
       }
+      else if(json['embeddedCode'] != null) {
+        return Content(
+          data: json['embeddedCode'],
+          aspectRatio: null,
+          description: json['caption'],
+        );
+      }
 
       return Content(data: null, aspectRatio: null, description: null);
     }

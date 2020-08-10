@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/constants.dart';
 import 'package:readr_app/models/contentList.dart';
 import 'package:readr_app/models/paragraph.dart';
+import 'package:readr_app/widgets/embeddedCodeWidget.dart';
 import 'package:readr_app/widgets/imageDescriptionWidget.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
 
@@ -93,6 +94,12 @@ class ParagraphFormat {
         return MMVideoPlayer(
           videourl: paragraph.contents[0].data,
           aspectRatio: 16/9,
+        );
+      }
+      break;
+      case 'embeddedcode': {
+        return EmbeddedCodeWidget(
+          embeddedCoede: paragraph.contents[0].data,
         );
       }
       break;
