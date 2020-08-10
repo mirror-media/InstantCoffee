@@ -234,7 +234,7 @@ class _StoryWidget extends State<StoryWidget> {
       authorItems.add(SizedBox(width: 12.0,));
     }
 
-    if (_story.extendByline == '' || _story.extendByline == null) {
+    if (_story.extendByline != '' && _story.extendByline != null) {
       authorItems.add(Text("文"));
       authorItems.add(myVerticalDivider);
       authorItems.add(Text(_story.extendByline));
