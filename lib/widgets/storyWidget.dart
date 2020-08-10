@@ -72,7 +72,7 @@ class _StoryWidget extends State<StoryWidget> {
           _buildAuthors(context),
           SizedBox(height: 16),
           _buildBrief(),
-          _buildContent(context),
+          _buildContent(),
           SizedBox(height: 32),
           _buildUpdateDateWidget(),
           SizedBox(height: 16),
@@ -260,23 +260,25 @@ class _StoryWidget extends State<StoryWidget> {
     return Container();
   }
 
-  _buildContent(BuildContext context) {
+  _buildContent() {
     ParagraphFormat paragraphFormat = ParagraphFormat();
-    List<Widget> paragraphWidgets = List<Widget>();
-
-    for(Paragraph paragraph in _story.apiDatas) {
-      paragraphWidgets.add(
-        Padding(
-          padding: const EdgeInsets.only(top: 16.0),
-          child: paragraphFormat.parseTheParagraph(paragraph, context),
-        ),
-      );
-    }
+    
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: paragraphWidgets,
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: _story.apiDatas.length,
+        itemBuilder: (context, index) {
+          Paragraph paragraph = _story.apiDatas[index];
+          if(paragraph.contents.length > 0 && paragraph.contents[0].data != '') {
+            return Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: paragraphFormat.parseTheParagraph(paragraph, context),
+            );
+          }
+          return Container();
+        }
       ),
     );
   }
