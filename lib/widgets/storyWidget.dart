@@ -7,6 +7,7 @@ import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/paragraph.dart';
 import 'package:readr_app/models/paragrpahList.dart';
 import 'package:readr_app/models/people.dart';
+import 'package:readr_app/models/peopleList.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/story.dart';
 import 'package:readr_app/models/storyService.dart';
@@ -166,6 +167,20 @@ class _StoryWidget extends State<StoryWidget> {
     );
   }
 
+  List<Widget> _addAuthorItems(PeopleList peopleList) {
+    List<Widget> authorItems = List();
+
+    for (People author in peopleList) {
+      authorItems.add(
+        Padding(
+          padding: const EdgeInsets.only(right: 4.0),
+          child: Text(author.name,),
+        )
+      );
+    }
+    return authorItems;
+  }
+
   Widget _buildAuthors(BuildContext context) {
     List<Widget> authorItems = List();
 
@@ -183,30 +198,48 @@ class _StoryWidget extends State<StoryWidget> {
       authorItems.add(Text("文"));
       authorItems.add(myVerticalDivider);
 
-      for (People author in _story.writers) {
-        authorItems.add(
-          Padding(
-            padding: const EdgeInsets.only(right: 4.0),
-            child: Text(author.name,),
-          )
-        );
-      }
+      authorItems.addAll(_addAuthorItems(_story.writers));
       authorItems.add(SizedBox(width: 12.0,));
     }
     
     if (_story.photographers.length > 0) {
       authorItems.add(Text("攝影"));
       authorItems.add(myVerticalDivider);
-      for (People author in _story.photographers) {
-        authorItems.add(
-          Padding(
-            padding: const EdgeInsets.only(right: 4.0),
-            child: Text(author.name,),
-          )
-        );
-      }
+
+      authorItems.addAll(_addAuthorItems(_story.photographers));
+      authorItems.add(SizedBox(width: 12.0,));
     }
-    
+
+    if (_story.cameraMen.length > 0) {
+      authorItems.add(Text("影音"));
+      authorItems.add(myVerticalDivider);
+
+      authorItems.addAll(_addAuthorItems(_story.cameraMen));
+      authorItems.add(SizedBox(width: 12.0,));
+    }
+
+    if (_story.designers.length > 0) {
+      authorItems.add(Text("設計"));
+      authorItems.add(myVerticalDivider);
+
+      authorItems.addAll(_addAuthorItems(_story.designers));
+      authorItems.add(SizedBox(width: 12.0,));
+    }
+
+    if (_story.engineers.length > 0) {
+      authorItems.add(Text("工程"));
+      authorItems.add(myVerticalDivider);
+
+      authorItems.addAll(_addAuthorItems(_story.engineers));
+      authorItems.add(SizedBox(width: 12.0,));
+    }
+
+    if (_story.extendByline == '' || _story.extendByline == null) {
+      authorItems.add(Text("文"));
+      authorItems.add(myVerticalDivider);
+      authorItems.add(Text(_story.extendByline));
+    }
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
       child: Wrap(
