@@ -40,6 +40,13 @@ class Content {
           description: json['caption'],
         );
       }
+      else if(json['draftRawObj'] != null) {
+        return Content(
+          data: json['body'],
+          aspectRatio: null,
+          description: json['title'],
+        );
+      }
 
       return Content(data: null, aspectRatio: null, description: null);
     }

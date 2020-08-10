@@ -10,6 +10,7 @@ import 'package:readr_app/models/paragraph.dart';
 import 'package:readr_app/widgets/embeddedCodeWidget.dart';
 import 'package:readr_app/widgets/imageAndDescriptionSlideShowWidget.dart';
 import 'package:readr_app/widgets/imageDescriptionWidget.dart';
+import 'package:readr_app/widgets/infoBoxWidget.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
 
 class ParagraphFormat {
@@ -99,6 +100,13 @@ class ParagraphFormat {
       case 'embeddedcode': {
         return EmbeddedCodeWidget(
           embeddedCoede: paragraph.contents[0].data,
+        );
+      }
+      break;
+      case 'infobox': {
+        return InfoBoxWidget(
+          title: paragraph.contents[0].description,
+          description: paragraph.contents[0].data,
         );
       }
       break;
