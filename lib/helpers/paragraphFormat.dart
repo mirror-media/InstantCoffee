@@ -120,7 +120,7 @@ class ParagraphFormat {
     List<String> resultList = List<String>();
     if(contentList.length == 1 && contentList[0].data[0] == '[') {
       // api data is strange [[...]]
-      String dataString = contentList[0].data.substring(1, contentList[0].data.length-2);
+      String dataString = contentList[0].data.substring(1, contentList[0].data.length-1);
       resultList = dataString.split(', ');
     }
     else {
@@ -137,15 +137,19 @@ class ParagraphFormat {
       physics: NeverScrollableScrollPhysics(),
       itemCount: dataList.length,
       itemBuilder: (context, index) {
-        return ListTile(
-          leading: Text(
-            (index+1).toString()+'.',
-            style: TextStyle(
-              fontSize: 20,
-              height: 1.8,
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              (index+1).toString()+'.',
+              style: TextStyle(
+                fontSize: 20,
+                height: 1.8,
+              ),
             ),
-          ),
-          title: parseTheTextToHtmlWidget(dataList[index], null),
+            SizedBox(width: 16),
+            Expanded(child: parseTheTextToHtmlWidget(dataList[index], null)),
+          ],
         );
       }
     );
@@ -159,16 +163,23 @@ class ParagraphFormat {
       physics: NeverScrollableScrollPhysics(),
       itemCount: dataList.length,
       itemBuilder: (context, index) {
-        return ListTile(
-          leading: Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-              color: Colors.black,
-              shape: BoxShape.circle,
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 20, 0, 8),
+              child: Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: appColor,
+                  shape: BoxShape.circle,
+                ),
+              ),
             ),
-          ),
-          title: parseTheTextToHtmlWidget(dataList[index], null),
+            SizedBox(width: 16),
+            Expanded(child: parseTheTextToHtmlWidget(dataList[index], null)),
+          ],
         );
       }
     );
