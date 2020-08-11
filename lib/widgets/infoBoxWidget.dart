@@ -25,7 +25,7 @@ class InfoBoxWidget extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
-                      fontSize: 32,
+                      fontSize: 24,
                       color: appColor,
                       fontWeight: FontWeight.bold,
                     ),
@@ -49,7 +49,7 @@ class InfoBoxWidget extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: Container(
-              height: 32,
+              height: 24,
               width: 42,
               color: appColor,
             ),
@@ -58,7 +58,7 @@ class InfoBoxWidget extends StatelessWidget {
         Align(
           alignment: Alignment.topLeft,
           child: Padding(
-            padding: const EdgeInsets.only(top: 52.0),
+            padding: const EdgeInsets.only(top: 44.0),
             child: CustomPaint(
               painter: TrianglePainter(
                 strokeColor: Colors.grey[600],
@@ -66,7 +66,7 @@ class InfoBoxWidget extends StatelessWidget {
                 paintingStyle: PaintingStyle.fill,
               ),
               child: Container(
-                height: 16,
+                height: 12,
                 width: 20,
               ),
             ),
