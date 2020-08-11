@@ -12,6 +12,7 @@ import 'package:readr_app/widgets/imageAndDescriptionSlideShowWidget.dart';
 import 'package:readr_app/widgets/imageDescriptionWidget.dart';
 import 'package:readr_app/widgets/infoBoxWidget.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
+import 'package:readr_app/widgets/youtubeWidget.dart';
 
 class ParagraphFormat {
   Widget parseTheParagraph(Paragraph paragraph, BuildContext context) {
@@ -200,19 +201,9 @@ class ParagraphFormat {
   }
 
   Widget buildYoutubeWidget(String youtubeId, String description) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        WebView('https://www.youtube.com/embed/$youtubeId', aspectRatio: 16/9),
-        if(description != '')
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Text(
-              description,
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-          ),
-      ],
+    return YoutubeWidget(
+      youtubeId: youtubeId,
+      description: description,
     );
   }
 }
