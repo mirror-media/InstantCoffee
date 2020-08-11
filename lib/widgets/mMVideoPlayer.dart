@@ -6,9 +6,6 @@ class MMVideoPlayer extends StatefulWidget {
   /// The baseUrl of the video
   final String videourl;
 
-  /// Initialize the Video on Startup. This will prep the video for playback.
-  final bool autoInitialize;
-
   /// Play the video as soon as it's displayed
   final bool autoPlay;
 
@@ -18,28 +15,19 @@ class MMVideoPlayer extends StatefulWidget {
   /// Whether or not the video should loop
   final bool looping;
 
-  /// Whether or not to show the controls
-  final bool showControls;
-
   /// The Aspect Ratio of the Video. Important to get the correct size of the
   /// video!
   ///
   /// Will fallback to fitting within the space allowed.
   final double aspectRatio;
 
-  /// Play video directly in fullscreen
-  final bool fullscreenByDefault;
-
   MMVideoPlayer({
     Key key,
     @required this.videourl,
     @required this.aspectRatio,
-    this.autoInitialize = true,
     this.autoPlay = false,
     this.startAt,
     this.looping = false,
-    this.showControls = true,
-    this.fullscreenByDefault = false,
   }) : super(key: key);
 
   @override
@@ -58,17 +46,11 @@ class _MMVideoPlayerState extends State<MMVideoPlayer> {
 
   void _configVideoPlayer() {
     _videoPlayerController = VideoPlayerController.network(widget.videourl);
-      
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
-      startAt: widget.startAt,
       aspectRatio: widget.aspectRatio,
-      autoPlay: widget.autoPlay,
-      looping: widget.looping,
-      showControls: widget.showControls,
-      fullScreenByDefault: widget.fullscreenByDefault,
-      autoInitialize: widget.autoInitialize,
-      allowFullScreen: true,
+      autoInitialize: true,
+      customControls: MaterialControls(),
     );
   }
 
@@ -81,10 +63,8 @@ class _MMVideoPlayerState extends State<MMVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Chewie(
-        controller: _chewieController,
-      ),
+    return Chewie(
+      controller: _chewieController,
     );
   }
 }
