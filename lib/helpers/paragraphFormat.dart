@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/constants.dart';
 import 'package:readr_app/models/contentList.dart';
 import 'package:readr_app/models/paragraph.dart';
+import 'package:readr_app/widgets/annotationWidget.dart';
 import 'package:readr_app/widgets/embeddedCodeWidget.dart';
 import 'package:readr_app/widgets/imageAndDescriptionSlideShowWidget.dart';
 import 'package:readr_app/widgets/imageDescriptionWidget.dart';
@@ -108,6 +109,12 @@ class ParagraphFormat {
         return InfoBoxWidget(
           title: paragraph.contents[0].description,
           description: paragraph.contents[0].data,
+        );
+      }
+      break;
+      case 'annotation': {
+        return AnnotationWidget(
+          data: paragraph.contents[0].data,
         );
       }
       break;
