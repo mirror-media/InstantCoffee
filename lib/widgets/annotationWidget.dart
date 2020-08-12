@@ -25,11 +25,11 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
   }
 
   _parsingTheData() {
-    String temp = widget.data.replaceAll('<!--', '<-split->').replaceAll('-->', '<-split->');
+    String temp = widget.data.replaceAll(RegExp(r'<!--[^{",}]*-->'), '');
+    temp = temp.replaceAll('<!--', '<-split->').replaceAll('-->', '<-split->');
     displayStringList = temp.split('<-split->');
     for(int i=displayStringList.length-1; i>=0; i--) {
       if(displayStringList[i] == "") {
-        displayStringList.removeAt(i+1);
         displayStringList.removeAt(i);
       }
     }
