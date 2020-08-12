@@ -35,6 +35,13 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
     }
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      children: _renderWidgets(context),
+    );
+  }
+
   List<Widget> _renderWidgets(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     List<Widget> displayWidgets = List<Widget>();
@@ -44,7 +51,6 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
     );
 
     for(int i=0; i<displayStringList.length; i++) {
-      print(displayStringList[i]);
       if(annotationExp.hasMatch(displayStringList[i])) {
         String body = annotationExp.firstMatch(displayStringList[i]).group(1);
         Annotation annotation = Annotation.parseResponseBody(body);
@@ -59,7 +65,6 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
               ),
             ),
           );
-
           displayWidgets.add(
             InkWell(
               child: Wrap(
@@ -101,7 +106,6 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
               },
             ),
           );
-
           displayWidgets.add(
             Padding(
               padding: const EdgeInsets.only(top: 16.0),
@@ -139,6 +143,7 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
             ),
           );
         }
+        // if is not expanded 
         else {
           displayWidgets.add(
             HtmlWidget(
@@ -206,14 +211,6 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
         );
       }
     }
-    print(displayWidgets.length);
     return displayWidgets;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      children: _renderWidgets(context),
-    );
   }
 }
