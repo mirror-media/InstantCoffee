@@ -25,16 +25,21 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
   }
 
   _parsingTheData() {
-    String temp = widget.data
-        .replaceAll('<!--', '<-split->')
-        .replaceAll('-->', '<-split->');
+    String temp = widget.data.replaceAll(RegExp(r'<!--[^{",}]*-->'), '');
+    temp = temp.replaceAll('<!--', '<-split->').replaceAll('-->', '<-split->');
     displayStringList = temp.split('<-split->');
     for (int i = displayStringList.length - 1; i >= 0; i--) {
       if (displayStringList[i] == "") {
-        displayStringList.removeAt(i + 1);
         displayStringList.removeAt(i);
       }
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      children: _renderWidgets(context),
+    );
   }
 
   List<Widget> _renderWidgets(BuildContext context) {
@@ -46,7 +51,6 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
     );
 
     for (int i = 0; i < displayStringList.length; i++) {
-      print(displayStringList[i]);
       if (annotationExp.hasMatch(displayStringList[i])) {
         String body = annotationExp.firstMatch(displayStringList[i]).group(1);
         Annotation annotation = Annotation.parseResponseBody(body);
@@ -61,7 +65,6 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
               ),
             ),
           );
-
           displayWidgets.add(
             InkWell(
               child: Wrap(
@@ -104,7 +107,6 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
               },
             ),
           );
-
           displayWidgets.add(
             Padding(
               padding: const EdgeInsets.only(top: 16.0),
@@ -141,7 +143,9 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
               ),
             ),
           );
-        } else {
+        }
+        // if is not expanded
+        else {
           displayWidgets.add(
             HtmlWidget(
               annotation.text,
@@ -208,14 +212,6 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
         );
       }
     }
-    print(displayWidgets.length);
     return displayWidgets;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      children: _renderWidgets(context),
-    );
   }
 }
