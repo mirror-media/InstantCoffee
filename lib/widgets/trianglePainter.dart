@@ -5,7 +5,10 @@ class TrianglePainter extends CustomPainter {
   final PaintingStyle paintingStyle;
   final double strokeWidth;
 
-  TrianglePainter({this.strokeColor = Colors.black, this.strokeWidth = 3, this.paintingStyle = PaintingStyle.stroke});
+  TrianglePainter(
+      {this.strokeColor = Colors.black,
+      this.strokeWidth = 3,
+      this.paintingStyle = PaintingStyle.stroke});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -20,7 +23,7 @@ class TrianglePainter extends CustomPainter {
   Path getTrianglePath(double x, double y) {
     return Path()
       ..moveTo(0, 0)
-      ..lineTo(x, y*2/3)
+      ..lineTo(x, y * 2 / 3)
       ..lineTo(x, 0);
   }
 

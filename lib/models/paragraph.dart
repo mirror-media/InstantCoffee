@@ -14,7 +14,7 @@ class Paragraph {
   factory Paragraph.fromJson(Map<String, dynamic> json) {
     ContentList contents;
     contents = ContentList.fromJson(json["content"]);
-    
+
     return Paragraph(
       type: json['type'],
       contents: contents,

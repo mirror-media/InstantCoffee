@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:readr_app/helpers/constants.dart';
 import 'package:readr_app/widgets/trianglePainter.dart';
+
 class InfoBoxWidget extends StatelessWidget {
   final String title;
   final String description;

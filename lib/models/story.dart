@@ -69,8 +69,12 @@ class Story {
     PeopleList designersBuilder = PeopleList.fromJson(json["designers"]);
     PeopleList engineersBuilder = PeopleList.fromJson(json["engineers"]);
     SectionList sectionBuilder = SectionList.fromJson(json["sections"]);
-    ParagraphList brief = json["brief"] == null ? ParagraphList() : ParagraphList.fromJson(json["brief"]["apiData"]);
-    ParagraphList apiDatas = json["content"] == null ? ParagraphList() : ParagraphList.fromJson(json["content"]["apiData"]);
+    ParagraphList brief = json["brief"] == null
+        ? ParagraphList()
+        : ParagraphList.fromJson(json["brief"]["apiData"]);
+    ParagraphList apiDatas = json["content"] == null
+        ? ParagraphList()
+        : ParagraphList.fromJson(json["content"]["apiData"]);
     String photoUrl = mirrorMediaNotImageUrl;
     RecordList relatedBuilder = RecordList();
     CategoryList categoryBuilder = CategoryList();

@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
-import '../helpers/constants.dart';
-import '../widgets/storyWidget.dart';
+import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/widgets/storyWidget.dart';
 
 class StoryPage extends StatelessWidget {
   final String slug;
@@ -19,7 +19,7 @@ class StoryPage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.share),
             tooltip: 'share',
-            onPressed: (){},
+            onPressed: () {},
           )
         ],
       ),

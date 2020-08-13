@@ -10,18 +10,18 @@ class ImageDescriptionWidget extends StatelessWidget {
     @required this.imageUrl,
     @required this.description,
     @required this.width,
-    this.aspectRatio = 16/9,
+    this.aspectRatio = 16 / 9,
   });
 
   @override
   Widget build(BuildContext context) {
-    double height = width/aspectRatio;
-    
+    double height = width / aspectRatio;
+
     return InkWell(
       child: Wrap(
         //direction: Axis.vertical,
         children: [
-          if(imageUrl != '')
+          if (imageUrl != '')
             CachedNetworkImage(
               //height: imageHeight,
               width: width,
@@ -39,7 +39,7 @@ class ImageDescriptionWidget extends StatelessWidget {
               ),
               fit: BoxFit.cover,
             ),
-          if(description != '')
+          if (description != '')
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
@@ -49,9 +49,7 @@ class ImageDescriptionWidget extends StatelessWidget {
             ),
         ],
       ),
-      onTap: (){
-
-      },
+      onTap: () {},
     );
   }
 }

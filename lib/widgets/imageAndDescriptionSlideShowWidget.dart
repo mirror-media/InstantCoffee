@@ -11,10 +11,12 @@ class ImageAndDescriptionSlideShowWidget extends StatefulWidget {
   });
 
   @override
-  _ImageAndDescriptionSlideShowWidgetState createState() => _ImageAndDescriptionSlideShowWidgetState();
+  _ImageAndDescriptionSlideShowWidgetState createState() =>
+      _ImageAndDescriptionSlideShowWidgetState();
 }
 
-class _ImageAndDescriptionSlideShowWidgetState extends State<ImageAndDescriptionSlideShowWidget> {
+class _ImageAndDescriptionSlideShowWidgetState
+    extends State<ImageAndDescriptionSlideShowWidget> {
   double theSmallestRatio;
   double carouselRatio;
   ContentList contentList;
@@ -67,16 +69,13 @@ class _ImageAndDescriptionSlideShowWidgetState extends State<ImageAndDescription
   @override
   void initState() {
     contentList = widget.contentList;
-    contentList.forEach(
-      (content) { 
-        if(theSmallestRatio == null) {
-          theSmallestRatio = content.aspectRatio;
-        }
-        else if(theSmallestRatio > content.aspectRatio) {
-          theSmallestRatio = content.aspectRatio;
-        }
+    contentList.forEach((content) {
+      if (theSmallestRatio == null) {
+        theSmallestRatio = content.aspectRatio;
+      } else if (theSmallestRatio > content.aspectRatio) {
+        theSmallestRatio = content.aspectRatio;
       }
-    );
+    });
     carouselRatio = theSmallestRatio * 0.85;
     options = CarouselOptions(
       viewportFraction: 1,
@@ -90,16 +89,16 @@ class _ImageAndDescriptionSlideShowWidgetState extends State<ImageAndDescription
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width-32;
+    var width = MediaQuery.of(context).size.width - 32;
 
-    List<Widget> silders = contentList.map(
-      (content) => ImageDescriptionWidget(
-        imageUrl: content.data, 
-        description: content.description, 
-        width: width,
-        aspectRatio: content.aspectRatio,
-      )
-    ).toList();
+    List<Widget> silders = contentList
+        .map((content) => ImageDescriptionWidget(
+              imageUrl: content.data,
+              description: content.description,
+              width: width,
+              aspectRatio: content.aspectRatio,
+            ))
+        .toList();
 
     return Stack(
       children: [
@@ -108,12 +107,11 @@ class _ImageAndDescriptionSlideShowWidgetState extends State<ImageAndDescription
           carouselController: carouselController,
           options: options,
         ),
-        
         Align(
           alignment: Alignment.centerLeft,
           child: Container(
             width: width * 0.1,
-            height: width/carouselRatio,
+            height: width / carouselRatio,
             alignment: Alignment.center,
             child: InkWell(
               child: backActivated ? backActivatedWidget : backOrginalWidget,
@@ -131,10 +129,12 @@ class _ImageAndDescriptionSlideShowWidgetState extends State<ImageAndDescription
           alignment: Alignment.centerRight,
           child: Container(
             width: width * 0.1,
-            height: width/carouselRatio,
+            height: width / carouselRatio,
             alignment: Alignment.center,
             child: InkWell(
-              child: forwardActivated ? forwardActivatedWidget : forwardOrginalWidget,
+              child: forwardActivated
+                  ? forwardActivatedWidget
+                  : forwardOrginalWidget,
               onTap: () {
                 carouselController.nextPage();
                 setState(() {

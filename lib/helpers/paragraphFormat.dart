@@ -17,116 +17,134 @@ import 'package:readr_app/widgets/youtubeWidget.dart';
 
 class ParagraphFormat {
   Widget parseTheParagraph(Paragraph paragraph, BuildContext context) {
-    switch(paragraph.type) {
-      case 'header-one': {
-        if(paragraph.contents.length > 0) {
-          return parseTheTextToHtmlWidget('<h1>' + paragraph.contents[0].data + '</h1>', null);
+    switch (paragraph.type) {
+      case 'header-one':
+        {
+          if (paragraph.contents.length > 0) {
+            return parseTheTextToHtmlWidget(
+                '<h1>' + paragraph.contents[0].data + '</h1>', null);
+          }
+          return Container();
         }
-        return Container();
-      }
-      case 'header-two': {
-        if(paragraph.contents.length > 0) {
-          return parseTheTextToHtmlWidget('<h2>' + paragraph.contents[0].data + '</h2>', null);
+      case 'header-two':
+        {
+          if (paragraph.contents.length > 0) {
+            return parseTheTextToHtmlWidget(
+                '<h2>' + paragraph.contents[0].data + '</h2>', null);
+          }
+          return Container();
         }
-        return Container();
-      }
       case 'code-block':
-      case 'unstyled': {
-        if(paragraph.contents.length > 0) {
-          return parseTheTextToHtmlWidget(paragraph.contents[0].data, null);
+      case 'unstyled':
+        {
+          if (paragraph.contents.length > 0) {
+            return parseTheTextToHtmlWidget(paragraph.contents[0].data, null);
+          }
+          return Container();
         }
-        return Container();
-      }
-      case 'blockquote': {
-        if(paragraph.contents.length > 0) {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Transform.rotate(
-                angle: 180 * math.pi / 180,
-                child: Icon(
+      case 'blockquote':
+        {
+          if (paragraph.contents.length > 0) {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Transform.rotate(
+                  angle: 180 * math.pi / 180,
+                  child: Icon(
+                    Icons.format_quote,
+                    size: 60,
+                    color: appColor,
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                    child: parseTheTextToHtmlWidget(
+                        paragraph.contents[0].data, null)),
+                SizedBox(width: 8),
+                Icon(
                   Icons.format_quote,
                   size: 60,
                   color: appColor,
                 ),
-              ),
-              SizedBox(width: 8),
-              Expanded(child: parseTheTextToHtmlWidget(paragraph.contents[0].data, null)),
-              SizedBox(width: 8),
-              Icon(
-                Icons.format_quote,
-                size: 60,
-                color: appColor,
-              ),
-            ],
+              ],
+            );
+          }
+          return Container();
+        }
+        break;
+      case 'ordered-list-item':
+        {
+          return buildOrderListWidget(paragraph.contents);
+        }
+        break;
+      case 'unordered-list-item':
+        {
+          return buildUnorderListWidget(paragraph.contents);
+        }
+        break;
+      case 'image':
+        {
+          var width = MediaQuery.of(context).size.width - 32;
+          return ImageDescriptionWidget(
+            imageUrl: paragraph.contents[0].data,
+            description: paragraph.contents[0].description,
+            width: width,
+            aspectRatio: paragraph.contents[0].aspectRatio,
           );
         }
-        return Container();
-      }
-      break;
-      case 'ordered-list-item': {
-        return buildOrderListWidget(paragraph.contents);
-      }
-      break;
-       case 'unordered-list-item': {
-        return buildUnorderListWidget(paragraph.contents);
-      }
-      break;
-      case 'image': {
-        var width = MediaQuery.of(context).size.width-32;
-        return ImageDescriptionWidget(
-          imageUrl: paragraph.contents[0].data, 
-          description: paragraph.contents[0].description, 
-          width: width,
-          aspectRatio: paragraph.contents[0].aspectRatio,
-        );
-      }
-      break;
-      case 'slideshow': {
-        return ImageAndDescriptionSlideShowWidget(contentList: paragraph.contents);
-      }
-      break;
-      case 'youtube': {
-        return buildYoutubeWidget(
-          paragraph.contents[0].data,
-          paragraph.contents[0].description,
-        );
-      }
-      case 'video': {
-        return MMVideoPlayer(
-          videourl: paragraph.contents[0].data,
-          aspectRatio: 16/9,
-        );
-      }
-      break;
-      case 'embeddedcode': {
-        return EmbeddedCodeWidget(
-          embeddedCoede: paragraph.contents[0].data,
-        );
-      }
-      break;
-      case 'infobox': {
-        return InfoBoxWidget(
-          title: paragraph.contents[0].description,
-          description: paragraph.contents[0].data,
-        );
-      }
-      break;
-      case 'annotation': {
-        return AnnotationWidget(
-          data: paragraph.contents[0].data,
-        );
-      }
-      break;
-      default: {
-        return Container();
-      }
-      break;
+        break;
+      case 'slideshow':
+        {
+          return ImageAndDescriptionSlideShowWidget(
+              contentList: paragraph.contents);
+        }
+        break;
+      case 'youtube':
+        {
+          return buildYoutubeWidget(
+            paragraph.contents[0].data,
+            paragraph.contents[0].description,
+          );
+        }
+      case 'video':
+        {
+          return MMVideoPlayer(
+            videourl: paragraph.contents[0].data,
+            aspectRatio: 16 / 9,
+          );
+        }
+        break;
+      case 'embeddedcode':
+        {
+          return EmbeddedCodeWidget(
+            embeddedCoede: paragraph.contents[0].data,
+          );
+        }
+        break;
+      case 'infobox':
+        {
+          return InfoBoxWidget(
+            title: paragraph.contents[0].description,
+            description: paragraph.contents[0].data,
+          );
+        }
+        break;
+      case 'annotation':
+        {
+          return AnnotationWidget(
+            data: paragraph.contents[0].data,
+          );
+        }
+        break;
+      default:
+        {
+          return Container();
+        }
+        break;
     }
   }
 
   Widget parseTheTextToHtmlWidget(String data, Color color) {
-
     return HtmlWidget(
       data,
       hyperlinkColor: Colors.blue[900],
@@ -140,71 +158,71 @@ class ParagraphFormat {
 
   List<String> _convertStrangedataList(ContentList contentList) {
     List<String> resultList = List<String>();
-    if(contentList.length == 1 && contentList[0].data[0] == '[') {
+    if (contentList.length == 1 && contentList[0].data[0] == '[') {
       // api data is strange [[...]]
-      String dataString = contentList[0].data.substring(1, contentList[0].data.length-1);
+      String dataString =
+          contentList[0].data.substring(1, contentList[0].data.length - 1);
       resultList = dataString.split(', ');
-    }
-    else {
-      contentList.forEach((content) { resultList.add(content.data); });
+    } else {
+      contentList.forEach((content) {
+        resultList.add(content.data);
+      });
     }
     return resultList;
   }
 
   Widget buildOrderListWidget(ContentList contentList) {
     List<String> dataList = _convertStrangedataList(contentList);
-    
+
     return ListView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: dataList.length,
-      itemBuilder: (context, index) {
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              (index+1).toString()+'.',
-              style: TextStyle(
-                fontSize: 20,
-                height: 1.8,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: dataList.length,
+        itemBuilder: (context, index) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                (index + 1).toString() + '.',
+                style: TextStyle(
+                  fontSize: 20,
+                  height: 1.8,
+                ),
               ),
-            ),
-            SizedBox(width: 16),
-            Expanded(child: parseTheTextToHtmlWidget(dataList[index], null)),
-          ],
-        );
-      }
-    );
+              SizedBox(width: 16),
+              Expanded(child: parseTheTextToHtmlWidget(dataList[index], null)),
+            ],
+          );
+        });
   }
 
   Widget buildUnorderListWidget(ContentList contentList) {
     List<String> dataList = _convertStrangedataList(contentList);
 
     return ListView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: dataList.length,
-      itemBuilder: (context, index) {
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 20, 0, 8),
-              child: Container(
-                width: 8,
-                height: 8,
-                decoration: BoxDecoration(
-                  color: appColor,
-                  shape: BoxShape.circle,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: dataList.length,
+        itemBuilder: (context, index) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 8),
+                child: Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: appColor,
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(width: 16),
-            Expanded(child: parseTheTextToHtmlWidget(dataList[index], null)),
-          ],
-        );
-      }
-    );
+              SizedBox(width: 16),
+              Expanded(child: parseTheTextToHtmlWidget(dataList[index], null)),
+            ],
+          );
+        });
   }
 
   Widget buildYoutubeWidget(String youtubeId, String description) {

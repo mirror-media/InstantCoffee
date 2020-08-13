@@ -10,37 +10,32 @@ class Content {
   });
 
   factory Content.fromJson(dynamic json) {
-    if(json is Map<String, dynamic>)
-    {
-      if(json['mobile'] != null) {
+    if (json is Map<String, dynamic>) {
+      if (json['mobile'] != null) {
         return Content(
           data: json['mobile']['url'],
-          aspectRatio: json['mobile']['width']/json['mobile']['height'],
+          aspectRatio: json['mobile']['width'] / json['mobile']['height'],
           description: json['description'],
         );
-      }
-      else if(json['youtubeId'] != null) {
+      } else if (json['youtubeId'] != null) {
         return Content(
           data: json['youtubeId'],
           aspectRatio: null,
           description: json['description'],
         );
-      }
-      else if(json['filetype'] != null) {
+      } else if (json['filetype'] != null) {
         return Content(
           data: json['url'],
           aspectRatio: null,
           description: json['title'] + ';' + json['description'],
         );
-      }
-      else if(json['embeddedCode'] != null) {
+      } else if (json['embeddedCode'] != null) {
         return Content(
           data: json['embeddedCode'],
           aspectRatio: null,
           description: json['caption'],
         );
-      }
-      else if(json['draftRawObj'] != null) {
+      } else if (json['draftRawObj'] != null) {
         return Content(
           data: json['body'],
           aspectRatio: null,

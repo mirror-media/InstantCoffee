@@ -25,11 +25,13 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
   }
 
   _parsingTheData() {
-    String temp = widget.data.replaceAll('<!--', '<-split->').replaceAll('-->', '<-split->');
+    String temp = widget.data
+        .replaceAll('<!--', '<-split->')
+        .replaceAll('-->', '<-split->');
     displayStringList = temp.split('<-split->');
-    for(int i=displayStringList.length-1; i>=0; i--) {
-      if(displayStringList[i] == "") {
-        displayStringList.removeAt(i+1);
+    for (int i = displayStringList.length - 1; i >= 0; i--) {
+      if (displayStringList[i] == "") {
+        displayStringList.removeAt(i + 1);
         displayStringList.removeAt(i);
       }
     }
@@ -43,12 +45,12 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
       caseSensitive: false,
     );
 
-    for(int i=0; i<displayStringList.length; i++) {
+    for (int i = 0; i < displayStringList.length; i++) {
       print(displayStringList[i]);
-      if(annotationExp.hasMatch(displayStringList[i])) {
+      if (annotationExp.hasMatch(displayStringList[i])) {
         String body = annotationExp.firstMatch(displayStringList[i]).group(1);
         Annotation annotation = Annotation.parseResponseBody(body);
-        if(annotation.isExpanded) {
+        if (annotation.isExpanded) {
           displayWidgets.add(
             HtmlWidget(
               annotation.text,
@@ -91,11 +93,12 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
                   SizedBox(width: 8),
                 ],
               ),
-              onTap: (){
-                if(mounted) {
+              onTap: () {
+                if (mounted) {
                   setState(() {
                     annotation.isExpanded = !annotation.isExpanded;
-                    displayStringList[i] = '__ANNOTATION__=' + json.encode(annotation.toJson());
+                    displayStringList[i] =
+                        '__ANNOTATION__=' + json.encode(annotation.toJson());
                   });
                 }
               },
@@ -138,8 +141,7 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
               ),
             ),
           );
-        }
-        else {
+        } else {
           displayWidgets.add(
             HtmlWidget(
               annotation.text,
@@ -181,19 +183,19 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
                   SizedBox(width: 8),
                 ],
               ),
-              onTap: (){
-                if(mounted) {
+              onTap: () {
+                if (mounted) {
                   setState(() {
                     annotation.isExpanded = !annotation.isExpanded;
-                    displayStringList[i] = '__ANNOTATION__=' + json.encode(annotation.toJson());
+                    displayStringList[i] =
+                        '__ANNOTATION__=' + json.encode(annotation.toJson());
                   });
                 }
               },
             ),
           );
         }
-      }
-      else {
+      } else {
         displayWidgets.add(
           HtmlWidget(
             displayStringList[i],

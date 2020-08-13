@@ -11,20 +11,20 @@ class YoutubeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width-32;
+    var width = MediaQuery.of(context).size.width - 32;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
           width: width,
-          height: width/16*9,
+          height: width / 16 * 9,
           child: WebView(
             initialUrl: 'https://www.youtube.com/embed/$youtubeId',
-            javascriptMode: JavascriptMode.unrestricted, 
+            javascriptMode: JavascriptMode.unrestricted,
           ),
         ),
-        if(description != '')
+        if (description != '')
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(

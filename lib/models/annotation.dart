@@ -29,9 +29,9 @@ class Annotation {
   }
 
   Map<String, dynamic> toJson() => {
-    'text': text,
-    'annotation': annotation,
-    'pureAnnotationText': pureAnnotationText,
-    'isExpanded': isExpanded,
-  };
+        'text': text,
+        'annotation': annotation,
+        'pureAnnotationText': pureAnnotationText,
+        'isExpanded': isExpanded,
+      };
 }

@@ -15,20 +15,18 @@ class EmbeddedCodeWidget extends StatefulWidget {
 
 class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> {
   String htmlPage = '';
-  double ratio = 16/9;
+  double ratio = 16 / 9;
   bool isVideo = false;
 
   @override
   void initState() {
-
     super.initState();
   }
-      
+
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width-32;
-    htmlPage = 
-    '''
+    var width = MediaQuery.of(context).size.width - 32;
+    htmlPage = '''
 <!DOCTYPE html>
 <html>
   <head>
@@ -52,9 +50,12 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> {
 
     return Container(
       width: width,
-      height: (isVideo || Platform.isIOS) ? width/16*9+8 : width/ratio/0.8,
+      height: (isVideo || Platform.isIOS)
+          ? width / 16 * 9 + 8
+          : width / ratio / 0.8,
       child: WebView(
-        initialUrl: Uri.dataFromString(htmlPage, mimeType: 'text/html').toString(),
+        initialUrl:
+            Uri.dataFromString(htmlPage, mimeType: 'text/html').toString(),
         javascriptMode: JavascriptMode.unrestricted,
       ),
     );
