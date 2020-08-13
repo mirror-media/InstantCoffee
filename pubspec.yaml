@@ -54,6 +54,8 @@ dependencies:
   video_player: ^0.10.11+2
   # a friendly Material or Cupertino UI for video
   chewie: ^0.9.10
+  # audio service
+  audioplayers: ^0.15.1
 
 dependency_overrides:
   flutter_svg: ^ 0.18.0
