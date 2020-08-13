@@ -71,7 +71,7 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
                 children: [
                   SizedBox(width: 8),
                   Text(
-                    '(註解)',
+                    '(註)',
                     style: TextStyle(
                       fontSize: 20,
                       height: 1.8,
@@ -162,7 +162,7 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
                 children: [
                   SizedBox(width: 8),
                   Text(
-                    '(註解)',
+                    '(註)',
                     style: TextStyle(
                       fontSize: 20,
                       height: 1.8,
