@@ -12,6 +12,7 @@ import 'package:readr_app/widgets/embeddedCodeWidget.dart';
 import 'package:readr_app/widgets/imageAndDescriptionSlideShowWidget.dart';
 import 'package:readr_app/widgets/imageDescriptionWidget.dart';
 import 'package:readr_app/widgets/infoBoxWidget.dart';
+import 'package:readr_app/widgets/mMAudioPlayer.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
 import 'package:readr_app/widgets/youtubeWidget.dart';
 
@@ -111,6 +112,15 @@ class ParagraphFormat {
           return MMVideoPlayer(
             videourl: paragraph.contents[0].data,
             aspectRatio: 16 / 9,
+          );
+        }
+        break;
+      case 'audio':
+        {
+          List<String> titleAndDescription = paragraph.contents[0].description.split(';');
+          return MMAudioPlayer(
+            audioUrl: paragraph.contents[0].data,
+            title: titleAndDescription[0],
           );
         }
         break;
