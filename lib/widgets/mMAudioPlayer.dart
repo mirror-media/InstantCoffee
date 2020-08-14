@@ -5,8 +5,10 @@ import 'package:readr_app/helpers/dateTimeFormat.dart';
 class MMAudioPlayer extends StatefulWidget {
   /// The baseUrl of the audio
   final String audioUrl;
+
   /// The title of audio
   final String title;
+
   /// The description of audio
   final String description;
   MMAudioPlayer({
@@ -22,10 +24,10 @@ class MMAudioPlayer extends StatefulWidget {
 class _MMAudioPlayerState extends State<MMAudioPlayer> {
   Color _audioColor = Colors.orange[800];
   AudioPlayer _audioPlayer;
-  bool get _checkIsPlaying => !(_audioPlayer.state == null || 
-    _audioPlayer.state == AudioPlayerState.COMPLETED || 
-    _audioPlayer.state == AudioPlayerState.STOPPED ||
-    _audioPlayer.state == AudioPlayerState.PAUSED);
+  bool get _checkIsPlaying => !(_audioPlayer.state == null ||
+      _audioPlayer.state == AudioPlayerState.COMPLETED ||
+      _audioPlayer.state == AudioPlayerState.STOPPED ||
+      _audioPlayer.state == AudioPlayerState.PAUSED);
   int _duration = 0;
 
   @override
@@ -34,13 +36,11 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> {
     super.initState();
   }
 
-  void _initAudioPlayer() async{
+  void _initAudioPlayer() async {
     _audioPlayer = AudioPlayer();
     await _audioPlayer.setUrl(widget.audioUrl);
     _duration = await _audioPlayer.getDuration();
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   _start() async {
@@ -56,22 +56,20 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> {
   }
 
   _playAndPause() {
-    if(_audioPlayer.state == null || 
-    _audioPlayer.state == AudioPlayerState.COMPLETED || 
-    _audioPlayer.state == AudioPlayerState.STOPPED) {
+    if (_audioPlayer.state == null ||
+        _audioPlayer.state == AudioPlayerState.COMPLETED ||
+        _audioPlayer.state == AudioPlayerState.STOPPED) {
       _start();
-    }
-    else if(_audioPlayer.state == AudioPlayerState.PLAYING) {
+    } else if (_audioPlayer.state == AudioPlayerState.PLAYING) {
       _pause();
-    }
-    else if(_audioPlayer.state == AudioPlayerState.PAUSED) {
+    } else if (_audioPlayer.state == AudioPlayerState.PAUSED) {
       _play();
     }
   }
 
   @override
   void dispose() {
-    if(_audioPlayer.state != null) {
+    if (_audioPlayer.state != null) {
       _audioPlayer.release();
     }
     super.dispose();
@@ -80,7 +78,7 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    if(_duration == 0) {
+    if (_duration == 0) {
       return Container();
     }
 
@@ -111,73 +109,77 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> {
             children: [
               SizedBox(width: 8),
               StreamBuilder<AudioPlayerState>(
-                stream: _audioPlayer.onPlayerStateChanged,
-                builder: (context, snapshot) {
-                  //print(snapshot.data);
-                  return InkWell(
-                    child: _checkIsPlaying
-                      ? Icon(
-                          Icons.pause_circle_filled,
-                          color: _audioColor,
-                          size: 36,
-                        )
-                      : Icon(
-                         Icons.play_circle_filled,
-                         color: _audioColor,
-                         size: 36,
-                        ),
-                    onTap: (){_playAndPause();},
-                  );
-                }
-              ),
+                  stream: _audioPlayer.onPlayerStateChanged,
+                  builder: (context, snapshot) {
+                    //print(snapshot.data);
+                    return InkWell(
+                      child: _checkIsPlaying
+                          ? Icon(
+                              Icons.pause_circle_filled,
+                              color: _audioColor,
+                              size: 36,
+                            )
+                          : Icon(
+                              Icons.play_circle_filled,
+                              color: _audioColor,
+                              size: 36,
+                            ),
+                      onTap: () {
+                        _playAndPause();
+                      },
+                    );
+                  }),
               Expanded(
                 child: StreamBuilder<Duration>(
-                  stream: _audioPlayer.onAudioPositionChanged,
-                  builder: (context, snapshot) {
-                    double sliderPosition = snapshot.data == null
-                      ? 0.0
-                      : snapshot.data.inMilliseconds.toDouble();
-                    String position = DateTimeFormat.stringDuration(snapshot.data);
-                    String duration = DateTimeFormat.stringDuration(Duration(milliseconds: _duration));
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Slider(
-                          min: 0.0,
-                          max: _duration.toDouble(),
-                          value: sliderPosition,
-                          activeColor: _audioColor,
-                          inactiveColor: Colors.black,
-                          onChanged: (v){
-                            if(_audioPlayer.state != null) {
-                              _audioPlayer.seek(Duration(milliseconds: v.toInt()));
-                            }
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 24.0, left: 24),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                position,
-                                style: TextStyle(
-                                  color: _audioColor,
-                                ),
-                              ),
-                              Text(
-                                duration,
-                                style: TextStyle(
-                                  color: _audioColor,
-                                ),
-                              ),
-                            ],
+                    stream: _audioPlayer.onAudioPositionChanged,
+                    builder: (context, snapshot) {
+                      double sliderPosition = snapshot.data == null
+                          ? 0.0
+                          : snapshot.data.inMilliseconds.toDouble();
+                      String position =
+                          DateTimeFormat.stringDuration(snapshot.data);
+                      String duration = DateTimeFormat.stringDuration(
+                          Duration(milliseconds: _duration));
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Slider(
+                            min: 0.0,
+                            max: _duration.toDouble(),
+                            value: sliderPosition,
+                            activeColor: _audioColor,
+                            inactiveColor: Colors.black,
+                            onChanged: (v) {
+                              if (_audioPlayer.state != null) {
+                                _audioPlayer
+                                    .seek(Duration(milliseconds: v.toInt()));
+                              }
+                            },
                           ),
-                        ),
-                      ],
-                    );
-                  }
-                ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(right: 24.0, left: 24),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  position,
+                                  style: TextStyle(
+                                    color: _audioColor,
+                                  ),
+                                ),
+                                Text(
+                                  duration,
+                                  style: TextStyle(
+                                    color: _audioColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
               ),
             ],
           ),

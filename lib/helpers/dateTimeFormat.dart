@@ -14,7 +14,7 @@ class DateTimeFormat {
 
   /// return string of duration in hh:mm:ss form(has pending 0)
   static String stringDuration(Duration duration) {
-    if(duration == null) {
+    if (duration == null) {
       return "00:00";
     }
 
@@ -22,6 +22,7 @@ class DateTimeFormat {
       if (n >= 10) return "$n";
       return "0$n";
     }
+
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
     //duration.toString()?.split('.')?.first ?? ''

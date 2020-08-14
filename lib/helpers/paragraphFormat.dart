@@ -118,7 +118,8 @@ class ParagraphFormat {
         break;
       case 'audio':
         {
-          List<String> titleAndDescription = paragraph.contents[0].description.split(';');
+          List<String> titleAndDescription =
+              paragraph.contents[0].description.split(';');
           return MMAudioPlayer(
             audioUrl: paragraph.contents[0].data,
             title: titleAndDescription[0],

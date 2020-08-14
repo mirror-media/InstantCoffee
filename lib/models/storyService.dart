@@ -11,8 +11,8 @@ class StoryService {
         slug +
         '","isAudioSiteOnly":false' +
         '}&related=full';
-        //&clean=content
-    
+    //&clean=content
+
     final jsonResponse = await _helper.getByUrl(endpoint);
     Story story = new Story.fromJson(jsonResponse["_items"][0]);
     return story;
