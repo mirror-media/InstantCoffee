@@ -12,7 +12,7 @@ class NotificationSettingList extends CustomizedList<NotificationSetting> {
       return null;
     }
 
-    NotificationSettingList notificationSettings= NotificationSettingList();
+    NotificationSettingList notificationSettings = NotificationSettingList();
     List parseList =
         parsedJson.map((i) => NotificationSetting.fromJson(i)).toList();
     parseList.forEach((element) {

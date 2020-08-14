@@ -16,7 +16,7 @@ class MirrorApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: appTitle,
-      theme: new ThemeData(
+      theme: ThemeData(
         primaryColor: appColor,
       ),
       home: HomePage(),
