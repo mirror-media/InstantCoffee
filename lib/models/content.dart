@@ -41,6 +41,12 @@ class Content {
           aspectRatio: null,
           description: json['title'],
         );
+      } else if (json['quote'] != null) {
+        return Content(
+          data: json['quote'],
+          aspectRatio: null,
+          description: json['quoteBy'],
+        );
       }
 
       return Content(data: null, aspectRatio: null, description: null);

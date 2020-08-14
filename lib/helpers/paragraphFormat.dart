@@ -14,6 +14,7 @@ import 'package:readr_app/widgets/imageDescriptionWidget.dart';
 import 'package:readr_app/widgets/infoBoxWidget.dart';
 import 'package:readr_app/widgets/mMAudioPlayer.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
+import 'package:readr_app/widgets/quoteByWidget.dart';
 import 'package:readr_app/widgets/youtubeWidget.dart';
 
 class ParagraphFormat {
@@ -143,6 +144,14 @@ class ParagraphFormat {
         {
           return AnnotationWidget(
             data: paragraph.contents[0].data,
+          );
+        }
+        break;
+      case 'quoteby':
+        {
+          return QuoteByWidget(
+            quote: paragraph.contents[0].data,
+            quoteBy: paragraph.contents[0].description,
           );
         }
         break;
