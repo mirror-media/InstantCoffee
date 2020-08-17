@@ -16,6 +16,7 @@ import 'package:readr_app/models/tagList.dart';
 import 'package:readr_app/pages/listingPage.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:readr_app/widgets/mMVideoPlayer.dart';
 
 class StoryWidget extends StatefulWidget {
   final String slug;
@@ -86,7 +87,12 @@ class _StoryWidget extends State<StoryWidget> {
   Widget _buildHeroWidget(double width, double height, Story story) {
     return Column(
       children: [
-        if (story.heroImage != '')
+        if(story.heroVideo != null)
+          MMVideoPlayer(
+            videourl: story.heroVideo,
+            aspectRatio: 16 / 9,
+          ),
+        if (story.heroImage != null && story.heroVideo == null)
           CachedNetworkImage(
             height: height,
             width: width,

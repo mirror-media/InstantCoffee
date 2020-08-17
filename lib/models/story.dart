@@ -17,6 +17,7 @@ class Story {
   String updatedAt;
   String createTime;
   String heroImage;
+  String heroVideo;
   RecordList relatedStory;
   String heroCaption;
   String extendByline;
@@ -42,6 +43,7 @@ class Story {
     this.updatedAt,
     this.createTime,
     this.heroImage,
+    this.heroVideo,
     this.relatedStory,
     this.heroCaption,
     this.extendByline,
@@ -76,26 +78,27 @@ class Story {
         ? ParagraphList()
         : ParagraphList.fromJson(json["content"]["apiData"]);
     String photoUrl = mirrorMediaNotImageUrl;
+    String videoUrl;
     RecordList relatedBuilder = RecordList();
     CategoryList categoryBuilder = CategoryList();
     TagList tagBuilder = TagList();
     final title = origTitle.replaceAll('　', "\n");
     if (json["relateds"] != null) {
       for (int i = 0; i < json["relateds"].length; i++) {
-        Record record = new Record.fromJson(json["relateds"][i]);
+        Record record = Record.fromJson(json["relateds"][i]);
         relatedBuilder.add(record);
       }
     }
 
     if (json["categories"] != null) {
       for (int i = 0; i < json["categories"].length; i++) {
-        Category category = new Category.fromJson(json["categories"][i]);
+        Category category = Category.fromJson(json["categories"][i]);
         categoryBuilder.add(category);
       }
     }
     if (json["tags"] != null) {
       for (int i = 0; i < json["tags"].length; i++) {
-        Tag tag = new Tag.fromJson(json["tags"][i]);
+        Tag tag = Tag.fromJson(json["tags"][i]);
         tagBuilder.add(tag);
       }
     }
@@ -107,8 +110,13 @@ class Story {
         json['heroImage']['image'].containsKey('resizedTargets')) {
       photoUrl = json['heroImage']['image']['resizedTargets']['mobile']['url'];
     }
+    if(json.containsKey('heroVideo')) {
+      if(json['heroVideo'] != null) {
+        videoUrl = json['heroVideo']['video']['url'];
+      }
+    }
 
-    return new Story(
+    return Story(
       title: title,
       subtitle: json['subtitle'] == null ? '' : json["subtitle"],
       slug: json['slug'],
@@ -116,6 +124,7 @@ class Story {
       updatedAt: json['updatedAt'],
       createTime: json['createTime'],
       heroImage: photoUrl,
+      heroVideo: videoUrl,
       heroCaption: json["heroCaption"] == null ? '' : json["heroCaption"],
       extendByline: json["extend_byline"],
       relatedStory: relatedBuilder,
