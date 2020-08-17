@@ -76,20 +76,25 @@ class _ImageAndDescriptionSlideShowWidgetState
         theSmallestRatio = content.aspectRatio;
       }
     });
-    carouselRatio = theSmallestRatio * 0.85;
-    options = CarouselOptions(
-      viewportFraction: 1,
-      aspectRatio: carouselRatio,
-      enlargeCenterPage: true,
-      onPageChanged: (index, reason) {},
-    );
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width - 32;
+
+    double textSize = 16;
+    double textHeight = 1.8;
+    double textRows = 2;
+    double height = width/theSmallestRatio + textHeight * textSize * textRows;
+
+    carouselRatio = width/height;
+    options = CarouselOptions(
+      viewportFraction: 1,
+      aspectRatio: carouselRatio,
+      enlargeCenterPage: true,
+      onPageChanged: (index, reason) {},
+    );
 
     List<Widget> silders = contentList
         .map((content) => ImageDescriptionWidget(
