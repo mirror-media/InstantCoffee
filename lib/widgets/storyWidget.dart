@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:readr_app/blocs/storyBloc.dart';
+import 'package:readr_app/helpers/apiResponse.dart';
 
 import 'package:readr_app/helpers/constants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
@@ -10,10 +12,11 @@ import 'package:readr_app/models/people.dart';
 import 'package:readr_app/models/peopleList.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/story.dart';
-import 'package:readr_app/models/storyService.dart';
+import 'package:readr_app/models/tagList.dart';
 import 'package:readr_app/pages/listingPage.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:readr_app/widgets/mMVideoPlayer.dart';
 
 class StoryWidget extends StatefulWidget {
   final String slug;
@@ -26,69 +29,74 @@ class StoryWidget extends StatefulWidget {
 }
 
 class _StoryWidget extends State<StoryWidget> {
-  Story _story;
-  ScrollController _controller;
-  Color _sectionColor = appColor;
+  StoryBloc _storyBloc;
 
   @override
   void initState() {
     super.initState();
-    getStory(widget.slug);
-    _controller = ScrollController();
-  }
-
-  void getStory(String slug) async {
-    _story = await StoryService().fetchStoryList(slug);
-    setSectionColor(_story);
-    setState(() {});
-  }
-
-  setSectionColor(Story story) {
-    String sectionName;
-    if (story != null && story.sections.length > 0) {
-      sectionName = story.sections[0]?.name;
-    }
-
-    if (sectionColorMaps.containsKey(sectionName)) {
-      _sectionColor = Color(sectionColorMaps[sectionName]);
-    }
+    _storyBloc = StoryBloc(widget.slug);
   }
 
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = width / 16 * 9;
 
-    if (_story == null) {
-      return Center(child: CircularProgressIndicator());
-    } else {
-      return ListView(controller: _controller, children: [
-        _buildHeroWidget(width, height),
-        SizedBox(height: 32),
-        _buildCategoryAndPublishedDate(context),
-        SizedBox(height: 8),
-        _buildStoryTitle(),
-        SizedBox(height: 8),
-        _buildAuthors(context),
-        SizedBox(height: 16),
-        _buildBrief(),
-        _buildContent(),
-        SizedBox(height: 32),
-        _buildUpdateDateWidget(),
-        SizedBox(height: 16),
-        _buildTagWidget(context),
-        _buildRelatedWidget(context, _story.relatedStory),
-      ]);
-    }
+    return StreamBuilder<ApiResponse<Story>>(
+      stream: _storyBloc.storyStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+              return Center(child: CircularProgressIndicator());
+              break;
+
+            case Status.LOADINGMORE:
+            case Status.COMPLETED:
+              Story story = snapshot.data.data;
+              Color sectionColor = _storyBloc.getSectionColor(story);
+
+              return ListView(children: [
+                _buildHeroWidget(width, height, story),
+                SizedBox(height: 32),
+                _buildCategoryAndPublishedDate(context, story, sectionColor),
+                SizedBox(height: 8),
+                _buildStoryTitle(story.title),
+                SizedBox(height: 8),
+                _buildAuthors(context, story),
+                SizedBox(height: 16),
+                _buildBrief(story, sectionColor),
+                _buildContent(story),
+                SizedBox(height: 32),
+                _buildUpdateDateWidget(story),
+                SizedBox(height: 16),
+                _buildTagWidget(context, story.tags),
+                _buildRelatedWidget(context, story.relatedStory),
+              ]);
+              break;
+
+            case Status.ERROR:
+              return Container();
+              break;
+          }
+        }
+        return Container();
+      },
+    );
   }
 
-  Widget _buildHeroWidget(double width, double height) {
+  Widget _buildHeroWidget(double width, double height, Story story) {
     return Column(
       children: [
-        if (_story.heroImage != '')
+        if(story.heroVideo != null)
+          MMVideoPlayer(
+            videourl: story.heroVideo,
+            aspectRatio: 16 / 9,
+          ),
+        if (story.heroImage != null && story.heroVideo == null)
           CachedNetworkImage(
             height: height,
             width: width,
-            imageUrl: _story.heroImage,
+            imageUrl: story.heroImage,
             placeholder: (context, url) => Container(
               height: height,
               width: width,
@@ -102,11 +110,11 @@ class _StoryWidget extends State<StoryWidget> {
             ),
             fit: BoxFit.cover,
           ),
-        if (_story.heroCaption != '')
+        if (story.heroCaption != '')
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
             child: Text(
-              _story.heroCaption,
+              story.heroCaption,
               style: TextStyle(fontSize: 16),
             ),
           ),
@@ -114,7 +122,8 @@ class _StoryWidget extends State<StoryWidget> {
     );
   }
 
-  Widget _buildCategoryAndPublishedDate(BuildContext context) {
+  Widget _buildCategoryAndPublishedDate(
+      BuildContext context, Story story, Color sectionColor) {
     DateTimeFormat dateTimeFormat = DateTimeFormat();
 
     return Padding(
@@ -122,10 +131,10 @@ class _StoryWidget extends State<StoryWidget> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _buildCategory(context),
+          _buildCategory(context, story, sectionColor),
           Text(
             dateTimeFormat.changeDatabaseStringToDisplayString(
-                _story.publishedDate, 'yyyy.MM.dd HH:mm'),
+                story.publishedDate, 'yyyy.MM.dd HH:mm'),
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[600], /*fontStyle: FontStyle.italic,*/
@@ -136,8 +145,8 @@ class _StoryWidget extends State<StoryWidget> {
     );
   }
 
-  Widget _buildCategory(BuildContext context) {
-    List<Category> categories = _story.categories;
+  Widget _buildCategory(BuildContext context, Story story, Color sectionColor) {
+    List<Category> categories = story.categories;
 
     return InkWell(
       child: Row(
@@ -145,7 +154,7 @@ class _StoryWidget extends State<StoryWidget> {
           Container(
             width: 10,
             height: 20,
-            color: _sectionColor,
+            color: sectionColor,
           ),
           SizedBox(width: 10),
           Text(
@@ -158,11 +167,11 @@ class _StoryWidget extends State<StoryWidget> {
     );
   }
 
-  Widget _buildStoryTitle() {
+  Widget _buildStoryTitle(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
       child: Text(
-        _story.title,
+        title,
         style: TextStyle(fontFamily: 'Open Sans', fontSize: 28),
       ),
     );
@@ -182,7 +191,7 @@ class _StoryWidget extends State<StoryWidget> {
     return authorItems;
   }
 
-  Widget _buildAuthors(BuildContext context) {
+  Widget _buildAuthors(BuildContext context, Story story) {
     List<Widget> authorItems = List();
 
     // VerticalDivider is broken? so use Container
@@ -195,60 +204,60 @@ class _StoryWidget extends State<StoryWidget> {
       ),
     );
 
-    if (_story.writers.length > 0) {
+    if (story.writers.length > 0) {
       authorItems.add(Text("文"));
       authorItems.add(myVerticalDivider);
 
-      authorItems.addAll(_addAuthorItems(_story.writers));
+      authorItems.addAll(_addAuthorItems(story.writers));
       authorItems.add(SizedBox(
         width: 12.0,
       ));
     }
 
-    if (_story.photographers.length > 0) {
+    if (story.photographers.length > 0) {
       authorItems.add(Text("攝影"));
       authorItems.add(myVerticalDivider);
 
-      authorItems.addAll(_addAuthorItems(_story.photographers));
+      authorItems.addAll(_addAuthorItems(story.photographers));
       authorItems.add(SizedBox(
         width: 12.0,
       ));
     }
 
-    if (_story.cameraMen.length > 0) {
+    if (story.cameraMen.length > 0) {
       authorItems.add(Text("影音"));
       authorItems.add(myVerticalDivider);
 
-      authorItems.addAll(_addAuthorItems(_story.cameraMen));
+      authorItems.addAll(_addAuthorItems(story.cameraMen));
       authorItems.add(SizedBox(
         width: 12.0,
       ));
     }
 
-    if (_story.designers.length > 0) {
+    if (story.designers.length > 0) {
       authorItems.add(Text("設計"));
       authorItems.add(myVerticalDivider);
 
-      authorItems.addAll(_addAuthorItems(_story.designers));
+      authorItems.addAll(_addAuthorItems(story.designers));
       authorItems.add(SizedBox(
         width: 12.0,
       ));
     }
 
-    if (_story.engineers.length > 0) {
+    if (story.engineers.length > 0) {
       authorItems.add(Text("工程"));
       authorItems.add(myVerticalDivider);
 
-      authorItems.addAll(_addAuthorItems(_story.engineers));
+      authorItems.addAll(_addAuthorItems(story.engineers));
       authorItems.add(SizedBox(
         width: 12.0,
       ));
     }
 
-    if (_story.extendByline != '' && _story.extendByline != null) {
+    if (story.extendByline != '' && story.extendByline != null) {
       authorItems.add(Text("文"));
       authorItems.add(myVerticalDivider);
-      authorItems.add(Text(_story.extendByline));
+      authorItems.add(Text(story.extendByline));
     }
 
     return Padding(
@@ -260,8 +269,8 @@ class _StoryWidget extends State<StoryWidget> {
     );
   }
 
-  Widget _buildBrief() {
-    ParagraphList articles = _story.brief;
+  Widget _buildBrief(Story story, Color sectionColor) {
+    ParagraphList articles = story.brief;
 
     if (articles.length > 0) {
       ParagraphFormat paragraphFormat = ParagraphFormat();
@@ -290,7 +299,7 @@ class _StoryWidget extends State<StoryWidget> {
       return Padding(
         padding: const EdgeInsets.all(16),
         child: Container(
-          color: _sectionColor,
+          color: sectionColor,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(32.0, 16.0, 32.0, 16.0),
             child: Column(
@@ -305,7 +314,7 @@ class _StoryWidget extends State<StoryWidget> {
     return Container();
   }
 
-  _buildContent() {
+  _buildContent(Story story) {
     ParagraphFormat paragraphFormat = ParagraphFormat();
 
     return Padding(
@@ -313,9 +322,9 @@ class _StoryWidget extends State<StoryWidget> {
       child: ListView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          itemCount: _story.apiDatas.length,
+          itemCount: story.apiDatas.length,
           itemBuilder: (context, index) {
-            Paragraph paragraph = _story.apiDatas[index];
+            Paragraph paragraph = story.apiDatas[index];
             if (paragraph.contents.length > 0 &&
                 paragraph.contents[0].data != '') {
               return Padding(
@@ -328,7 +337,7 @@ class _StoryWidget extends State<StoryWidget> {
     );
   }
 
-  Widget _buildTagWidget(BuildContext context) {
+  Widget _buildTagWidget(BuildContext context, TagList tags) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -344,7 +353,7 @@ class _StoryWidget extends State<StoryWidget> {
                 '相關關鍵字 : ',
                 style: TextStyle(fontSize: 18),
               ),
-              _buildTags(context),
+              _buildTags(context, tags),
             ],
           ),
         ),
@@ -355,20 +364,20 @@ class _StoryWidget extends State<StoryWidget> {
     );
   }
 
-  Widget _buildTags(BuildContext context) {
-    if (_story.tags == null) {
+  Widget _buildTags(BuildContext context, TagList tags) {
+    if (tags == null) {
       return Container();
     } else {
       List<Widget> tagWidgets = List();
-      for (int i = 0; i < _story.tags.length; i++) {
+      for (int i = 0; i < tags.length; i++) {
         tagWidgets.add(
           Text(
-            '#' + _story.tags[i].name,
+            '#' + tags[i].name,
             style: TextStyle(fontSize: 18, color: appColor),
           ),
         );
 
-        if (i != _story.tags.length - 1) {
+        if (i != tags.length - 1) {
           tagWidgets.add(
             Text(
               '、',
@@ -389,7 +398,7 @@ class _StoryWidget extends State<StoryWidget> {
         context, MaterialPageRoute(builder: (context) => ListingPage()));
   }
 
-  _buildUpdateDateWidget() {
+  _buildUpdateDateWidget(Story story) {
     DateTimeFormat dateTimeFormat = DateTimeFormat();
 
     // VerticalDivider is broken? so use Container
@@ -412,7 +421,7 @@ class _StoryWidget extends State<StoryWidget> {
         myVerticalDivider,
         Text(
           dateTimeFormat.changeDatabaseStringToDisplayString(
-              _story.updatedAt, 'yyyy.MM.dd HH:mm'),
+              story.updatedAt, 'yyyy.MM.dd HH:mm'),
           style: TextStyle(fontSize: 16),
         ),
       ],
@@ -496,8 +505,7 @@ class _StoryWidget extends State<StoryWidget> {
         ),
       ),
       onTap: () {
-        getStory(relatedItem.slug);
-        _controller.jumpTo(1);
+        _storyBloc.fetchStory(relatedItem.slug);
       },
     );
   }

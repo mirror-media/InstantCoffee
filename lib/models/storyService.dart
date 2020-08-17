@@ -5,7 +5,7 @@ import 'package:readr_app/models/story.dart';
 class StoryService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  Future<Story> fetchStoryList(String slug) async {
+  Future<Story> fetchStory(String slug) async {
     String endpoint = apiBase +
         'posts?where={"slug":"' +
         slug +

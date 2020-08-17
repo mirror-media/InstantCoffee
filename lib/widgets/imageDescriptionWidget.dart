@@ -6,11 +6,13 @@ class ImageDescriptionWidget extends StatelessWidget {
   final String description;
   final double width;
   final double aspectRatio;
+  final double textSize;
   ImageDescriptionWidget({
     @required this.imageUrl,
     @required this.description,
     @required this.width,
     this.aspectRatio = 16 / 9,
+    this.textSize = 16,
   });
 
   @override
@@ -44,7 +46,7 @@ class ImageDescriptionWidget extends StatelessWidget {
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
                 description,
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(fontSize: textSize, color: Colors.grey),
               ),
             ),
         ],
