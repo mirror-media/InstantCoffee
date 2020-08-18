@@ -42,7 +42,7 @@ class Record {
     else if (json.containsKey('snippet') && json['snippet'] != null) {
       photoUrl = json['snippet']['thumbnails']['medium']['url'];
     } 
-    else {
+    else if (json.containsKey('photoUrl') && json['photoUrl'] != null){
       photoUrl = json['photoUrl'];
     }
 
