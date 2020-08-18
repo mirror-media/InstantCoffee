@@ -6,7 +6,8 @@ class ListeningWidgetService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<Listening> fetchListening(String youtubeId) async {
-    String endpoint = apiBase + 'youtube/videos?part=snippet&maxResults=1&id=' + youtubeId;
+    String endpoint =
+        apiBase + 'youtube/videos?part=snippet&maxResults=1&id=' + youtubeId;
 
     final jsonResponse = await _helper.getByUrl(endpoint);
     Listening listening = Listening.fromJson(jsonResponse["items"][0]);

@@ -86,7 +86,7 @@ class _StoryWidget extends State<StoryWidget> {
   Widget _buildHeroWidget(double width, double height, Story story) {
     return Column(
       children: [
-        if(story.heroVideo != null)
+        if (story.heroVideo != null)
           MMVideoPlayer(
             videourl: story.heroVideo,
             aspectRatio: 16 / 9,

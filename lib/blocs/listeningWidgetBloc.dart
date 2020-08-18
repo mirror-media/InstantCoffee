@@ -13,14 +13,17 @@ class ListeningWidgetBloc {
 
   StreamController _listeningWidgetController;
 
-  StreamSink<ApiResponse<TabContentState>> get listeningWidgetSink => _listeningWidgetController.sink;
+  StreamSink<ApiResponse<TabContentState>> get listeningWidgetSink =>
+      _listeningWidgetController.sink;
 
-  Stream<ApiResponse<TabContentState>> get listeningWidgetStream => _listeningWidgetController.stream;
+  Stream<ApiResponse<TabContentState>> get listeningWidgetStream =>
+      _listeningWidgetController.stream;
 
   ListeningWidgetBloc(String slug) {
     _listeningWidgetService = ListeningWidgetService();
     _listeningTabContentService = ListeningTabContentService();
-    _listeningWidgetController = StreamController<ApiResponse<TabContentState>>();
+    _listeningWidgetController =
+        StreamController<ApiResponse<TabContentState>>();
     fetchListening(slug);
   }
 
@@ -35,9 +38,12 @@ class ListeningWidgetBloc {
 
     try {
       Listening listening = await _listeningWidgetService.fetchListening(slug);
-      RecordList recordList = await _listeningTabContentService.fetchRecordList(apiBase + 'youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw');
+      RecordList recordList = await _listeningTabContentService.fetchRecordList(
+          apiBase +
+              'youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw');
 
-      sinkToAdd(ApiResponse.completed(TabContentState(listening: listening, recordList: recordList)));
+      sinkToAdd(ApiResponse.completed(
+          TabContentState(listening: listening, recordList: recordList)));
     } catch (e) {
       sinkToAdd(ApiResponse.error(e.toString()));
       print(e);

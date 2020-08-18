@@ -50,13 +50,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       );
 
       _scrollControllerList.add(ScrollController());
-      if(section.key == '5975ab2de531830d00e32b2f') {
+      if (section.key == '5975ab2de531830d00e32b2f') {
         _tabWidgets.add(ListeningTabContent(
           section: section,
           scrollController: _scrollControllerList[i],
         ));
-      }
-      else {
+      } else {
         _tabWidgets.add(TabContent(
           section: section,
           scrollController: _scrollControllerList[i],

@@ -44,7 +44,7 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
     super.dispose();
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
@@ -62,16 +62,18 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
               case Status.LOADINGMORE:
               case Status.COMPLETED:
                 RecordList recordList = snapshot.data.data == null
-                  ? _listeningTabContentBloc.records
-                  : snapshot.data.data;
+                    ? _listeningTabContentBloc.records
+                    : snapshot.data.data;
 
-                return _buildTheRecordList(context, recordList, snapshot.data.status);
+                return _buildTheRecordList(
+                    context, recordList, snapshot.data.status);
                 break;
 
               case Status.ERROR:
                 return ErrorStatelessWidget(
                   errorMessage: snapshot.data.message,
-                  onRetryPressed: () => _listeningTabContentBloc.fetchRecordList(),
+                  onRetryPressed: () =>
+                      _listeningTabContentBloc.fetchRecordList(),
                 );
                 break;
             }
@@ -82,7 +84,8 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
     );
   }
 
-  Widget _buildTheRecordList(BuildContext context, RecordList recordList, Status status) {
+  Widget _buildTheRecordList(
+      BuildContext context, RecordList recordList, Status status) {
     return ListView(
       controller: widget.scrollController,
       children: [
@@ -148,7 +151,10 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => StoryPage(slug: record.slug, isListeningWidget: true,)));
+                builder: (context) => StoryPage(
+                      slug: record.slug,
+                      isListeningWidget: true,
+                    )));
       },
     );
   }
@@ -203,7 +209,10 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => StoryPage(slug: record.slug, isListeningWidget: true,)));
+                builder: (context) => StoryPage(
+                      slug: record.slug,
+                      isListeningWidget: true,
+                    )));
       },
     );
   }

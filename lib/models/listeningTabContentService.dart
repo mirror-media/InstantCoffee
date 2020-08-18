@@ -10,7 +10,8 @@ class ListeningTabContentService {
   Future<RecordList> fetchRecordList(String url) async {
     final jsonResponse = await _helper.getByUrl(url);
     var jsonObject = jsonResponse['items'];
-    nextPage = listeningWidgetApi + '&pageToken=' + jsonResponse['nextPageToken'];
+    nextPage =
+        listeningWidgetApi + '&pageToken=' + jsonResponse['nextPageToken'];
     RecordList records = RecordList.fromJson(jsonObject);
     return records;
   }

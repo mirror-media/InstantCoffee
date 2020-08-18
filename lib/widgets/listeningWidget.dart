@@ -43,7 +43,8 @@ class _ListeningWidget extends State<ListeningWidget> {
             case Status.COMPLETED:
               TabContentState tabContentState = snapshot.data.data;
 
-              return ListView(children: [_buildContent(width, tabContentState)]);
+              return ListView(
+                  children: [_buildContent(width, tabContentState)]);
               break;
 
             case Status.ERROR:
@@ -58,19 +59,19 @@ class _ListeningWidget extends State<ListeningWidget> {
 
   _buildContent(double width, TabContentState tabContentState) {
     return Column(
-      children:[
+      children: [
         YoutubeWidget(
           width: width,
           youtubeId: tabContentState.listening.slug,
         ),
         SizedBox(height: 16.0),
         Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0 ,0.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
           child: _buildTitleAndDescription(tabContentState.listening),
         ),
         SizedBox(height: 16.0),
         Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0 ,0.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
           child: _buildTheNewestVideos(width, tabContentState.recordList),
         ),
       ],
@@ -103,7 +104,8 @@ class _ListeningWidget extends State<ListeningWidget> {
         ),
         SizedBox(height: 8),
         Text(
-          listening.description.split('---------------------------------------')[0],
+          listening.description
+              .split('---------------------------------------')[0],
           style: TextStyle(
             fontSize: 20,
           ),
@@ -113,51 +115,50 @@ class _ListeningWidget extends State<ListeningWidget> {
   }
 
   _buildTheNewestVideos(double width, RecordList recordList) {
-    double imageWidth = width-32;
+    double imageWidth = width - 32;
     double imageHeight = width / 16 * 9;
 
     return ListView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: recordList.length,
-      itemBuilder: (context, index) {
-        return InkWell(
-          child: Column(
-            children: [
-              CachedNetworkImage(
-                height: imageHeight,
-                width: imageWidth,
-                imageUrl: recordList[index].photoUrl,
-                placeholder: (context, url) => Container(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: recordList.length,
+        itemBuilder: (context, index) {
+          return InkWell(
+            child: Column(
+              children: [
+                CachedNetworkImage(
                   height: imageHeight,
                   width: imageWidth,
-                  color: Colors.grey,
+                  imageUrl: recordList[index].photoUrl,
+                  placeholder: (context, url) => Container(
+                    height: imageHeight,
+                    width: imageWidth,
+                    color: Colors.grey,
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    height: imageHeight,
+                    width: imageWidth,
+                    color: Colors.grey,
+                    child: Icon(Icons.error),
+                  ),
+                  fit: BoxFit.cover,
                 ),
-                errorWidget: (context, url, error) => Container(
-                  height: imageHeight,
-                  width: imageWidth,
-                  color: Colors.grey,
-                  child: Icon(Icons.error),
+                SizedBox(
+                  height: 8,
                 ),
-                fit: BoxFit.cover,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Text(
-                recordList[index].title,
-                style: TextStyle(color: Colors.grey),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-            ],
-          ),
-          onTap: () {
-            _listeningWidgetBloc.fetchListening(recordList[index].slug);
-          },
-        );
-      }
-    );
+                Text(
+                  recordList[index].title,
+                  style: TextStyle(color: Colors.grey),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+              ],
+            ),
+            onTap: () {
+              _listeningWidgetBloc.fetchListening(recordList[index].slug);
+            },
+          );
+        });
   }
 }

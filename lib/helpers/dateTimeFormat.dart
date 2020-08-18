@@ -15,8 +15,7 @@ class DateTimeFormat {
   String changeYoutubeStringToDisplayString(String data, String formatType) {
     int gmtHour = DateTime.now().timeZoneOffset.inHours;
 
-    DateTime parsedDate =
-        DateFormat('yyyy-MM-ddTHH:mm:ssZ').parse(data);
+    DateTime parsedDate = DateFormat('yyyy-MM-ddTHH:mm:ssZ').parse(data);
     DateTime gmt8Date = parsedDate.add(Duration(hours: gmtHour));
     return DateFormat(formatType).format(gmt8Date);
   }

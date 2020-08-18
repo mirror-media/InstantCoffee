@@ -13,7 +13,6 @@ class YoutubeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -25,7 +24,7 @@ class YoutubeWidget extends StatelessWidget {
             javascriptMode: JavascriptMode.unrestricted,
           ),
         ),
-        if (description!=null && description != '')
+        if (description != null && description != '')
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(

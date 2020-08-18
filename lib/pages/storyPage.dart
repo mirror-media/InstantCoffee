@@ -6,11 +6,9 @@ import 'package:readr_app/widgets/storyWidget.dart';
 class StoryPage extends StatelessWidget {
   final String slug;
   final bool isListeningWidget;
-  const StoryPage({
-    Key key, 
-    @required this.slug, 
-    this.isListeningWidget = false
-  }) : super(key: key);
+  const StoryPage(
+      {Key key, @required this.slug, this.isListeningWidget = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +27,9 @@ class StoryPage extends StatelessWidget {
           )
         ],
       ),
-      body: isListeningWidget ? ListeningWidget(slug: slug) : StoryWidget(slug: slug),
+      body: isListeningWidget
+          ? ListeningWidget(slug: slug)
+          : StoryWidget(slug: slug),
     );
   }
 }

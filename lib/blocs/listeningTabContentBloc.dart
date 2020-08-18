@@ -20,14 +20,17 @@ class ListeningTabContentBloc {
 
   RecordList get records => _records;
 
-  StreamSink<ApiResponse<RecordList>> get listeningTabContentSink => _listeningTabContentController.sink;
+  StreamSink<ApiResponse<RecordList>> get listeningTabContentSink =>
+      _listeningTabContentController.sink;
 
-  Stream<ApiResponse<RecordList>> get listeningTabContentStream => _listeningTabContentController.stream;
+  Stream<ApiResponse<RecordList>> get listeningTabContentStream =>
+      _listeningTabContentController.stream;
 
   ListeningTabContentBloc() {
     _records = RecordList();
     _listeningTabContentService = ListeningTabContentService();
-    _listeningTabContentController = StreamController<ApiResponse<RecordList>>();
+    _listeningTabContentController =
+        StreamController<ApiResponse<RecordList>>();
     fetchRecordList();
   }
 
@@ -46,7 +49,8 @@ class ListeningTabContentBloc {
     }
 
     try {
-      RecordList latests = await _listeningTabContentService.fetchRecordList(_endpoint);
+      RecordList latests =
+          await _listeningTabContentService.fetchRecordList(_endpoint);
       _loadmoreUrl = _listeningTabContentService.getNext();
       if (_page == 1) {
         _records.clear();
@@ -80,7 +84,7 @@ class ListeningTabContentBloc {
       }
     }
   }
-  
+
   dispose() {
     _listeningTabContentController?.close();
   }
