@@ -47,7 +47,7 @@ class _ListingTabContentState extends State<ListingTabContent> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        //_tabContentBloc.refreshTheList();
+        _listingTabContentBloc.refreshTheList();
       },
       child: StreamBuilder<ApiResponse<RecordList>>(
         stream: _listingTabContentBloc.listingTabContentStream,
@@ -90,6 +90,9 @@ class _ListingTabContentState extends State<ListingTabContent> {
             physics: NeverScrollableScrollPhysics(),
             itemCount: recordList.length,
             itemBuilder: (context, index) {
+              if (index == 0) {
+                return _buildTheFirstItem(context, recordList[index]);
+              }
 
               return Column(
                 children: [
@@ -101,6 +104,51 @@ class _ListingTabContentState extends State<ListingTabContent> {
               );
             }),
       ],
+    );
+  }
+
+  Widget _buildTheFirstItem(BuildContext context, Record record) {
+    var width = MediaQuery.of(context).size.width;
+
+    return InkWell(
+      child: Column(
+        children: [
+          CachedNetworkImage(
+            height: width / 16 * 9,
+            width: width,
+            imageUrl: record.photoUrl,
+            placeholder: (context, url) => Container(
+              height: width / 16 * 9,
+              width: width,
+              color: Colors.grey,
+            ),
+            errorWidget: (context, url, error) => Container(
+              height: width / 16 * 9,
+              width: width,
+              color: Colors.grey,
+              child: Icon(Icons.error),
+            ),
+            fit: BoxFit.cover,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
+            child: Text(
+              record.title,
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+          Divider(
+            thickness: 1,
+            color: Colors.black,
+          ),
+        ],
+      ),
+      onTap: () {
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => StoryPage(slug: record.slug)));
+      },
     );
   }
 

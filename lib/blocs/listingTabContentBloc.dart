@@ -62,6 +62,13 @@ class ListingTabContentBloc {
     }
   }
 
+  refreshTheList() {
+    _records.clear();
+    _page = 1;
+    _endpoint = listingPageApi;
+    fetchRecordList();
+  }
+
   loadingMore(ScrollController scrollController) {
     if (scrollController.hasClients) {
       if (scrollController.position.pixels ==
