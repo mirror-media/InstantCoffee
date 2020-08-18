@@ -45,7 +45,7 @@ class CarouselDisplayWidget extends StatelessWidget {
     return CachedNetworkImage(
       height: width / 16 * 9,
       width: width,
-      imageUrl: record.photo,
+      imageUrl: record.photoUrl,
       placeholder: (context, url) => Container(
         height: width / 16 * 9,
         width: width,

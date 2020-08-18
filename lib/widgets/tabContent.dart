@@ -151,7 +151,7 @@ class _TabContentState extends State<TabContent> {
           CachedNetworkImage(
             height: width / 16 * 9,
             width: width,
-            imageUrl: record.photo,
+            imageUrl: record.photoUrl,
             placeholder: (context, url) => Container(
               height: width / 16 * 9,
               width: width,
@@ -182,7 +182,7 @@ class _TabContentState extends State<TabContent> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => new StoryPage(slug: record.slug)));
+                builder: (context) => StoryPage(slug: record.slug)));
       },
     );
   }
@@ -210,7 +210,7 @@ class _TabContentState extends State<TabContent> {
                 CachedNetworkImage(
                   height: imageSize,
                   width: imageSize,
-                  imageUrl: record.photo,
+                  imageUrl: record.photoUrl,
                   placeholder: (context, url) => Container(
                     height: imageSize,
                     width: imageSize,
@@ -237,7 +237,7 @@ class _TabContentState extends State<TabContent> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => new StoryPage(slug: record.slug)));
+                builder: (context) => StoryPage(slug: record.slug)));
       },
     );
   }

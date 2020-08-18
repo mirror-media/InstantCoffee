@@ -127,7 +127,7 @@ class _ListingTabContentState extends State<ListingTabContent> {
                 CachedNetworkImage(
                   height: imageSize,
                   width: imageSize,
-                  imageUrl: record.photo,
+                  imageUrl: record.photoUrl,
                   placeholder: (context, url) => Container(
                     height: imageSize,
                     width: imageSize,

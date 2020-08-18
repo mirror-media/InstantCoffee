@@ -4,51 +4,60 @@ class Record {
   String title;
   String slug;
   String publishedDate;
-  String photo;
+  String photoUrl;
 
   Record({
     this.title,
     this.slug,
     this.publishedDate,
-    this.photo,
+    this.photoUrl,
   });
 
   factory Record.fromJson(Map<String, dynamic> json) {
+    String origTitle;
+    if(json.containsKey('snippet')) {
+      origTitle = json['snippet']['title'];
+    } else {
+      origTitle = json['title'];
+    }
+
+    String origSlug;
+    if(json.containsKey('id')) {
+      origSlug = json['id']['videoId'];
+    } else {
+      origSlug = json['slug'];
+    }
+
+    String origPublishedDate;
+    if(json.containsKey('publishedDate')) {
+      origPublishedDate = json['publishedDate'];
+    } else {
+      origPublishedDate = json['publishTime'];
+    }
+
     String photoUrl = mirrorMediaNotImageUrl;
     if (json.containsKey('heroImage') && json['heroImage'] != null) {
       photoUrl = json['heroImage']['image']['resizedTargets']['mobile']['url'];
-    }
-    return Record(
-      title: json['title'],
-      slug: json['slug'],
-      publishedDate: json['publishedDate'],
-      photo: photoUrl,
-    );
-  }
-
-  factory Record.fromListingJson(Map<String, dynamic> json) {
-    String photoUrl = mirrorMediaNotImageUrl;
-    if (json.containsKey('snippet') && json['snippet']['thumbnails'] != null) {
+    } 
+    else if (json.containsKey('snippet') && json['snippet'] != null) {
       photoUrl = json['snippet']['thumbnails']['medium']['url'];
+    } 
+    else {
+      photoUrl = json['photoUrl'];
     }
+
     return Record(
-      title: json['snippet']['title'],
-      slug: json['id']['videoId'],
-      publishedDate: json['publishTime'],
-      photo: photoUrl,
+      title: origTitle,
+      slug: origSlug,
+      publishedDate: origPublishedDate,
+      photoUrl: photoUrl,
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'title': title,
-        'slug': slug,
-        'publishedDate': publishedDate,
-        'heroImage': {
-          'image': {
-            'resizedTargets': {
-              'mobile': {'url': photo}
-            }
-          }
-        },
-      };
+      'title': title,
+      'slug': slug,
+      'publishedDate': publishedDate,
+      'photoUrl': photoUrl,
+    };
 }

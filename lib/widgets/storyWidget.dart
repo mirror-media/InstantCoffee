@@ -478,7 +478,7 @@ class _StoryWidget extends State<StoryWidget> {
             CachedNetworkImage(
               height: imageHeight,
               width: imageWidth,
-              imageUrl: relatedItem.photo,
+              imageUrl: relatedItem.photoUrl,
               placeholder: (context, url) => Container(
                 height: imageHeight,
                 width: imageWidth,

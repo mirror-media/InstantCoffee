@@ -10,7 +10,7 @@ class ListingTabContentService {
     final jsonResponse = await _helper.getByUrl(url);
     var jsonObject = jsonResponse['items'];
     nextPage = url + '&pageToken=' + jsonResponse['nextPageToken'];
-    RecordList records = RecordList.fromListingJson(jsonObject);
+    RecordList records = RecordList.fromJson(jsonObject);
     return records;
   }
 

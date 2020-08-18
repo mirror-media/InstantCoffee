@@ -120,7 +120,7 @@ class _ListingWidget extends State<ListingWidget> {
             child: Hero(
                 tag: record.title,
                 child: Image(
-                  image: NetworkImage(record.photo),
+                  image: NetworkImage(record.photoUrl),
                   fit: BoxFit.fitWidth,
                   colorBlendMode: BlendMode.darken,
                 )),
