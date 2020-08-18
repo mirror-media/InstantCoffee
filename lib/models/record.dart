@@ -14,17 +14,27 @@ class Record {
   });
 
   factory Record.fromJson(Map<String, dynamic> json) {
-    String origTitle = json['title'];
-    String type;
     String photoUrl = mirrorMediaNotImageUrl;
-    final title = origTitle.replaceAll('　', "\n");
     if (json.containsKey('heroImage') && json['heroImage'] != null) {
       photoUrl = json['heroImage']['image']['resizedTargets']['mobile']['url'];
     }
-    return new Record(
-      title: origTitle,
+    return Record(
+      title: json['title'],
       slug: json['slug'],
       publishedDate: json['publishedDate'],
+      photo: photoUrl,
+    );
+  }
+
+  factory Record.fromListingJson(Map<String, dynamic> json) {
+    String photoUrl = mirrorMediaNotImageUrl;
+    if (json.containsKey('snippet') && json['snippet']['thumbnails'] != null) {
+      photoUrl = json['snippet']['thumbnails']['medium']['url'];
+    }
+    return Record(
+      title: json['snippet']['title'],
+      slug: json['id']['videoId'],
+      publishedDate: json['publishTime'],
       photo: photoUrl,
     );
   }

@@ -3,12 +3,12 @@ import 'package:readr_app/blocs/sectionBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/models/sectionList.dart';
 import 'package:readr_app/models/section.dart';
-import 'package:readr_app/models/sectionService.dart';
+import 'package:readr_app/widgets/listingTabContent.dart';
 import 'package:readr_app/widgets/newsMarquee.dart';
 import 'package:readr_app/widgets/tabContent.dart';
 
-import 'notificationSettingsPage.dart';
-import '../helpers/constants.dart';
+import 'package:readr_app/pages/notificationSettingsPage.dart';
+import 'package:readr_app/helpers/constants.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -50,12 +50,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       );
 
       _scrollControllerList.add(ScrollController());
-
-      _tabWidgets.add(TabContent(
-        section: section,
-        scrollController: _scrollControllerList[i],
-        needCarousel: i == 0,
-      ));
+      if(section.key == '5975ab2de531830d00e32b2f') {
+        _tabWidgets.add(ListingTabContent(
+          section: section,
+          scrollController: _scrollControllerList[i],
+        ));
+      }
+      else {
+        _tabWidgets.add(TabContent(
+          section: section,
+          scrollController: _scrollControllerList[i],
+          needCarousel: i == 0,
+        ));
+      }
     }
 
     // set controller

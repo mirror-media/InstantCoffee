@@ -21,6 +21,20 @@ class RecordList extends CustomizedList<Record> {
     return records;
   }
 
+  factory RecordList.fromListingJson(List<dynamic> parsedJson) {
+    if (parsedJson == null) {
+      return null;
+    }
+
+    RecordList records = RecordList();
+    List parseList = parsedJson.map((i) => Record.fromListingJson(i)).toList();
+    parseList.forEach((element) {
+      records.add(element);
+    });
+
+    return records;
+  }
+
   factory RecordList.parseResponseBody(String body) {
     final jsonData = json.decode(body);
 
