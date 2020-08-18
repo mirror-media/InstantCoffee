@@ -6,6 +6,7 @@ import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/models/section.dart';
+import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
 
 class ListingTabContent extends StatefulWidget {
@@ -144,10 +145,10 @@ class _ListingTabContentState extends State<ListingTabContent> {
         ],
       ),
       onTap: () {
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => StoryPage(slug: record.slug)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => StoryPage(slug: record.slug, isListingWidget: true,)));
       },
     );
   }
@@ -199,10 +200,10 @@ class _ListingTabContentState extends State<ListingTabContent> {
         ),
       ),
       onTap: () {
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => StoryPage(slug: record.slug)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => StoryPage(slug: record.slug, isListingWidget: true,)));
       },
     );
   }

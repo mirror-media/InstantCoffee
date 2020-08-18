@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:readr_app/models/recordList.dart';
-import 'package:readr_app/models/recordService.dart';
-import '../helpers/constants.dart';
-import '../models/record.dart';
-import '../models/sectionList.dart';
-import '../pages/storyPage.dart';
+import 'package:readr_app/blocs/listingWidgetBloc.dart';
+import 'package:readr_app/helpers/apiResponse.dart';
+import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/helpers/dateTimeFormat.dart';
+import 'package:readr_app/models/listing.dart';
+import 'package:readr_app/widgets/youtubeWidget.dart';
 
 class ListingWidget extends StatefulWidget {
-  final String endpoint;
-  const ListingWidget({key, this.endpoint}) : super(key: key);
+  final String slug;
+  const ListingWidget({key, @required this.slug}) : super(key: key);
 
   @override
   _ListingWidget createState() {
@@ -17,122 +17,86 @@ class ListingWidget extends StatefulWidget {
 }
 
 class _ListingWidget extends State<ListingWidget> {
-  String endpoint;
-  ScrollController _controller;
-  String loadmoreUrl = '';
-  RecordList _records = new RecordList();
-  RecordList _filteredRecords = new RecordList();
-  SectionList sectionItems = new SectionList();
-  int page = 1;
-  String _searchText = "";
-  Widget _appBarTitle = new Text(appTitle);
+  ListingWidgetBloc _listingWidgetBloc;
 
   @override
   void initState() {
+    _listingWidgetBloc = ListingWidgetBloc(widget.slug);
     super.initState();
-    _controller = ScrollController();
-    print("endpoint from widget: " + widget.endpoint);
-
-    _getLatests();
-  }
-
-  void _getLatests() async {
-    RecordService recordService = new RecordService();
-    RecordList latests = await recordService.fetchRecordList(widget.endpoint);
-    this.loadmoreUrl = recordService.getNext();
-    print("loadmore: " + this.loadmoreUrl);
-    if (this.page == 1) {
-      this._records.clear();
-      this._filteredRecords.clear();
-    }
-    this.page++;
-
-    setState(() {
-      Record record = new Record();
-      for (int i = 0; i < latests.length; i++) {
-        record = latests[i];
-        this._filteredRecords.add(record);
-        this._records.add(record);
-      }
-    });
   }
 
   Widget build(BuildContext context) {
-    _getLatests();
-    return _buildList(context);
-  }
+    var width = MediaQuery.of(context).size.width;
+    var height = width / 16 * 9;
 
-  Widget _buildList(BuildContext context) {
-    if (!(_searchText.isEmpty)) {
-      _filteredRecords = new List();
-      for (int i = 0; i < _records.length; i++) {
-        if (_records[i]
-                .title
-                .toLowerCase()
-                .contains(_searchText.toLowerCase()) ||
-            _records[i]
-                .slug
-                .toLowerCase()
-                .contains(_searchText.toLowerCase())) {
-          _filteredRecords.add(_records[i]);
+    return StreamBuilder<ApiResponse<Listing>>(
+      stream: _listingWidgetBloc.listingWidgetStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+              return Center(child: CircularProgressIndicator());
+              break;
+
+            case Status.LOADINGMORE:
+            case Status.COMPLETED:
+              Listing listing = snapshot.data.data;
+
+              return ListView(children: [
+                YoutubeWidget(
+                  width: width,
+                  youtubeId: widget.slug,
+                ),
+                SizedBox(height: 16.0),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0 ,0.0),
+                  child: _buildTitleAndDescription(listing),
+                ),
+              ]);
+              break;
+
+            case Status.ERROR:
+              return Container();
+              break;
+          }
         }
-      }
-    }
-
-    List<Widget> storyList = new List();
-    for (int i = 0; i < _filteredRecords.length; i++) {
-      storyList.add(_buildListItem(context, _filteredRecords[i]));
-    }
-    return ListView(
-      controller: _controller,
-      padding: const EdgeInsets.only(top: 5.0),
-      children: storyList,
+        return Container();
+      },
     );
   }
 
-  _scrollListener() {
-    if (_controller.position.pixels == _controller.position.maxScrollExtent) {
-      if (this.loadmoreUrl != '') {
-        this.endpoint = apiBase + this.loadmoreUrl;
-        _getLatests();
-      }
-    }
-    return true;
-  }
+  _buildTitleAndDescription(Listing listing) {
+    DateTimeFormat dateTimeFormat = DateTimeFormat();
 
-  Widget _buildListItem(BuildContext context, Record record) {
-    return Card(
-      key: ValueKey(record.title),
-      //elevation: 8.0,
-      color: Colors.white,
-      //margin: new EdgeInsets.symmetric(horizontal: 5.0, vertical: 6.0),
-      child: Container(
-        //decoration: BoxDecoration(color: Color.fromRGBO(255, 255, 255, .4)),
-        child: ListTile(
-          //contentPadding:
-          //EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
-          title: Text(
-            record.title,
-            style: TextStyle(color: Colors.black, height: 1.8, fontSize: 19),
+    return Column(
+      children: [
+        Text(
+          listing.title,
+          style: TextStyle(
+            fontSize: 28,
+            color: appColor,
           ),
-          trailing: Container(
-            padding: EdgeInsets.only(right: 5.0),
-            child: Hero(
-                tag: record.title,
-                child: Image(
-                  image: NetworkImage(record.photoUrl),
-                  fit: BoxFit.fitWidth,
-                  colorBlendMode: BlendMode.darken,
-                )),
-          ),
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => new StoryPage(slug: record.slug)));
-          },
         ),
-      ),
+        SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(),
+            Text(
+              dateTimeFormat.changeYoutubeStringToDisplayString(
+                  listing.publishedAt, 'yyyy/MM/dd HH:mm:ss'),
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          ],
+        ),
+        SizedBox(height: 8),
+        Text(
+          listing.description.split('---------------------------------------')[0],
+          style: TextStyle(
+            fontSize: 20,
+          ),
+        ),
+      ],
     );
   }
 }

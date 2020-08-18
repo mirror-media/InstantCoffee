@@ -4,14 +4,15 @@ import 'package:webview_flutter/webview_flutter.dart';
 class YoutubeWidget extends StatelessWidget {
   final String youtubeId;
   final String description;
+  final double width;
   YoutubeWidget({
+    @required this.width,
     @required this.youtubeId,
     this.description,
   });
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width - 32;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,7 +25,7 @@ class YoutubeWidget extends StatelessWidget {
             javascriptMode: JavascriptMode.unrestricted,
           ),
         ),
-        if (description != '')
+        if (description!=null && description != '')
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(

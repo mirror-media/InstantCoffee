@@ -9,7 +9,7 @@ import 'package:readr_app/models/recordList.dart';
 class ListingTabContentBloc {
   RecordList _records;
 
-  String _endpoint = listingPageApi;
+  String _endpoint = listingWidgetApi;
   bool isLoading = false;
   String _loadmoreUrl = '';
   int _page = 1;
@@ -65,7 +65,7 @@ class ListingTabContentBloc {
   refreshTheList() {
     _records.clear();
     _page = 1;
-    _endpoint = listingPageApi;
+    _endpoint = listingWidgetApi;
     fetchRecordList();
   }
 

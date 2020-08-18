@@ -1,10 +1,16 @@
 import "package:flutter/material.dart";
 import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/widgets/listingWidget.dart';
 import 'package:readr_app/widgets/storyWidget.dart';
 
 class StoryPage extends StatelessWidget {
   final String slug;
-  const StoryPage({Key key, this.slug}) : super(key: key);
+  final bool isListingWidget;
+  const StoryPage({
+    Key key, 
+    @required this.slug, 
+    this.isListingWidget = false
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +29,7 @@ class StoryPage extends StatelessWidget {
           )
         ],
       ),
-      body: StoryWidget(slug: slug),
+      body: isListingWidget ? ListingWidget(slug: slug) : StoryWidget(slug: slug),
     );
   }
 }

@@ -13,7 +13,6 @@ import 'package:readr_app/models/peopleList.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/story.dart';
 import 'package:readr_app/models/tagList.dart';
-import 'package:readr_app/pages/listingPage.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
@@ -390,12 +389,6 @@ class _StoryWidget extends State<StoryWidget> {
         children: tagWidgets,
       );
     }
-  }
-
-  void _connectTagPage(String tagID) {
-    // load the [age]
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ListingPage()));
   }
 
   _buildUpdateDateWidget(Story story) {
