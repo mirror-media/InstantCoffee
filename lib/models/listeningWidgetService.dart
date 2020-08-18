@@ -9,7 +9,7 @@ class ListeningWidgetService {
     String endpoint = apiBase + 'youtube/videos?part=snippet&maxResults=1&id=' + youtubeId;
 
     final jsonResponse = await _helper.getByUrl(endpoint);
-    Listening listening = Listening.fromJson(jsonResponse["items"][0]['snippet']);
+    Listening listening = Listening.fromJson(jsonResponse["items"][0]);
     return listening;
   }
 }

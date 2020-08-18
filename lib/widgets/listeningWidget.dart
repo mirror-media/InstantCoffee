@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/listeningWidgetBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/constants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/models/listening.dart';
+import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/widgets/youtubeWidget.dart';
 
 class ListeningWidget extends StatefulWidget {
@@ -27,9 +29,8 @@ class _ListeningWidget extends State<ListeningWidget> {
 
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    var height = width / 16 * 9;
 
-    return StreamBuilder<ApiResponse<Listening>>(
+    return StreamBuilder<ApiResponse<TabContentState>>(
       stream: _listeningWidgetBloc.listeningWidgetStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -40,19 +41,9 @@ class _ListeningWidget extends State<ListeningWidget> {
 
             case Status.LOADINGMORE:
             case Status.COMPLETED:
-              Listening listening = snapshot.data.data;
+              TabContentState tabContentState = snapshot.data.data;
 
-              return ListView(children: [
-                YoutubeWidget(
-                  width: width,
-                  youtubeId: widget.slug,
-                ),
-                SizedBox(height: 16.0),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0 ,0.0),
-                  child: _buildTitleAndDescription(listening),
-                ),
-              ]);
+              return ListView(children: [_buildContent(width, tabContentState)]);
               break;
 
             case Status.ERROR:
@@ -62,6 +53,27 @@ class _ListeningWidget extends State<ListeningWidget> {
         }
         return Container();
       },
+    );
+  }
+
+  _buildContent(double width, TabContentState tabContentState) {
+    return Column(
+      children:[
+        YoutubeWidget(
+          width: width,
+          youtubeId: tabContentState.listening.slug,
+        ),
+        SizedBox(height: 16.0),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0 ,0.0),
+          child: _buildTitleAndDescription(tabContentState.listening),
+        ),
+        SizedBox(height: 16.0),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0 ,0.0),
+          child: _buildTheNewestVideos(width, tabContentState.recordList),
+        ),
+      ],
     );
   }
 
@@ -97,6 +109,55 @@ class _ListeningWidget extends State<ListeningWidget> {
           ),
         ),
       ],
+    );
+  }
+
+  _buildTheNewestVideos(double width, RecordList recordList) {
+    double imageWidth = width-32;
+    double imageHeight = width / 16 * 9;
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: recordList.length,
+      itemBuilder: (context, index) {
+        return InkWell(
+          child: Column(
+            children: [
+              CachedNetworkImage(
+                height: imageHeight,
+                width: imageWidth,
+                imageUrl: recordList[index].photoUrl,
+                placeholder: (context, url) => Container(
+                  height: imageHeight,
+                  width: imageWidth,
+                  color: Colors.grey,
+                ),
+                errorWidget: (context, url, error) => Container(
+                  height: imageHeight,
+                  width: imageWidth,
+                  color: Colors.grey,
+                  child: Icon(Icons.error),
+                ),
+                fit: BoxFit.cover,
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Text(
+                recordList[index].title,
+                style: TextStyle(color: Colors.grey),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+            ],
+          ),
+          onTap: () {
+            _listeningWidgetBloc.fetchListening(recordList[index].slug);
+          },
+        );
+      }
     );
   }
 }
