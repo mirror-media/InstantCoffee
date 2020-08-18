@@ -3,7 +3,7 @@ import 'package:readr_app/blocs/sectionBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/models/sectionList.dart';
 import 'package:readr_app/models/section.dart';
-import 'package:readr_app/widgets/listingTabContent.dart';
+import 'package:readr_app/widgets/listeningTabContent.dart';
 import 'package:readr_app/widgets/newsMarquee.dart';
 import 'package:readr_app/widgets/tabContent.dart';
 
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
       _scrollControllerList.add(ScrollController());
       if(section.key == '5975ab2de531830d00e32b2f') {
-        _tabWidgets.add(ListingTabContent(
+        _tabWidgets.add(ListeningTabContent(
           section: section,
           scrollController: _scrollControllerList[i],
         ));

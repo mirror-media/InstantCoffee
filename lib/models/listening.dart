@@ -1,18 +1,18 @@
-class Listing {
+class Listening {
   String title;
   String description;
   String photoUrl;
   String publishedAt;
 
-  Listing({
+  Listening({
     this.title,
     this.description,
     this.photoUrl,
     this.publishedAt,
   });
 
-  factory Listing.fromJson(Map<String, dynamic> json) {
-    return Listing(
+  factory Listening.fromJson(Map<String, dynamic> json) {
+    return Listening(
       title: json['title'],
       description: json['description'],
       photoUrl: json['thumbnails']['medium']['url'],

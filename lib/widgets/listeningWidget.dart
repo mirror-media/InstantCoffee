@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:readr_app/blocs/listingWidgetBloc.dart';
+import 'package:readr_app/blocs/listeningWidgetBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/constants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
-import 'package:readr_app/models/listing.dart';
+import 'package:readr_app/models/listening.dart';
 import 'package:readr_app/widgets/youtubeWidget.dart';
 
-class ListingWidget extends StatefulWidget {
+class ListeningWidget extends StatefulWidget {
   final String slug;
-  const ListingWidget({key, @required this.slug}) : super(key: key);
+  const ListeningWidget({key, @required this.slug}) : super(key: key);
 
   @override
-  _ListingWidget createState() {
-    return _ListingWidget();
+  _ListeningWidget createState() {
+    return _ListeningWidget();
   }
 }
 
-class _ListingWidget extends State<ListingWidget> {
-  ListingWidgetBloc _listingWidgetBloc;
+class _ListeningWidget extends State<ListeningWidget> {
+  ListeningWidgetBloc _listeningWidgetBloc;
 
   @override
   void initState() {
-    _listingWidgetBloc = ListingWidgetBloc(widget.slug);
+    _listeningWidgetBloc = ListeningWidgetBloc(widget.slug);
     super.initState();
   }
 
@@ -29,8 +29,8 @@ class _ListingWidget extends State<ListingWidget> {
     var width = MediaQuery.of(context).size.width;
     var height = width / 16 * 9;
 
-    return StreamBuilder<ApiResponse<Listing>>(
-      stream: _listingWidgetBloc.listingWidgetStream,
+    return StreamBuilder<ApiResponse<Listening>>(
+      stream: _listeningWidgetBloc.listeningWidgetStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
@@ -40,7 +40,7 @@ class _ListingWidget extends State<ListingWidget> {
 
             case Status.LOADINGMORE:
             case Status.COMPLETED:
-              Listing listing = snapshot.data.data;
+              Listening listening = snapshot.data.data;
 
               return ListView(children: [
                 YoutubeWidget(
@@ -50,7 +50,7 @@ class _ListingWidget extends State<ListingWidget> {
                 SizedBox(height: 16.0),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0 ,0.0),
-                  child: _buildTitleAndDescription(listing),
+                  child: _buildTitleAndDescription(listening),
                 ),
               ]);
               break;
@@ -65,13 +65,13 @@ class _ListingWidget extends State<ListingWidget> {
     );
   }
 
-  _buildTitleAndDescription(Listing listing) {
+  _buildTitleAndDescription(Listening listening) {
     DateTimeFormat dateTimeFormat = DateTimeFormat();
 
     return Column(
       children: [
         Text(
-          listing.title,
+          listening.title,
           style: TextStyle(
             fontSize: 28,
             color: appColor,
@@ -84,14 +84,14 @@ class _ListingWidget extends State<ListingWidget> {
             Container(),
             Text(
               dateTimeFormat.changeYoutubeStringToDisplayString(
-                  listing.publishedAt, 'yyyy/MM/dd HH:mm:ss'),
+                  listening.publishedAt, 'yyyy/MM/dd HH:mm:ss'),
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
         ),
         SizedBox(height: 8),
         Text(
-          listing.description.split('---------------------------------------')[0],
+          listening.description.split('---------------------------------------')[0],
           style: TextStyle(
             fontSize: 20,
           ),

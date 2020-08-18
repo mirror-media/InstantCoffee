@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:readr_app/blocs/listingTabContentBloc.dart';
+import 'package:readr_app/blocs/listeningTabContentBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
@@ -9,24 +9,24 @@ import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
 
-class ListingTabContent extends StatefulWidget {
+class ListeningTabContent extends StatefulWidget {
   final Section section;
   final ScrollController scrollController;
-  ListingTabContent({
+  ListeningTabContent({
     @required this.section,
     @required this.scrollController,
   });
 
   @override
-  _ListingTabContentState createState() => _ListingTabContentState();
+  _ListeningTabContentState createState() => _ListeningTabContentState();
 }
 
-class _ListingTabContentState extends State<ListingTabContent> {
-  ListingTabContentBloc _listingTabContentBloc;
+class _ListeningTabContentState extends State<ListeningTabContent> {
+  ListeningTabContentBloc _listeningTabContentBloc;
 
   @override
   void initState() {
-    _listingTabContentBloc = ListingTabContentBloc();
+    _listeningTabContentBloc = ListeningTabContentBloc();
 
     widget.scrollController.addListener(_loadingMore);
 
@@ -34,13 +34,13 @@ class _ListingTabContentState extends State<ListingTabContent> {
   }
 
   _loadingMore() {
-    _listingTabContentBloc.loadingMore(widget.scrollController);
+    _listeningTabContentBloc.loadingMore(widget.scrollController);
   }
 
   @override
   void dispose() {
     widget.scrollController.removeListener(_loadingMore);
-    _listingTabContentBloc.dispose();
+    _listeningTabContentBloc.dispose();
     super.dispose();
   }
 
@@ -48,10 +48,10 @@ class _ListingTabContentState extends State<ListingTabContent> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        _listingTabContentBloc.refreshTheList();
+        _listeningTabContentBloc.refreshTheList();
       },
       child: StreamBuilder<ApiResponse<RecordList>>(
-        stream: _listingTabContentBloc.listingTabContentStream,
+        stream: _listeningTabContentBloc.listeningTabContentStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             switch (snapshot.data.status) {
@@ -62,7 +62,7 @@ class _ListingTabContentState extends State<ListingTabContent> {
               case Status.LOADINGMORE:
               case Status.COMPLETED:
                 RecordList recordList = snapshot.data.data == null
-                  ? _listingTabContentBloc.records
+                  ? _listeningTabContentBloc.records
                   : snapshot.data.data;
 
                 return _buildTheRecordList(context, recordList, snapshot.data.status);
@@ -71,7 +71,7 @@ class _ListingTabContentState extends State<ListingTabContent> {
               case Status.ERROR:
                 return ErrorStatelessWidget(
                   errorMessage: snapshot.data.message,
-                  onRetryPressed: () => _listingTabContentBloc.fetchRecordList(),
+                  onRetryPressed: () => _listeningTabContentBloc.fetchRecordList(),
                 );
                 break;
             }
@@ -148,7 +148,7 @@ class _ListingTabContentState extends State<ListingTabContent> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => StoryPage(slug: record.slug, isListingWidget: true,)));
+                builder: (context) => StoryPage(slug: record.slug, isListeningWidget: true,)));
       },
     );
   }
@@ -203,7 +203,7 @@ class _ListingTabContentState extends State<ListingTabContent> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => StoryPage(slug: record.slug, isListingWidget: true,)));
+                builder: (context) => StoryPage(slug: record.slug, isListeningWidget: true,)));
       },
     );
   }

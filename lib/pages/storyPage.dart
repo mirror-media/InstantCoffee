@@ -1,15 +1,15 @@
 import "package:flutter/material.dart";
 import 'package:readr_app/helpers/constants.dart';
-import 'package:readr_app/widgets/listingWidget.dart';
+import 'package:readr_app/widgets/listeningWidget.dart';
 import 'package:readr_app/widgets/storyWidget.dart';
 
 class StoryPage extends StatelessWidget {
   final String slug;
-  final bool isListingWidget;
+  final bool isListeningWidget;
   const StoryPage({
     Key key, 
     @required this.slug, 
-    this.isListingWidget = false
+    this.isListeningWidget = false
   }) : super(key: key);
 
   @override
@@ -29,7 +29,7 @@ class StoryPage extends StatelessWidget {
           )
         ],
       ),
-      body: isListingWidget ? ListingWidget(slug: slug) : StoryWidget(slug: slug),
+      body: isListeningWidget ? ListeningWidget(slug: slug) : StoryWidget(slug: slug),
     );
   }
 }

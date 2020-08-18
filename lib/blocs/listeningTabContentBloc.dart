@@ -3,51 +3,51 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/constants.dart';
-import 'package:readr_app/models/listingTabContentService.dart';
+import 'package:readr_app/models/listeningTabContentService.dart';
 import 'package:readr_app/models/recordList.dart';
 
-class ListingTabContentBloc {
+class ListeningTabContentBloc {
   RecordList _records;
 
-  String _endpoint = listingWidgetApi;
+  String _endpoint = listeningWidgetApi;
   bool isLoading = false;
   String _loadmoreUrl = '';
   int _page = 1;
 
-  ListingTabContentService _listingTabContentService;
+  ListeningTabContentService _listeningTabContentService;
 
-  StreamController _listingTabContentController;
+  StreamController _listeningTabContentController;
 
   RecordList get records => _records;
 
-  StreamSink<ApiResponse<RecordList>> get listingTabContentSink => _listingTabContentController.sink;
+  StreamSink<ApiResponse<RecordList>> get listeningTabContentSink => _listeningTabContentController.sink;
 
-  Stream<ApiResponse<RecordList>> get listingTabContentStream => _listingTabContentController.stream;
+  Stream<ApiResponse<RecordList>> get listeningTabContentStream => _listeningTabContentController.stream;
 
-  ListingTabContentBloc() {
+  ListeningTabContentBloc() {
     _records = RecordList();
-    _listingTabContentService = ListingTabContentService();
-    _listingTabContentController = StreamController<ApiResponse<RecordList>>();
+    _listeningTabContentService = ListeningTabContentService();
+    _listeningTabContentController = StreamController<ApiResponse<RecordList>>();
     fetchRecordList();
   }
 
   sinkToAdd(ApiResponse<RecordList> value) {
-    if (!_listingTabContentController.isClosed) {
-      listingTabContentSink.add(value);
+    if (!_listeningTabContentController.isClosed) {
+      listeningTabContentSink.add(value);
     }
   }
 
   fetchRecordList() async {
     isLoading = true;
     if (_records == null || _records.length == 0) {
-      sinkToAdd(ApiResponse.loading('Fetching Listing Tab Content'));
+      sinkToAdd(ApiResponse.loading('Fetching Listening Tab Content'));
     } else {
-      sinkToAdd(ApiResponse.loadingMore('Loading More Listing Tab Content'));
+      sinkToAdd(ApiResponse.loadingMore('Loading More Listening Tab Content'));
     }
 
     try {
-      RecordList latests = await _listingTabContentService.fetchRecordList(_endpoint);
-      _loadmoreUrl = _listingTabContentService.getNext();
+      RecordList latests = await _listeningTabContentService.fetchRecordList(_endpoint);
+      _loadmoreUrl = _listeningTabContentService.getNext();
       if (_page == 1) {
         _records.clear();
       }
@@ -65,7 +65,7 @@ class ListingTabContentBloc {
   refreshTheList() {
     _records.clear();
     _page = 1;
-    _endpoint = listingWidgetApi;
+    _endpoint = listeningWidgetApi;
     fetchRecordList();
   }
 
@@ -82,6 +82,6 @@ class ListingTabContentBloc {
   }
   
   dispose() {
-    _listingTabContentController?.close();
+    _listeningTabContentController?.close();
   }
 }
