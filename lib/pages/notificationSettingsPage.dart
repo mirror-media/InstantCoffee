@@ -21,13 +21,20 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
   @override
   void initState() {
-    _notificationSettingList =
+    _setNotificationSettingList();
+    super.initState();
+  }
+
+  _setNotificationSettingList() async{
+    if(await _storage.ready) {
+      _notificationSettingList =
         NotificationSettingList.fromJson(_storage.getItem("notification"));
+    }
 
     if (_notificationSettingList == null) {
       _initNotification();
     }
-    super.initState();
+    setState(() {});
   }
 
   void _initNotification() async {
@@ -35,11 +42,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
         await rootBundle.loadString('assets/data/defaultNotificationList.json');
     var jsonSettingList = json.decode(jsonSetting)['defaultNotificationList'];
 
-    setState(() {
-      _notificationSettingList =
-          NotificationSettingList.fromJson(jsonSettingList);
-      _storage.setItem("notification", jsonSettingList);
-    });
+    _notificationSettingList =
+        NotificationSettingList.fromJson(jsonSettingList);
+    _storage.setItem("notification", jsonSettingList);
   }
 
   @override
@@ -104,7 +109,10 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   Widget _buildNotificationSettingListSection(
       BuildContext context, List<NotificationSetting> notificationSettingList) {
     if (notificationSettingList == null) {
-      return Center(child: CircularProgressIndicator());
+      return Center(child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: CircularProgressIndicator(),
+      ));
     }
 
     return ListView.builder(
