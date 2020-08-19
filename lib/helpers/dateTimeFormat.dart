@@ -12,6 +12,14 @@ class DateTimeFormat {
     return DateFormat(formatType).format(gmt8Date);
   }
 
+  String changeYoutubeStringToDisplayString(String data, String formatType) {
+    int gmtHour = DateTime.now().timeZoneOffset.inHours;
+
+    DateTime parsedDate = DateFormat('yyyy-MM-ddTHH:mm:ssZ').parse(data);
+    DateTime gmt8Date = parsedDate.add(Duration(hours: gmtHour));
+    return DateFormat(formatType).format(gmt8Date);
+  }
+
   /// return string of duration in hh:mm:ss form(has pending 0)
   static String stringDuration(Duration duration) {
     if (duration == null) {

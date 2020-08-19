@@ -1,38 +1,32 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:readr_app/blocs/tabContentBloc.dart';
+import 'package:readr_app/blocs/listeningTabContentBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
-import 'package:readr_app/helpers/constants.dart';
-import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/models/section.dart';
-import 'package:readr_app/widgets/editorChoiceCarousel.dart';
+import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
 
-class TabContent extends StatefulWidget {
+class ListeningTabContent extends StatefulWidget {
   final Section section;
   final ScrollController scrollController;
-  final bool needCarousel;
-  TabContent({
+  ListeningTabContent({
     @required this.section,
     @required this.scrollController,
-    this.needCarousel = false,
   });
 
   @override
-  _TabContentState createState() => _TabContentState();
+  _ListeningTabContentState createState() => _ListeningTabContentState();
 }
 
-class _TabContentState extends State<TabContent> {
-  TabContentBloc _tabContentBloc;
+class _ListeningTabContentState extends State<ListeningTabContent> {
+  ListeningTabContentBloc _listeningTabContentBloc;
 
   @override
   void initState() {
-    _tabContentBloc = TabContentBloc(
-        widget.section.key, widget.section.type, widget.needCarousel);
+    _listeningTabContentBloc = ListeningTabContentBloc();
 
     widget.scrollController.addListener(_loadingMore);
 
@@ -40,13 +34,13 @@ class _TabContentState extends State<TabContent> {
   }
 
   _loadingMore() {
-    _tabContentBloc.loadingMore(widget.scrollController);
+    _listeningTabContentBloc.loadingMore(widget.scrollController);
   }
 
   @override
   void dispose() {
     widget.scrollController.removeListener(_loadingMore);
-    _tabContentBloc.dispose();
+    _listeningTabContentBloc.dispose();
     super.dispose();
   }
 
@@ -54,15 +48,12 @@ class _TabContentState extends State<TabContent> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        _tabContentBloc.refreshTheList(
-            widget.section.key, widget.section.type, widget.needCarousel);
+        _listeningTabContentBloc.refreshTheList();
       },
-      child: StreamBuilder<ApiResponse<TabContentState>>(
-        stream: _tabContentBloc.recordListStream,
+      child: StreamBuilder<ApiResponse<RecordList>>(
+        stream: _listeningTabContentBloc.listeningTabContentStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            TabContentState tabContentState = snapshot.data.data;
-
             switch (snapshot.data.status) {
               case Status.LOADING:
                 return Center(child: CircularProgressIndicator());
@@ -70,21 +61,19 @@ class _TabContentState extends State<TabContent> {
 
               case Status.LOADINGMORE:
               case Status.COMPLETED:
-                RecordList recordList = tabContentState == null
-                    ? _tabContentBloc.records
-                    : tabContentState.recordList;
-                RecordList editorChoiceList = tabContentState == null
-                    ? null
-                    : tabContentState.editorChoiceList;
+                RecordList recordList = snapshot.data.data == null
+                    ? _listeningTabContentBloc.records
+                    : snapshot.data.data;
 
-                return _buildTheRecordList(context, recordList,
-                    editorChoiceList, snapshot.data.status);
+                return _buildTheRecordList(
+                    context, recordList, snapshot.data.status);
                 break;
 
               case Status.ERROR:
                 return ErrorStatelessWidget(
                   errorMessage: snapshot.data.message,
-                  onRetryPressed: () => _tabContentBloc.fetchRecordList(),
+                  onRetryPressed: () =>
+                      _listeningTabContentBloc.fetchRecordList(),
                 );
                 break;
             }
@@ -95,26 +84,17 @@ class _TabContentState extends State<TabContent> {
     );
   }
 
-  Widget _buildTheRecordList(BuildContext context, RecordList recordList,
-      RecordList editorChoiceList, Status status) {
+  Widget _buildTheRecordList(
+      BuildContext context, RecordList recordList, Status status) {
     return ListView(
       controller: widget.scrollController,
       children: [
-        if (widget.needCarousel) ...[
-          EditorChoiceCarousel(
-            editorChoiceList: editorChoiceList,
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
-            child: _buildTagText(),
-          ),
-        ],
         ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: recordList.length,
             itemBuilder: (context, index) {
-              if (index == 0 && !widget.needCarousel) {
+              if (index == 0) {
                 return _buildTheFirstItem(context, recordList[index]);
               }
 
@@ -128,17 +108,6 @@ class _TabContentState extends State<TabContent> {
               );
             }),
       ],
-    );
-  }
-
-  Widget _buildTagText() {
-    return Text(
-      '最新文章',
-      style: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        color: appColor,
-      ),
     );
   }
 
@@ -182,7 +151,10 @@ class _TabContentState extends State<TabContent> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => StoryPage(slug: record.slug)));
+                builder: (context) => StoryPage(
+                      slug: record.slug,
+                      isListeningWidget: true,
+                    )));
       },
     );
   }
@@ -237,7 +209,10 @@ class _TabContentState extends State<TabContent> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => StoryPage(slug: record.slug)));
+                builder: (context) => StoryPage(
+                      slug: record.slug,
+                      isListeningWidget: true,
+                    )));
       },
     );
   }

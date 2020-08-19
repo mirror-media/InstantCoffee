@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/models/recordList.dart';
 
@@ -25,14 +23,13 @@ class RecordService {
       jsonObject = jsonResponse["report"];
       // work around to get a clean slug string
       for (var item in jsonObject) {
-        item['slug'] = item['slug'].replaceAll(new RegExp(r'(story|/)'), '');
+        item['slug'] = item['slug'].replaceAll(RegExp(r'(story|/)'), '');
       }
       //
     } else {
       jsonObject = [];
     }
-    RecordList records = new RecordList.fromJson(jsonObject);
-    //await Future.delayed(Duration(seconds: 3));
+    RecordList records = RecordList.fromJson(jsonObject);
     return records;
   }
 

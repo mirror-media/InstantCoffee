@@ -103,9 +103,11 @@ class ParagraphFormat {
         break;
       case 'youtube':
         {
-          return buildYoutubeWidget(
-            paragraph.contents[0].data,
-            paragraph.contents[0].description,
+          var width = MediaQuery.of(context).size.width - 32;
+          return YoutubeWidget(
+            width: width,
+            youtubeId: paragraph.contents[0].data,
+            description: paragraph.contents[0].description,
           );
         }
       case 'video':
@@ -243,12 +245,5 @@ class ParagraphFormat {
             ],
           );
         });
-  }
-
-  Widget buildYoutubeWidget(String youtubeId, String description) {
-    return YoutubeWidget(
-      youtubeId: youtubeId,
-      description: description,
-    );
   }
 }

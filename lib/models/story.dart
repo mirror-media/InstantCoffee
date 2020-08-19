@@ -110,8 +110,8 @@ class Story {
         json['heroImage']['image'].containsKey('resizedTargets')) {
       photoUrl = json['heroImage']['image']['resizedTargets']['mobile']['url'];
     }
-    if(json.containsKey('heroVideo')) {
-      if(json['heroVideo'] != null) {
+    if (json.containsKey('heroVideo')) {
+      if (json['heroVideo'] != null) {
         videoUrl = json['heroVideo']['video']['url'];
       }
     }
