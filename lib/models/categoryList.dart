@@ -54,6 +54,23 @@ class CategoryList extends CustomizedList<Category> {
     return idStringList;
   }
 
+  bool isTheSame(CategoryList other) {
+    if(l.length != other.length) {
+      return false;
+    }
+    for(int i=0; i<l.length; i++) {
+      if(l[i].id != other[i].id || 
+        l[i].name != other[i].name ||
+        l[i].title != other[i].title ||
+        l[i].isCampaign != other[i].isCampaign
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   // static methods
   static CategoryList getTheNewestCategoryList(
       {CategoryList localCategoryList, CategoryList onlineCategoryList}) {
@@ -61,9 +78,12 @@ class CategoryList extends CustomizedList<Category> {
       return onlineCategoryList;
     }
 
+    if(localCategoryList.isTheSame(onlineCategoryList)) {
+      return localCategoryList;
+    }
+
     if (onlineCategoryList.length != 0) {
       CategoryList resultCategoryList = CategoryList();
-
       for (int i = 0; i < onlineCategoryList.length; i++) {
         Category onlineCategory = onlineCategoryList[i];
         bool onlineCategoryListIsExistedInLocalCategoryList = false;
