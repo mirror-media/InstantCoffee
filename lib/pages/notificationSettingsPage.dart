@@ -25,10 +25,10 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     super.initState();
   }
 
-  _setNotificationSettingList() async{
-    if(await _storage.ready) {
+  _setNotificationSettingList() async {
+    if (await _storage.ready) {
       _notificationSettingList =
-        NotificationSettingList.fromJson(_storage.getItem("notification"));
+          NotificationSettingList.fromJson(_storage.getItem("notification"));
     }
 
     if (_notificationSettingList == null) {
@@ -109,7 +109,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   Widget _buildNotificationSettingListSection(
       BuildContext context, List<NotificationSetting> notificationSettingList) {
     if (notificationSettingList == null) {
-      return Center(child: Padding(
+      return Center(
+          child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: CircularProgressIndicator(),
       ));

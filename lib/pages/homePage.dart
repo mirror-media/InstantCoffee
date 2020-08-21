@@ -3,6 +3,7 @@ import 'package:readr_app/blocs/sectionBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/models/sectionList.dart';
 import 'package:readr_app/models/section.dart';
+import 'package:readr_app/pages/personalPage.dart';
 import 'package:readr_app/widgets/listeningTabContent.dart';
 import 'package:readr_app/widgets/newsMarquee.dart';
 import 'package:readr_app/widgets/tabContent.dart';
@@ -151,7 +152,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         IconButton(
           icon: Icon(Icons.person),
           tooltip: 'Personal',
-          onPressed: () => {},
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PersonalPage(),
+              fullscreenDialog: true,
+            ),
+          ),
         ),
       ],
     );

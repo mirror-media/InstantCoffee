@@ -26,4 +26,96 @@ class CategoryList extends CustomizedList<Category> {
 
     return CategoryList.fromJson(jsonData);
   }
+
+  // your custom methods
+  List<Map<dynamic, dynamic>> toJson() {
+    List<Map> categoryMaps = List();
+    if (l == null) {
+      return null;
+    }
+
+    for (Category category in l) {
+      categoryMaps.add(category.toJson());
+    }
+    return categoryMaps;
+  }
+
+  List<String> get getSubscriptionIdStringList {
+    List<String> idStringList = List<String>();
+    if (l == null) {
+      return null;
+    }
+
+    for (Category category in l) {
+      if (category.isSubscribed) {
+        idStringList.add(category.id);
+      }
+    }
+    return idStringList;
+  }
+
+  bool isTheSame(CategoryList other) {
+    if(l.length != other.length) {
+      return false;
+    }
+    for(int i=0; i<l.length; i++) {
+      if(l[i].id != other[i].id || 
+        l[i].name != other[i].name ||
+        l[i].title != other[i].title ||
+        l[i].isCampaign != other[i].isCampaign
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  // static methods
+  static CategoryList getTheNewestCategoryList(
+      {CategoryList localCategoryList, CategoryList onlineCategoryList}) {
+    if (localCategoryList == null) {
+      return onlineCategoryList;
+    }
+
+    if(localCategoryList.isTheSame(onlineCategoryList)) {
+      return localCategoryList;
+    }
+
+    if (onlineCategoryList.length != 0) {
+      CategoryList resultCategoryList = CategoryList();
+      for (int i = 0; i < onlineCategoryList.length; i++) {
+        Category onlineCategory = onlineCategoryList[i];
+        bool onlineCategoryListIsExistedInLocalCategoryList = false;
+
+        for (int j = 0; j < localCategoryList.length; j++) {
+          Category localCategory = localCategoryList[j];
+
+          // only check the Category id in operator '=='
+          if (localCategory == onlineCategory) {
+            onlineCategoryListIsExistedInLocalCategoryList = true;
+
+            if (!Category.checkOtherParameters(localCategory, onlineCategory)) {
+              resultCategoryList.add(Category(
+                id: onlineCategory.id,
+                name: onlineCategory.name,
+                title: onlineCategory.title,
+                isCampaign: onlineCategory.isCampaign,
+                isSubscribed: localCategory.isSubscribed,
+              ));
+            } else {
+              resultCategoryList.add(localCategory);
+            }
+          }
+        }
+
+        if (!onlineCategoryListIsExistedInLocalCategoryList) {
+          resultCategoryList.add(onlineCategory);
+        }
+      }
+      return resultCategoryList;
+    }
+
+    return localCategoryList;
+  }
 }

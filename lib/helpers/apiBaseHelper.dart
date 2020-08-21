@@ -10,7 +10,8 @@ class ApiBaseHelper {
     print('Call Api Get, url $url');
     var responseJson;
     try {
-      final response = await http.get(url);
+      final response =
+          await http.get(url, headers: {'Cache-control': 'no-cache'});
       responseJson = _returnResponse(response);
     } on SocketException {
       print('No Internet connection');
