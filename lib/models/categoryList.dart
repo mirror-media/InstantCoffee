@@ -54,27 +54,6 @@ class CategoryList extends CustomizedList<Category> {
     return idStringList;
   }
 
-  String getSubscriptionIdString() {
-    String idString = '[';
-    if (l == null) {
-      return null;
-    }
-
-    for (Category category in l) {
-      if (category.isSubscribed) {
-        idString = idString + '"${category.id}",';
-      }
-    }
-    if (idString.length >= 4) {
-      idString =
-          idString.replaceRange(idString.length - 1, idString.length, ']');
-    } else {
-      idString = idString + ']';
-    }
-
-    return idString;
-  }
-
   // static methods
   static CategoryList getTheNewestCategoryList(
       {CategoryList localCategoryList, CategoryList onlineCategoryList}) {
