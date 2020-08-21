@@ -55,27 +55,29 @@ class PersonalPageBloc {
 
     _categoryService = CategoryService();
     _personalSubscriptionService = PersonalSubscriptionService();
-    _categoryController =
-        StreamController<ApiResponse<CategoryList>>();
+    _categoryController = StreamController<ApiResponse<CategoryList>>();
     _personalSubscriptionController =
         StreamController<ApiResponse<RecordList>>();
-    
+
     fetchCategoryListAndSubscriptionList();
   }
-  
-  fetchCategoryListAndSubscriptionList() async{
+
+  fetchCategoryListAndSubscriptionList() async {
     categorySinkToAdd(ApiResponse.loading('Fetching Category List'));
 
     try {
       CategoryList localCategoryList;
       CategoryList onlineCategoryList;
-      if(await _storage.ready) {
-        localCategoryList = CategoryList.fromJson(_storage.getItem("categoryList"));
+      if (await _storage.ready) {
+        localCategoryList =
+            CategoryList.fromJson(_storage.getItem("categoryList"));
       }
 
       onlineCategoryList = await _categoryService.fetchCategoryList();
 
-      CategoryList categoryList = CategoryList.getTheNewestCategoryList(localCategoryList: localCategoryList, onlineCategoryList: onlineCategoryList);
+      CategoryList categoryList = CategoryList.getTheNewestCategoryList(
+          localCategoryList: localCategoryList,
+          onlineCategoryList: onlineCategoryList);
       _categoryList = categoryList;
       categorySinkToAdd(ApiResponse.completed(categoryList));
 
@@ -86,16 +88,19 @@ class PersonalPageBloc {
     }
   }
 
-  fetchSubscriptionList(CategoryList categoryList) async{
+  fetchSubscriptionList(CategoryList categoryList) async {
     _isLoading = true;
     if (_recordList == null || _recordList.length == 0) {
-      personalSubscriptionSinkToAdd(ApiResponse.loading('Fetching Subscription Content'));
+      personalSubscriptionSinkToAdd(
+          ApiResponse.loading('Fetching Subscription Content'));
     } else {
-      personalSubscriptionSinkToAdd(ApiResponse.loadingMore('Loading More Subscription Content'));
+      personalSubscriptionSinkToAdd(
+          ApiResponse.loadingMore('Loading More Subscription Content'));
     }
 
     try {
-      RecordList latests = await _personalSubscriptionService.fetchRecordList(_page, categoryList);
+      RecordList latests = await _personalSubscriptionService.fetchRecordList(
+          _page, categoryList);
       if (_page == 1) {
         _recordList.clear();
       }
@@ -122,7 +127,7 @@ class PersonalPageBloc {
     _page = 1;
     fetchSubscriptionList(categoryList);
   }
-  
+
   loadingMore(ScrollController scrollController) {
     if (scrollController.hasClients) {
       print('hey');

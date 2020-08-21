@@ -19,17 +19,17 @@ class Category {
       name: json['name'],
       title: json['title'],
       isCampaign: json['isCampaign'],
-      isSubscribed: json['isSubscribed']??true,
+      isSubscribed: json['isSubscribed'] ?? true,
     );
   }
 
   Map<String, dynamic> toJson() => {
-    '_id': id,
-    'name': name,
-    'title': title,
-    'isCampaign': isCampaign,
-    'isSubscribed': isSubscribed,
-  };
+        '_id': id,
+        'name': name,
+        'title': title,
+        'isCampaign': isCampaign,
+        'isSubscribed': isSubscribed,
+      };
 
   @override
   int get hashCode => this.hashCode;
@@ -41,9 +41,8 @@ class Category {
   }
 
   static checkOtherParameters(Category a, Category b) {
-    return 
-      a.name == b.name &&
-      a.title == b.title &&
-      a.isCampaign == b.isCampaign;
+    return a.name == b.name &&
+        a.title == b.title &&
+        a.isCampaign == b.isCampaign;
   }
 }

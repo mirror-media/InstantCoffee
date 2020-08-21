@@ -47,7 +47,7 @@ class CategoryList extends CustomizedList<Category> {
     }
 
     for (Category category in l) {
-      if(category.isSubscribed) {
+      if (category.isSubscribed) {
         idStringList.add(category.id);
       }
     }
@@ -61,58 +61,56 @@ class CategoryList extends CustomizedList<Category> {
     }
 
     for (Category category in l) {
-      if(category.isSubscribed) {
+      if (category.isSubscribed) {
         idString = idString + '"${category.id}",';
       }
     }
-    if(idString.length >= 4) {
-      idString = idString.replaceRange(idString.length-1, idString.length, ']');
-    }
-    else {
+    if (idString.length >= 4) {
+      idString =
+          idString.replaceRange(idString.length - 1, idString.length, ']');
+    } else {
       idString = idString + ']';
     }
-    
+
     return idString;
   }
 
   // static methods
-  static CategoryList getTheNewestCategoryList({CategoryList localCategoryList, CategoryList onlineCategoryList}) {
-    if(localCategoryList == null) {
+  static CategoryList getTheNewestCategoryList(
+      {CategoryList localCategoryList, CategoryList onlineCategoryList}) {
+    if (localCategoryList == null) {
       return onlineCategoryList;
     }
 
-    if(onlineCategoryList.length != 0) {
+    if (onlineCategoryList.length != 0) {
       CategoryList resultCategoryList = CategoryList();
 
-      for(int i=0; i<onlineCategoryList.length; i++) {
+      for (int i = 0; i < onlineCategoryList.length; i++) {
         Category onlineCategory = onlineCategoryList[i];
         bool onlineCategoryListIsExistedInLocalCategoryList = false;
 
-        for(int j=0; j<localCategoryList.length; j++) {
+        for (int j = 0; j < localCategoryList.length; j++) {
           Category localCategory = localCategoryList[j];
 
           // only check the Category id in operator '=='
-          if(localCategory == onlineCategory) {
+          if (localCategory == onlineCategory) {
             onlineCategoryListIsExistedInLocalCategoryList = true;
 
-            if(!Category.checkOtherParameters(localCategory, onlineCategory)) {
-              resultCategoryList.add(
-                Category(
-                  id: onlineCategory.id,
-                  name: onlineCategory.name,
-                  title: onlineCategory.title,
-                  isCampaign: onlineCategory.isCampaign,
-                  isSubscribed: localCategory.isSubscribed,
-                )
-              );
-            }
-            else {
+            if (!Category.checkOtherParameters(localCategory, onlineCategory)) {
+              resultCategoryList.add(Category(
+                id: onlineCategory.id,
+                name: onlineCategory.name,
+                title: onlineCategory.title,
+                isCampaign: onlineCategory.isCampaign,
+                isSubscribed: localCategory.isSubscribed,
+              ));
+            } else {
               resultCategoryList.add(localCategory);
             }
           }
         }
 
-        if(!onlineCategoryListIsExistedInLocalCategoryList) {
+        if (!onlineCategoryListIsExistedInLocalCategoryList) {
           resultCategoryList.add(onlineCategory);
         }
       }

@@ -10,7 +10,7 @@ class CategoryService {
     var sectionJson = jsonResponse["_items"];
 
     CategoryList categoryList = CategoryList();
-    for(int i=0; i<sectionJson.length; i++) {
+    for (int i = 0; i < sectionJson.length; i++) {
       categoryList.addAll(CategoryList.fromJson(sectionJson[i]['categories']));
     }
 

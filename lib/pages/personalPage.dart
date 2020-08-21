@@ -22,7 +22,7 @@ class _PersonalPageState extends State<PersonalPage> {
   void initState() {
     _personalPageBloc = PersonalPageBloc();
     _scrollController = ScrollController();
-    
+
     _scrollController.addListener(_loadingMore);
     super.initState();
   }
@@ -33,10 +33,8 @@ class _PersonalPageState extends State<PersonalPage> {
 
   _scrollToTop() {
     if (_scrollController.hasClients) {
-      _scrollController.animateTo(
-          _scrollController.position.minScrollExtent,
-          duration: Duration(milliseconds: 1000),
-          curve: Curves.easeIn);
+      _scrollController.animateTo(_scrollController.position.minScrollExtent,
+          duration: Duration(milliseconds: 1000), curve: Curves.easeIn);
     }
   }
 
@@ -64,39 +62,41 @@ class _PersonalPageState extends State<PersonalPage> {
               case Status.COMPLETED:
                 CategoryList categoryList = snapshot.data.data;
 
-                return ListView(
-                  controller: _scrollController,
-                  children: [
-                    _buildCategoryList(categoryList, _personalPageBloc),
-                    Divider(height: 32, thickness: 1.5, color: Colors.black,),
-                    StreamBuilder<ApiResponse<RecordList>>(
-                      stream: _personalPageBloc.personalSubscriptionStream,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          switch (snapshot.data.status) {
-                            case Status.LOADING:
-                              return Center(child: CircularProgressIndicator());
-                              break;
+                return ListView(controller: _scrollController, children: [
+                  _buildCategoryList(categoryList, _personalPageBloc),
+                  Divider(
+                    height: 32,
+                    thickness: 1.5,
+                    color: Colors.black,
+                  ),
+                  StreamBuilder<ApiResponse<RecordList>>(
+                    stream: _personalPageBloc.personalSubscriptionStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        switch (snapshot.data.status) {
+                          case Status.LOADING:
+                            return Center(child: CircularProgressIndicator());
+                            break;
 
-                            case Status.LOADINGMORE:
-                            case Status.COMPLETED:
-                              RecordList recordList = snapshot.data.data == null
+                          case Status.LOADINGMORE:
+                          case Status.COMPLETED:
+                            RecordList recordList = snapshot.data.data == null
                                 ? _personalPageBloc.recordList
                                 : snapshot.data.data;
 
-                              return _buildSubscribtoinList(context, recordList, snapshot.data.status);
-                              break;
+                            return _buildSubscribtoinList(
+                                context, recordList, snapshot.data.status);
+                            break;
 
-                            case Status.ERROR:
-                              return Container();
-                              break;
-                          }
+                          case Status.ERROR:
+                            return Container();
+                            break;
                         }
-                        return Container();
-                      },
-                    ),
-                  ]
-                );
+                      }
+                      return Container();
+                    },
+                  ),
+                ]);
                 break;
 
               case Status.ERROR:
@@ -113,10 +113,10 @@ class _PersonalPageState extends State<PersonalPage> {
           child: InkWell(
             splashColor: Colors.red,
             child: SizedBox(
-              width: 48, 
-              height: 48, 
+              width: 48,
+              height: 48,
               child: Icon(
-                Icons.arrow_drop_up, 
+                Icons.arrow_drop_up,
                 color: Colors.white,
               ),
             ),
@@ -128,7 +128,7 @@ class _PersonalPageState extends State<PersonalPage> {
       ),
     );
   }
-  
+
   Widget _buildBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
@@ -151,7 +151,8 @@ class _PersonalPageState extends State<PersonalPage> {
     );
   }
 
-  Widget _buildCategoryList(CategoryList categoryList, PersonalPageBloc personalPageBloc) {
+  Widget _buildCategoryList(
+      CategoryList categoryList, PersonalPageBloc personalPageBloc) {
     return Column(
       children: [
         SizedBox(height: 16),
@@ -166,53 +167,60 @@ class _PersonalPageState extends State<PersonalPage> {
         Container(
           height: 32,
           child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: categoryList.length,
-            itemBuilder: (context, index) {
-              return Row(
-                children: [
-                  if(index == 0)
-                    SizedBox(width: 8.0),
-                  
-                  Padding(
-                    padding: const EdgeInsets.only(right:8.0),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular((15.0)),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: appColor, width: 1),
-                          borderRadius: BorderRadius.circular((15.0)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(categoryList[index].title),
-                              SizedBox(width: 4.0),
-                              categoryList[index].isSubscribed 
-                              ? Icon(Icons.remove_circle_outline, size: 18,)
-                              : Icon(Icons.add_circle_outline, size: 18,),
-                            ],
+              scrollDirection: Axis.horizontal,
+              itemCount: categoryList.length,
+              itemBuilder: (context, index) {
+                return Row(
+                  children: [
+                    if (index == 0) SizedBox(width: 8.0),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular((15.0)),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: appColor, width: 1),
+                            borderRadius: BorderRadius.circular((15.0)),
+                          ),
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(categoryList[index].title),
+                                SizedBox(width: 4.0),
+                                categoryList[index].isSubscribed
+                                    ? Icon(
+                                        Icons.remove_circle_outline,
+                                        size: 18,
+                                      )
+                                    : Icon(
+                                        Icons.add_circle_outline,
+                                        size: 18,
+                                      ),
+                              ],
+                            ),
                           ),
                         ),
+                        onTap: () {
+                          categoryList[index].isSubscribed =
+                              !categoryList[index].isSubscribed;
+                          personalPageBloc
+                              .setCategoryListInStorage(categoryList);
+                        },
                       ),
-                      onTap: (){
-                        categoryList[index].isSubscribed = !categoryList[index].isSubscribed;
-                        personalPageBloc.setCategoryListInStorage(categoryList);
-                      },
                     ),
-                  ),
-                ],
-              );
-            }
-          ),
+                  ],
+                );
+              }),
         ),
       ],
     );
   }
 
-  _buildSubscribtoinList(BuildContext context, RecordList recordList, Status status) {
+  _buildSubscribtoinList(
+      BuildContext context, RecordList recordList, Status status) {
     var width = MediaQuery.of(context).size.width;
     double imageSize = 25 * (width - 32) / 100;
 
@@ -226,24 +234,19 @@ class _PersonalPageState extends State<PersonalPage> {
       ),
     );
 
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            myVerticalDivider,
-            Text(
-              '訂閱的文章',
-              style: TextStyle(
-                color: appColor,
-                fontSize: 20,
-              ),
-            ),
-            myVerticalDivider,
-          ]
+    return Column(children: [
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        myVerticalDivider,
+        Text(
+          '訂閱的文章',
+          style: TextStyle(
+            color: appColor,
+            fontSize: 20,
+          ),
         ),
-        
-        ListView.builder(
+        myVerticalDivider,
+      ]),
+      ListView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           itemCount: recordList == null ? 0 : recordList.length,
@@ -252,14 +255,13 @@ class _PersonalPageState extends State<PersonalPage> {
             return Column(
               children: [
                 _buildListItem(record, imageSize),
-                if (index == recordList.length - 1 &&status == Status.LOADINGMORE)
+                if (index == recordList.length - 1 &&
+                    status == Status.LOADINGMORE)
                   CupertinoActivityIndicator(),
               ],
             );
-          }
-        ),
-      ]
-    );
+          }),
+    ]);
   }
 
   _buildListItem(Record record, double imageSize) {
