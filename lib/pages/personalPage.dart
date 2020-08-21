@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,7 @@ import 'package:readr_app/models/categoryList.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/pages/storyPage.dart';
+import 'package:readr_app/widgets/unsubscriptionCategoryList.dart';
 
 class PersonalPage extends StatefulWidget {
   @override
@@ -63,7 +66,7 @@ class _PersonalPageState extends State<PersonalPage> {
                 CategoryList categoryList = snapshot.data.data;
 
                 return ListView(controller: _scrollController, children: [
-                  _buildCategoryList(categoryList, _personalPageBloc),
+                  _buildCategoryList(context, categoryList, _personalPageBloc),
                   Divider(
                     height: 32,
                     thickness: 1.5,
@@ -152,70 +155,110 @@ class _PersonalPageState extends State<PersonalPage> {
   }
 
   Widget _buildCategoryList(
-      CategoryList categoryList, PersonalPageBloc personalPageBloc) {
+      BuildContext context, CategoryList categoryList, PersonalPageBloc personalPageBloc) {
     return Column(
       children: [
-        SizedBox(height: 16),
-        Text(
-          '新增訂閱項目',
-          style: TextStyle(
-            color: appColor,
-            fontSize: 20,
-          ),
+        SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(width: 48),
+            Text(
+              '訂閱新聞類別',
+              style: TextStyle(
+                color: appColor,
+                fontSize: 20,
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.add_circle_outline, color: appColor,), 
+              onPressed: () {
+                _showUnsubscriptionDialog(context, categoryList, personalPageBloc);
+              }
+            ),
+          ],
         ),
-        SizedBox(height: 16),
-        Container(
-          height: 32,
-          child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: categoryList.length,
-              itemBuilder: (context, index) {
-                return Row(
-                  children: [
-                    if (index == 0) SizedBox(width: 8.0),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular((15.0)),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: appColor, width: 1),
+        SizedBox(height: 4),
+        categoryList.subscriptionCount == 0
+        ? Container()
+        : Container(
+            height: 32,
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: categoryList.length,
+                itemBuilder: (context, index) {
+                  return Row(
+                    children: [
+                      if (index == 0) SizedBox(width: 8.0),
+                      if(categoryList[index].isSubscribed)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: InkWell(
                             borderRadius: BorderRadius.circular((15.0)),
-                          ),
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(categoryList[index].title),
-                                SizedBox(width: 4.0),
-                                categoryList[index].isSubscribed
-                                    ? Icon(
-                                        Icons.remove_circle_outline,
-                                        size: 18,
-                                      )
-                                    : Icon(
-                                        Icons.add_circle_outline,
-                                        size: 18,
-                                      ),
-                              ],
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: appColor, width: 1),
+                                borderRadius: BorderRadius.circular((15.0)),
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(categoryList[index].title),
+                                    SizedBox(width: 4.0),
+                                    Icon(
+                                      Icons.remove_circle_outline,
+                                      size: 18,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
+                            onTap: () {
+                              categoryList[index].isSubscribed =
+                                  !categoryList[index].isSubscribed;
+                              personalPageBloc
+                                  .setCategoryListInStorage(categoryList);
+                            },
                           ),
                         ),
-                        onTap: () {
-                          categoryList[index].isSubscribed =
-                              !categoryList[index].isSubscribed;
-                          personalPageBloc
-                              .setCategoryListInStorage(categoryList);
-                        },
-                      ),
-                    ),
-                  ],
-                );
-              }),
-        ),
+                    ],
+                  );
+                }),
+          ),
       ],
+    );
+  }
+
+  _showUnsubscriptionDialog(BuildContext context, CategoryList categoryList, PersonalPageBloc personalPageBloc){
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        StreamController<CategoryList> controller = StreamController<CategoryList>();
+        return AlertDialog(
+          title: Text('新增訂閱項目'),
+          content: Container(
+            width: double.maxFinite,
+            child: UnsubscriptionCategoryList(
+              controller: controller,
+              categoryList: categoryList,
+              personalPageBloc: personalPageBloc,
+            ),
+          ),
+          actions: [
+            FlatButton(
+              child: Text("Ok", style: TextStyle(color: Colors.black),),
+              onPressed:(){
+                controller.close();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -271,16 +314,8 @@ class _PersonalPageState extends State<PersonalPage> {
         child: Column(
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Text(
-                    record.title,
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-                SizedBox(
-                  width: 16,
-                ),
                 CachedNetworkImage(
                   height: imageSize,
                   width: imageSize,
@@ -298,11 +333,21 @@ class _PersonalPageState extends State<PersonalPage> {
                   ),
                   fit: BoxFit.cover,
                 ),
+                SizedBox(
+                  width: 16,
+                ),
+                Expanded(
+                  child: Text(
+                    record.title,
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
               ],
             ),
+            SizedBox(height: 8,),
             Divider(
               thickness: 1,
-              color: Colors.black,
+              color: Colors.grey,
             ),
           ],
         ),
