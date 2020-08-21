@@ -104,8 +104,7 @@ class _ListeningWidget extends State<ListeningWidget> {
         ),
         SizedBox(height: 8),
         Text(
-          listening.description
-              .split('---------------------------------------')[0],
+          listening.description.split('-----')[0],
           style: TextStyle(
             fontSize: 20,
           ),
@@ -118,47 +117,61 @@ class _ListeningWidget extends State<ListeningWidget> {
     double imageWidth = width - 32;
     double imageHeight = width / 16 * 9;
 
-    return ListView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: recordList.length,
-        itemBuilder: (context, index) {
-          return InkWell(
-            child: Column(
-              children: [
-                CachedNetworkImage(
-                  height: imageHeight,
-                  width: imageWidth,
-                  imageUrl: recordList[index].photoUrl,
-                  placeholder: (context, url) => Container(
-                    height: imageHeight,
-                    width: imageWidth,
-                    color: Colors.grey,
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    height: imageHeight,
-                    width: imageWidth,
-                    color: Colors.grey,
-                    child: Icon(Icons.error),
-                  ),
-                  fit: BoxFit.cover,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '最新影音',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: appColor,
+          ),
+        ),
+        SizedBox(height: 16,),
+        ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: recordList.length,
+            itemBuilder: (context, index) {
+              return InkWell(
+                child: Column(
+                  children: [
+                    CachedNetworkImage(
+                      height: imageHeight,
+                      width: imageWidth,
+                      imageUrl: recordList[index].photoUrl,
+                      placeholder: (context, url) => Container(
+                        height: imageHeight,
+                        width: imageWidth,
+                        color: Colors.grey,
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        height: imageHeight,
+                        width: imageWidth,
+                        color: Colors.grey,
+                        child: Icon(Icons.error),
+                      ),
+                      fit: BoxFit.cover,
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Text(
+                      recordList[index].title,
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: 8,
-                ),
-                Text(
-                  recordList[index].title,
-                  style: TextStyle(color: Colors.grey),
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-              ],
-            ),
-            onTap: () {
-              _listeningWidgetBloc.fetchListening(recordList[index].slug);
-            },
-          );
-        });
+                onTap: () {
+                  _listeningWidgetBloc.fetchListening(recordList[index].slug);
+                },
+              );
+            }),
+      ],
+    );
   }
 }
