@@ -197,6 +197,7 @@ class _TabContentState extends State<TabContent> {
         child: Column(
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: Text(
@@ -226,9 +227,10 @@ class _TabContentState extends State<TabContent> {
                 ),
               ],
             ),
+            SizedBox(height: 8,),
             Divider(
               thickness: 1,
-              color: Colors.black,
+              color: Colors.grey,
             ),
           ],
         ),

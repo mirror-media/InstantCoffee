@@ -54,6 +54,17 @@ class CategoryList extends CustomizedList<Category> {
     return idStringList;
   }
 
+  int get subscriptionCount {
+    int count = 0;
+    for(int i=0; i<l.length; i++) {
+      if(l[i].isSubscribed) {
+        count ++;
+      }
+    }
+    
+    return count;
+  }
+
   bool isTheSame(CategoryList other) {
     if(l.length != other.length) {
       return false;
@@ -84,6 +95,7 @@ class CategoryList extends CustomizedList<Category> {
 
     if (onlineCategoryList.length != 0) {
       CategoryList resultCategoryList = CategoryList();
+
       for (int i = 0; i < onlineCategoryList.length; i++) {
         Category onlineCategory = onlineCategoryList[i];
         bool onlineCategoryListIsExistedInLocalCategoryList = false;
