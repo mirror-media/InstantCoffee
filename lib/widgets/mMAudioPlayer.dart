@@ -21,7 +21,7 @@ class MMAudioPlayer extends StatefulWidget {
   _MMAudioPlayerState createState() => _MMAudioPlayerState();
 }
 
-class _MMAudioPlayerState extends State<MMAudioPlayer> {
+class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveClientMixin {
   Color _audioColor = Colors.orange[800];
   AudioPlayer _audioPlayer;
   bool get _checkIsPlaying => !(_audioPlayer.state == null ||
@@ -39,11 +39,10 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> {
   void _initAudioPlayer() async {
     _audioPlayer = AudioPlayer();
     await _audioPlayer.setUrl(widget.audioUrl);
-    _duration = await _audioPlayer.getDuration();
-    setState(() {});
   }
 
   _start() async {
+    _duration = await _audioPlayer.getDuration();
     await _audioPlayer.play(widget.audioUrl);
   }
 
@@ -78,10 +77,8 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    if (_duration == 0) {
-      return Container();
-    }
-
+    
+    super.build(context);
     return Container(
       color: Colors.grey[300],
       child: Column(
@@ -188,4 +185,7 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
