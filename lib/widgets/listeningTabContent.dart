@@ -169,6 +169,7 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
         child: Column(
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: Text(
@@ -198,9 +199,10 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
                 ),
               ],
             ),
+            SizedBox(height: 8,),
             Divider(
               thickness: 1,
-              color: Colors.black,
+              color: Colors.grey,
             ),
           ],
         ),
