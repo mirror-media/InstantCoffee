@@ -233,6 +233,8 @@ class _PersonalPageState extends State<PersonalPage> {
   }
 
   _showUnsubscriptionDialog(BuildContext context, CategoryList categoryList, PersonalPageBloc personalPageBloc){
+    var contentHeight = MediaQuery.of(context).size.height/3;
+
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -242,6 +244,7 @@ class _PersonalPageState extends State<PersonalPage> {
           title: Text('新增訂閱項目'),
           content: Container(
             width: double.maxFinite,
+            height: contentHeight,
             child: UnsubscriptionCategoryList(
               controller: controller,
               categoryList: categoryList,
@@ -250,7 +253,7 @@ class _PersonalPageState extends State<PersonalPage> {
           ),
           actions: [
             FlatButton(
-              child: Text("Ok", style: TextStyle(color: Colors.black),),
+              child: Text("完成", style: TextStyle(color: Colors.black),),
               onPressed:(){
                 controller.close();
                 Navigator.of(context).pop();

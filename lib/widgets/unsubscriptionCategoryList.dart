@@ -28,52 +28,54 @@ class _UnsubscriptionCategoryListState extends State<UnsubscriptionCategoryList>
       stream: widget.controller.stream,
       builder: (context, snapshot) {
         CategoryList unsubscriptionCategoryList = snapshot.data ;
-        return ListView.builder(
-          itemCount: unsubscriptionCategoryList.length,
-          itemBuilder: (context, index) {
-            if(unsubscriptionCategoryList[index].isSubscribed) {
-              return Container();
-            }
+        return unsubscriptionCategoryList.length - unsubscriptionCategoryList.subscriptionCount == 0
+        ? Center(child: Text('全部已訂閱'))
+        : ListView.builder(
+            itemCount: unsubscriptionCategoryList.length,
+            itemBuilder: (context, index) {
+              if(unsubscriptionCategoryList[index].isSubscribed) {
+                return Container();
+              }
 
-            return Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: InkWell(
-                borderRadius: BorderRadius.circular((5.0)),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: appColor, width: 1),
-                    borderRadius: BorderRadius.circular((5.0)),
-                  ),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(unsubscriptionCategoryList[index].title),
-                        SizedBox(width: 4.0),
-                        Icon(
-                          Icons.add_circle_outline,
-                          size: 18,
-                        ),
-                      ],
+              return Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular((5.0)),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: appColor, width: 1),
+                      borderRadius: BorderRadius.circular((5.0)),
+                    ),
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(unsubscriptionCategoryList[index].title),
+                          SizedBox(width: 4.0),
+                          Icon(
+                            Icons.add_circle_outline,
+                            size: 18,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+                  onTap: () {
+                    unsubscriptionCategoryList[index].isSubscribed =
+                        !unsubscriptionCategoryList[index].isSubscribed;
+                    
+                    if(!widget.controller.isClosed) {
+                      widget.controller.sink.add(unsubscriptionCategoryList);
+                    }
+                    
+                    widget.personalPageBloc
+                        .setCategoryListInStorage(unsubscriptionCategoryList);
+                  },
                 ),
-                onTap: () {
-                  unsubscriptionCategoryList[index].isSubscribed =
-                      !unsubscriptionCategoryList[index].isSubscribed;
-                  
-                  if(!widget.controller.isClosed) {
-                    widget.controller.sink.add(unsubscriptionCategoryList);
-                  }
-                  
-                  widget.personalPageBloc
-                      .setCategoryListInStorage(unsubscriptionCategoryList);
-                },
-              ),
-            );
-          });
+              );
+            });
       },
     );
   }
