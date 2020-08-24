@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/constants.dart';
 import 'package:readr_app/models/story.dart';
-import 'package:readr_app/models/storyService.dart';
+import 'package:readr_app/services/storyService.dart';
 
 class StoryBloc {
   StoryService _storyService;

@@ -5,8 +5,8 @@ import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/models/categoryList.dart';
 import 'package:readr_app/models/recordList.dart';
-import 'package:readr_app/models/categoryService.dart';
-import 'package:readr_app/models/personalSubscriptionService.dart';
+import 'package:readr_app/services/categoryService.dart';
+import 'package:readr_app/services/personalSubscriptionService.dart';
 
 class PersonalPageBloc {
   LocalStorage _storage;

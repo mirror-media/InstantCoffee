@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/models/sectionList.dart';
-import 'package:readr_app/models/sectionService.dart';
+import 'package:readr_app/services/sectionService.dart';
 
 class SectionBloc {
   SectionService _sectionService;

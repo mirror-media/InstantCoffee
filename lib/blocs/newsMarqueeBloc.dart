@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:readr_app/helpers/apiResponse.dart';
-import 'package:readr_app/models/newsMarqueeService.dart';
+import 'package:readr_app/services/newsMarqueeService.dart';
 import 'package:readr_app/models/recordList.dart';
 
 class NewsMarqueeBloc {
