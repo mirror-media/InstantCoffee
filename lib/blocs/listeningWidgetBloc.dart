@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/constants.dart';
 import 'package:readr_app/models/listening.dart';
-import 'package:readr_app/models/listeningTabContentService.dart';
-import 'package:readr_app/models/listeningWidgetService.dart';
+import 'package:readr_app/services/listeningTabContentService.dart';
+import 'package:readr_app/services/listeningWidgetService.dart';
 import 'package:readr_app/models/recordList.dart';
 
 class ListeningWidgetBloc {
