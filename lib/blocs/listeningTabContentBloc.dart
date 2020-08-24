@@ -58,6 +58,7 @@ class ListeningTabContentBloc {
       _page++;
 
       _records.addAll(latests);
+      _records = _records.filterDuplicatedSlug();
       isLoading = false;
       sinkToAdd(ApiResponse.completed(_records));
     } catch (e) {

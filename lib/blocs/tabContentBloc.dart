@@ -57,6 +57,7 @@ class TabContentBloc {
       RecordList latests = await _recordService.fetchRecordList(_endpoint);
       _editorChoices.addAll(editorChoices);
       _records.addAll(latests);
+      _records = _records.filterDuplicatedSlug();
 
       _loadmoreUrl = _recordService.getNext();
       _page++;
@@ -86,6 +87,7 @@ class TabContentBloc {
       _page++;
 
       _records.addAll(latests);
+      _records = _records.filterDuplicatedSlug();
       isLoading = false;
       sinkToAdd(ApiResponse.completed(TabContentState(
           editorChoiceList: _editorChoices, recordList: _records)));
