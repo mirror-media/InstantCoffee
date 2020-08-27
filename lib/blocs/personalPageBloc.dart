@@ -107,6 +107,7 @@ class PersonalPageBloc {
       _page++;
 
       _recordList.addAll(latests);
+      _recordList = _recordList.filterDuplicatedSlug();
       _isLoading = false;
       personalSubscriptionSinkToAdd(ApiResponse.completed(_recordList));
     } catch (e) {
@@ -130,7 +131,6 @@ class PersonalPageBloc {
 
   loadingMore(ScrollController scrollController) {
     if (scrollController.hasClients) {
-      print('hey');
       if (scrollController.position.pixels ==
           scrollController.position.maxScrollExtent) {
         if (!_isLoading) {

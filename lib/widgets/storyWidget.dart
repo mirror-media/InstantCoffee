@@ -298,6 +298,7 @@ class _StoryWidget extends State<StoryWidget> {
       return Padding(
         padding: const EdgeInsets.all(16),
         child: Container(
+          width: double.maxFinite,
           color: sectionColor,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(32.0, 16.0, 32.0, 16.0),

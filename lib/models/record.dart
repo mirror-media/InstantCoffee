@@ -58,4 +58,13 @@ class Record {
         'publishedDate': publishedDate,
         'photoUrl': photoUrl,
       };
+
+  @override
+  int get hashCode => this.hashCode;
+
+  @override
+  bool operator ==(covariant Record other) {
+    // compare this to other
+    return this.slug == other.slug;
+  }
 }

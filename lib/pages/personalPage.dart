@@ -207,20 +207,25 @@ class _PersonalPageState extends State<PersonalPage> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(categoryList[index].title),
-                                    SizedBox(width: 4.0),
-                                    Icon(
-                                      Icons.remove_circle_outline,
-                                      size: 18,
-                                    ),
+                                    if(categoryList[index].id != focusSectionKey)
+                                    ...[
+                                      SizedBox(width: 4.0),
+                                      Icon(
+                                        Icons.remove_circle_outline,
+                                        size: 18,
+                                      ),
+                                    ],
                                   ],
                                 ),
                               ),
                             ),
                             onTap: () {
-                              categoryList[index].isSubscribed =
-                                  !categoryList[index].isSubscribed;
-                              personalPageBloc
-                                  .setCategoryListInStorage(categoryList);
+                              if(categoryList[index].id != focusSectionKey) {
+                                categoryList[index].isSubscribed =
+                                    !categoryList[index].isSubscribed;
+                                personalPageBloc
+                                    .setCategoryListInStorage(categoryList);
+                              }
                             },
                           ),
                         ),
