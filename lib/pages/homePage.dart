@@ -31,11 +31,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     _firebaseMessangingHelper = FirebaseMessangingHelper();
-    _firebaseMessangingHelper.configFirebaseMessaging();
 
     _scrollControllerList = List<ScrollController>();
     _sectionBloc = SectionBloc();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _firebaseMessangingHelper.configFirebaseMessaging(context);
+    super.didChangeDependencies();
   }
 
   _initializeTabController(SectionList sectionItems) {

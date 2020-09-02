@@ -1,20 +1,24 @@
 import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/helpers/fcm.dart';
 import 'package:readr_app/models/notificationSetting.dart';
 import 'package:readr_app/models/notificationSettingList.dart';
+import 'package:readr_app/pages/storyPage.dart';
 
 class FirebaseMessangingHelper {
+  bool _isInTheStoryPage;
   FirebaseMessaging _firebaseMessaging;
 
   FirebaseMessangingHelper() {
     _firebaseMessaging = FirebaseMessaging();
+    _isInTheStoryPage = false;
   }
 
-  configFirebaseMessaging() {
+  configFirebaseMessaging(BuildContext context) {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
@@ -22,9 +26,14 @@ class FirebaseMessangingHelper {
       onBackgroundMessage: Fcm.myBackgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
+        if(!_isInTheStoryPage) {
+          _navigateToStoryPage(context, message);
+        }
       },
       onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
+        print("onLaunch: $message");
+        _isInTheStoryPage = false;
+        _navigateToStoryPage(context, message);
       },
     );
 
@@ -36,7 +45,26 @@ class FirebaseMessangingHelper {
       print("Settings registered: $settings");
     });
   }
-  
+
+  String _getSlug(Map<String, dynamic> message) {
+    final dynamic data = message['data'] ?? message;
+    final String slug = data['_open_slug'];
+    return slug;
+  }
+
+  void _navigateToStoryPage(BuildContext context, Map<String, dynamic> message) async{
+    final String slug = _getSlug(message);
+    _isInTheStoryPage = true;
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => StoryPage(
+          slug: slug,
+        )
+      )
+    );
+  }
+
   // not use
   subscribeAllOfSubscribtionTopic() async{
     LocalStorage storage = LocalStorage('setting');
