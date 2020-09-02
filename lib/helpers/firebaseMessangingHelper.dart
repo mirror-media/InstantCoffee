@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:readr_app/helpers/fcm.dart';
 import 'package:readr_app/models/notificationSetting.dart';
 import 'package:readr_app/models/notificationSettingList.dart';
 
@@ -18,6 +19,7 @@ class FirebaseMessangingHelper {
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
       },
+      onBackgroundMessage: Fcm.myBackgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
       },
@@ -25,6 +27,14 @@ class FirebaseMessangingHelper {
         print("onResume: $message");
       },
     );
+
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(
+            sound: true, badge: true, alert: true, provisional: false));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
   }
   
   // not use

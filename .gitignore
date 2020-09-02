@@ -20,7 +20,10 @@ doc/api/
 *.js.deps
 *.js.map
 
-#for internal constants
+# for internal constants
 lib/helpers/constants.dart 
+android/app/google-services.json
+# in Runner Runner
+ios/Runner/GoogleService-Info.plist
 .flutter-plugins
 .flutter-plugins-dependencies
