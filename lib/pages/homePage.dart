@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/sectionBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
+import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/models/sectionList.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/personalPage.dart';
 import 'package:readr_app/widgets/listeningTabContent.dart';
 import 'package:readr_app/widgets/newsMarquee.dart';
 import 'package:readr_app/widgets/tabContent.dart';
-
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/helpers/constants.dart';
 
@@ -17,6 +17,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  FirebaseMessangingHelper _firebaseMessangingHelper;
+
   List<ScrollController> _scrollControllerList;
   SectionBloc _sectionBloc;
 
@@ -28,6 +30,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    _firebaseMessangingHelper = FirebaseMessangingHelper();
+    _firebaseMessangingHelper.configFirebaseMessaging();
+
     _scrollControllerList = List<ScrollController>();
     _sectionBloc = SectionBloc();
     super.initState();
@@ -85,6 +90,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    _firebaseMessangingHelper.dispose();
     _tabController?.dispose();
 
     _scrollControllerList.forEach((scrollController) {

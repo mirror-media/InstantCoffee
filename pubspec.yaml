@@ -57,6 +57,11 @@ dependencies:
   # audio service
   audioplayers: ^0.15.1
 
+  # firebase
+  firebase_core: ^0.4.2+1
+  # firebase messaging
+  firebase_messaging: ^6.0.16
+
 dependency_overrides:
   flutter_svg: ^ 0.18.0
 

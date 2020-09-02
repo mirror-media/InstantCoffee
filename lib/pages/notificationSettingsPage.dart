@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:localstorage/localstorage.dart';
 
+import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/models/notificationSetting.dart';
 import 'package:readr_app/models/notificationSettingList.dart';
 import 'package:readr_app/helpers/constants.dart';
@@ -17,6 +18,7 @@ class NotificationSettingsPage extends StatefulWidget {
 
 class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   final LocalStorage _storage = LocalStorage('setting');
+  FirebaseMessangingHelper _firebaseMessangingHelper = FirebaseMessangingHelper();
   NotificationSettingList _notificationSettingList = NotificationSettingList();
 
   @override
@@ -144,6 +146,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                 });
                 _storage.setItem(
                     "notification", _notificationSettingList.toJson());
+
+                _firebaseMessangingHelper.subscribeTheNotification(notificationSettingList[listViewIndex]);
               },
               children: _renderCheckBoxChildren(
                   context, notificationSettingList[listViewIndex]),
@@ -202,6 +206,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
               _storage.setItem(
                   "notification", _notificationSettingList.toJson());
+
+              _firebaseMessangingHelper.subscribeTheNotification(checkboxList[checkboxIndex]);
             },
             child: IgnorePointer(
               child: Row(children: [
