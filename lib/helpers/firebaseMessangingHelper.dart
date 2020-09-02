@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class FirebaseMessangingHelper {
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
       },
-      onBackgroundMessage: Fcm.myBackgroundMessageHandler,
+      onBackgroundMessage: Platform.isIOS ? null : Fcm.myBackgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
         if(!_isInTheStoryPage) {
@@ -31,7 +32,7 @@ class FirebaseMessangingHelper {
         }
       },
       onResume: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
+        print("onResume: $message");
         _isInTheStoryPage = false;
         _navigateToStoryPage(context, message);
       },
