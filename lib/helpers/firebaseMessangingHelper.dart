@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/helpers/fcm.dart';
+import 'package:readr_app/models/fcmData.dart';
 import 'package:readr_app/models/notificationSetting.dart';
 import 'package:readr_app/models/notificationSettingList.dart';
 import 'package:readr_app/pages/storyPage.dart';
@@ -47,23 +48,27 @@ class FirebaseMessangingHelper {
     });
   }
 
-  String _getSlug(Map<String, dynamic> message) {
-    final dynamic data = message['data'] ?? message;
-    final String slug = data['_open_slug'];
-    return slug;
+  FcmData _getFcmData(Map<String, dynamic> message) {
+    final Map<dynamic, dynamic> data = message['data'] ?? message;
+    final FcmData fcmData = FcmData.fromJson(data);
+    return fcmData;
   }
 
   void _navigateToStoryPage(BuildContext context, Map<String, dynamic> message) async{
-    final String slug = _getSlug(message);
-    _isInTheStoryPage = true;
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => StoryPage(
-          slug: slug,
+    FcmData fcmData = _getFcmData(message);
+    
+    if(fcmData != null && fcmData.slug != null) {
+      _isInTheStoryPage = true;
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => StoryPage(
+            slug: fcmData.slug,
+            isListeningWidget: fcmData.isListeningPage,
+          )
         )
-      )
-    );
+      );
+    }
   }
 
   // not use
