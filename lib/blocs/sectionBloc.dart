@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
@@ -36,7 +37,10 @@ class SectionBloc {
     try {
       SectionList sectionList = await _sectionService.fetchSectionList();
       
-      String sectionAdString = await rootBundle.loadString('assets/data/testAndroidSectionAd.json');
+      String sectionAdJsonFileLocation = Platform.isIOS
+      ? 'assets/data/testIosSectionAd.json'
+      : 'assets/data/testAndroidSectionAd.json';
+      String sectionAdString = await rootBundle.loadString(sectionAdJsonFileLocation);
       final sectionAdMaps = json.decode(sectionAdString);
       
       for(int i=0; i<sectionList.length; i++) {
