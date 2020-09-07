@@ -438,26 +438,28 @@ class _StoryWidget extends State<StoryWidget> {
     for (int i = 0; i < relateds.length; i++) {
       relatedList.add(_buildRelatedItem(context, relateds[i]));
     }
-    return Padding(
-      padding: const EdgeInsets.only(top: 16.0, bottom: 32.0),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              myVerticalDivider,
-              Text(
-                '相關文章',
-                style: TextStyle(fontSize: 24, color: appColor),
-              ),
-              myVerticalDivider,
-            ],
-          ),
-          SizedBox(height: 16),
-          ...relatedList,
-        ],
-      ),
-    );
+    return relatedList.length == 0
+    ? Container()
+    : Padding(
+        padding: const EdgeInsets.only(top: 16.0, bottom: 32.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                myVerticalDivider,
+                Text(
+                  '相關文章',
+                  style: TextStyle(fontSize: 24, color: appColor),
+                ),
+                myVerticalDivider,
+              ],
+            ),
+            SizedBox(height: 16),
+            ...relatedList,
+          ],
+        ),
+      );
   }
 
   Widget _buildRelatedItem(BuildContext context, Record relatedItem) {
