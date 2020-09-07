@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/sectionBloc.dart';
+import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/models/sectionList.dart';
@@ -9,7 +10,7 @@ import 'package:readr_app/widgets/listeningTabContent.dart';
 import 'package:readr_app/widgets/newsMarquee.dart';
 import 'package:readr_app/widgets/tabContent.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
-import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/helpers/dataConstants.dart';
 
 class HomePage extends StatefulWidget {
   @override

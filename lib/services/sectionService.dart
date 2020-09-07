@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:readr_app/helpers/apiBaseHelper.dart';
+import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/models/sectionList.dart';
-import '../helpers/constants.dart';
 import 'dart:convert';
 
 class SectionService {

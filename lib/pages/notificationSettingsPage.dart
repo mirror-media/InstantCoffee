@@ -8,7 +8,7 @@ import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/models/notificationSetting.dart';
 import 'package:readr_app/models/notificationSettingList.dart';
-import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/helpers/dataConstants.dart';
 
 class NotificationSettingsPage extends StatefulWidget {
   @override
@@ -34,12 +34,12 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     }
 
     if (_notificationSettingList == null) {
-      _initNotification();
+      await _initNotification();
     }
     setState(() {});
   }
 
-  void _initNotification() async {
+  Future<void> _initNotification() async {
     var jsonSetting =
         await rootBundle.loadString('assets/data/defaultNotificationList.json');
     var jsonSettingList = json.decode(jsonSetting)['defaultNotificationList'];

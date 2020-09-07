@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/personalPageBloc.dart';
-import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/categoryList.dart';
 
 class UnsubscriptionCategoryList extends StatefulWidget {

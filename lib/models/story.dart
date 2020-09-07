@@ -1,4 +1,4 @@
-import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/categoryList.dart';
 import 'package:readr_app/models/paragrpahList.dart';

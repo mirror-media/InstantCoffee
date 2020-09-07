@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:readr_app/blocs/tabContentBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
-import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/sectionAd.dart';
 import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/models/record.dart';
@@ -182,11 +182,20 @@ class _TabContentState extends State<TabContent> {
                   //   ),
                   if (index == recordList.length - 1 &&
                       status == Status.LOADINGMORE)
-                    CupertinoActivityIndicator(),
+                    _loadMoreWidget(),
                 ],
               );
             }),
       ],
+    );
+  }
+
+  Widget _loadMoreWidget() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Center(
+        child: CupertinoActivityIndicator()
+      ),
     );
   }
 
