@@ -325,7 +325,8 @@ class _StoryWidget extends State<StoryWidget> {
           itemCount: story.apiDatas.length,
           itemBuilder: (context, index) {
             Paragraph paragraph = story.apiDatas[index];
-            if (paragraph.contents.length > 0 &&
+            if (paragraph.contents != null && 
+                paragraph.contents.length > 0 &&
                 paragraph.contents[0].data != '') {
               return Padding(
                 padding: const EdgeInsets.only(top: 16.0),

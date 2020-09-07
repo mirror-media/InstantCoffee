@@ -12,6 +12,10 @@ class Paragraph {
   });
 
   factory Paragraph.fromJson(Map<String, dynamic> json) {
+    if(json == null) {
+      return Paragraph();
+    }
+
     ContentList contents;
     contents = ContentList.fromJson(json["content"]);
 
