@@ -1,3 +1,5 @@
+import 'package:readr_app/models/sectionAd.dart';
+
 class Section {
   String key;
   String name;
@@ -7,6 +9,8 @@ class Section {
   int order;
   String type;
 
+  SectionAd sectionAd;
+
   Section({
     this.key,
     this.name,
@@ -15,6 +19,8 @@ class Section {
     this.order,
     this.focus,
     this.type,
+    
+    this.sectionAd,
   });
 
   factory Section.fromJson(Map<String, dynamic> json) {

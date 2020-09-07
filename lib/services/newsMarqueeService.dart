@@ -1,5 +1,5 @@
 import 'package:readr_app/helpers/apiBaseHelper.dart';
-import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/models/recordList.dart';
 
 class NewsMarqueeService {

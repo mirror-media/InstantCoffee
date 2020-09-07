@@ -57,5 +57,7 @@
 	</dict>
 	<key>com.apple.security.network.client</key>
 	<true/>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-7986335951683342~1205438796</string>
 </dict>
 </plist>

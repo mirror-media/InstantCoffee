@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/pages/storyPage.dart';
 

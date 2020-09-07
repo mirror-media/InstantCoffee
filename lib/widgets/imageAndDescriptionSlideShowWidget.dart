@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/contentList.dart';
 import 'package:readr_app/widgets/imageDescriptionWidget.dart';
 

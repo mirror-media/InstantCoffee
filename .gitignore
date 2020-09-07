@@ -22,6 +22,7 @@ doc/api/
 
 # for internal constants
 lib/helpers/constants.dart 
+lib/helpers/apiConstants.dart
 android/app/google-services.json
 # in Runner Runner
 ios/Runner/GoogleService-Info.plist

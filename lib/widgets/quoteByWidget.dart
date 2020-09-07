@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/widgets/messageClipper.dart';
 
 class QuoteByWidget extends StatelessWidget {

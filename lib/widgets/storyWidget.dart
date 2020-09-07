@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/storyBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 
-import 'package:readr_app/helpers/constants.dart';
+import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/helpers/paragraphFormat.dart';
 import 'package:readr_app/models/category.dart';
