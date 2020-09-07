@@ -106,8 +106,8 @@ class PersonalPageBloc {
       }
       _page++;
 
+      latests = latests.filterDuplicatedSlugByAnother(_recordList);
       _recordList.addAll(latests);
-      _recordList = _recordList.filterDuplicatedSlug();
       _isLoading = false;
       personalSubscriptionSinkToAdd(ApiResponse.completed(_recordList));
     } catch (e) {
