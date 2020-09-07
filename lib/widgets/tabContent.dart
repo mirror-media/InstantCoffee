@@ -103,15 +103,16 @@ class _TabContentState extends State<TabContent> {
               },
             ),
           ),
-          Container(
-            height: 58,
-            child: Center(
-              child: AdmobBanner(
-                adUnitId: _sectionAd.stUnitId,
-                adSize: AdmobBannerSize.BANNER,
+          if(isTabContentAdsActivated)
+            Container(
+              height: 58,
+              child: Center(
+                child: AdmobBanner(
+                  adUnitId: _sectionAd.stUnitId,
+                  adSize: AdmobBannerSize.BANNER,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
@@ -127,11 +128,12 @@ class _TabContentState extends State<TabContent> {
             editorChoiceList: editorChoiceList,
           ),
           SizedBox(height: 16.0,),
-          // carouselAT1AdIndex
-          AdmobBanner(
-            adUnitId: _sectionAd.aT1UnitId,
-            adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-          ),
+          if(isTabContentAdsActivated)
+            // carouselAT1AdIndex
+            AdmobBanner(
+              adUnitId: _sectionAd.aT1UnitId,
+              adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+            ),
           SizedBox(height: 16.0,),
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
@@ -149,29 +151,29 @@ class _TabContentState extends State<TabContent> {
 
               return Column(
                 children: [
-                  if((index == noCarouselAT1AdIndex && !widget.needCarousel))
+                  if(isTabContentAdsActivated && index == noCarouselAT1AdIndex && !widget.needCarousel)
                     AdmobBanner(
                       adUnitId: _sectionAd.aT1UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                     ),
                   _buildListItem(context, recordList[index]),
-                  if(index == carouselAT2AdIndex && widget.needCarousel) 
+                  if(isTabContentAdsActivated && index == carouselAT2AdIndex && widget.needCarousel) 
                     AdmobBanner(
                       adUnitId: _sectionAd.aT2UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                     ),
-                  if(index == noCarouselAT2AdIndex && !widget.needCarousel) 
+                  if(isTabContentAdsActivated && index == noCarouselAT2AdIndex && !widget.needCarousel) 
                     AdmobBanner(
                       adUnitId: _sectionAd.aT2UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                     ),
                     
-                  if(index == carouselAT3AdIndex && widget.needCarousel) 
+                  if(isTabContentAdsActivated && index == carouselAT3AdIndex && widget.needCarousel) 
                     AdmobBanner(
                       adUnitId: _sectionAd.aT3UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                     ),
-                  if(index == noCarouselAT3AdIndex && !widget.needCarousel) 
+                  if(isTabContentAdsActivated && index == noCarouselAT3AdIndex && !widget.needCarousel) 
                     AdmobBanner(
                       adUnitId: _sectionAd.aT3UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
