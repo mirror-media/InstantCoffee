@@ -23,3 +23,12 @@ const Map<String, int> sectionColorMaps = {
   'carandwatch': 0xff003153,
   'external': 0xffFB9D18,
 };
+
+// AT index in tab content
+const int carouselAT1AdIndex = 0;
+const int carouselAT2AdIndex = 4;
+const int carouselAT3AdIndex = 9;
+
+const int noCarouselAT1AdIndex = 1;
+const int noCarouselAT2AdIndex = 5;
+const int noCarouselAT3AdIndex = 10;

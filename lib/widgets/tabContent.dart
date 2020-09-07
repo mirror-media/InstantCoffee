@@ -127,6 +127,7 @@ class _TabContentState extends State<TabContent> {
             editorChoiceList: editorChoiceList,
           ),
           SizedBox(height: 16.0,),
+          // carouselAT1AdIndex
           AdmobBanner(
             adUnitId: _sectionAd.aT1UnitId,
             adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
@@ -148,29 +149,29 @@ class _TabContentState extends State<TabContent> {
 
               return Column(
                 children: [
-                  if((index == 1 && !widget.needCarousel))
+                  if((index == noCarouselAT1AdIndex && !widget.needCarousel))
                     AdmobBanner(
                       adUnitId: _sectionAd.aT1UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                     ),
                   _buildListItem(context, recordList[index]),
-                  if(index == 4 && widget.needCarousel) 
+                  if(index == carouselAT2AdIndex && widget.needCarousel) 
                     AdmobBanner(
                       adUnitId: _sectionAd.aT2UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                     ),
-                  if(index == 5 && !widget.needCarousel) 
+                  if(index == noCarouselAT2AdIndex && !widget.needCarousel) 
                     AdmobBanner(
                       adUnitId: _sectionAd.aT2UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                     ),
                     
-                  if(index == 9 && widget.needCarousel) 
+                  if(index == carouselAT3AdIndex && widget.needCarousel) 
                     AdmobBanner(
                       adUnitId: _sectionAd.aT3UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                     ),
-                  if(index == 10 && !widget.needCarousel) 
+                  if(index == noCarouselAT3AdIndex && !widget.needCarousel) 
                     AdmobBanner(
                       adUnitId: _sectionAd.aT3UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
