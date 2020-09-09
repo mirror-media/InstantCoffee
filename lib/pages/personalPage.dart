@@ -111,25 +111,6 @@ class _PersonalPageState extends State<PersonalPage> {
           return Container();
         },
       ),
-      floatingActionButton: ClipOval(
-        child: Material(
-          color: appColor,
-          child: InkWell(
-            splashColor: Colors.red,
-            child: SizedBox(
-              width: 48,
-              height: 48,
-              child: Icon(
-                Icons.arrow_drop_up,
-                color: Colors.white,
-              ),
-            ),
-            onTap: () {
-              _scrollToTop();
-            },
-          ),
-        ),
-      ),
     );
   }
 
@@ -140,9 +121,14 @@ class _PersonalPageState extends State<PersonalPage> {
         onPressed: () => Navigator.of(context).pop(),
       ),
       centerTitle: true,
-      title: Text(
-        personalPageTitle,
-        style: TextStyle(color: Colors.white, fontSize: 24.0),
+      title: GestureDetector(
+        onTap: () {
+          _scrollToTop();
+        },
+        child: Text(
+          personalPageTitle,
+          style: TextStyle(color: Colors.white, fontSize: 24.0),
+        ),
       ),
       backgroundColor: appColor,
       actions: [
