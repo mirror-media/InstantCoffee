@@ -14,6 +14,11 @@ class Record {
   });
 
   factory Record.fromJson(Map<String, dynamic> json) {
+    // check the search json format
+    if(json.containsKey('_source')) {
+      json = json['_source'];
+    }
+
     String origTitle;
     if (json.containsKey('snippet')) {
       origTitle = json['snippet']['title'];

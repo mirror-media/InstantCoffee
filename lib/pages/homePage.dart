@@ -6,6 +6,7 @@ import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/models/sectionList.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/personalPage.dart';
+import 'package:readr_app/pages/searchPage.dart';
 import 'package:readr_app/widgets/listeningTabContent.dart';
 import 'package:readr_app/widgets/newsMarquee.dart';
 import 'package:readr_app/widgets/tabContent.dart';
@@ -159,7 +160,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         IconButton(
           icon: Icon(Icons.search),
           tooltip: 'Search',
-          onPressed: () => {},
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SearchPage(),
+              fullscreenDialog: true,
+            ),
+          ),
         ),
         IconButton(
           icon: Icon(Icons.person),
