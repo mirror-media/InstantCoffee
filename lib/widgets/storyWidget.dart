@@ -339,30 +339,32 @@ class _StoryWidget extends State<StoryWidget> {
   }
 
   Widget _buildTagWidget(BuildContext context, TagList tags) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Divider(
-          color: Colors.black,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '相關關鍵字 : ',
-                style: TextStyle(fontSize: 18),
-              ),
-              _buildTags(context, tags),
-            ],
+    return tags == null || tags.length == 0
+    ? Container()
+    : Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Divider(
+            color: Colors.black,
           ),
-        ),
-        Divider(
-          color: Colors.black,
-        ),
-      ],
-    );
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '相關關鍵字 : ',
+                  style: TextStyle(fontSize: 18),
+                ),
+                _buildTags(context, tags),
+              ],
+            ),
+          ),
+          Divider(
+            color: Colors.black,
+          ),
+        ],
+      );
   }
 
   Widget _buildTags(BuildContext context, TagList tags) {

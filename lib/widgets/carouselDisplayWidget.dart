@@ -88,14 +88,16 @@ class CarouselDisplayWidget extends StatelessWidget {
         child: Center(
           child: Container(
             height: 56,
-            child: Text(
-              record.title.length > 35
-                  ? record.title.substring(0, 35) + ' ...'
-                  : record.title + record.title,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
+            child: Center(
+              child: Text(
+                record.title.length > 35
+                    ? record.title.substring(0, 35) + ' ...'
+                    : record.title,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
