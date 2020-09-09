@@ -31,6 +31,9 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveCl
   int _duration = 0;
 
   @override
+  bool get wantKeepAlive => true;
+  
+  @override
   void initState() {
     _initAudioPlayer();
     super.initState();
@@ -185,7 +188,4 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveCl
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
