@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class YoutubeWidget extends StatelessWidget {
+class YoutubeWidget extends StatefulWidget {
   final String youtubeId;
   final String description;
   final double width;
@@ -12,23 +12,32 @@ class YoutubeWidget extends StatelessWidget {
   });
 
   @override
+  _YoutubeWidgetState createState() => _YoutubeWidgetState();
+}
+
+class _YoutubeWidgetState extends State<YoutubeWidget> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: width,
-          height: width / 16 * 9,
+          width: widget.width,
+          height: widget.width / 16 * 9,
           child: WebView(
-            initialUrl: 'https://www.youtube.com/embed/$youtubeId',
+            initialUrl: 'https://www.youtube.com/embed/${widget.youtubeId}',
             javascriptMode: JavascriptMode.unrestricted,
           ),
         ),
-        if (description != null && description != '')
+        if (widget.description != null && widget.description != '')
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(
-              description,
+              widget.description,
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ),

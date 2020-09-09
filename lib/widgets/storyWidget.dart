@@ -325,7 +325,8 @@ class _StoryWidget extends State<StoryWidget> {
           itemCount: story.apiDatas.length,
           itemBuilder: (context, index) {
             Paragraph paragraph = story.apiDatas[index];
-            if (paragraph.contents.length > 0 &&
+            if (paragraph.contents != null && 
+                paragraph.contents.length > 0 &&
                 paragraph.contents[0].data != '') {
               return Padding(
                 padding: const EdgeInsets.only(top: 16.0),
@@ -338,30 +339,32 @@ class _StoryWidget extends State<StoryWidget> {
   }
 
   Widget _buildTagWidget(BuildContext context, TagList tags) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Divider(
-          color: Colors.black,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '相關關鍵字 : ',
-                style: TextStyle(fontSize: 18),
-              ),
-              _buildTags(context, tags),
-            ],
+    return tags == null || tags.length == 0
+    ? Container()
+    : Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Divider(
+            color: Colors.black,
           ),
-        ),
-        Divider(
-          color: Colors.black,
-        ),
-      ],
-    );
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '相關關鍵字 : ',
+                  style: TextStyle(fontSize: 18),
+                ),
+                _buildTags(context, tags),
+              ],
+            ),
+          ),
+          Divider(
+            color: Colors.black,
+          ),
+        ],
+      );
   }
 
   Widget _buildTags(BuildContext context, TagList tags) {
@@ -437,26 +440,28 @@ class _StoryWidget extends State<StoryWidget> {
     for (int i = 0; i < relateds.length; i++) {
       relatedList.add(_buildRelatedItem(context, relateds[i]));
     }
-    return Padding(
-      padding: const EdgeInsets.only(top: 16.0, bottom: 32.0),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              myVerticalDivider,
-              Text(
-                '相關文章',
-                style: TextStyle(fontSize: 24, color: appColor),
-              ),
-              myVerticalDivider,
-            ],
-          ),
-          SizedBox(height: 16),
-          ...relatedList,
-        ],
-      ),
-    );
+    return relatedList.length == 0
+    ? Container()
+    : Padding(
+        padding: const EdgeInsets.only(top: 16.0, bottom: 32.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                myVerticalDivider,
+                Text(
+                  '相關文章',
+                  style: TextStyle(fontSize: 24, color: appColor),
+                ),
+                myVerticalDivider,
+              ],
+            ),
+            SizedBox(height: 16),
+            ...relatedList,
+          ],
+        ),
+      );
   }
 
   Widget _buildRelatedItem(BuildContext context, Record relatedItem) {

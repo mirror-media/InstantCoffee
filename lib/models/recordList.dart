@@ -38,6 +38,16 @@ class RecordList extends CustomizedList<Record> {
     return records;
   }
 
+  RecordList filterDuplicatedSlugByAnother(RecordList another) {
+    RecordList records = RecordList();
+    l.forEach((element) { 
+      if(!another.contains(element)) {
+        records.add(element);
+      }
+    });
+    return records;
+  }
+
   List<Map<dynamic, dynamic>> toJson() {
     List<Map> recordMaps = List();
     if (l == null) {

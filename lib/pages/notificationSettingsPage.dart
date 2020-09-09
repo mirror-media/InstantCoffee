@@ -72,18 +72,6 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
         style: TextStyle(color: Colors.white, fontSize: 24.0),
       ),
       backgroundColor: appColor,
-      actions: [
-        IconButton(
-          icon: Icon(Icons.search),
-          tooltip: 'Search',
-          onPressed: () => {},
-        ),
-        IconButton(
-          icon: Icon(Icons.person),
-          tooltip: 'Personal',
-          onPressed: () => {},
-        ),
-      ],
     );
   }
 

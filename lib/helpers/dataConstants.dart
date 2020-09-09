@@ -24,6 +24,8 @@ const Map<String, int> sectionColorMaps = {
   'external': 0xffFB9D18,
 };
 
+const bool isTabContentAdsActivated = true;
+
 // AT index in tab content
 const int carouselAT1AdIndex = 0;
 const int carouselAT2AdIndex = 4;
