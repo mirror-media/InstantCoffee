@@ -34,9 +34,12 @@ class MMVideoPlayer extends StatefulWidget {
   _MMVideoPlayerState createState() => _MMVideoPlayerState();
 }
 
-class _MMVideoPlayerState extends State<MMVideoPlayer> {
+class _MMVideoPlayerState extends State<MMVideoPlayer> with AutomaticKeepAliveClientMixin {
   VideoPlayerController _videoPlayerController;
   ChewieController _chewieController;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -63,6 +66,7 @@ class _MMVideoPlayerState extends State<MMVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Chewie(
       controller: _chewieController,
     );
