@@ -131,13 +131,6 @@ class _PersonalPageState extends State<PersonalPage> {
         ),
       ),
       backgroundColor: appColor,
-      actions: [
-        IconButton(
-          icon: Icon(Icons.search),
-          tooltip: 'Search',
-          onPressed: () => {},
-        ),
-      ],
     );
   }
 
