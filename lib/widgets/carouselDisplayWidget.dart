@@ -86,14 +86,17 @@ class CarouselDisplayWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
         child: Center(
-          child: Text(
-            record.title.length > 35
-                ? record.title.substring(0, 35) + ' ...'
-                : record.title,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
+          child: Container(
+            height: 56,
+            child: Text(
+              record.title.length > 35
+                  ? record.title.substring(0, 35) + ' ...'
+                  : record.title + record.title,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
