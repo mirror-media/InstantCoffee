@@ -43,8 +43,22 @@ class _ListeningWidget extends State<ListeningWidget> {
             case Status.COMPLETED:
               TabContentState tabContentState = snapshot.data.data;
 
-              return ListView(
-                  children: [_buildContent(width, tabContentState)]);
+              return ListView(children: [
+                YoutubeWidget(
+                  width: width,
+                  youtubeId: tabContentState.listening.slug,
+                ),
+                SizedBox(height: 16.0),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+                  child: _buildTitleAndDescription(tabContentState.listening),
+                ),
+                SizedBox(height: 16.0),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+                  child: _buildTheNewestVideos(width, tabContentState.recordList),
+                ),
+              ]);
               break;
 
             case Status.ERROR:
@@ -54,27 +68,6 @@ class _ListeningWidget extends State<ListeningWidget> {
         }
         return Container();
       },
-    );
-  }
-
-  _buildContent(double width, TabContentState tabContentState) {
-    return Column(
-      children: [
-        YoutubeWidget(
-          width: width,
-          youtubeId: tabContentState.listening.slug,
-        ),
-        SizedBox(height: 16.0),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-          child: _buildTitleAndDescription(tabContentState.listening),
-        ),
-        SizedBox(height: 16.0),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-          child: _buildTheNewestVideos(width, tabContentState.recordList),
-        ),
-      ],
     );
   }
 
