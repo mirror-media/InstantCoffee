@@ -60,4 +60,12 @@ class SectionList extends CustomizedList<Section> {
     }
     l = allSections;
   }
+
+  void deleteTheSectionByKey(String key) {
+    for(int i=l.length-1; i>=0; i--) {
+      if(l[i].key == key) {
+        l.removeAt(i);
+      }
+    }
+  }
 }

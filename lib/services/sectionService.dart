@@ -7,15 +7,20 @@ import 'dart:convert';
 class SectionService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  Future<SectionList> fetchSectionList() async {
+  Future<SectionList> fetchSectionList({bool needMenu = true}) async {
     final jsonResponse = await _helper.getByUrl(sectionAPI);
 
     SectionList sessions = SectionList.fromJson(jsonResponse["_items"]);
-    String jsonFixed = await rootBundle.loadString('assets/data/menu.json');
-    final fixedMenu = json.decode(jsonFixed);
-    SectionList fixedSections = new SectionList.fromJson(fixedMenu);
-    fixedSections.addAll(sessions);
+    if(needMenu) {
+      String jsonFixed = await rootBundle.loadString('assets/data/menu.json');
+      final fixedMenu = json.decode(jsonFixed);
+      SectionList fixedSections = SectionList.fromJson(fixedMenu);
+      fixedSections.addAll(sessions);
 
-    return fixedSections;
+      return fixedSections;
+    }
+
+    sessions.deleteTheSectionByKey(listeningSectionKey);
+    return sessions;
   }
 }
