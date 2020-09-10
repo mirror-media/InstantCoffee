@@ -98,19 +98,18 @@ class SearchPageBloc {
     }
   }
 
-  search(String keyword, {bool isNextPage = false}) async {
+  search(String keyword, {int page = 1}) async {
     _isLoading = true;
-    if(!isNextPage) {
-      _searchService.initialPage();
-      searchSinkToAdd(ApiResponse.loading('search $keyword in ${initialTargetSection.title} (${_searchService.page} page)'));
+    if(page == 1) {
+      searchSinkToAdd(ApiResponse.loading('search $keyword in ${initialTargetSection.title} ($page page)'));
     } else {
-      _searchService.nextPage();
-      searchSinkToAdd(ApiResponse.loadingMore('search $keyword in ${initialTargetSection.title} (${_searchService.page} page)'));
+      searchSinkToAdd(ApiResponse.loadingMore('search $keyword in ${initialTargetSection.title} ($page page)'));
     } 
 
     try {
       RecordList recordList = await _searchService.search(keyword, sectionId: initialTargetSection.key, page: _searchService.page);
-      if(!isNextPage) {
+      if(page == 1) {
+        _searchService.initialPage();
         _searchList.clear();
       }
 
@@ -126,7 +125,7 @@ class SearchPageBloc {
 
   loadingMore(String keyword, int index) {
     if(!_isLoading && index == _searchList.length - 5) {
-      search(keyword, isNextPage: true);
+      search(keyword, page: _searchService.nextPage());
     }
   }
   

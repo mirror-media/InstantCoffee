@@ -16,11 +16,11 @@ class SearchService {
     return recordList;
   }
 
-  void initialPage() {
-    this.page = 1;
+  int initialPage() {
+    return this.page = 1;
   }
 
-  void nextPage() {
-    this.page ++;
+  int nextPage() {
+    return ++ this.page;
   }
 }
