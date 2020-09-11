@@ -1,10 +1,14 @@
 import 'package:readr_app/helpers/apiBaseHelper.dart';
+import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/models/recordList.dart';
 
 class RecordService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  String nextPage = '';
+  int page = 1;
+
+  String _nextPageUrl = '';
+  String get getNextUrl => this._nextPageUrl;
 
   Future<RecordList> fetchRecordList(String url) async {
     final jsonResponse = await _helper.getByUrl(url);
@@ -12,9 +16,9 @@ class RecordService {
 
     if (jsonResponse.containsKey("_links") &&
         jsonResponse["_links"].containsKey("next")) {
-      this.nextPage = jsonResponse["_links"]["next"]["href"];
+      this._nextPageUrl = apiBase + jsonResponse["_links"]["next"]["href"];
     } else {
-      this.nextPage = '';
+      this._nextPageUrl = '';
     }
 
     if (jsonResponse.containsKey("_items")) {
@@ -33,7 +37,11 @@ class RecordService {
     return records;
   }
 
-  String getNext() {
-    return this.nextPage;
+  int initialPage() {
+    return this.page = 1;
+  }
+
+  int nextPage() {
+    return ++ this.page;
   }
 }
