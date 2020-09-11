@@ -26,13 +26,7 @@ class _PersonalPageState extends State<PersonalPage> {
   void initState() {
     _personalPageBloc = PersonalPageBloc();
     _scrollController = ScrollController();
-
-    _scrollController.addListener(_loadingMore);
     super.initState();
-  }
-
-  _loadingMore() {
-    _personalPageBloc.loadingMore(_scrollController);
   }
 
   _scrollToTop() {
@@ -66,41 +60,7 @@ class _PersonalPageState extends State<PersonalPage> {
               case Status.COMPLETED:
                 CategoryList categoryList = snapshot.data.data;
 
-                return ListView(controller: _scrollController, children: [
-                  _buildCategoryList(context, categoryList, _personalPageBloc),
-                  Divider(
-                    height: 32,
-                    thickness: 1.5,
-                    color: Colors.black,
-                  ),
-                  StreamBuilder<ApiResponse<RecordList>>(
-                    stream: _personalPageBloc.personalSubscriptionStream,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        switch (snapshot.data.status) {
-                          case Status.LOADING:
-                            return Center(child: CircularProgressIndicator());
-                            break;
-
-                          case Status.LOADINGMORE:
-                          case Status.COMPLETED:
-                            RecordList recordList = snapshot.data.data == null
-                                ? _personalPageBloc.recordList
-                                : snapshot.data.data;
-
-                            return _buildSubscribtoinList(
-                                context, recordList, snapshot.data.status);
-                            break;
-
-                          case Status.ERROR:
-                            return Container();
-                            break;
-                        }
-                      }
-                      return Container();
-                    },
-                  ),
-                ]);
+                return _buildPersonalWidget(_scrollController, context, categoryList, _personalPageBloc);
                 break;
 
               case Status.ERROR:
@@ -131,6 +91,70 @@ class _PersonalPageState extends State<PersonalPage> {
         ),
       ),
       backgroundColor: appColor,
+    );
+  }
+
+  Widget _buildPersonalWidget(
+      ScrollController scrollController, 
+      BuildContext context, 
+      CategoryList categoryList, 
+      PersonalPageBloc personalPageBloc) {
+    return CustomScrollView(
+      controller: scrollController,
+      slivers: [
+        SliverToBoxAdapter(
+          child: _buildCategoryList(context, categoryList, _personalPageBloc),
+        ),
+        SliverToBoxAdapter(
+          child: Divider(
+            height: 32,
+            thickness: 1.5,
+            color: Colors.black,
+          ),
+        ),
+        StreamBuilder<ApiResponse<RecordList>>(
+          stream: _personalPageBloc.personalSubscriptionStream,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              switch (snapshot.data.status) {
+                case Status.LOADING:
+                  return SliverToBoxAdapter(
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                  break;
+
+                case Status.LOADINGMORE:
+                case Status.COMPLETED:
+                  RecordList recordList = snapshot.data.data == null
+                      ? _personalPageBloc.recordList
+                      : snapshot.data.data;
+                  Status status = snapshot.data.status;
+                  
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        _personalPageBloc.loadingMore(index);
+
+                        return _buildSubscribtoinList(context, recordList, index, status);
+                      },
+                      childCount: recordList == null ? 0 : recordList.length,
+                    ),
+                  );
+                  break;
+
+                case Status.ERROR:
+                  return SliverToBoxAdapter(
+                    child: Container(),
+                  );
+                  break;
+              }
+            }
+            return SliverToBoxAdapter(
+              child: Container(),
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -251,7 +275,8 @@ class _PersonalPageState extends State<PersonalPage> {
   }
 
   _buildSubscribtoinList(
-      BuildContext context, RecordList recordList, Status status) {
+      BuildContext context, RecordList recordList, int index, Status status) {
+    Record record = recordList[index];
     var width = MediaQuery.of(context).size.width;
     double imageSize = 25 * (width - 32) / 100;
 
@@ -265,34 +290,26 @@ class _PersonalPageState extends State<PersonalPage> {
       ),
     );
 
-    return Column(children: [
-      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        myVerticalDivider,
-        Text(
-          '訂閱的文章',
-          style: TextStyle(
-            color: appColor,
-            fontSize: 20,
-          ),
-        ),
-        myVerticalDivider,
-      ]),
-      ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: recordList == null ? 0 : recordList.length,
-          itemBuilder: (context, index) {
-            Record record = recordList[index];
-            return Column(
-              children: [
-                _buildListItem(record, imageSize),
-                if (index == recordList.length - 1 &&
-                    status == Status.LOADINGMORE)
-                  CupertinoActivityIndicator(),
-              ],
-            );
-          }),
-    ]);
+    return Column(
+      children: [
+        if(index == 0) 
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            myVerticalDivider,
+            Text(
+              '訂閱的文章',
+              style: TextStyle(
+                color: appColor,
+                fontSize: 20,
+              ),
+            ),
+            myVerticalDivider,
+          ]),
+        _buildListItem(record, imageSize),
+        if (index == recordList.length - 1 &&
+            status == Status.LOADINGMORE)
+          CupertinoActivityIndicator(),
+      ],
+    );
   }
 
   _buildListItem(Record record, double imageSize) {
