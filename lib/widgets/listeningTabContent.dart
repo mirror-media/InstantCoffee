@@ -27,19 +27,11 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
   @override
   void initState() {
     _listeningTabContentBloc = ListeningTabContentBloc();
-
-    widget.scrollController.addListener(_loadingMore);
-
     super.initState();
-  }
-
-  _loadingMore() {
-    _listeningTabContentBloc.loadingMore(widget.scrollController);
   }
 
   @override
   void dispose() {
-    widget.scrollController.removeListener(_loadingMore);
     _listeningTabContentBloc.dispose();
     super.dispose();
   }
@@ -86,28 +78,23 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
 
   Widget _buildTheRecordList(
       BuildContext context, RecordList recordList, Status status) {
-    return ListView(
+    return ListView.builder(
       controller: widget.scrollController,
-      children: [
-        ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: recordList.length,
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return _buildTheFirstItem(context, recordList[index]);
-              }
+      itemCount: recordList.length,
+      itemBuilder: (context, index) {
+        if (index == 0) {
+          return _buildTheFirstItem(context, recordList[index]);
+        }
 
-              return Column(
-                children: [
-                  _buildListItem(context, recordList[index]),
-                  if (index == recordList.length - 1 &&
-                      status == Status.LOADINGMORE)
-                    CupertinoActivityIndicator(),
-                ],
-              );
-            }),
-      ],
+        return Column(
+          children: [
+            _buildListItem(context, recordList[index]),
+            if (index == recordList.length - 1 &&
+                status == Status.LOADINGMORE)
+              CupertinoActivityIndicator(),
+          ],
+        );
+      }
     );
   }
 

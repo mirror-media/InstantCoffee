@@ -1,28 +1,22 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/services/listeningTabContentService.dart';
 import 'package:readr_app/models/recordList.dart';
 
 class ListeningTabContentBloc {
-  RecordList _records;
-
   String _endpoint = listeningWidgetApi;
-  bool isLoading = false;
-  String _loadmoreUrl = '';
-  int _page = 1;
-
+  bool _isLoading = false;
+  
   ListeningTabContentService _listeningTabContentService;
 
-  StreamController _listeningTabContentController;
-
+  RecordList _records;
   RecordList get records => _records;
 
+  StreamController _listeningTabContentController;
   StreamSink<ApiResponse<RecordList>> get listeningTabContentSink =>
       _listeningTabContentController.sink;
-
   Stream<ApiResponse<RecordList>> get listeningTabContentStream =>
       _listeningTabContentController.stream;
 
@@ -41,7 +35,7 @@ class ListeningTabContentBloc {
   }
 
   fetchRecordList() async {
-    isLoading = true;
+    _isLoading = true;
     if (_records == null || _records.length == 0) {
       sinkToAdd(ApiResponse.loading('Fetching Listening Tab Content'));
     } else {
@@ -51,15 +45,14 @@ class ListeningTabContentBloc {
     try {
       RecordList latests =
           await _listeningTabContentService.fetchRecordList(_endpoint);
-      _loadmoreUrl = _listeningTabContentService.getNext();
-      if (_page == 1) {
+      
+      if (_listeningTabContentService.page == 1) {
         _records.clear();
       }
-      _page++;
 
       latests = latests.filterDuplicatedSlugByAnother(_records);
       _records.addAll(latests);
-      isLoading = false;
+      _isLoading = false;
       sinkToAdd(ApiResponse.completed(_records));
     } catch (e) {
       sinkToAdd(ApiResponse.error(e.toString()));
@@ -69,20 +62,16 @@ class ListeningTabContentBloc {
 
   refreshTheList() {
     _records.clear();
-    _page = 1;
+    _listeningTabContentService.initialPage();
     _endpoint = listeningWidgetApi;
     fetchRecordList();
   }
 
-  loadingMore(ScrollController scrollController) {
-    if (scrollController.hasClients) {
-      if (scrollController.position.pixels ==
-          scrollController.position.maxScrollExtent) {
-        if (_loadmoreUrl != '' && !isLoading) {
-          _endpoint = _loadmoreUrl;
-          fetchRecordList();
-        }
-      }
+  loadingMore(int index) {
+    if(!_isLoading && index == _records.length - 5) {
+      _listeningTabContentService.nextPage();
+      _endpoint = _listeningTabContentService.getNextUrl;
+      fetchRecordList();
     }
   }
 

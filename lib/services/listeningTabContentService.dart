@@ -5,18 +5,25 @@ import 'package:readr_app/models/recordList.dart';
 class ListeningTabContentService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  String nextPage = '';
+  int page = 1;
 
+  String _nextPageUrl = '';
+  String get getNextUrl => this._nextPageUrl;
+  
   Future<RecordList> fetchRecordList(String url) async {
     final jsonResponse = await _helper.getByUrl(url);
     var jsonObject = jsonResponse['items'];
-    nextPage =
+    _nextPageUrl =
         listeningWidgetApi + '&pageToken=' + jsonResponse['nextPageToken'];
     RecordList records = RecordList.fromJson(jsonObject);
     return records;
   }
 
-  String getNext() {
-    return this.nextPage;
+  int initialPage() {
+    return this.page = 1;
+  }
+
+  int nextPage() {
+    return ++ this.page;
   }
 }
