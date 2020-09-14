@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/services/editorChoiceService.dart';
@@ -8,25 +7,20 @@ import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/services/recordService.dart';
 
 class TabContentBloc {
-  RecordList _records;
-  RecordList _editorChoices;
-
   String _endpoint = latestAPI;
-  bool isLoading = false;
-  String _loadmoreUrl = '';
-  int _page = 1;
-
+  bool _isLoading = false;
+  
   RecordService _recordService;
   EditorChoiceService _editorChoiceService;
 
-  StreamController _recordListController;
-
+  RecordList _records;
+  RecordList _editorChoices;
   RecordList get records => _records;
   RecordList get editorChoices => _editorChoices;
 
+  StreamController _recordListController;
   StreamSink<ApiResponse<TabContentState>> get recordListSink =>
       _recordListController.sink;
-
   Stream<ApiResponse<TabContentState>> get recordListStream =>
       _recordListController.stream;
 
@@ -59,9 +53,6 @@ class TabContentBloc {
       latests = latests.filterDuplicatedSlugByAnother(_records);
       _records.addAll(latests);
 
-      _loadmoreUrl = _recordService.getNext();
-      _page++;
-
       sinkToAdd(ApiResponse.completed(TabContentState(
           editorChoiceList: _editorChoices, recordList: _records)));
     } catch (e) {
@@ -71,7 +62,7 @@ class TabContentBloc {
   }
 
   fetchRecordList() async {
-    isLoading = true;
+    _isLoading = true;
     if (_records == null || _records.length == 0) {
       sinkToAdd(ApiResponse.loading('Fetching Tab Content'));
     } else {
@@ -80,18 +71,17 @@ class TabContentBloc {
 
     try {
       RecordList latests = await _recordService.fetchRecordList(_endpoint);
-      _loadmoreUrl = _recordService.getNext();
-      if (_page == 1) {
+      if (_recordService.page == 1) {
         _records.clear();
       }
-      _page++;
 
       latests = latests.filterDuplicatedSlugByAnother(_records);
       _records.addAll(latests);
-      isLoading = false;
+      _isLoading = false;
       sinkToAdd(ApiResponse.completed(TabContentState(
           editorChoiceList: _editorChoices, recordList: _records)));
     } catch (e) {
+      _isLoading = false;
       sinkToAdd(ApiResponse.error(e.toString()));
       print(e);
     }
@@ -99,12 +89,12 @@ class TabContentBloc {
 
   refreshTheList(String id, String type, bool needCarousel) {
     _records.clear();
-    _page = 1;
+    _recordService.initialPage();
     switchTab(id, type, needCarousel: needCarousel);
   }
 
   switchTab(String id, String type, {bool needCarousel = false}) {
-    _page = 1;
+    _recordService.initialPage();
     if (type == 'section') {
       _endpoint = listingBase + '&where={"sections":{"\$in":["' + id + '"]}}';
     } else if (id == 'latest') {
@@ -122,15 +112,11 @@ class TabContentBloc {
     }
   }
 
-  loadingMore(ScrollController scrollController) {
-    if (scrollController.hasClients) {
-      if (scrollController.position.pixels ==
-          scrollController.position.maxScrollExtent) {
-        if (_loadmoreUrl != '' && !isLoading) {
-          _endpoint = apiBase + _loadmoreUrl;
-          fetchRecordList();
-        }
-      }
+  loadingMore(int index) {
+    if(!_isLoading && _recordService.getNextUrl != '' && index == _records.length - 5) {
+      _recordService.nextPage();
+      _endpoint = _recordService.getNextUrl;
+      fetchRecordList();
     }
   }
 
