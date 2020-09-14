@@ -105,6 +105,7 @@ class PersonalPageBloc {
       _isLoading = false;
       personalSubscriptionSinkToAdd(ApiResponse.completed(_recordList));
     } catch (e) {
+      _isLoading = false;
       personalSubscriptionSinkToAdd(ApiResponse.error(e.toString()));
       print(e);
     }

@@ -81,6 +81,7 @@ class TabContentBloc {
       sinkToAdd(ApiResponse.completed(TabContentState(
           editorChoiceList: _editorChoices, recordList: _records)));
     } catch (e) {
+      _isLoading = false;
       sinkToAdd(ApiResponse.error(e.toString()));
       print(e);
     }

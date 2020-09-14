@@ -55,6 +55,7 @@ class ListeningTabContentBloc {
       _isLoading = false;
       sinkToAdd(ApiResponse.completed(_records));
     } catch (e) {
+      _isLoading = false;
       sinkToAdd(ApiResponse.error(e.toString()));
       print(e);
     }

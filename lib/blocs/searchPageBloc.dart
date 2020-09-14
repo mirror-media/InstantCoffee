@@ -118,6 +118,7 @@ class SearchPageBloc {
       _isLoading = false;
       searchSinkToAdd(ApiResponse.completed(_searchList));
     } catch (e) {
+      _isLoading = false;
       searchSinkToAdd(ApiResponse.error(e.toString()));
       print(e);
     }
