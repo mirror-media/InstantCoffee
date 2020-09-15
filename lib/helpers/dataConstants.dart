@@ -25,6 +25,7 @@ const Map<String, int> sectionColorMaps = {
 };
 
 const bool isTabContentAdsActivated = true;
+const bool isListeningTabContentAdsActivated = true;
 
 // AT index in tab content
 const int carouselAT1AdIndex = 0;

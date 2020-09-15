@@ -13,6 +13,7 @@ import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/widgets/editorChoiceCarousel.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
+import 'package:readr_app/widgets/mMAdBanner.dart';
 
 class TabContent extends StatefulWidget {
   final Section section;
@@ -60,54 +61,53 @@ class _TabContentState extends State<TabContent> {
       child: Column(
         children: [
           Expanded(
-            child: StreamBuilder<ApiResponse<TabContentState>>(
-              stream: _tabContentBloc.recordListStream,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  TabContentState tabContentState = snapshot.data.data;
-
-                  switch (snapshot.data.status) {
-                    case Status.LOADING:
-                      return Center(child: CircularProgressIndicator());
-                      break;
-
-                    case Status.LOADINGMORE:
-                    case Status.COMPLETED:
-                      RecordList recordList = tabContentState == null
-                          ? _tabContentBloc.records
-                          : tabContentState.recordList;
-                      RecordList editorChoiceList = tabContentState == null
-                          ? null
-                          : tabContentState.editorChoiceList;
-
-                      return _buildTheRecordList(context, recordList,
-                          editorChoiceList, snapshot.data.status, _tabContentBloc);
-                      break;
-
-                    case Status.ERROR:
-                      return ErrorStatelessWidget(
-                        errorMessage: snapshot.data.message,
-                        onRetryPressed: () => _tabContentBloc.fetchRecordList(),
-                      );
-                      break;
-                  }
-                }
-                return Container();
-              },
-            ),
+            child: _buildTabContentBody(),
           ),
           if(isTabContentAdsActivated)
-            Container(
-              height: 58,
-              child: Center(
-                child: AdmobBanner(
-                  adUnitId: _sectionAd.stUnitId,
-                  adSize: AdmobBannerSize.BANNER,
-                ),
-              ),
+            MMAdBanner(
+              adUnitId: _sectionAd.stUnitId,
+              adSize: AdmobBannerSize.BANNER,
             ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTabContentBody() {
+    return StreamBuilder<ApiResponse<TabContentState>>(
+      stream: _tabContentBloc.recordListStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          TabContentState tabContentState = snapshot.data.data;
+
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+              return Center(child: CircularProgressIndicator());
+              break;
+
+            case Status.LOADINGMORE:
+            case Status.COMPLETED:
+              RecordList recordList = tabContentState == null
+                  ? _tabContentBloc.records
+                  : tabContentState.recordList;
+              RecordList editorChoiceList = tabContentState == null
+                  ? null
+                  : tabContentState.editorChoiceList;
+
+              return _buildTheRecordList(context, recordList,
+                  editorChoiceList, snapshot.data.status, _tabContentBloc);
+              break;
+
+            case Status.ERROR:
+              return ErrorStatelessWidget(
+                errorMessage: snapshot.data.message,
+                onRetryPressed: () => _tabContentBloc.fetchRecordList(),
+              );
+              break;
+          }
+        }
+        return Container();
+      },
     );
   }
 
@@ -129,7 +129,7 @@ class _TabContentState extends State<TabContent> {
                 SizedBox(height: 16.0,),
                 if(isTabContentAdsActivated)
                   // carouselAT1AdIndex
-                  AdmobBanner(
+                  MMAdBanner(
                     adUnitId: _sectionAd.aT1UnitId,
                     adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                   ),
@@ -148,29 +148,29 @@ class _TabContentState extends State<TabContent> {
         return Column(
           children: [
             if(isTabContentAdsActivated && index == noCarouselAT1AdIndex && !widget.needCarousel)
-              AdmobBanner(
+              MMAdBanner(
                 adUnitId: _sectionAd.aT1UnitId,
                 adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
               ),
             _buildListItem(context, recordList[index]),
             if(isTabContentAdsActivated && index == carouselAT2AdIndex && widget.needCarousel) 
-              AdmobBanner(
+              MMAdBanner(
                 adUnitId: _sectionAd.aT2UnitId,
                 adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
               ),
             if(isTabContentAdsActivated && index == noCarouselAT2AdIndex && !widget.needCarousel) 
-              AdmobBanner(
+              MMAdBanner(
                 adUnitId: _sectionAd.aT2UnitId,
                 adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
               ),
               
             if(isTabContentAdsActivated && index == carouselAT3AdIndex && widget.needCarousel) 
-              AdmobBanner(
+              MMAdBanner(
                 adUnitId: _sectionAd.aT3UnitId,
                 adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
               ),
             if(isTabContentAdsActivated && index == noCarouselAT3AdIndex && !widget.needCarousel) 
-              AdmobBanner(
+              MMAdBanner(
                 adUnitId: _sectionAd.aT3UnitId,
                 adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
               ),
