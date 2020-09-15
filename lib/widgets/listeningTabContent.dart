@@ -1,13 +1,17 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/listeningTabContentBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
+import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/models/section.dart';
+import 'package:readr_app/models/sectionAd.dart';
 import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
+import 'package:readr_app/widgets/mMAdBanner.dart';
 
 class ListeningTabContent extends StatefulWidget {
   final Section section;
@@ -22,12 +26,18 @@ class ListeningTabContent extends StatefulWidget {
 }
 
 class _ListeningTabContentState extends State<ListeningTabContent> {
+  SectionAd _sectionAd;
   ListeningTabContentBloc _listeningTabContentBloc;
 
   @override
   void initState() {
+    _setAds();
     _listeningTabContentBloc = ListeningTabContentBloc();
     super.initState();
+  }
+
+  _setAds() {
+    _sectionAd = widget.section.sectionAd;
   }
 
   @override
@@ -42,53 +52,85 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
       onRefresh: () async {
         _listeningTabContentBloc.refreshTheList();
       },
-      child: StreamBuilder<ApiResponse<RecordList>>(
-        stream: _listeningTabContentBloc.listeningTabContentStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            switch (snapshot.data.status) {
-              case Status.LOADING:
-                return Center(child: CircularProgressIndicator());
-                break;
-
-              case Status.LOADINGMORE:
-              case Status.COMPLETED:
-                RecordList recordList = snapshot.data.data == null
-                    ? _listeningTabContentBloc.records
-                    : snapshot.data.data;
-
-                return _buildTheRecordList(
-                    context, recordList, snapshot.data.status);
-                break;
-
-              case Status.ERROR:
-                return ErrorStatelessWidget(
-                  errorMessage: snapshot.data.message,
-                  onRetryPressed: () =>
-                      _listeningTabContentBloc.fetchRecordList(),
-                );
-                break;
-            }
-          }
-          return Container();
-        },
+      child: Column(
+        children: [
+          Expanded(
+            child: _buildListeningTabContentBody(),
+          ),
+          if(isListeningTabContentAdsActivated)
+            MMAdBanner(
+              adUnitId: _sectionAd.stUnitId,
+              adSize: AdmobBannerSize.BANNER,
+            ),
+        ],
       ),
     );
   }
 
+  Widget _buildListeningTabContentBody() {
+    return StreamBuilder<ApiResponse<RecordList>>(
+      stream: _listeningTabContentBloc.listeningTabContentStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+              return Center(child: CircularProgressIndicator());
+              break;
+
+            case Status.LOADINGMORE:
+            case Status.COMPLETED:
+              RecordList recordList = snapshot.data.data == null
+                  ? _listeningTabContentBloc.records
+                  : snapshot.data.data;
+
+              return _buildTheRecordList(
+                  context, _listeningTabContentBloc, recordList, snapshot.data.status);
+              break;
+
+            case Status.ERROR:
+              return ErrorStatelessWidget(
+                errorMessage: snapshot.data.message,
+                onRetryPressed: () =>
+                    _listeningTabContentBloc.fetchRecordList(),
+              );
+              break;
+          }
+        }
+        return Container();
+      },
+    );
+  }
+
   Widget _buildTheRecordList(
-      BuildContext context, RecordList recordList, Status status) {
+      BuildContext context, ListeningTabContentBloc listeningTabContentBloc, RecordList recordList, Status status) {
     return ListView.builder(
       controller: widget.scrollController,
       itemCount: recordList.length,
       itemBuilder: (context, index) {
+        listeningTabContentBloc.loadingMore(index);
+
         if (index == 0) {
           return _buildTheFirstItem(context, recordList[index]);
         }
 
         return Column(
           children: [
+            if(isListeningTabContentAdsActivated && index == noCarouselAT1AdIndex)
+              MMAdBanner(
+                adUnitId: _sectionAd.aT1UnitId,
+                adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+              ),
             _buildListItem(context, recordList[index]),
+            if(isListeningTabContentAdsActivated && index == noCarouselAT2AdIndex)
+              MMAdBanner(
+                adUnitId: _sectionAd.aT2UnitId,
+                adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+              ),
+            if(isListeningTabContentAdsActivated && index == noCarouselAT3AdIndex)
+              MMAdBanner(
+                adUnitId: _sectionAd.aT3UnitId,
+                adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+              ),
             if (index == recordList.length - 1 &&
                 status == Status.LOADINGMORE)
               CupertinoActivityIndicator(),
