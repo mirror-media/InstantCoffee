@@ -1,3 +1,4 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/storyBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
@@ -15,6 +16,7 @@ import 'package:readr_app/models/story.dart';
 import 'package:readr_app/models/tagList.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:readr_app/widgets/mMAdBanner.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
 
 class StoryWidget extends StatefulWidget {
@@ -54,23 +56,54 @@ class _StoryWidget extends State<StoryWidget> {
               Story story = snapshot.data.data;
               Color sectionColor = _storyBloc.getSectionColor(story);
 
-              return ListView(children: [
-                _buildHeroWidget(width, height, story),
-                SizedBox(height: 32),
-                _buildCategoryAndPublishedDate(context, story, sectionColor),
-                SizedBox(height: 8),
-                _buildStoryTitle(story.title),
-                SizedBox(height: 8),
-                _buildAuthors(context, story),
-                SizedBox(height: 16),
-                _buildBrief(story, sectionColor),
-                _buildContent(story),
-                SizedBox(height: 32),
-                _buildUpdateDateWidget(story),
-                SizedBox(height: 16),
-                _buildTagWidget(context, story.tags),
-                _buildRelatedWidget(context, story.relatedStory),
-              ]);
+              return Column(
+                children: [
+                  Expanded(
+                    child: ListView(children: [
+                      SizedBox(height: 16),
+                      if(isStoryWidgetAdsActivated)
+                        MMAdBanner(
+                          adUnitId: story.storyAd.hDUnitId,
+                          adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                        ),
+                      SizedBox(height: 16),
+                      _buildHeroWidget(width, height, story),
+                      SizedBox(height: 32),
+                      _buildCategoryAndPublishedDate(context, story, sectionColor),
+                      SizedBox(height: 8),
+                      _buildStoryTitle(story.title),
+                      SizedBox(height: 8),
+                      _buildAuthors(context, story),
+                      SizedBox(height: 16),
+                      _buildBrief(story, sectionColor),
+                      _buildContent(story),
+                      //SizedBox(height: 32),
+                      SizedBox(height: 16),
+                      if(isStoryWidgetAdsActivated)
+                        MMAdBanner(
+                          adUnitId: story.storyAd.e1UnitId,
+                          adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                        ),
+                      SizedBox(height: 16),
+                      _buildUpdateDateWidget(story),
+                      SizedBox(height: 16),
+                      _buildTagWidget(context, story.tags),
+                      _buildRelatedWidget(context, story.relatedStory),
+                      if(isStoryWidgetAdsActivated)
+                        MMAdBanner(
+                          adUnitId: story.storyAd.fTUnitId,
+                          adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                        ),
+                      SizedBox(height: 16),
+                    ]),
+                  ),
+                  if(isStoryWidgetAdsActivated)
+                    MMAdBanner(
+                      adUnitId: story.storyAd.stUnitId,
+                      adSize: AdmobBannerSize.BANNER,
+                    ),
+                ],
+              );
               break;
 
             case Status.ERROR:
@@ -316,6 +349,10 @@ class _StoryWidget extends State<StoryWidget> {
 
   _buildContent(Story story) {
     ParagraphFormat paragraphFormat = ParagraphFormat();
+    int unStyleParagraphCount = 0;
+    bool aT1IsActivated = false;
+    bool aT2IsActivated = false;
+    bool aT3IsActivated = false;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -328,9 +365,51 @@ class _StoryWidget extends State<StoryWidget> {
             if (paragraph.contents != null && 
                 paragraph.contents.length > 0 &&
                 paragraph.contents[0].data != '') {
+              if(unStyleParagraphCount == storyAT1AdIndex) {
+                aT1IsActivated = true;
+              }
+              else if(unStyleParagraphCount == storyAT2AdIndex) {
+                aT2IsActivated = true;
+              }
+              else if(unStyleParagraphCount == storyAT3AdIndex) {
+                aT3IsActivated = true;
+              }
+
+              if(paragraph.type == 'unstyled') {
+                unStyleParagraphCount ++;
+              }
+
               return Padding(
                 padding: const EdgeInsets.only(top: 16.0),
-                child: paragraphFormat.parseTheParagraph(paragraph, context),
+                child: Column(
+                  children: [
+                    paragraphFormat.parseTheParagraph(paragraph, context),
+                    if(isStoryWidgetAdsActivated && (!aT1IsActivated && unStyleParagraphCount == storyAT1AdIndex)) 
+                    ...[
+                      SizedBox(height: 16),
+                      MMAdBanner(
+                        adUnitId: story.storyAd.aT1UnitId,
+                        adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                      ),
+                    ],
+                    if(isStoryWidgetAdsActivated && (!aT2IsActivated && unStyleParagraphCount == storyAT2AdIndex)) 
+                    ...[
+                      SizedBox(height: 16),
+                      MMAdBanner(
+                        adUnitId: story.storyAd.aT2UnitId,
+                        adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                      ),
+                    ],
+                    if(isStoryWidgetAdsActivated && (!aT3IsActivated && unStyleParagraphCount == storyAT3AdIndex)) 
+                    ...[
+                      SizedBox(height: 16),
+                      MMAdBanner(
+                        adUnitId: story.storyAd.aT3UnitId,
+                        adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                      ),
+                    ],
+                  ],
+                ),
               );
             }
             return Container();
