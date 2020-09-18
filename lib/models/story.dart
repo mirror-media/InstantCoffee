@@ -6,6 +6,7 @@ import 'package:readr_app/models/peopleList.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/models/sectionList.dart';
+import 'package:readr_app/models/storyAd.dart';
 import 'package:readr_app/models/tag.dart';
 import 'package:readr_app/models/tagList.dart';
 
@@ -35,6 +36,8 @@ class Story {
   bool isAdult;
   String state;
 
+  StoryAd storyAd;
+
   Story({
     this.title,
     this.subtitle,
@@ -60,6 +63,8 @@ class Story {
     this.sections,
     this.isAdult,
     this.state,
+
+    this.storyAd,
   });
 
   factory Story.fromJson(Map<String, dynamic> json) {

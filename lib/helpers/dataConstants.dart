@@ -26,12 +26,17 @@ const Map<String, int> sectionColorMaps = {
 
 const bool isTabContentAdsActivated = true;
 const bool isListeningTabContentAdsActivated = true;
-
-// AT index in tab content
+// AT index in tab content(carousel)
 const int carouselAT1AdIndex = 0;
 const int carouselAT2AdIndex = 4;
 const int carouselAT3AdIndex = 9;
-
+// AT index in tab content(no carousel)
 const int noCarouselAT1AdIndex = 1;
 const int noCarouselAT2AdIndex = 5;
 const int noCarouselAT3AdIndex = 10;
+
+const bool isStoryWidgetAdsActivated = true;
+// AT index in story
+const int storyAT1AdIndex = 1;
+const int storyAT2AdIndex = 5;
+const int storyAT3AdIndex = 10;

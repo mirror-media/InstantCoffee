@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/story.dart';
+import 'package:readr_app/models/storyAd.dart';
 import 'package:readr_app/services/storyService.dart';
 
 class StoryBloc {
@@ -32,6 +35,21 @@ class StoryBloc {
 
     try {
       Story story = await _storyService.fetchStory(slug);
+
+      // String storyAdJsonFileLocation = Platform.isIOS
+      // ? 'assets/data/iosStoryAd.json'
+      // : 'assets/data/androidStoryAd.json';
+      String storyAdJsonFileLocation = 'assets/data/defaultTestStoryAd.json';
+      String storyAdString = await rootBundle.loadString(storyAdJsonFileLocation);
+      final storyAdMaps = json.decode(storyAdString);
+
+      story.storyAd = StoryAd.fromJson(storyAdMaps['other']);
+      for(int i=0; i<story.sections.length; i++) {
+        if(storyAdMaps[story.sections[i].key] != null) {
+          story.storyAd = StoryAd.fromJson(storyAdMaps[story.sections[i].key]);
+          break;
+        }
+      }
 
       sinkToAdd(ApiResponse.completed(story));
     } catch (e) {
