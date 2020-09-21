@@ -126,6 +126,19 @@ dynamic _returnResponse(http.Response response) {
   switch (response.statusCode) {
     case 200:
       var responseJson = json.decode(response.body.toString());
+
+      bool hasData = (responseJson.containsKey('_items') && responseJson['_items'].length > 0) || 
+        (responseJson.containsKey('items') && responseJson['items'].length > 0) || 
+        // properties responded by popular tab content api
+        (responseJson.containsKey('report') && responseJson['report'].length > 0) || 
+        // properties responded by editor choice api
+        (responseJson.containsKey('choices') && responseJson['choices'].length > 0) || 
+        // properties responded by search api
+        (responseJson.containsKey('hits') && responseJson['hits'].containsKey('hits')) ;
+      if(!hasData) {
+        throw BadRequestException(response.body.toString());
+      }
+      
       return responseJson;
     case 400:
       throw BadRequestException(response.body.toString());
