@@ -1,5 +1,6 @@
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/helpers/apiConstants.dart';
+import 'package:readr_app/helpers/cacheDurationCache.dart';
 import 'package:readr_app/models/story.dart';
 
 class StoryService {
@@ -13,7 +14,7 @@ class StoryService {
         '}&related=full';
     //&clean=content
 
-    final jsonResponse = await _helper.getByUrl(endpoint);
+    final jsonResponse = await _helper.getByCache(endpoint, maxAge: storyCacheDuration);
     Story story = new Story.fromJson(jsonResponse["_items"][0]);
     return story;
   }

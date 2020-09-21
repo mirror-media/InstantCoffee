@@ -1,5 +1,6 @@
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/helpers/apiConstants.dart';
+import 'package:readr_app/helpers/cacheDurationCache.dart';
 import 'package:readr_app/models/recordList.dart';
 
 class RecordService {
@@ -11,9 +12,14 @@ class RecordService {
   String get getNextUrl => this._nextPageUrl;
 
   Future<RecordList> fetchRecordList(String url) async {
-    final jsonResponse = await _helper.getByUrl(url);
-    var jsonObject;
-
+    dynamic jsonResponse;
+    if(page <= 2) {
+      jsonResponse = await _helper.getByCache(url, maxAge: contentTabCacheDuration);
+    }
+    else {
+      jsonResponse = await _helper.getByUrl(url);
+    }
+    
     if (jsonResponse.containsKey("_links") &&
         jsonResponse["_links"].containsKey("next")) {
       this._nextPageUrl = apiBase + jsonResponse["_links"]["next"]["href"];
@@ -21,6 +27,7 @@ class RecordService {
       this._nextPageUrl = '';
     }
 
+    var jsonObject;
     if (jsonResponse.containsKey("_items")) {
       jsonObject = jsonResponse["_items"];
     } else if (jsonResponse.containsKey("report")) {
