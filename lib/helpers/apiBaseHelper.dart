@@ -1,11 +1,52 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:mime/mime.dart';
 import 'dart:convert';
 import 'dart:async';
 
 import 'package:readr_app/helpers/appException.dart';
+import 'package:readr_app/helpers/mMCacheManager.dart';
 
 class ApiBaseHelper {
+  Future<dynamic> getByCache(String url, {Duration maxAge = const Duration(days: 30),}) async {
+    print('Get cache, url $url');
+    MMCacheManager mMCacheManager = MMCacheManager();
+    final cacheFile = await mMCacheManager.getFileFromCache(url);
+    if ( cacheFile == null ||
+      cacheFile != null && cacheFile.validTill.isBefore(DateTime.now())
+    ) {
+      print('Call Api Get, url $url');
+      var responseJson;
+      try {
+        final response =
+            await http.get(url, headers: {'Cache-control': 'no-cache'});
+        responseJson = _returnResponse(response);
+        // save cache file
+        mMCacheManager.putFile(url, response.bodyBytes, maxAge: maxAge, fileExtension: 'json');
+      } on SocketException {
+        print('No Internet connection');
+        throw FetchDataException('No Internet connection');
+      }
+      print('Api get done.');
+      return responseJson;
+    }
+
+    var file = cacheFile.file;
+    if (file != null && await file.exists()) {
+      var mimeStr = lookupMimeType(file.path);
+      String res;
+      if(mimeStr == 'application/json') {
+        res = await file.readAsString();
+      }
+      else {
+        res = file.path;
+      }
+      
+      return _returnResponse(http.Response(res, 200));
+    }
+    return _returnResponse(http.Response(null, 404));
+  }
+
   Future<dynamic> getByUrl(String url) async {
     print('Call Api Get, url $url');
     var responseJson;
@@ -85,6 +126,19 @@ dynamic _returnResponse(http.Response response) {
   switch (response.statusCode) {
     case 200:
       var responseJson = json.decode(response.body.toString());
+
+      bool hasData = (responseJson.containsKey('_items') && responseJson['_items'].length > 0) || 
+        (responseJson.containsKey('items') && responseJson['items'].length > 0) || 
+        // properties responded by popular tab content api
+        (responseJson.containsKey('report') && responseJson['report'].length > 0) || 
+        // properties responded by editor choice api
+        (responseJson.containsKey('choices') && responseJson['choices'].length > 0) || 
+        // properties responded by search api
+        (responseJson.containsKey('hits') && responseJson['hits'].containsKey('hits')) ;
+      if(!hasData) {
+        throw BadRequestException(response.body.toString());
+      }
+      
       return responseJson;
     case 400:
       throw BadRequestException(response.body.toString());

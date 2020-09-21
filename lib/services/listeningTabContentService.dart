@@ -1,5 +1,6 @@
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/helpers/apiConstants.dart';
+import 'package:readr_app/helpers/cacheDurationCache.dart';
 import 'package:readr_app/models/recordList.dart';
 
 class ListeningTabContentService {
@@ -11,7 +12,14 @@ class ListeningTabContentService {
   String get getNextUrl => this._nextPageUrl;
   
   Future<RecordList> fetchRecordList(String url) async {
-    final jsonResponse = await _helper.getByUrl(url);
+    dynamic jsonResponse;
+    if(page <= 2) {
+      jsonResponse = await _helper.getByCache(url, maxAge: listeningTabContentCacheDuration);
+    }
+    else {
+      jsonResponse = await _helper.getByUrl(url);
+    }
+
     var jsonObject = jsonResponse['items'];
     _nextPageUrl =
         listeningWidgetApi + '&pageToken=' + jsonResponse['nextPageToken'];
