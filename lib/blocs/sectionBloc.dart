@@ -42,9 +42,12 @@ class SectionBloc {
       String sectionAdJsonFileLocation = 'assets/data/defaultTestSectionAd.json';
       String sectionAdString = await rootBundle.loadString(sectionAdJsonFileLocation);
       final sectionAdMaps = json.decode(sectionAdString);
-      
       for(int i=0; i<sectionList.length; i++) {
-        sectionList[i].sectionAd = SectionAd.fromJson(sectionAdMaps[sectionList[i].key]);
+        if(sectionAdMaps[sectionList[i].key] != null) {
+          sectionList[i].sectionAd = SectionAd.fromJson(sectionAdMaps[sectionList[i].key]);
+        } else {
+          sectionList[i].sectionAd = SectionAd.fromJson(sectionAdMaps['other']);
+        }
       }
 
       sinkToAdd(ApiResponse.completed(sectionList));

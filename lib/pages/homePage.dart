@@ -5,10 +5,10 @@ import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/models/sectionList.dart';
 import 'package:readr_app/models/section.dart';
-import 'package:readr_app/pages/personalPage.dart';
 import 'package:readr_app/pages/searchPage.dart';
 import 'package:readr_app/widgets/listeningTabContent.dart';
 import 'package:readr_app/widgets/newsMarquee.dart';
+import 'package:readr_app/widgets/personalWidget.dart';
 import 'package:readr_app/widgets/tabContent.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
@@ -66,6 +66,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       if (section.key == listeningSectionKey) {
         _tabWidgets.add(ListeningTabContent(
           section: section,
+          scrollController: _scrollControllerList[i],
+        ));
+      } else if (section.key == personalSectionKey){
+        _tabWidgets.add(PersonalWidget(
           scrollController: _scrollControllerList[i],
         ));
       } else {
@@ -164,17 +168,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             context,
             MaterialPageRoute(
               builder: (context) => SearchPage(),
-              fullscreenDialog: true,
-            ),
-          ),
-        ),
-        IconButton(
-          icon: Icon(Icons.person),
-          tooltip: 'Personal',
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PersonalPage(),
               fullscreenDialog: true,
             ),
           ),

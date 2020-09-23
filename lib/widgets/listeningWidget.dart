@@ -1,3 +1,4 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/listeningWidgetBloc.dart';
@@ -6,6 +7,7 @@ import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/models/listening.dart';
 import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/widgets/mMAdBanner.dart';
 import 'package:readr_app/widgets/youtubeWidget.dart';
 
 class ListeningWidget extends StatefulWidget {
@@ -43,22 +45,57 @@ class _ListeningWidget extends State<ListeningWidget> {
             case Status.COMPLETED:
               TabContentState tabContentState = snapshot.data.data;
 
-              return ListView(children: [
-                YoutubeWidget(
-                  width: width,
-                  youtubeId: tabContentState.listening.slug,
-                ),
-                SizedBox(height: 16.0),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-                  child: _buildTitleAndDescription(tabContentState.listening),
-                ),
-                SizedBox(height: 16.0),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-                  child: _buildTheNewestVideos(width, tabContentState.recordList),
-                ),
-              ]);
+              return Column(
+                children: [
+                  Expanded(
+                    child: ListView(children: [
+                      YoutubeWidget(
+                        width: width,
+                        youtubeId: tabContentState.listening.slug,
+                      ),
+                      SizedBox(height: 16.0),
+                      if(isListeningWidgetAdsActivated)
+                      ...[
+                        MMAdBanner(
+                          adUnitId: tabContentState.listening.storyAd.hDUnitId,
+                          adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                        ),
+                        SizedBox(height: 16),
+                      ],
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+                        child: _buildTitleAndDescription(tabContentState.listening),
+                      ),
+                      SizedBox(height: 16.0),
+                      if(isListeningWidgetAdsActivated)
+                      ...[
+                        MMAdBanner(
+                          adUnitId: tabContentState.listening.storyAd.aT1UnitId,
+                          adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                        ),
+                        SizedBox(height: 16),
+                      ],
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+                        child: _buildTheNewestVideos(width, tabContentState.recordList),
+                      ),
+                      if(isListeningWidgetAdsActivated)
+                      ...[
+                        MMAdBanner(
+                          adUnitId: tabContentState.listening.storyAd.fTUnitId,
+                          adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                        ),
+                        SizedBox(height: 16),
+                      ],
+                    ]),
+                  ),
+                  if(isListeningWidgetAdsActivated)
+                    MMAdBanner(
+                      adUnitId: tabContentState.listening.storyAd.stUnitId,
+                      adSize: AdmobBannerSize.BANNER,
+                    ),
+                ],
+              );
               break;
 
             case Status.ERROR:

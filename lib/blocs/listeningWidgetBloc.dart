@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:flutter/services.dart';
 import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/models/listening.dart';
+import 'package:readr_app/models/storyAd.dart';
 import 'package:readr_app/services/listeningTabContentService.dart';
 import 'package:readr_app/services/listeningWidgetService.dart';
 import 'package:readr_app/models/recordList.dart';
@@ -42,6 +45,15 @@ class ListeningWidgetBloc {
           apiBase +
               'youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw');
 
+      // String storyAdJsonFileLocation = Platform.isIOS
+      // ? 'assets/data/iosStoryAd.json'
+      // : 'assets/data/androidStoryAd.json';
+      String storyAdJsonFileLocation = 'assets/data/defaultTestStoryAd.json';
+      String storyAdString = await rootBundle.loadString(storyAdJsonFileLocation);
+      final storyAdMaps = json.decode(storyAdString);
+
+      listening.storyAd = StoryAd.fromJson(storyAdMaps['other']);
+      
       sinkToAdd(ApiResponse.completed(
           TabContentState(listening: listening, recordList: recordList)));
     } catch (e) {

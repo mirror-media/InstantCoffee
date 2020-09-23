@@ -57,7 +57,7 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
           Expanded(
             child: _buildListeningTabContentBody(),
           ),
-          if(isListeningTabContentAdsActivated)
+          if(isListeningTabContentAdsActivated && _sectionAd.stUnitId != '')
             MMAdBanner(
               adUnitId: _sectionAd.stUnitId,
               adSize: AdmobBannerSize.BANNER,
