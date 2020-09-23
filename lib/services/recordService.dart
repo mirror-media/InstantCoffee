@@ -36,7 +36,6 @@ class RecordService {
       for (var item in jsonObject) {
         item['slug'] = item['slug'].replaceAll(RegExp(r'(story|/)'), '');
       }
-      //
     } else {
       jsonObject = [];
     }

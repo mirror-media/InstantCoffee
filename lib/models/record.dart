@@ -41,7 +41,7 @@ class Record {
     }
 
     String photoUrl = mirrorMediaNotImageUrl;
-    if (json.containsKey('heroImage') && json['heroImage'] != null) {
+    if (json.containsKey('heroImage') && json['heroImage'] != null && json['heroImage']['image'] != null) {
       photoUrl = json['heroImage']['image']['resizedTargets']['mobile']['url'];
     } else if (json.containsKey('snippet') && json['snippet'] != null) {
       photoUrl = json['snippet']['thumbnails']['medium']['url'];

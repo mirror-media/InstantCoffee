@@ -13,84 +13,56 @@ import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/widgets/unsubscriptionCategoryList.dart';
 
-class PersonalPage extends StatefulWidget {
+class PersonalWidget extends StatefulWidget {
+  final ScrollController scrollController;
+  PersonalWidget({
+    @required this.scrollController,
+  });
+
   @override
-  _PersonalPageState createState() => _PersonalPageState();
+  _PersonalWidgetState createState() => _PersonalWidgetState();
 }
 
-class _PersonalPageState extends State<PersonalPage> {
+class _PersonalWidgetState extends State<PersonalWidget> {
   PersonalPageBloc _personalPageBloc;
-  ScrollController _scrollController;
 
   @override
   void initState() {
     _personalPageBloc = PersonalPageBloc();
-    _scrollController = ScrollController();
     super.initState();
-  }
-
-  _scrollToTop() {
-    if (_scrollController.hasClients) {
-      _scrollController.animateTo(_scrollController.position.minScrollExtent,
-          duration: Duration(milliseconds: 1000), curve: Curves.easeIn);
-    }
   }
 
   @override
   void dispose() {
     _personalPageBloc.dispose();
-    _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildBar(context),
-      body: StreamBuilder<ApiResponse<CategoryList>>(
-        stream: _personalPageBloc.categoryStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            switch (snapshot.data.status) {
-              case Status.LOADING:
-                return Center(child: CircularProgressIndicator());
-                break;
+    return StreamBuilder<ApiResponse<CategoryList>>(
+      stream: _personalPageBloc.categoryStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+              return Center(child: CircularProgressIndicator());
+              break;
 
-              case Status.LOADINGMORE:
-              case Status.COMPLETED:
-                CategoryList categoryList = snapshot.data.data;
+            case Status.LOADINGMORE:
+            case Status.COMPLETED:
+              CategoryList categoryList = snapshot.data.data;
 
-                return _buildPersonalWidget(_scrollController, context, categoryList, _personalPageBloc);
-                break;
+              return _buildPersonalWidget(widget.scrollController, context, categoryList, _personalPageBloc);
+              break;
 
-              case Status.ERROR:
-                return Container();
-                break;
-            }
+            case Status.ERROR:
+              return Container();
+              break;
           }
-          return Container();
-        },
-      ),
-    );
-  }
-
-  Widget _buildBar(BuildContext context) {
-    return AppBar(
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios),
-        onPressed: () => Navigator.of(context).pop(),
-      ),
-      centerTitle: true,
-      title: GestureDetector(
-        onTap: () {
-          _scrollToTop();
-        },
-        child: Text(
-          personalPageTitle,
-          style: TextStyle(color: Colors.white, fontSize: 24.0),
-        ),
-      ),
-      backgroundColor: appColor,
+        }
+        return Container();
+      },
     );
   }
 

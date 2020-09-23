@@ -1,3 +1,5 @@
+import 'package:readr_app/models/storyAd.dart';
+
 class Listening {
   String slug;
   String title;
@@ -5,12 +7,16 @@ class Listening {
   String photoUrl;
   String publishedAt;
 
+  StoryAd storyAd;
+  
   Listening({
     this.slug,
     this.title,
     this.description,
     this.photoUrl,
     this.publishedAt,
+
+    this.storyAd,
   });
 
   factory Listening.fromJson(Map<String, dynamic> json) {

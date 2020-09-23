@@ -60,13 +60,15 @@ class _StoryWidget extends State<StoryWidget> {
                 children: [
                   Expanded(
                     child: ListView(children: [
-                      SizedBox(height: 16),
                       if(isStoryWidgetAdsActivated)
+                      ...[
+                        SizedBox(height: 16),
                         MMAdBanner(
                           adUnitId: story.storyAd.hDUnitId,
                           adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                         ),
-                      SizedBox(height: 16),
+                        SizedBox(height: 16),
+                      ],
                       _buildHeroWidget(width, height, story),
                       SizedBox(height: 32),
                       _buildCategoryAndPublishedDate(context, story, sectionColor),
@@ -81,20 +83,33 @@ class _StoryWidget extends State<StoryWidget> {
                       SizedBox(height: 16),
                       if(isStoryWidgetAdsActivated)
                         MMAdBanner(
-                          adUnitId: story.storyAd.e1UnitId,
+                          adUnitId: story.storyAd.aT3UnitId,
                           adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                         ),
                       SizedBox(height: 16),
                       _buildUpdateDateWidget(story),
                       SizedBox(height: 16),
+                      _buildMoreContentWidget(),
+                      SizedBox(height: 16),
                       _buildTagWidget(context, story.tags),
+                      if(isStoryWidgetAdsActivated)
+                      ...[
+                        SizedBox(height: 16),
+                        MMAdBanner(
+                          adUnitId: story.storyAd.e1UnitId,
+                          adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                        ),
+                        SizedBox(height: 16),
+                      ],
                       _buildRelatedWidget(context, story.relatedStory),
                       if(isStoryWidgetAdsActivated)
+                      ...[
                         MMAdBanner(
                           adUnitId: story.storyAd.fTUnitId,
                           adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                         ),
-                      SizedBox(height: 16),
+                        SizedBox(height: 16),
+                      ],
                     ]),
                   ),
                   if(isStoryWidgetAdsActivated)
@@ -352,7 +367,6 @@ class _StoryWidget extends State<StoryWidget> {
     int unStyleParagraphCount = 0;
     bool aT1IsActivated = false;
     bool aT2IsActivated = false;
-    bool aT3IsActivated = false;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -370,9 +384,6 @@ class _StoryWidget extends State<StoryWidget> {
               }
               else if(unStyleParagraphCount == storyAT2AdIndex) {
                 aT2IsActivated = true;
-              }
-              else if(unStyleParagraphCount == storyAT3AdIndex) {
-                aT3IsActivated = true;
               }
 
               if(paragraph.type == 'unstyled') {
@@ -397,14 +408,6 @@ class _StoryWidget extends State<StoryWidget> {
                       SizedBox(height: 16),
                       MMAdBanner(
                         adUnitId: story.storyAd.aT2UnitId,
-                        adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-                      ),
-                    ],
-                    if(isStoryWidgetAdsActivated && (!aT3IsActivated && unStyleParagraphCount == storyAT3AdIndex)) 
-                    ...[
-                      SizedBox(height: 16),
-                      MMAdBanner(
-                        adUnitId: story.storyAd.aT3UnitId,
                         adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                       ),
                     ],
@@ -501,6 +504,15 @@ class _StoryWidget extends State<StoryWidget> {
           style: TextStyle(fontSize: 16),
         ),
       ],
+    );
+  }
+
+  _buildMoreContentWidget() {
+    ParagraphFormat paragraphFormat = ParagraphFormat();
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
+      child: paragraphFormat.parseTheTextToHtmlWidget(moreContentHtml, null),
     );
   }
 

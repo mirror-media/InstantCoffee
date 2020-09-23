@@ -63,7 +63,7 @@ class _TabContentState extends State<TabContent> {
           Expanded(
             child: _buildTabContentBody(),
           ),
-          if(isTabContentAdsActivated)
+          if(isTabContentAdsActivated && _sectionAd.stUnitId != '')
             MMAdBanner(
               adUnitId: _sectionAd.stUnitId,
               adSize: AdmobBannerSize.BANNER,
@@ -122,17 +122,22 @@ class _TabContentState extends State<TabContent> {
         if (index == 0) {
           if(widget.needCarousel) {
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 EditorChoiceCarousel(
                   editorChoiceList: editorChoiceList,
                 ),
-                SizedBox(height: 16.0,),
                 if(isTabContentAdsActivated)
+                ...[
+                  SizedBox(height: 16.0,),
                   // carouselAT1AdIndex
-                  MMAdBanner(
-                    adUnitId: _sectionAd.aT1UnitId,
-                    adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                  Center(
+                    child: MMAdBanner(
+                      adUnitId: _sectionAd.aT1UnitId,
+                      adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                    ),
                   ),
+                ],
                 SizedBox(height: 16.0,),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
