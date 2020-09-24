@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:readr_app/blocs/sectionBloc.dart';
 import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
@@ -33,16 +34,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     _firebaseMessangingHelper = FirebaseMessangingHelper();
-
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _firebaseMessangingHelper.configFirebaseMessaging(context);
+    });
+    
     _scrollControllerList = List<ScrollController>();
     _sectionBloc = SectionBloc();
     super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    _firebaseMessangingHelper.configFirebaseMessaging(context);
-    super.didChangeDependencies();
   }
 
   _initializeTabController(SectionList sectionItems) {
