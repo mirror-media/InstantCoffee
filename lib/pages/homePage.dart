@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:readr_app/blocs/sectionBloc.dart';
 import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
+import 'package:readr_app/helpers/appLinkHelper.dart';
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/models/sectionList.dart';
 import 'package:readr_app/models/section.dart';
@@ -20,6 +21,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  AppLinkHelper _appLinkHelper;
   FirebaseMessangingHelper _firebaseMessangingHelper;
 
   List<ScrollController> _scrollControllerList;
@@ -33,11 +35,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    _appLinkHelper = AppLinkHelper();
     _firebaseMessangingHelper = FirebaseMessangingHelper();
     SchedulerBinding.instance.addPostFrameCallback((_) {
+      _appLinkHelper.configAppLink(context);
       _firebaseMessangingHelper.configFirebaseMessaging(context);
     });
-    
+
     _scrollControllerList = List<ScrollController>();
     _sectionBloc = SectionBloc();
     super.initState();
@@ -99,6 +103,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    _appLinkHelper.dispose();
     _firebaseMessangingHelper.dispose();
     _tabController?.dispose();
 
