@@ -170,14 +170,16 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
                   );
                 } else if(widget.embeddedCoede.contains('twitter-tweet')) {
                   // waiting for iframe rendering(workaround)
-                  await Future.delayed(Duration(seconds: 5));
+                  while (_webViewHeight == null || _webViewHeight == 0) {
+                    await Future.delayed(Duration(seconds: 1));
+                    _webViewHeight = double.tryParse(
+                      await _webViewController
+                          .evaluateJavascript('document.querySelector(".twitter-tweet").getBoundingClientRect().height;'),
+                    );
+                  }
                   _webViewWidth = double.tryParse(
                     await _webViewController
-                        .evaluateJavascript("document.documentElement.scrollWidth;"),
-                  );
-                  _webViewHeight = double.tryParse(
-                    await _webViewController
-                        .evaluateJavascript('document.querySelector(".twitter-tweet").getBoundingClientRect().height;'),
+                        .evaluateJavascript('document.querySelector(".twitter-tweet").getBoundingClientRect().width;'),
                   );
                 } else if(widget.embeddedCoede.contains('www.facebook.com/plugins')) {
                   if(widget.embeddedCoede.contains('www.facebook.com/plugins/video.php')) {
