@@ -60,6 +60,8 @@ dependencies:
   flutter_cache_manager: ^1.4.2
   # package for working with MIME type definitions
   mime: ^0.9.7
+  # app link
+  uni_links: ^0.4.0
 
   # firebase
   firebase_core: ^0.4.2+1
