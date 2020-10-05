@@ -32,7 +32,9 @@ class Content {
       } else if (json['embeddedCode'] != null) {
         return Content(
           data: json['embeddedCode'],
-          aspectRatio: null,
+          aspectRatio: (json['width'] == null || json['height'] == null)
+            ? null
+            : double.parse(json['width'])/double.parse(json['height']),
           description: json['caption'],
         );
       } else if (json['draftRawObj'] != null) {
