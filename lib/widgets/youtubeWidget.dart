@@ -16,6 +16,8 @@ class YoutubeWidget extends StatefulWidget {
 }
 
 class _YoutubeWidgetState extends State<YoutubeWidget> with AutomaticKeepAliveClientMixin {
+  bool _visible = false;
+
   @override
   bool get wantKeepAlive => true;
 
@@ -25,12 +27,23 @@ class _YoutubeWidgetState extends State<YoutubeWidget> with AutomaticKeepAliveCl
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          width: widget.width,
-          height: widget.width / 16 * 9,
-          child: WebView(
-            initialUrl: 'https://www.youtube.com/embed/${widget.youtubeId}',
-            javascriptMode: JavascriptMode.unrestricted,
+        AnimatedOpacity(
+          opacity: _visible ? 1.0 : 0.0,
+          duration: Duration(milliseconds: 500),
+          child: SizedBox(
+            width: widget.width,
+            height: widget.width / 16 * 9,
+            child: WebView(
+              initialUrl: 'https://www.youtube.com/embed/${widget.youtubeId}',
+              javascriptMode: JavascriptMode.unrestricted,
+              onPageFinished: (e) {
+                if(mounted) {
+                  setState(() {
+                    _visible = true;
+                  });
+                }
+              },
+            ),
           ),
         ),
         if (widget.description != null && widget.description != '')
