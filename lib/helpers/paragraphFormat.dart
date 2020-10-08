@@ -132,6 +132,7 @@ class ParagraphFormat {
         {
           return EmbeddedCodeWidget(
             embeddedCoede: paragraph.contents[0].data,
+            aspectRatio:  paragraph.contents[0].aspectRatio,
           );
         }
         break;
