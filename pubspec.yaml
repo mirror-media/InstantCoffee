@@ -30,9 +30,9 @@ dependencies:
   # http ajax call
   http: ^0.12.2
   # launching a URL in the mobile platform
-  url_launcher: ^5.5.0
+  url_launcher: ^5.7.2
   # webview
-  webview_flutter: ^0.3.22+1
+  webview_flutter: ^1.0.1
   # local storage
   localstorage: ^3.0.2+5
   # drag and drop object
@@ -47,9 +47,9 @@ dependencies:
   # A Flutter widget that scrolls text infinitely.
   marquee: ^1.5.2
   # carousel slider in flutter
-  carousel_slider: ^2.2.1
+  carousel_slider: ^2.3.1
   # widget from html
-  flutter_widget_from_html: ^0.4.2
+  flutter_widget_from_html: ^0.5.0+7
   # video player
   video_player: ^0.10.11+2
   # a friendly Material or Cupertino UI for video
@@ -64,13 +64,13 @@ dependencies:
   uni_links: ^0.4.0
 
   # firebase
-  firebase_core: ^0.4.2+1
+  firebase_core: ^0.4.5
   # firebase messaging
   firebase_messaging: ^6.0.16
   # firebase ad mob
   firebase_admob: ^0.9.3+4
   #flutter_native_admob: ^2.1.0+3
-  admob_flutter: ^0.3.4
+  admob_flutter: ^1.0.0
 
 dependency_overrides:
   flutter_svg: ^ 0.18.0
