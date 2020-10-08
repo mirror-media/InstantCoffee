@@ -21,7 +21,7 @@ class MMCacheManager extends BaseCacheManager {
   MMCacheManager._()
       : super(key,
             maxAgeCacheObject: const Duration(hours: 12),
-            maxNrOfCacheObjects: 200);
+            maxNrOfCacheObjects: 100);
 
   @override
   Future<String> getFilePath() async {
