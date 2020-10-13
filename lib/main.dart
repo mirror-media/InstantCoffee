@@ -1,10 +1,14 @@
 import 'dart:async';
 
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/pages/homePage.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Initialize without device test ids.
+  Admob.initialize();
   runApp(MirrorApp());
 }
 
@@ -27,7 +31,7 @@ class _MirrorAppState extends State<MirrorApp> {
   }
 
   _waiting() async{
-    await Future.delayed(Duration(seconds: 3));
+    // await Future.delayed(Duration(seconds: 3));
     _configController.sink.add(true);
   }
 

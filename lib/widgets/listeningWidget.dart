@@ -59,6 +59,8 @@ class _ListeningWidget extends State<ListeningWidget> {
                         MMAdBanner(
                           adUnitId: tabContentState.listening.storyAd.hDUnitId,
                           adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                          widthPadding: 16,
+                          leftAndRightPadding: 16,
                         ),
                         SizedBox(height: 16),
                       ],
@@ -72,6 +74,8 @@ class _ListeningWidget extends State<ListeningWidget> {
                         MMAdBanner(
                           adUnitId: tabContentState.listening.storyAd.aT1UnitId,
                           adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                          widthPadding: 16,
+                          leftAndRightPadding: 16,
                         ),
                         SizedBox(height: 16),
                       ],
@@ -84,6 +88,8 @@ class _ListeningWidget extends State<ListeningWidget> {
                         MMAdBanner(
                           adUnitId: tabContentState.listening.storyAd.fTUnitId,
                           adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                          widthPadding: 16,
+                          leftAndRightPadding: 16,
                         ),
                         SizedBox(height: 16),
                       ],
