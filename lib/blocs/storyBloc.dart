@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,9 +38,11 @@ class StoryBloc {
       Story story = await _storyService.fetchStory(slug);
 
       // String storyAdJsonFileLocation = Platform.isIOS
-      // ? 'assets/data/iosStoryAd.json'
+      // ? 'assets/data/iOSStoryAd.json'
       // : 'assets/data/androidStoryAd.json';
-      String storyAdJsonFileLocation = 'assets/data/defaultTestStoryAd.json';
+      String storyAdJsonFileLocation = Platform.isIOS
+      ? 'assets/data/iOSTestStoryAd.json'
+      : 'assets/data/androidTestStoryAd.json';
       String storyAdString = await rootBundle.loadString(storyAdJsonFileLocation);
       final storyAdMaps = json.decode(storyAdString);
 
