@@ -61,7 +61,7 @@
                 <!-- Accepts URIs that begin with https://YOUR_HOST -->
                 <data
                 android:scheme="https"
-                android:host="www.mirrormedia.mg"
+                android:host="dev.mirrormedia.mg"
                 android:pathPattern="/.*" />
             </intent-filter>
         </activity>

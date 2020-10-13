@@ -18,6 +18,19 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>mg.mirrormedia.readrApp</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>dev.mirrormedia.mg</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
@@ -25,17 +38,6 @@
 	<!-- test admob id https://developers.google.com/admob/ios/quick-start -->
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-3940256099942544~1458002511</string>
-	<key>SKAdNetworkItems</key>
-	<array>
-		<dict>
-		<key>SKAdNetworkIdentifier</key>
-		<string>cstr6suwn9.skadnetwork</string>
-		</dict>
-	</array>
-	<key>io.flutter.embedded_views_preview</key>
-	<true/>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>Your data will be used to deliver personalized ads to you.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -43,6 +45,15 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Your data will be used to deliver personalized ads to you.</string>
+	<key>SKAdNetworkItems</key>
+	<array>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>cstr6suwn9.skadnetwork</string>
+		</dict>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -68,6 +79,8 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>com.apple.security.network.client</key>
+	<true/>
+	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 </dict>
 </plist>
