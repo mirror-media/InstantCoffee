@@ -72,12 +72,20 @@ dependencies:
   #flutter_native_admob: ^2.1.0+3
   admob_flutter: ^1.0.0
 
+  # generate app icons
+  flutter_launcher_icons: ^0.7.5
+
 dependency_overrides:
   flutter_svg: ^ 0.18.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/icon.jpg"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
