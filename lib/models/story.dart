@@ -148,4 +148,12 @@ class Story {
       isAdult: json['isAdult'],
     );
   }
+
+  String getSectionName() {
+    String sectionName = '';
+    if (sections.length > 0) {
+      sectionName = sections[0]?.name;
+    }
+    return sectionName;
+  }
 }

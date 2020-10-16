@@ -37,12 +37,12 @@ class SectionBloc {
     try {
       SectionList sectionList = await _sectionService.fetchSectionList();
       
-      // String sectionAdJsonFileLocation = Platform.isIOS
-      // ? 'assets/data/iOSSectionAd.json'
-      // : 'assets/data/androidSectionAd.json';
       String sectionAdJsonFileLocation = Platform.isIOS
-      ? 'assets/data/iOSTestSectionAd.json'
-      : 'assets/data/androidTestSectionAd.json';
+      ? 'assets/data/iOSSectionAd.json'
+      : 'assets/data/androidSectionAd.json';
+      // String sectionAdJsonFileLocation = Platform.isIOS
+      // ? 'assets/data/iOSTestSectionAd.json'
+      // : 'assets/data/androidTestSectionAd.json';
       String sectionAdString = await rootBundle.loadString(sectionAdJsonFileLocation);
       final sectionAdMaps = json.decode(sectionAdString);
       for(int i=0; i<sectionList.length; i++) {

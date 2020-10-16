@@ -37,19 +37,24 @@ class StoryBloc {
     try {
       Story story = await _storyService.fetchStory(slug);
 
-      // String storyAdJsonFileLocation = Platform.isIOS
-      // ? 'assets/data/iOSStoryAd.json'
-      // : 'assets/data/androidStoryAd.json';
       String storyAdJsonFileLocation = Platform.isIOS
-      ? 'assets/data/iOSTestStoryAd.json'
-      : 'assets/data/androidTestStoryAd.json';
+      ? 'assets/data/iOSStoryAd.json'
+      : 'assets/data/androidStoryAd.json';
+      // String storyAdJsonFileLocation = Platform.isIOS
+      // ? 'assets/data/iOSTestStoryAd.json'
+      // : 'assets/data/androidTestStoryAd.json';
       String storyAdString = await rootBundle.loadString(storyAdJsonFileLocation);
       final storyAdMaps = json.decode(storyAdString);
 
       story.storyAd = StoryAd.fromJson(storyAdMaps['other']);
       for(int i=0; i<story.sections.length; i++) {
-        if(storyAdMaps[story.sections[i].key] != null) {
-          story.storyAd = StoryAd.fromJson(storyAdMaps[story.sections[i].key]);
+        String sectionName;
+        if (story != null) {
+          sectionName = story.getSectionName();
+        }
+        
+        if(sectionName != null && storyAdMaps[sectionName] != null) {
+          story.storyAd = StoryAd.fromJson(storyAdMaps[sectionName]);
           break;
         }
       }
@@ -63,8 +68,8 @@ class StoryBloc {
 
   Color getSectionColor(Story story) {
     String sectionName;
-    if (story != null && story.sections.length > 0) {
-      sectionName = story.sections[0]?.name;
+    if (story != null) {
+      sectionName = story.getSectionName();
     }
 
     if (sectionColorMaps.containsKey(sectionName)) {

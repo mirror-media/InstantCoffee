@@ -19,7 +19,7 @@
         <!-- test admob id https://developers.google.com/admob/android/quick-start -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
+            android:value="ca-app-pub-7986335951683342~8419780140"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
