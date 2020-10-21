@@ -1,5 +1,6 @@
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:readr_app/blocs/slugBloc.dart';
 import 'package:readr_app/blocs/storyBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 
@@ -20,8 +21,8 @@ import 'package:readr_app/widgets/mMAdBanner.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
 
 class StoryWidget extends StatefulWidget {
-  final String slug;
-  const StoryWidget({key, this.slug}) : super(key: key);
+  final SlugBloc slugBloc;
+  const StoryWidget({key, this.slugBloc}) : super(key: key);
 
   @override
   _StoryWidget createState() {
@@ -35,7 +36,7 @@ class _StoryWidget extends State<StoryWidget> {
   @override
   void initState() {
     super.initState();
-    _storyBloc = StoryBloc(widget.slug);
+    _storyBloc = StoryBloc(widget.slugBloc.slug);
   }
 
   Widget build(BuildContext context) {
@@ -605,6 +606,7 @@ class _StoryWidget extends State<StoryWidget> {
         ),
       ),
       onTap: () {
+        widget.slugBloc.slug = relatedItem.slug;
         _storyBloc.fetchStory(relatedItem.slug);
       },
     );

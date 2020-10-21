@@ -1,7 +1,9 @@
 import "package:flutter/material.dart";
+import 'package:readr_app/blocs/slugBloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/widgets/listeningWidget.dart';
 import 'package:readr_app/widgets/storyWidget.dart';
+import 'package:share/share.dart';
 
 class StoryPage extends StatelessWidget {
   final String slug;
@@ -12,6 +14,8 @@ class StoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SlugBloc _slugBloc = SlugBloc(slug);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: appColor,
@@ -23,13 +27,16 @@ class StoryPage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.share),
             tooltip: 'share',
-            onPressed: () {},
+            onPressed: () {
+              String url = _slugBloc.getShareUrlFromSlug(isListeningWidget);
+              Share.share(url);
+            },
           )
         ],
       ),
       body: isListeningWidget
-          ? ListeningWidget(slug: slug)
-          : StoryWidget(slug: slug),
+          ? ListeningWidget(slugBloc: _slugBloc)
+          : StoryWidget(slugBloc: _slugBloc),
     );
   }
 }

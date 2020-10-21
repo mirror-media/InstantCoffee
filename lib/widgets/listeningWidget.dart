@@ -2,6 +2,7 @@ import 'package:admob_flutter/admob_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/listeningWidgetBloc.dart';
+import 'package:readr_app/blocs/slugBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
@@ -11,8 +12,8 @@ import 'package:readr_app/widgets/mMAdBanner.dart';
 import 'package:readr_app/widgets/youtubeWidget.dart';
 
 class ListeningWidget extends StatefulWidget {
-  final String slug;
-  const ListeningWidget({key, @required this.slug}) : super(key: key);
+  final SlugBloc slugBloc;
+  const ListeningWidget({key, @required this.slugBloc}) : super(key: key);
 
   @override
   _ListeningWidget createState() {
@@ -25,7 +26,7 @@ class _ListeningWidget extends State<ListeningWidget> {
 
   @override
   void initState() {
-    _listeningWidgetBloc = ListeningWidgetBloc(widget.slug);
+    _listeningWidgetBloc = ListeningWidgetBloc(widget.slugBloc.slug);
     super.initState();
   }
 
@@ -203,6 +204,7 @@ class _ListeningWidget extends State<ListeningWidget> {
                   ],
                 ),
                 onTap: () {
+                  widget.slugBloc.slug = recordList[index].slug;
                   _listeningWidgetBloc.fetchListening(recordList[index].slug);
                 },
               );
