@@ -522,7 +522,7 @@ class _StoryWidget extends State<StoryWidget> {
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
-      child: paragraphFormat.parseTheTextToHtmlWidget(moreContentHtml, null),
+      child: paragraphFormat.parseTheTextToHtmlWidget(moreContentHtml, null, fontSize: 18),
     );
   }
 
