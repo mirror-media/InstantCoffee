@@ -170,7 +170,7 @@ class ParagraphFormat {
   Widget parseTheTextToHtmlWidget(String data, Color color, {double fontSize = 20}) {
     return HtmlWidget(
       data,
-      hyperlinkColor: Colors.blue[900],
+      hyperlinkColor: Colors.blue,
       textStyle: TextStyle(
         fontSize: fontSize,
         height: 1.8,
