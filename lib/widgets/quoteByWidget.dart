@@ -34,8 +34,15 @@ class QuoteByWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(quote),
-                        if (quoteBy != null) ...[
+                        Text(
+                          quote,
+                          style: TextStyle(
+                            color: Colors.blue[900],
+                            fontSize: 20,
+                            height: 1.8,
+                          ),
+                        ),
+                        if (quoteBy != null && quoteBy != '') ...[
                           SizedBox(
                             height: 8,
                           ),
@@ -43,7 +50,13 @@ class QuoteByWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(),
-                              Text('-- $quoteBy'),
+                              Text(
+                                '-- $quoteBy',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  height: 1.8,
+                                ),
+                              ),
                             ],
                           ),
                         ],
