@@ -32,7 +32,7 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width/3;
+    var width = (MediaQuery.of(context).size.width-68)/10;
     var height = MediaQuery.of(context).size.height;
     return Column(
       children: [
@@ -41,8 +41,8 @@ class _SearchWidgetState extends State<SearchWidget> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _keywordTextField(width),
-              _selectSectionButton(width, height, widget.searchPageBloc, widget.sectionList),
+              _keywordTextField(5*width, widget.searchPageBloc),
+              _selectSectionButton(4*width, height, widget.searchPageBloc, widget.sectionList),
               _searchButton(widget.searchPageBloc),
             ],
           ),
@@ -52,7 +52,7 @@ class _SearchWidgetState extends State<SearchWidget> {
     );
   }
 
-  Widget _keywordTextField(double width) {
+  Widget _keywordTextField(double width, SearchPageBloc searchPageBloc) {
     return Container(
       width: width,
       child: TextField(
@@ -86,6 +86,9 @@ class _SearchWidgetState extends State<SearchWidget> {
         onChanged: (value) {
           keyword = value;
         },
+        onSubmitted: (value) {
+          searchPageBloc.search(keyword);
+        }
       ),
     );
   }
