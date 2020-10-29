@@ -124,7 +124,6 @@ class _ListeningWidget extends State<ListeningWidget> {
           listening.title,
           style: TextStyle(
             fontSize: 28,
-            color: appColor,
           ),
         ),
         SizedBox(height: 8),
@@ -144,6 +143,7 @@ class _ListeningWidget extends State<ListeningWidget> {
           listening.description.split('-----')[0],
           style: TextStyle(
             fontSize: 20,
+            height: 1.8,
           ),
         ),
       ],
