@@ -8,9 +8,11 @@ import 'package:readr_app/pages/storyPage.dart';
 class CarouselDisplayWidget extends StatelessWidget {
   final Record record;
   final double width;
+  final double aspectRatio;
   CarouselDisplayWidget({
     @required this.record,
     @required this.width,
+    this.aspectRatio = 16/9,
   });
 
   @override
@@ -43,16 +45,16 @@ class CarouselDisplayWidget extends StatelessWidget {
 
   Widget _displayImage(double width, Record record) {
     return CachedNetworkImage(
-      height: width / 16 * 9,
+      height: width / aspectRatio,
       width: width,
       imageUrl: record.photoUrl,
       placeholder: (context, url) => Container(
-        height: width / 16 * 9,
+        height: width / aspectRatio,
         width: width,
         color: Colors.grey,
       ),
       errorWidget: (context, url, error) => Container(
-        height: width / 16 * 9,
+        height: width / aspectRatio,
         width: width,
         color: Colors.grey,
         child: Icon(Icons.error),
@@ -81,7 +83,7 @@ class CarouselDisplayWidget extends StatelessWidget {
 
   Widget _displayTitle(Record record) {
     return Container(
-      height: width / 16 * 9 / 3,
+      height: width / aspectRatio / 3,
       color: Colors.black.withOpacity(0.6),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),

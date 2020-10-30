@@ -94,7 +94,11 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
   List<Widget> _imageSliders(double width, RecordList editorChoiceList) {
     return editorChoiceList
         .map(
-          (item) => CarouselDisplayWidget(record: item, width: width),
+          (item) => CarouselDisplayWidget(
+            record: item, 
+            width: width,
+            aspectRatio: widget.aspectRatio,
+          ),
         )
         .toList();
   }
