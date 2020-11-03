@@ -24,7 +24,7 @@ class _FbEmbeddedCodeWidgetState extends State<FbEmbeddedCodeWidget> {
   void initState() {
     // refer to https://www.facebook.com/help/105399436216001
     RegExp regExp = new RegExp(
-      r'src="https:\/\/www\.facebook\.com\/plugins\/(?:post|video)\.php\?href=(https?(%3A|\:)(%2F|\\)(%2F|\\)www\.facebook\.com(%2F|\\)(?:[a-zA-Z0-9.]+)(%2F|\\)(?:posts|videos)(%2F|\\)[0-9]+)(%2F?|\\?)\&',
+      r'src="https:\/\/www\.facebook\.com\/plugins\/(?:post|video)\.php\?(?:.*)href=(https?(%3A|\:)(%2F|\\)(%2F|\\)www\.facebook\.com(%2F|\\)(?:[a-zA-Z0-9.]+)(%2F|\\)(?:posts|videos)(%2F|\\)[0-9]+)(%2F?|\\?)\&',
       caseSensitive: false,
     );
     _regExpMatch = regExp.firstMatch(widget.embeddedCoede);
@@ -108,12 +108,14 @@ class _FbEmbeddedCodeWidgetState extends State<FbEmbeddedCodeWidget> {
                         .evaluateJavascript('document.querySelector("._li").getBoundingClientRect().height;'),
                   );
 
-                  double ratio = w/h;
-                  if(ratio != _ratio) {
-                    if(mounted) {
-                      setState(() {
-                        _ratio = ratio;
-                      });
+                  if(w != null && h != null) {
+                    double ratio = w/h;
+                    if(ratio != _ratio) {
+                      if(mounted) {
+                        setState(() {
+                          _ratio = ratio;
+                        });
+                      }
                     }
                   }
                 }
