@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:readr_app/helpers/appUpgradeHelper.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/pages/homePage.dart';
 
@@ -22,19 +23,26 @@ class MirrorApp extends StatefulWidget {
 }
 
 class _MirrorAppState extends State<MirrorApp> {
+  AppUpgradeHelper _appUpgradeHelper;
   StreamController _configController;
+
+  bool _isUpdateAvailable = false;
+
   final routes = <String, WidgetBuilder>{
     latestPageTag: (context) => HomePage(),
   };
 
   @override
   void initState() {
+    _appUpgradeHelper = AppUpgradeHelper();
     _configController = StreamController<bool>();
     _waiting();
     super.initState();
   }
 
   _waiting() async{
+    _isUpdateAvailable = await _appUpgradeHelper.isUpdateAvailable();
+    print(_isUpdateAvailable);
     // await Future.delayed(Duration(seconds: 3));
     _configController.sink.add(true);
   }
@@ -75,7 +83,7 @@ class _MirrorAppState extends State<MirrorApp> {
             ));
           }
 
-          return HomePage();
+          return HomePage(isUpdateAvailable: _isUpdateAvailable,);
         }
       ),
       routes: routes,

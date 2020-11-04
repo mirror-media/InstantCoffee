@@ -4,6 +4,7 @@ import 'package:readr_app/blocs/sectionBloc.dart';
 import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/appLinkHelper.dart';
+import 'package:readr_app/helpers/appUpgradeHelper.dart';
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/models/sectionList.dart';
 import 'package:readr_app/models/section.dart';
@@ -16,11 +17,17 @@ import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 
 class HomePage extends StatefulWidget {
+  final bool isUpdateAvailable;
+  HomePage({
+    this.isUpdateAvailable = false,
+  });
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin, WidgetsBindingObserver {
+  AppUpgradeHelper _appUpgradeHelper;
   AppLinkHelper _appLinkHelper;
   FirebaseMessangingHelper _firebaseMessangingHelper;
 
@@ -35,11 +42,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
 
   @override
   void initState() {
+    _appUpgradeHelper = AppUpgradeHelper();
     _appLinkHelper = AppLinkHelper();
     _firebaseMessangingHelper = FirebaseMessangingHelper();
     WidgetsBinding.instance.addObserver(this);
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _firebaseMessangingHelper.configFirebaseMessaging(context);
+      if(widget.isUpdateAvailable){
+        _appUpgradeHelper.renderUpgradeUI(context);
+      }
     });
 
     _scrollControllerList = List<ScrollController>();
