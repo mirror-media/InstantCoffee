@@ -103,40 +103,47 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
 
   Widget _buildTheRecordList(
       BuildContext context, ListeningTabContentBloc listeningTabContentBloc, RecordList recordList, Status status) {
-    return ListView.builder(
+    
+    return CustomScrollView(
       controller: widget.scrollController,
-      itemCount: recordList.length,
-      itemBuilder: (context, index) {
-        listeningTabContentBloc.loadingMore(index);
+      slivers: [
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              listeningTabContentBloc.loadingMore(index);
 
-        if (index == 0) {
-          return _buildTheFirstItem(context, recordList[index]);
-        }
+              if (index == 0) {
+                return _buildTheFirstItem(context, recordList[index]);
+              }
 
-        return Column(
-          children: [
-            if(isListeningTabContentAdsActivated && index == noCarouselAT1AdIndex)
-              MMAdBanner(
-                adUnitId: _sectionAd.aT1UnitId,
-                adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-              ),
-            _buildListItem(context, recordList[index]),
-            if(isListeningTabContentAdsActivated && index == noCarouselAT2AdIndex)
-              MMAdBanner(
-                adUnitId: _sectionAd.aT2UnitId,
-                adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-              ),
-            if(isListeningTabContentAdsActivated && index == noCarouselAT3AdIndex)
-              MMAdBanner(
-                adUnitId: _sectionAd.aT3UnitId,
-                adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-              ),
-            if (index == recordList.length - 1 &&
-                status == Status.LOADINGMORE)
-              CupertinoActivityIndicator(),
-          ],
-        );
-      }
+              return Column(
+                children: [
+                  if(isListeningTabContentAdsActivated && index == noCarouselAT1AdIndex)
+                    MMAdBanner(
+                      adUnitId: _sectionAd.aT1UnitId,
+                      adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                    ),
+                  _buildListItem(context, recordList[index]),
+                  if(isListeningTabContentAdsActivated && index == noCarouselAT2AdIndex)
+                    MMAdBanner(
+                      adUnitId: _sectionAd.aT2UnitId,
+                      adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                    ),
+                  if(isListeningTabContentAdsActivated && index == noCarouselAT3AdIndex)
+                    MMAdBanner(
+                      adUnitId: _sectionAd.aT3UnitId,
+                      adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                    ),
+                  if (index == recordList.length - 1 &&
+                      status == Status.LOADINGMORE)
+                    CupertinoActivityIndicator(),
+                ],
+              );
+            },
+            childCount: recordList.length,
+          ),
+        ),
+      ],
     );
   }
 

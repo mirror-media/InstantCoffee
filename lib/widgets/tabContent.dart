@@ -113,84 +113,92 @@ class _TabContentState extends State<TabContent> {
 
   Widget _buildTheRecordList(BuildContext context, RecordList recordList,
       RecordList editorChoiceList, Status status, TabContentBloc tabContentBloc) {
-    return ListView.builder(
+    
+    return CustomScrollView(
       controller: widget.scrollController,
-      itemCount: recordList.length,
-      itemBuilder: (context, index) {
-        tabContentBloc.loadingMore(index);
+      slivers: [
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              tabContentBloc.loadingMore(index);
+              
+              if (index == 0) {
+                if(widget.needCarousel) {
 
-        if (index == 0) {
-          if(widget.needCarousel) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                EditorChoiceCarousel(
-                  editorChoiceList: editorChoiceList,
-                  aspectRatio: 16 / 10,
-                ),
-                if(isTabContentAdsActivated)
-                ...[
-                  SizedBox(height: 16.0,),
-                  // carouselAT1AdIndex
-                  Center(
-                    child: MMAdBanner(
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      EditorChoiceCarousel(
+                        editorChoiceList: editorChoiceList,
+                        aspectRatio: 16 / 10,
+                      ),
+                      if(isTabContentAdsActivated)
+                      ...[
+                        SizedBox(height: 16.0,),
+                        // carouselAT1AdIndex
+                        Center(
+                          child: MMAdBanner(
+                            adUnitId: _sectionAd.aT1UnitId,
+                            adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                          ),
+                        ),
+                      ],
+                      SizedBox(height: 16.0,),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+                        child: _buildTagText(),
+                      ),
+                    ]
+                  );
+                }
+                // if(!widget.needCarousel)
+                return _buildTheFirstItem(context, recordList[index]);
+              }
+
+              return Column(
+                children: [
+                  if(isTabContentAdsActivated && index == noCarouselAT1AdIndex && !widget.needCarousel)
+                    MMAdBanner(
                       adUnitId: _sectionAd.aT1UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                     ),
-                  ),
+                  _buildListItem(context, recordList[index]),
+                  if(isTabContentAdsActivated && index == carouselAT2AdIndex && widget.needCarousel) 
+                    MMAdBanner(
+                      adUnitId: _sectionAd.aT2UnitId,
+                      adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                    ),
+                  if(isTabContentAdsActivated && index == noCarouselAT2AdIndex && !widget.needCarousel) 
+                    MMAdBanner(
+                      adUnitId: _sectionAd.aT2UnitId,
+                      adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                    ),
+                    
+                  if(isTabContentAdsActivated && index == carouselAT3AdIndex && widget.needCarousel) 
+                    MMAdBanner(
+                      adUnitId: _sectionAd.aT3UnitId,
+                      adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                    ),
+                  if(isTabContentAdsActivated && index == noCarouselAT3AdIndex && !widget.needCarousel) 
+                    MMAdBanner(
+                      adUnitId: _sectionAd.aT3UnitId,
+                      adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                    ),
+                  // if((((index + 1) % 5 == 0 && widget.needCarousel) || (index % 5 == 0 && !widget.needCarousel)) && index < 11) 
+                  //   AdmobBanner(
+                  //     adUnitId: BannerAd.testAdUnitId,
+                  //     adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                  //   ),
+                  if (index == recordList.length - 1 &&
+                      status == Status.LOADINGMORE)
+                    _loadMoreWidget(),
                 ],
-                SizedBox(height: 16.0,),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-                  child: _buildTagText(),
-                ),
-              ]
-            );
-          }
-          // if(!widget.needCarousel)
-          return _buildTheFirstItem(context, recordList[index]);
-        }
-
-        return Column(
-          children: [
-            if(isTabContentAdsActivated && index == noCarouselAT1AdIndex && !widget.needCarousel)
-              MMAdBanner(
-                adUnitId: _sectionAd.aT1UnitId,
-                adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-              ),
-            _buildListItem(context, recordList[index]),
-            if(isTabContentAdsActivated && index == carouselAT2AdIndex && widget.needCarousel) 
-              MMAdBanner(
-                adUnitId: _sectionAd.aT2UnitId,
-                adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-              ),
-            if(isTabContentAdsActivated && index == noCarouselAT2AdIndex && !widget.needCarousel) 
-              MMAdBanner(
-                adUnitId: _sectionAd.aT2UnitId,
-                adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-              ),
-              
-            if(isTabContentAdsActivated && index == carouselAT3AdIndex && widget.needCarousel) 
-              MMAdBanner(
-                adUnitId: _sectionAd.aT3UnitId,
-                adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-              ),
-            if(isTabContentAdsActivated && index == noCarouselAT3AdIndex && !widget.needCarousel) 
-              MMAdBanner(
-                adUnitId: _sectionAd.aT3UnitId,
-                adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-              ),
-            // if((((index + 1) % 5 == 0 && widget.needCarousel) || (index % 5 == 0 && !widget.needCarousel)) && index < 11) 
-            //   AdmobBanner(
-            //     adUnitId: BannerAd.testAdUnitId,
-            //     adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-            //   ),
-            if (index == recordList.length - 1 &&
-                status == Status.LOADINGMORE)
-              _loadMoreWidget(),
-          ],
-        );
-      }
+              );
+            },
+            childCount: recordList.length
+          ),
+        ),
+      ],
     );
   }
 
