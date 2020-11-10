@@ -22,18 +22,30 @@ class AppUpgradeHelper {
   }
 
   Future<bool> isAndroidUpdateAvailable() async{
-    AppUpdateInfo androidVersion = await InAppUpdate.checkForUpdate();
-    return androidVersion.updateAvailable;
+    try {
+      AppUpdateInfo androidVersion = await InAppUpdate.checkForUpdate();
+      return androidVersion.updateAvailable;
+    }catch(e) {
+      print(e);
+    }
+    
+    return false;
   }
 
   Future<bool> isIOSUpdateAvailable() async{
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    final iTunesVersion = await _getITunesVersion(packageInfo.packageName);
+    try {
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      final iTunesVersion = await _getITunesVersion(packageInfo.packageName);
 
-    final installedVersion = Version.parse(packageInfo.version);
-    final appStoreVersion = Version.parse(iTunesVersion);
+      final installedVersion = Version.parse(packageInfo.version);
+      final appStoreVersion = Version.parse(iTunesVersion);
 
-    return installedVersion < appStoreVersion;
+      return installedVersion < appStoreVersion;
+    }catch(e) {
+      print(e);
+    }
+    
+    return false;
   }
 
   /// Return field version on App store(iOS only).

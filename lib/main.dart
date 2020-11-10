@@ -42,7 +42,7 @@ class _MirrorAppState extends State<MirrorApp> {
 
   _waiting() async{
     _isUpdateAvailable = await _appUpgradeHelper.isUpdateAvailable();
-    print(_isUpdateAvailable);
+    print('in-app upgrade: $_isUpdateAvailable');
     // await Future.delayed(Duration(seconds: 3));
     _configController.sink.add(true);
   }
