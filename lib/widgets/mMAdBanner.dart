@@ -6,13 +6,11 @@ import 'package:flutter/material.dart';
 class MMAdBanner extends StatefulWidget {
   final String adUnitId;
   final AdmobBannerSize adSize;
-  final double widthPadding;
-  final double leftAndRightPadding;
+  final bool isKeepAlive;
   MMAdBanner({
     @required this.adUnitId,
     @required this.adSize,
-    this.widthPadding = 0,
-    this.leftAndRightPadding = 0,
+    this.isKeepAlive = false,
   });
 
   @override
@@ -20,21 +18,9 @@ class MMAdBanner extends StatefulWidget {
 }
 
 class _MMAdBannerState extends State<MMAdBanner> with AutomaticKeepAliveClientMixin {
-  double _widthPadding = 0;
-  double _padding = 0;
 
   @override
-  bool get wantKeepAlive => true;
-
-  @override
-  void initState() {
-    // display specific ad size on iOS
-    if(Platform.isIOS) {
-      _widthPadding = widget.widthPadding;
-      _padding = widget.leftAndRightPadding;
-    }
-    super.initState();
-  }
+  bool get wantKeepAlive => widget.isKeepAlive;
 
   Future<bool> _initAd() async{
     if(Platform.isAndroid) {
@@ -52,30 +38,26 @@ class _MMAdBannerState extends State<MMAdBanner> with AutomaticKeepAliveClientMi
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    var width = MediaQuery.of(context).size.width - 2*_widthPadding;
 
     return FutureBuilder<bool>(
       future: _initAd(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (snapshot.hasData && snapshot.data) {
-          return Padding(
-            padding: EdgeInsets.only(left: _padding, right: _padding),
-            child: Container(
-              width: width,
-              height: width*widget.adSize.height/widget.adSize.width,
-              color: Colors.transparent,
-              child: AnimatedOpacityBanner(
-                adUnitId: widget.adUnitId,
-                adSize: widget.adSize, 
-              ),
+          return Container(
+            width: widget.adSize.width.toDouble(),
+            height: widget.adSize.height.toDouble(),
+            color: Colors.transparent,
+            child: AnimatedOpacityBanner(
+              adUnitId: widget.adUnitId,
+              adSize: widget.adSize, 
             ),
           );
         }
         
         if(Platform.isAndroid) {
           return Container(
-            width: width,
-            height: width*widget.adSize.height/widget.adSize.width,
+            width: widget.adSize.width.toDouble(),
+            height: widget.adSize.height.toDouble(),
             color: Colors.transparent,
           );
         }
