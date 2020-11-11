@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/tabContentBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/models/sectionAd.dart';
 import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
@@ -30,19 +29,17 @@ class TabContent extends StatefulWidget {
 }
 
 class _TabContentState extends State<TabContent> {
-  SectionAd _sectionAd;
   TabContentBloc _tabContentBloc;
 
   @override
   void initState() {
-    _setAds();
     _tabContentBloc = TabContentBloc(
-        widget.section.key, widget.section.type, widget.needCarousel);
+      widget.section.sectionAd,
+      widget.section.key, 
+      widget.section.type, 
+      widget.needCarousel
+    );
     super.initState();
-  }
-
-  _setAds() {
-    _sectionAd = widget.section.sectionAd;
   }
 
   @override
@@ -63,9 +60,9 @@ class _TabContentState extends State<TabContent> {
           Expanded(
             child: _buildTabContentBody(),
           ),
-          if(isTabContentAdsActivated && _sectionAd.stUnitId != '')
+          if(isTabContentAdsActivated && _tabContentBloc.sectionAd.stUnitId != '')
             MMAdBanner(
-              adUnitId: _sectionAd.stUnitId,
+              adUnitId: _tabContentBloc.sectionAd.stUnitId,
               adSize: AdmobBannerSize.BANNER,
             ),
         ],
@@ -138,7 +135,7 @@ class _TabContentState extends State<TabContent> {
                         // carouselAT1AdIndex
                         Center(
                           child: MMAdBanner(
-                            adUnitId: _sectionAd.aT1UnitId,
+                            adUnitId: _tabContentBloc.sectionAd.aT1UnitId,
                             adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                           ),
                         ),
@@ -159,29 +156,29 @@ class _TabContentState extends State<TabContent> {
                 children: [
                   if(isTabContentAdsActivated && index == noCarouselAT1AdIndex && !widget.needCarousel)
                     MMAdBanner(
-                      adUnitId: _sectionAd.aT1UnitId,
+                      adUnitId: _tabContentBloc.sectionAd.aT1UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                     ),
                   _buildListItem(context, recordList[index]),
                   if(isTabContentAdsActivated && index == carouselAT2AdIndex && widget.needCarousel) 
                     MMAdBanner(
-                      adUnitId: _sectionAd.aT2UnitId,
+                      adUnitId: _tabContentBloc.sectionAd.aT2UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                     ),
                   if(isTabContentAdsActivated && index == noCarouselAT2AdIndex && !widget.needCarousel) 
                     MMAdBanner(
-                      adUnitId: _sectionAd.aT2UnitId,
+                      adUnitId: _tabContentBloc.sectionAd.aT2UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                     ),
                     
                   if(isTabContentAdsActivated && index == carouselAT3AdIndex && widget.needCarousel) 
                     MMAdBanner(
-                      adUnitId: _sectionAd.aT3UnitId,
+                      adUnitId: _tabContentBloc.sectionAd.aT3UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                     ),
                   if(isTabContentAdsActivated && index == noCarouselAT3AdIndex && !widget.needCarousel) 
                     MMAdBanner(
-                      adUnitId: _sectionAd.aT3UnitId,
+                      adUnitId: _tabContentBloc.sectionAd.aT3UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                     ),
                   // if((((index + 1) % 5 == 0 && widget.needCarousel) || (index % 5 == 0 && !widget.needCarousel)) && index < 11) 

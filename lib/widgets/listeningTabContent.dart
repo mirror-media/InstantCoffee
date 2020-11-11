@@ -26,18 +26,12 @@ class ListeningTabContent extends StatefulWidget {
 }
 
 class _ListeningTabContentState extends State<ListeningTabContent> {
-  SectionAd _sectionAd;
   ListeningTabContentBloc _listeningTabContentBloc;
 
   @override
   void initState() {
-    _setAds();
-    _listeningTabContentBloc = ListeningTabContentBloc();
+    _listeningTabContentBloc = ListeningTabContentBloc(widget.section.sectionAd);
     super.initState();
-  }
-
-  _setAds() {
-    _sectionAd = widget.section.sectionAd;
   }
 
   @override
@@ -57,9 +51,9 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
           Expanded(
             child: _buildListeningTabContentBody(),
           ),
-          if(isListeningTabContentAdsActivated && _sectionAd.stUnitId != '')
+          if(isListeningTabContentAdsActivated && _listeningTabContentBloc.sectionAd.stUnitId != '')
             MMAdBanner(
-              adUnitId: _sectionAd.stUnitId,
+              adUnitId: _listeningTabContentBloc.sectionAd.stUnitId,
               adSize: AdmobBannerSize.BANNER,
             ),
         ],
@@ -120,18 +114,18 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
                 children: [
                   if(isListeningTabContentAdsActivated && index == noCarouselAT1AdIndex)
                     MMAdBanner(
-                      adUnitId: _sectionAd.aT1UnitId,
+                      adUnitId: _listeningTabContentBloc.sectionAd.aT1UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                     ),
                   _buildListItem(context, recordList[index]),
                   if(isListeningTabContentAdsActivated && index == noCarouselAT2AdIndex)
                     MMAdBanner(
-                      adUnitId: _sectionAd.aT2UnitId,
+                      adUnitId: _listeningTabContentBloc.sectionAd.aT2UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                     ),
                   if(isListeningTabContentAdsActivated && index == noCarouselAT3AdIndex)
                     MMAdBanner(
-                      adUnitId: _sectionAd.aT3UnitId,
+                      adUnitId: _listeningTabContentBloc.sectionAd.aT3UnitId,
                       adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
                     ),
                   if (index == recordList.length - 1 &&

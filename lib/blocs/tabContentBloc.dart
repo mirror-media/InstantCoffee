@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
+import 'package:readr_app/models/sectionAd.dart';
 import 'package:readr_app/services/editorChoiceService.dart';
 import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/services/recordService.dart';
@@ -13,8 +14,10 @@ class TabContentBloc {
   RecordService _recordService;
   EditorChoiceService _editorChoiceService;
 
+  SectionAd _sectionAd;
   RecordList _records;
   RecordList _editorChoices;
+  SectionAd get sectionAd => _sectionAd;
   RecordList get records => _records;
   RecordList get editorChoices => _editorChoices;
 
@@ -24,7 +27,8 @@ class TabContentBloc {
   Stream<ApiResponse<TabContentState>> get recordListStream =>
       _recordListController.stream;
 
-  TabContentBloc(String id, String type, bool needCarousel) {
+  TabContentBloc(SectionAd sectionAd, String id, String type, bool needCarousel) {
+    _sectionAd = sectionAd;
     _records = RecordList();
     _recordService = RecordService();
 
