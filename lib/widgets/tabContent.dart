@@ -258,12 +258,7 @@ class _TabContentState extends State<TabContent> {
           ),
         ],
       ),
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => StoryPage(slug: record.slug)));
-      },
+      onTap: navigateToStoryPage(context, record.slug),
     );
   }
 
@@ -315,12 +310,15 @@ class _TabContentState extends State<TabContent> {
           ],
         ),
       ),
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => StoryPage(slug: record.slug)));
-      },
+      onTap: navigateToStoryPage(context, record.slug),
     );
   }
+
+  Function navigateToStoryPage(BuildContext context, String slug) =>
+      () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => StoryPage(slug: slug))
+        );
+      };
 }

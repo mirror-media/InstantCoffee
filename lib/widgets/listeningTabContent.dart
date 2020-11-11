@@ -183,15 +183,7 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
           ),
         ],
       ),
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => StoryPage(
-                      slug: record.slug,
-                      isListeningWidget: true,
-                    )));
-      },
+      onTap: navigateToStoryPage(context, record.slug),
     );
   }
 
@@ -243,15 +235,16 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
           ],
         ),
       ),
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => StoryPage(
-                      slug: record.slug,
-                      isListeningWidget: true,
-                    )));
-      },
+      onTap: navigateToStoryPage(context, record.slug),
     );
   }
+
+  Function navigateToStoryPage(BuildContext context, String slug) =>
+      () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => 
+              StoryPage(slug: slug, isListeningWidget: true,))
+        );
+      };
 }
