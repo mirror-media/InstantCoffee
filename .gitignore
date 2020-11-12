@@ -28,3 +28,6 @@ android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 .flutter-plugins
 .flutter-plugins-dependencies
+# key
+android/key.properties
+android/MirrorMedia.jks
