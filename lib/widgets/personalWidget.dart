@@ -3,19 +3,22 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/blocs/personalPageBloc.dart';
-import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/categoryList.dart';
+import 'package:readr_app/models/onBoarding.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/widgets/unsubscriptionCategoryList.dart';
 
 class PersonalWidget extends StatefulWidget {
+  final OnBoardingBloc onBoardingBloc;
   final ScrollController scrollController;
   PersonalWidget({
+    @required this.onBoardingBloc,
     @required this.scrollController,
   });
 
@@ -24,11 +27,14 @@ class PersonalWidget extends StatefulWidget {
 }
 
 class _PersonalWidgetState extends State<PersonalWidget> {
+  GlobalKey _categoryKey;
   PersonalPageBloc _personalPageBloc;
 
   @override
   void initState() {
+    _categoryKey = GlobalKey();
     _personalPageBloc = PersonalPageBloc();
+
     super.initState();
   }
 
@@ -52,7 +58,19 @@ class _PersonalWidgetState extends State<PersonalWidget> {
             case Status.LOADINGMORE:
             case Status.COMPLETED:
               CategoryList categoryList = snapshot.data.data;
-
+              WidgetsBinding.instance.addPostFrameCallback((_) async{
+                //await Future.delayed(Duration(milliseconds: 500));
+                if(widget.onBoardingBloc.isOnBoarding && 
+                widget.onBoardingBloc.status == OnBoardingStatus.SecondPage) {
+                  OnBoarding onBoarding = await widget.onBoardingBloc.getSizeAndPosition(_categoryKey);
+                  onBoarding.left = 0;
+                  onBoarding.height += 16;
+                  
+                  widget.onBoardingBloc.checkOnBoarding(onBoarding);
+                  widget.onBoardingBloc.status = OnBoardingStatus.ThirdPage;
+                  widget.onBoardingBloc.isNeedInkWell = true;
+                }
+              });
               return _buildPersonalWidget(widget.scrollController, context, categoryList, _personalPageBloc);
               break;
 
@@ -159,6 +177,7 @@ class _PersonalWidgetState extends State<PersonalWidget> {
   Widget _buildCategoryList(
       BuildContext context, CategoryList categoryList, PersonalPageBloc personalPageBloc) {
     return Column(
+      key: _categoryKey,
       children: [
         SizedBox(height: 8),
         Row(
