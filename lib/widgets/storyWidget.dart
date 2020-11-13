@@ -91,10 +91,9 @@ class _StoryWidget extends State<StoryWidget> {
                         ),
                       SizedBox(height: 16),
                       _buildUpdateDateWidget(story),
+                      _buildRelatedWidget(context, story.relatedStory),
                       SizedBox(height: 16),
                       _buildMoreContentWidget(),
-                      SizedBox(height: 16),
-                      _buildTagWidget(context, story.tags),
                       if(isStoryWidgetAdsActivated)
                       ...[
                         SizedBox(height: 16),
@@ -105,7 +104,8 @@ class _StoryWidget extends State<StoryWidget> {
                         ),
                         SizedBox(height: 16),
                       ],
-                      _buildRelatedWidget(context, story.relatedStory),
+                      SizedBox(height: 16),
+                      _buildTagWidget(context, story.tags),
                       if(isStoryWidgetAdsActivated)
                       ...[
                         MMAdBanner(
