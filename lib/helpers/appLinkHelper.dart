@@ -14,6 +14,8 @@ class AppLinkHelper {
     }
   }
 
+  Stream<String> get getStringLinksStream => getLinksStream();
+
   configAppLink(BuildContext context) async{
     String link = await getLink();
     if(link != null) {

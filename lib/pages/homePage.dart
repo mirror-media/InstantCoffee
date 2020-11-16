@@ -20,7 +20,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin, WidgetsBindingObserver {
   AppLinkHelper _appLinkHelper;
   FirebaseMessangingHelper _firebaseMessangingHelper;
 
@@ -37,14 +37,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     _appLinkHelper = AppLinkHelper();
     _firebaseMessangingHelper = FirebaseMessangingHelper();
+    WidgetsBinding.instance.addObserver(this);
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      _appLinkHelper.configAppLink(context);
       _firebaseMessangingHelper.configFirebaseMessaging(context);
     });
 
     _scrollControllerList = List<ScrollController>();
     _sectionBloc = SectionBloc();
     super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if(state == AppLifecycleState.resumed) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        _appLinkHelper.configAppLink(context);
+      });
+    }
   }
 
   _initializeTabController(SectionList sectionItems) {
