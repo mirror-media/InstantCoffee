@@ -46,16 +46,16 @@ class ListeningWidgetBloc {
           apiBase +
               'youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw');
 
-      // String storyAdJsonFileLocation = Platform.isIOS
-      // ? 'assets/data/iOSStoryAd.json'
-      // : 'assets/data/androidStoryAd.json';
       String storyAdJsonFileLocation = Platform.isIOS
-      ? 'assets/data/iOSTestStoryAd.json'
-      : 'assets/data/androidTestStoryAd.json';
+      ? 'assets/data/iOSStoryAd.json'
+      : 'assets/data/androidStoryAd.json';
+      // String storyAdJsonFileLocation = Platform.isIOS
+      // ? 'assets/data/iOSTestStoryAd.json'
+      // : 'assets/data/androidTestStoryAd.json';
       String storyAdString = await rootBundle.loadString(storyAdJsonFileLocation);
       final storyAdMaps = json.decode(storyAdString);
 
-      listening.storyAd = StoryAd.fromJson(storyAdMaps['other']);
+      listening.storyAd = StoryAd.fromJson(storyAdMaps['videohub']);
       
       sinkToAdd(ApiResponse.completed(
           TabContentState(listening: listening, recordList: recordList)));

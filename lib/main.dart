@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/pages/homePage.dart';
 
@@ -43,6 +44,12 @@ class _MirrorAppState extends State<MirrorApp> {
 
   @override
   Widget build(BuildContext context) {
+    // force portrait
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: appTitle,
