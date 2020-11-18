@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:admob_flutter/admob_flutter.dart';
+import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
+import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -47,6 +49,8 @@ class MirrorApp extends StatefulWidget {
 }
 
 class _MirrorAppState extends State<MirrorApp> {
+  AppsflyerSdk _appsflyerSdk;
+  
   GlobalKey _settingKey;
   AppUpgradeHelper _appUpgradeHelper;
   StreamController _configController;
@@ -56,12 +60,26 @@ class _MirrorAppState extends State<MirrorApp> {
 
   @override
   void initState() {
+    final AppsFlyerOptions options = AppsFlyerOptions(
+        afDevKey: appsFlyerKey, appId: appleAppId, showDebug: true);
+    _appsflyerSdk = AppsflyerSdk(options);
+
     _settingKey = GlobalKey();
     _appUpgradeHelper = AppUpgradeHelper();
     _configController = StreamController<bool>();
     _onBoardingBloc = OnBoardingBloc();
     _waiting();
     super.initState();
+  }
+
+  Future<dynamic> _initialAppsFlyer() async{
+    var k;
+    k = await _appsflyerSdk.initSdk(
+      registerConversionDataCallback: true,
+      registerOnAppOpenAttributionCallback: true
+    );
+
+    return k;
   }
   
   _waiting() async{
@@ -70,6 +88,8 @@ class _MirrorAppState extends State<MirrorApp> {
 
     _onBoardingBloc.setOnBoardingHintList();
     await _onBoardingBloc.setOnBoardingFromStorage();
+
+    await _initialAppsFlyer();
     _configController.sink.add(true);
   }
 

@@ -24,10 +24,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>mg.mirrormedia.readrApp</string>
+			<string>com.mirrormedia.news</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>dev.mirrormedia.mg</string>
+				<string>mirrormedia</string>
 			</array>
 		</dict>
 	</array>

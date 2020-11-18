@@ -16,6 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # iOS and android is the same version
+# version: 3.0.0+307
 version: 1.0.0+1
 
 environment:
@@ -63,6 +64,9 @@ dependencies:
   mime: ^0.9.7
   # app link
   uni_links: ^0.4.0
+  
+  # appsflyer
+  appsflyer_sdk: ^6.0.5
   
   # force app to upgrade
   upgrader: ^2.6.1

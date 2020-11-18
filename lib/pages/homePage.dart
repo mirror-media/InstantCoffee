@@ -56,6 +56,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
     WidgetsBinding.instance.addObserver(this);
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _appLinkHelper.configAppLink(context);
+      _appLinkHelper.listenAppLink(context);
       _firebaseMessangingHelper.configFirebaseMessaging(context);
       if(widget.isUpdateAvailable){
         _appUpgradeHelper.renderUpgradeUI(context);
@@ -71,16 +72,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
     _tabWidgets = List<Widget>();
     _scrollControllerList = List<ScrollController>();
     super.initState();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if(state == AppLifecycleState.resumed) {
-      print(AppLifecycleState.resumed);
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        _appLinkHelper.configAppLink(context);
-      });
-    }
   }
 
   _initializeTabController(SectionList sectionItems) {
