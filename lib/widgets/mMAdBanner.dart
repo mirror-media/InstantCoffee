@@ -25,11 +25,12 @@ class _MMAdBannerState extends State<MMAdBanner> with AutomaticKeepAliveClientMi
   Future<bool> _initAd() async{
     if(Platform.isAndroid) {
       // Prevent the lag of displaying the ad on android.
-      await Future.delayed(Duration(milliseconds: 300));
+      await Future.delayed(Duration(milliseconds: 250));
       return true;
     } else if(Platform.isIOS) {
-      // Run this before displaying any ad on iOS.
-      return await Admob.requestTrackingAuthorization();
+      // Run this before displaying any ad on iOS,
+      // return await Admob.requestTrackingAuthorization();
+      return true;
     }
 
     return true;
@@ -94,12 +95,12 @@ class _AnimatedOpacityBannerState extends State<AnimatedOpacityBanner> {
   Widget build(BuildContext context) {
     return AnimatedOpacity(
       opacity: _visible ? 1.0 : 0.0,
-      duration: Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 250),
       child: AdmobBanner(
         adUnitId: widget.adUnitId,
         adSize: widget.adSize,
         listener: (AdmobAdEvent event, Map<String, dynamic> args) async{
-          print(event.toString());
+          //print(event.toString());
           if(event == AdmobAdEvent.loaded && !_visible && Platform.isAndroid) {
             //await Future.delayed(Duration(milliseconds: 500));
             if(mounted) {
