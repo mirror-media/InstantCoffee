@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/helpers/fcm.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/fcmData.dart';
 import 'package:readr_app/models/notificationSetting.dart';
 import 'package:readr_app/models/notificationSettingList.dart';
-import 'package:readr_app/pages/storyPage.dart';
 
 class FirebaseMessangingHelper {
   bool _isInTheStoryPage;
@@ -54,20 +54,12 @@ class FirebaseMessangingHelper {
     return fcmData;
   }
 
-  void _navigateToStoryPage(BuildContext context, Map<String, dynamic> message) async{
+  void _navigateToStoryPage(BuildContext context, Map<String, dynamic> message) {
     FcmData fcmData = _getFcmData(message);
     
     if(fcmData != null && fcmData.slug != null) {
       _isInTheStoryPage = true;
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => StoryPage(
-            slug: fcmData.slug,
-            isListeningWidget: fcmData.isListeningPage,
-          )
-        )
-      );
+      RouteGenerator.navigateToStory(context, fcmData.slug, isListeningWidget: fcmData.isListeningPage);
     }
   }
 
@@ -119,7 +111,7 @@ class FirebaseMessangingHelper {
 
     return notificationSettingList;
   }
-  
+
   subscribeTheNotification(NotificationSetting notificationSetting) {
     if(notificationSetting.id == 'horoscopes' || notificationSetting.id == 'subscriptionChannels') {
       notificationSetting.notificationSettingList.forEach(

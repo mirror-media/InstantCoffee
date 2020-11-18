@@ -7,11 +7,11 @@ import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/blocs/personalPageBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/categoryList.dart';
 import 'package:readr_app/models/onBoarding.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
-import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/widgets/unsubscriptionCategoryList.dart';
 
 class PersonalWidget extends StatefulWidget {
@@ -368,12 +368,7 @@ class _PersonalWidgetState extends State<PersonalWidget> {
           ],
         ),
       ),
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => StoryPage(slug: record.slug)));
-      },
+      onTap: () => RouteGenerator.navigateToStory(context, record.slug),
     );
   }
 }

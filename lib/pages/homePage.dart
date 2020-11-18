@@ -7,15 +7,14 @@ import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/appLinkHelper.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/onBoarding.dart';
 import 'package:readr_app/models/sectionList.dart';
 import 'package:readr_app/models/section.dart';
-import 'package:readr_app/pages/searchPage.dart';
 import 'package:readr_app/widgets/listeningTabContent.dart';
 import 'package:readr_app/widgets/newsMarquee.dart';
 import 'package:readr_app/widgets/personalWidget.dart';
 import 'package:readr_app/widgets/tabContent.dart';
-import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 
 class HomePage extends StatefulWidget {
@@ -208,14 +207,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
       leading: IconButton(
         key: widget.settingKey,
         icon: Icon(Icons.settings),
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NotificationSettingsPage(
-              onBoardingBloc: widget.onBoardingBloc,
-            ),
-            fullscreenDialog: true,
-          ),
+        onPressed: () => RouteGenerator.navigateToNotificationSettings(
+          context, 
+          widget.onBoardingBloc
         ),
       ),
       backgroundColor: appColor,
@@ -225,13 +219,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
         IconButton(
           icon: Icon(Icons.search),
           tooltip: 'Search',
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SearchPage(),
-              fullscreenDialog: true,
-            ),
-          ),
+          onPressed: () => RouteGenerator.navigateToSearch(context),
         ),
       ],
     );

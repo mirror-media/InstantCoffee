@@ -5,11 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/listeningTabContentBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/models/section.dart';
-import 'package:readr_app/models/sectionAd.dart';
-import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
 
@@ -177,7 +176,7 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
           ),
         ],
       ),
-      onTap: navigateToStoryPage(context, record.slug),
+      onTap: () => RouteGenerator.navigateToStory(context, record.slug),
     );
   }
 
@@ -229,16 +228,7 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
           ],
         ),
       ),
-      onTap: navigateToStoryPage(context, record.slug),
+      onTap: () => RouteGenerator.navigateToStory(context, record.slug),
     );
   }
-
-  Function navigateToStoryPage(BuildContext context, String slug) =>
-      () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => 
-              StoryPage(slug: slug, isListeningWidget: true,))
-        );
-      };
 }
