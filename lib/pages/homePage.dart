@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
     _appUpgradeHelper = AppUpgradeHelper();
     _appLinkHelper = AppLinkHelper();
     _firebaseMessangingHelper = FirebaseMessangingHelper();
-    
+
     WidgetsBinding.instance.addObserver(this);
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _appLinkHelper.configAppLink(context);
@@ -130,7 +130,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
         OnBoarding onBoarding = await widget.onBoardingBloc.getSizeAndPosition(_tabKeys[2]);
         onBoarding.left -= 16;
         onBoarding.width += 32;
+        onBoarding.isNeedInkWell = true;
+        onBoarding.function = () {
+          _tabController.animateTo(2);
+        };
 
+        widget.onBoardingBloc.closeFunction = () {
+          _tabController.animateTo(0);
+        };
         widget.onBoardingBloc.checkOnBoarding(onBoarding);
         widget.onBoardingBloc.status = OnBoardingStatus.SecondPage;
       }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/onBoarding.dart';
 import 'package:readr_app/pages/homePage.dart';
 
@@ -99,7 +100,7 @@ class _MirrorAppState extends State<MirrorApp> {
                     isUpdateAvailable: _isUpdateAvailable,
                   ),
                   if(onBoarding.isOnBoarding && 
-                  !_onBoardingBloc.isNeedInkWell)
+                  !onBoarding.isNeedInkWell)
                     _onBoardingBloc.getClipPathOverlay(
                       onBoarding.left,
                       onBoarding.top,
@@ -107,17 +108,25 @@ class _MirrorAppState extends State<MirrorApp> {
                       onBoarding.height,
                     ),
                   if(onBoarding.isOnBoarding && 
-                  _onBoardingBloc.isNeedInkWell)
+                  onBoarding.isNeedInkWell)
                     GestureDetector(
                       onTap: () async{
                         if(_onBoardingBloc.isOnBoarding && 
                         _onBoardingBloc.status == OnBoardingStatus.ThirdPage) {
                           OnBoarding onBoarding = await _onBoardingBloc.getSizeAndPosition(_settingKey);
+                          onBoarding.isNeedInkWell = true;
 
                           _onBoardingBloc.checkOnBoarding(onBoarding);
                           _onBoardingBloc.status = OnBoardingStatus.FourthPage;
+                          onBoarding.function = () {
+                            RouteGenerator.navigateToNotificationSettings(
+                              context, 
+                              _onBoardingBloc
+                            );
+                          };
+                        } else {
+                          onBoarding.function?.call();
                         }
-                        _onBoardingBloc.isNeedInkWell = false;
                       },
                       child: _onBoardingBloc.getCustomPaintOverlay(
                         context,

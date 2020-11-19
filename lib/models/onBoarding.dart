@@ -4,6 +4,8 @@ class OnBoarding {
   double top;
   double width;
   double height;
+  bool isNeedInkWell;
+  Function function;
 
   OnBoarding({
     this.isOnBoarding,
@@ -11,5 +13,7 @@ class OnBoarding {
     this.top,
     this.width,
     this.height,
+    this.isNeedInkWell = false,
+    this.function,
   });
 }

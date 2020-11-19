@@ -12,9 +12,9 @@ enum OnBoardingStatus { FirstPage, SecondPage, ThirdPage, FourthPage, NULL }
 class OnBoardingBloc {
   LocalStorage _storage;
 
+  Function closeFunction;
   List<OnBoardingHint> onBoardingHintList;
   OnBoardingStatus status;
-  bool isNeedInkWell;
   bool _isOnBoarding;
   bool get isOnBoarding => _isOnBoarding;
 
@@ -27,7 +27,6 @@ class OnBoardingBloc {
   OnBoardingBloc() {
     onBoardingHintList = List<OnBoardingHint>();
     status = OnBoardingStatus.FirstPage;
-    isNeedInkWell = false;
     _storage = LocalStorage('setting');
     _onBoardingController = StreamController<OnBoarding>.broadcast();
   }
@@ -99,6 +98,7 @@ class OnBoardingBloc {
       height: 0,
     );
     sinkToAdd(onBoarding);
+    closeFunction?.call();
   }
 
   checkOnBoarding(OnBoarding data) {

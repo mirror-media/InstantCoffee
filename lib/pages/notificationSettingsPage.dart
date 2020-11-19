@@ -54,7 +54,16 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       widget.onBoardingBloc.status == OnBoardingStatus.FourthPage) {
         // await navigation completed, or onBoarding will get the wrong position
         await Future.delayed(Duration(milliseconds: 300));
-        OnBoarding onBoarding = await widget.onBoardingBloc.getSizeAndPosition(_notificationCupertinoSwitchKeys[0]);
+        OnBoarding onBoarding = await widget.onBoardingBloc.getSizeAndPosition(_notificationCupertinoSwitchKeys[1]);
+        onBoarding.isNeedInkWell = true;
+        onBoarding.function = () {
+          _notificationSettingList[1].value = true;
+          _storage.setItem(
+              "notification", _notificationSettingList.toJson());
+
+          _firebaseMessangingHelper.subscribeTheNotification(_notificationSettingList[1]);
+          widget.onBoardingBloc.closeOnBoarding();
+        };
 
         widget.onBoardingBloc.checkOnBoarding(onBoarding);
         widget.onBoardingBloc.status = OnBoardingStatus.NULL;
@@ -98,6 +107,20 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   onBoarding.width,
                   onBoarding.height,
                 ),
+                if(onBoarding.isOnBoarding && 
+                onBoarding.isNeedInkWell)
+                  GestureDetector(
+                    onTap: () async{
+                      onBoarding.function?.call();
+                    },
+                    child: widget.onBoardingBloc.getCustomPaintOverlay(
+                      context,
+                      onBoarding.left,
+                      onBoarding.top,
+                      onBoarding.width,
+                      onBoarding.height,
+                    ),
+                  ),
               if(onBoarding.isOnBoarding)
                 widget.onBoardingBloc.getHint(
                   context,
