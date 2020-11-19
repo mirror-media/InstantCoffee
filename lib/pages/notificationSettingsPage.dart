@@ -80,6 +80,13 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     _notificationSettingList =
         NotificationSettingList.fromJson(jsonSettingList);
     _storage.setItem("notification", jsonSettingList);
+
+    // reset all of topics by defaultNotificationList.json
+    _notificationSettingList.forEach(
+      (notificationSetting) { 
+        _firebaseMessangingHelper.subscribeTheNotification(notificationSetting);
+      }
+    );
   }
 
   @override

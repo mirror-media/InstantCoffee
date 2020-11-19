@@ -1,7 +1,7 @@
 {
     "defaultNotificationList": 
         [
-            {"type": "switch", "id": "breaking", "title": "新聞快訊", "topic": "breaking", "value": false},
+            {"type": "switch", "id": "breaking", "title": "新聞快訊", "topic": "breaking", "value": true},
             {"type": "switch", "id": "choices", "title": "編輯精選", "topic": "choices", "value": false},
             {
                 "type": "switch", "id": "horoscopes", "title": "訂閱星座運勢 - 每週在專屬於你會自動更新屬於你的星座運勢", "value": false, 
