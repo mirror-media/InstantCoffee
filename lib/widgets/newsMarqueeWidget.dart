@@ -69,7 +69,7 @@ class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
             animationDuration: Duration(milliseconds: 4000),
           ),
         ),
-        onTap: () => () => RouteGenerator.navigateToStory(context, recordList[i].slug),
+        onTap: () => RouteGenerator.navigateToStory(context, recordList[i].slug),
       ));
     }
 
