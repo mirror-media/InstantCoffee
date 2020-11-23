@@ -2,8 +2,8 @@ import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/slugBloc.dart';
 import 'package:readr_app/blocs/storyBloc.dart';
+import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
-
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/helpers/paragraphFormat.dart';
@@ -117,7 +117,12 @@ class _StoryWidget extends State<StoryWidget> {
                       ],
                     ]),
                   ),
-                  if(isStoryWidgetAdsActivated)
+                  if(_isWineCategory(story.categories))
+                    Image.asset(
+                      "assets/image/wine-warning.png",
+                      height: 50.0,
+                    ),
+                  if(isStoryWidgetAdsActivated && !_isWineCategory(story.categories))
                     MMAdBanner(
                       adUnitId: story.storyAd.stUnitId,
                       adSize: AdmobBannerSize.BANNER,
@@ -196,6 +201,10 @@ class _StoryWidget extends State<StoryWidget> {
         ],
       ),
     );
+  }
+
+  bool _isWineCategory(List<Category> categories) {
+    return (categories.length > 0 && categories[0].id == wineSectionKey);
   }
 
   Widget _buildCategory(BuildContext context, Story story, Color sectionColor) {
