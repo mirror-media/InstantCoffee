@@ -246,12 +246,12 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     if (notificationSetting.id == 'horoscopes') {
       return [
         _buildCheckbox(
-            context, notificationSetting.notificationSettingList, false, 4, 2.0)
+            context, notificationSetting, false, 4, 2.0)
       ];
     } else if (notificationSetting.id == 'subscriptionChannels') {
       return [
         _buildCheckbox(
-            context, notificationSetting.notificationSettingList, true, 2, 4)
+            context, notificationSetting, true, 2, 4)
       ];
     }
 
@@ -260,10 +260,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
   Widget _buildCheckbox(
       BuildContext context,
-      List<NotificationSetting> checkboxList,
+      NotificationSetting notificationSetting,
       bool isRepeatable,
       int count,
       double ratio) {
+    List<NotificationSetting> checkboxList = notificationSetting.notificationSettingList;
     return GridView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
@@ -290,7 +291,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
               _storage.setItem(
                   "notification", _notificationSettingList.toJson());
 
-              _firebaseMessangingHelper.subscribeTheNotification(checkboxList[checkboxIndex]);
+              _firebaseMessangingHelper.subscribeTheNotification(notificationSetting);
             },
             child: IgnorePointer(
               child: Row(children: [

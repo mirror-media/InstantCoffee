@@ -6,18 +6,18 @@
             {
                 "type": "switch", "id": "horoscopes", "title": "訂閱星座運勢 - 每週在專屬於你會自動更新屬於你的星座運勢", "value": false, 
                 "notificationSettingList": [
-                    {"type": "checkbox", "id": "Aries", "title": "牡羊座", "topic": "Aries", "value": false},
-                    {"type": "checkbox", "id": "Taurus", "title": "金牛座", "topic": "Taurus", "value": false},
-                    {"type": "checkbox", "id": "Gemini", "title": "雙子座", "topic": "Gemini", "value": false},
-                    {"type": "checkbox", "id": "Cancer", "title": "巨蟹座", "topic": "Cancer", "value": false},
-                    {"type": "checkbox", "id": "Leo", "title": "獅子座", "topic": "Leo", "value": false},
-                    {"type": "checkbox", "id": "Virgo", "title": "處女座", "topic": "Virgo", "value": false},
-                    {"type": "checkbox", "id": "Libra", "title": "天秤座", "topic": "Libra", "value": false},
-                    {"type": "checkbox", "id": "Scorpio", "title": "天蠍座", "topic": "Scorpio", "value": false},
-                    {"type": "checkbox", "id": "Sagittarius", "title": "射手座", "topic": "Sagittarius", "value": false},
-                    {"type": "checkbox", "id": "Capricorn", "title": "摩羯座", "topic": "Capricorn", "value": false},
-                    {"type": "checkbox", "id": "Aquarius", "title": "水瓶座", "topic": "Aquarius", "value": false},
-                    {"type": "checkbox", "id": "Pisces", "title": "牡羊座", "topic": "Pisces", "value": false}
+                    {"type": "checkbox", "id": "aries", "title": "牡羊座", "topic": "aries", "value": false},
+                    {"type": "checkbox", "id": "taurus", "title": "金牛座", "topic": "taurus", "value": false},
+                    {"type": "checkbox", "id": "gemini", "title": "雙子座", "topic": "gemini", "value": false},
+                    {"type": "checkbox", "id": "cancer", "title": "巨蟹座", "topic": "cancer", "value": false},
+                    {"type": "checkbox", "id": "leo", "title": "獅子座", "topic": "leo", "value": false},
+                    {"type": "checkbox", "id": "virgo", "title": "處女座", "topic": "virgo", "value": false},
+                    {"type": "checkbox", "id": "libra", "title": "天秤座", "topic": "libra", "value": false},
+                    {"type": "checkbox", "id": "scorpio", "title": "天蠍座", "topic": "scorpio", "value": false},
+                    {"type": "checkbox", "id": "sagittarius", "title": "射手座", "topic": "sagittarius", "value": false},
+                    {"type": "checkbox", "id": "capricorn", "title": "摩羯座", "topic": "capricorn", "value": false},
+                    {"type": "checkbox", "id": "aquarius", "title": "水瓶座", "topic": "aquarius", "value": false},
+                    {"type": "checkbox", "id": "pisces", "title": "牡羊座", "topic": "pisces", "value": false}
                 ]
             },
             {

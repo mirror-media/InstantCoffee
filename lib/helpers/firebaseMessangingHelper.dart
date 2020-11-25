@@ -20,7 +20,9 @@ class FirebaseMessangingHelper {
     _isInTheStoryPage = false;
   }
 
-  configFirebaseMessaging(BuildContext context) {
+  configFirebaseMessaging(BuildContext context) async{
+    String token = await _firebaseMessaging.getToken();
+    print('FCM token: ' + token);
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
@@ -33,6 +35,9 @@ class FirebaseMessangingHelper {
         }
       },
       onResume: (Map<String, dynamic> message) async {
+        // TODO: need to fix
+        // onResume is not working on android.
+        // https://github.com/FirebaseExtended/flutterfire/issues/4177
         print("onResume: $message");
         _isInTheStoryPage = false;
         _navigateToStoryPage(context, message);
@@ -119,7 +124,7 @@ class FirebaseMessangingHelper {
           if(notificationSetting.value && element.value) {
             subscribeToTopic(element.topic);
           }
-          else if(!notificationSetting.value && element.value){
+          else if(!notificationSetting.value || !element.value){
             unsubscribeFromTopic(element.topic);
           }
         }
