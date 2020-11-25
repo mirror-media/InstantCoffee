@@ -34,6 +34,7 @@ class Story {
   CategoryList categories;
   SectionList sections;
   bool isAdult;
+  bool isAdvertised;
   String state;
 
   StoryAd storyAd;
@@ -62,6 +63,7 @@ class Story {
     this.categories,
     this.sections,
     this.isAdult,
+    this.isAdvertised,
     this.state,
 
     this.storyAd,
@@ -146,6 +148,7 @@ class Story {
       tags: tagBuilder,
       state: json["state"],
       isAdult: json['isAdult'],
+      isAdvertised: json['isAdvertised'] ?? false,
     );
   }
 

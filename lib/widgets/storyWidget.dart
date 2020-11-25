@@ -91,7 +91,8 @@ class _StoryWidget extends State<StoryWidget> {
                         ),
                       SizedBox(height: 16),
                       _buildUpdateDateWidget(story),
-                      _buildRelatedWidget(context, story.relatedStory),
+                      if(!story.isAdvertised)
+                        _buildRelatedWidget(context, story.relatedStory),
                       SizedBox(height: 16),
                       _buildMoreContentWidget(),
                       if(isStoryWidgetAdsActivated)
@@ -208,7 +209,14 @@ class _StoryWidget extends State<StoryWidget> {
   }
 
   Widget _buildCategory(BuildContext context, Story story, Color sectionColor) {
-    List<Category> categories = story.categories;
+    List<Category> categories = List<Category>();
+    if(story.categories != null) {
+      categories = story.categories;
+    }
+
+    if(story.isAdvertised) {
+      return Container();
+    }
 
     return InkWell(
       child: Row(
