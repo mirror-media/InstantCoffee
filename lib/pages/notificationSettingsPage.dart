@@ -24,14 +24,14 @@ class NotificationSettingsPage extends StatefulWidget {
 }
 
 class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
-  List<GlobalKey> _notificationCupertinoSwitchKeys;
+  List<GlobalKey> _notificationKeys;
   final LocalStorage _storage = LocalStorage('setting');
   FirebaseMessangingHelper _firebaseMessangingHelper = FirebaseMessangingHelper();
   NotificationSettingList _notificationSettingList = NotificationSettingList();
 
   @override
   void initState() {
-    _notificationCupertinoSwitchKeys = List<GlobalKey>();
+    _notificationKeys = List<GlobalKey>();
     _setNotificationSettingList();
     super.initState();
   }
@@ -47,14 +47,16 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     }
 
     for(int i=0; i<_notificationSettingList.length; i++) {
-      _notificationCupertinoSwitchKeys.add(GlobalKey());
+      _notificationKeys.add(GlobalKey());
     }
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{  
       if(widget.onBoardingBloc.isOnBoarding && 
       widget.onBoardingBloc.status == OnBoardingStatus.FourthPage) {
         // await navigation completed, or onBoarding will get the wrong position
         await Future.delayed(Duration(milliseconds: 300));
-        OnBoarding onBoarding = await widget.onBoardingBloc.getSizeAndPosition(_notificationCupertinoSwitchKeys[1]);
+        OnBoarding onBoarding = await widget.onBoardingBloc.getSizeAndPosition(_notificationKeys[1]);
+        onBoarding.left = 0;
+        onBoarding.height += 16;
         onBoarding.isNeedInkWell = true;
         onBoarding.function = () {
           _notificationSettingList[1].value = true;
@@ -194,6 +196,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       itemCount: notificationSettingList.length,
       itemBuilder: (context, listViewIndex) {
         return Padding(
+          key: _notificationKeys[listViewIndex],
           padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
           child: ListTileTheme(
             contentPadding: EdgeInsets.all(0),
@@ -210,7 +213,6 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
               ),
               trailing: IgnorePointer(
                 child: CupertinoSwitch(
-                    key: _notificationCupertinoSwitchKeys[listViewIndex],
                     value: notificationSettingList[listViewIndex].value,
                     onChanged: (bool value) {}),
               ),
