@@ -11,6 +11,7 @@ import 'package:readr_app/models/notificationSetting.dart';
 import 'package:readr_app/models/notificationSettingList.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/onBoarding.dart';
+import 'package:readr_app/widgets/appExpansionTile.dart';
 
 class NotificationSettingsPage extends StatefulWidget {
   final OnBoardingBloc onBoardingBloc;
@@ -25,6 +26,7 @@ class NotificationSettingsPage extends StatefulWidget {
 
 class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   List<GlobalKey> _notificationKeys;
+  List<GlobalKey<AppExpansionTileState>> _expansionTileKeys;
   final LocalStorage _storage = LocalStorage('setting');
   FirebaseMessangingHelper _firebaseMessangingHelper = FirebaseMessangingHelper();
   NotificationSettingList _notificationSettingList = NotificationSettingList();
@@ -32,6 +34,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   @override
   void initState() {
     _notificationKeys = List<GlobalKey>();
+    _expansionTileKeys = List<GlobalKey<AppExpansionTileState>>();
     _setNotificationSettingList();
     super.initState();
   }
@@ -48,6 +51,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
     for(int i=0; i<_notificationSettingList.length; i++) {
       _notificationKeys.add(GlobalKey());
+      _expansionTileKeys.add(GlobalKey());
     }
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{  
       if(widget.onBoardingBloc.isOnBoarding && 
@@ -64,6 +68,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
               "notification", _notificationSettingList.toJson());
 
           _firebaseMessangingHelper.subscribeTheNotification(_notificationSettingList[1]);
+          _expansionTileKeys[1].currentState.expand();
           widget.onBoardingBloc.closeOnBoarding();
         };
 
@@ -200,7 +205,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
           padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
           child: ListTileTheme(
             contentPadding: EdgeInsets.all(0),
-            child: ExpansionTile(
+            child: AppExpansionTile(
+              key: _expansionTileKeys[listViewIndex],
               initiallyExpanded: notificationSettingList[listViewIndex].value,
               leading: null,
               title: ListTile(
