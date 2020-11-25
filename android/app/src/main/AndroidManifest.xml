@@ -54,16 +54,36 @@
                 <action android:name="FLUTTER_NOTIFICATION_CLICK" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            <!-- App Links -->
+            <!-- App Links
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with https://YOUR_HOST -->
                 <data
                 android:scheme="https"
                 android:host="www.mirrormedia.mg"
                 android:pathPattern=".*" />
+            </intent-filter>
+            -->
+            <!-- Scheme App Links -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                android:scheme="mirrormedia"
+                android:host="story"
+                android:pathPattern=".*" />
+                <data
+                android:scheme="mirrormedia"
+                android:host="video"
+                android:pathPattern=".*" />
+            </intent-filter>
+            <!-- OneLink App Links -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Appsflyer OneLink -->
                 <data android:scheme="https"
                     android:host="mirrormedia.onelink.me"
