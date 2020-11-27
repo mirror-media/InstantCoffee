@@ -120,7 +120,7 @@ class _StoryWidget extends State<StoryWidget> {
                   ),
                   if(_isWineCategory(story.categories))
                     Image.asset(
-                      "assets/image/wine-warning.png",
+                      "assets/image/wine_warning.png",
                       height: 50.0,
                     ),
                   if(isStoryWidgetAdsActivated && !_isWineCategory(story.categories))
@@ -205,7 +205,16 @@ class _StoryWidget extends State<StoryWidget> {
   }
 
   bool _isWineCategory(List<Category> categories) {
-    return (categories.length > 0 && categories[0].id == wineSectionKey);
+    if(categories == null) {
+      return false;
+    }
+
+    for(Category category in categories) {
+      if(category.id == wineSectionKey) {
+        return true;
+      }
+    }
+    return false;
   }
 
   Widget _buildCategory(BuildContext context, Story story, Color sectionColor) {
