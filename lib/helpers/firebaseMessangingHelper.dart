@@ -35,9 +35,6 @@ class FirebaseMessangingHelper {
         }
       },
       onResume: (Map<String, dynamic> message) async {
-        // TODO: need to fix
-        // onResume is not working on android.
-        // https://github.com/FirebaseExtended/flutterfire/issues/4177
         print("onResume: $message");
         _isInTheStoryPage = false;
         _navigateToStoryPage(context, message);
