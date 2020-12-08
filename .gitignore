@@ -31,3 +31,6 @@ ios/Runner/GoogleService-Info.plist
 # key
 android/key.properties
 android/MirrorMedia.jks
+
+# Mac OS
+**/.DS_Store
