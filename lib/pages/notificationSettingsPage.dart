@@ -4,25 +4,34 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:readr_app/blocs/onBoardingBloc.dart';
 
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/models/notificationSetting.dart';
 import 'package:readr_app/models/notificationSettingList.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/models/onBoarding.dart';
 
 class NotificationSettingsPage extends StatefulWidget {
+  final OnBoardingBloc onBoardingBloc;
+  NotificationSettingsPage({
+    @required this.onBoardingBloc,
+  });
+
   @override
   _NotificationSettingsPageState createState() =>
       _NotificationSettingsPageState();
 }
 
 class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
+  List<GlobalKey> _notificationCupertinoSwitchKeys;
   final LocalStorage _storage = LocalStorage('setting');
   FirebaseMessangingHelper _firebaseMessangingHelper = FirebaseMessangingHelper();
   NotificationSettingList _notificationSettingList = NotificationSettingList();
 
   @override
   void initState() {
+    _notificationCupertinoSwitchKeys = List<GlobalKey>();
     _setNotificationSettingList();
     super.initState();
   }
@@ -36,6 +45,21 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     if (_notificationSettingList == null) {
       await _initNotification();
     }
+
+    for(int i=0; i<_notificationSettingList.length; i++) {
+      _notificationCupertinoSwitchKeys.add(GlobalKey());
+    }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{  
+      if(widget.onBoardingBloc.isOnBoarding && 
+      widget.onBoardingBloc.status == OnBoardingStatus.FourthPage) {
+        // await navigation completed, or onBoarding will get the wrong position
+        await Future.delayed(Duration(milliseconds: 300));
+        OnBoarding onBoarding = await widget.onBoardingBloc.getSizeAndPosition(_notificationCupertinoSwitchKeys[0]);
+
+        widget.onBoardingBloc.checkOnBoarding(onBoarding);
+        widget.onBoardingBloc.status = OnBoardingStatus.NULL;
+      }
+    });
     setState(() {});
   }
 
@@ -51,12 +75,40 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildBar(context),
-      body: ListView(children: [
-        _buildDescriptionSection(context),
-        _buildNotificationSettingListSection(context, _notificationSettingList),
-      ]),
+    return StreamBuilder<OnBoarding>(
+      initialData: OnBoarding(isOnBoarding: false),
+      stream: widget.onBoardingBloc.onBoardingStream,
+      builder: (context, snapshot) {
+        OnBoarding onBoarding = snapshot.data;
+        return Material(
+          type: MaterialType.transparency,
+          child: Stack(
+            children: [
+              Scaffold(
+                appBar: _buildBar(context),
+                body: ListView(children: [
+                  _buildDescriptionSection(context),
+                  _buildNotificationSettingListSection(context, _notificationSettingList),
+                ]),
+              ),
+              if(onBoarding.isOnBoarding)
+                widget.onBoardingBloc.getClipPathOverlay(
+                  onBoarding.left,
+                  onBoarding.top,
+                  onBoarding.width,
+                  onBoarding.height,
+                ),
+              if(onBoarding.isOnBoarding)
+                widget.onBoardingBloc.getHint(
+                  context,
+                  onBoarding.left, 
+                  onBoarding.top + onBoarding.height,
+                  widget.onBoardingBloc.onBoardingHintList[widget.onBoardingBloc.status.index-1],
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -121,10 +173,14 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
               title: ListTile(
                 title: Text(
                   notificationSettingList[listViewIndex].title,
+                  style: TextStyle(
+                    color:  Colors.black,
+                  ),
                 ),
               ),
               trailing: IgnorePointer(
                 child: CupertinoSwitch(
+                    key: _notificationCupertinoSwitchKeys[listViewIndex],
                     value: notificationSettingList[listViewIndex].value,
                     onChanged: (bool value) {}),
               ),
@@ -136,6 +192,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                     "notification", _notificationSettingList.toJson());
 
                 _firebaseMessangingHelper.subscribeTheNotification(notificationSettingList[listViewIndex]);
+                widget.onBoardingBloc.closeOnBoarding();
               },
               children: _renderCheckBoxChildren(
                   context, notificationSettingList[listViewIndex]),

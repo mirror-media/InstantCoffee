@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/blocs/sectionBloc.dart';
 import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/appLinkHelper.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
+import 'package:readr_app/models/onBoarding.dart';
 import 'package:readr_app/models/sectionList.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/searchPage.dart';
@@ -17,8 +19,12 @@ import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 
 class HomePage extends StatefulWidget {
+  final GlobalKey settingKey;
+  final OnBoardingBloc onBoardingBloc;
   final bool isUpdateAvailable;
   HomePage({
+    @required this.settingKey,
+    @required this.onBoardingBloc,
     this.isUpdateAvailable = false,
   });
 
@@ -36,6 +42,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
   /// tab controller
   int _initialTabIndex;
   TabController _tabController;
+
+  List<GlobalKey> _tabKeys;
   List<Tab> _tabs;
   List<Widget> _tabWidgets;
   List<ScrollController> _scrollControllerList;
@@ -48,6 +56,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
     
     WidgetsBinding.instance.addObserver(this);
     SchedulerBinding.instance.addPostFrameCallback((_) {
+      _appLinkHelper.configAppLink(context);
       _firebaseMessangingHelper.configFirebaseMessaging(context);
       if(widget.isUpdateAvailable){
         _appUpgradeHelper.renderUpgradeUI(context);
@@ -55,9 +64,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
     });
 
     _sectionBloc = SectionBloc();
-    
+
     /// tab controller
     _initialTabIndex = 0;
+    _tabKeys = List<GlobalKey>();
     _tabs = List<Tab>();
     _tabWidgets = List<Widget>();
     _scrollControllerList = List<ScrollController>();
@@ -67,6 +77,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if(state == AppLifecycleState.resumed) {
+      print(AppLifecycleState.resumed);
       SchedulerBinding.instance.addPostFrameCallback((_) {
         _appLinkHelper.configAppLink(context);
       });
@@ -74,14 +85,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
   }
 
   _initializeTabController(SectionList sectionItems) {
+    _tabKeys.clear();
     _tabs.clear();
     _tabWidgets.clear();
     _scrollControllerList.clear();
 
     for (int i = 0; i < sectionItems.length; i++) {
+      _tabKeys.add(GlobalKey());
       Section section = sectionItems[i];
       _tabs.add(
         Tab(
+          key: _tabKeys[i],
           child: Text(
             section.title,
             style: TextStyle(
@@ -99,6 +113,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
         ));
       } else if (section.key == personalSectionKey){
         _tabWidgets.add(PersonalWidget(
+          onBoardingBloc: widget.onBoardingBloc,
           scrollController: _scrollControllerList[i],
         ));
       } else {
@@ -117,6 +132,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
       initialIndex:
           _tabController == null ? _initialTabIndex : _tabController.index,
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{  
+      if(widget.onBoardingBloc.isOnBoarding && 
+      widget.onBoardingBloc.status == OnBoardingStatus.FirstPage) {
+        // get personal tab size and position by personal tab key(_tabKeys[2])
+        OnBoarding onBoarding = await widget.onBoardingBloc.getSizeAndPosition(_tabKeys[2]);
+        onBoarding.left -= 16;
+        onBoarding.width += 32;
+
+        widget.onBoardingBloc.checkOnBoarding(onBoarding);
+        widget.onBoardingBloc.status = OnBoardingStatus.SecondPage;
+      }
+    });
   }
 
   _scrollToTop(int index) {
@@ -178,11 +206,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
     return AppBar(
       elevation: 0.1,
       leading: IconButton(
+        key: widget.settingKey,
         icon: Icon(Icons.settings),
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => NotificationSettingsPage(),
+            builder: (context) => NotificationSettingsPage(
+              onBoardingBloc: widget.onBoardingBloc,
+            ),
             fullscreenDialog: true,
           ),
         ),
