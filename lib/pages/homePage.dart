@@ -31,20 +31,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
   AppLinkHelper _appLinkHelper;
   FirebaseMessangingHelper _firebaseMessangingHelper;
 
-  List<ScrollController> _scrollControllerList;
   SectionBloc _sectionBloc;
 
   /// tab controller
-  int initialTabIndex = 0;
+  int _initialTabIndex;
   TabController _tabController;
-  List<Tab> _tabs = List<Tab>();
-  List<Widget> _tabWidgets = List<Widget>();
+  List<Tab> _tabs;
+  List<Widget> _tabWidgets;
+  List<ScrollController> _scrollControllerList;
 
   @override
   void initState() {
     _appUpgradeHelper = AppUpgradeHelper();
     _appLinkHelper = AppLinkHelper();
     _firebaseMessangingHelper = FirebaseMessangingHelper();
+    
     WidgetsBinding.instance.addObserver(this);
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _firebaseMessangingHelper.configFirebaseMessaging(context);
@@ -53,8 +54,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
       }
     });
 
-    _scrollControllerList = List<ScrollController>();
     _sectionBloc = SectionBloc();
+    
+    /// tab controller
+    _initialTabIndex = 0;
+    _tabs = List<Tab>();
+    _tabWidgets = List<Widget>();
+    _scrollControllerList = List<ScrollController>();
     super.initState();
   }
 
@@ -70,6 +76,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
   _initializeTabController(SectionList sectionItems) {
     _tabs.clear();
     _tabWidgets.clear();
+    _scrollControllerList.clear();
 
     for (int i = 0; i < sectionItems.length; i++) {
       Section section = sectionItems[i];
@@ -108,7 +115,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
       vsync: this,
       length: sectionItems.length,
       initialIndex:
-          _tabController == null ? initialTabIndex : _tabController.index,
+          _tabController == null ? _initialTabIndex : _tabController.index,
     );
   }
 
@@ -215,10 +222,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
               tabs: tabs.toList(),
               controller: tabController,
               onTap: (int index) {
-                if (initialTabIndex == index) {
+                if (_initialTabIndex == index) {
                   _scrollToTop(index);
                 }
-                initialTabIndex = index;
+                _initialTabIndex = index;
               },
             ),
           ),

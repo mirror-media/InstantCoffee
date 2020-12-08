@@ -67,8 +67,7 @@ class _StoryWidget extends State<StoryWidget> {
                         MMAdBanner(
                           adUnitId: story.storyAd.hDUnitId,
                           adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-                          widthPadding: 16,
-                          leftAndRightPadding: 16,
+                          isKeepAlive: true,
                         ),
                         SizedBox(height: 16),
                       ],
@@ -88,8 +87,7 @@ class _StoryWidget extends State<StoryWidget> {
                         MMAdBanner(
                           adUnitId: story.storyAd.aT3UnitId,
                           adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-                          widthPadding: 16,
-                          leftAndRightPadding: 16,
+                          isKeepAlive: true,
                         ),
                       SizedBox(height: 16),
                       _buildUpdateDateWidget(story),
@@ -103,8 +101,7 @@ class _StoryWidget extends State<StoryWidget> {
                         MMAdBanner(
                           adUnitId: story.storyAd.e1UnitId,
                           adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-                          widthPadding: 16,
-                          leftAndRightPadding: 16,
+                          isKeepAlive: true,
                         ),
                         SizedBox(height: 16),
                       ],
@@ -114,8 +111,7 @@ class _StoryWidget extends State<StoryWidget> {
                         MMAdBanner(
                           adUnitId: story.storyAd.fTUnitId,
                           adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-                          widthPadding: 16,
-                          leftAndRightPadding: 16,
+                          isKeepAlive: true,
                         ),
                         SizedBox(height: 16),
                       ],
@@ -125,6 +121,7 @@ class _StoryWidget extends State<StoryWidget> {
                     MMAdBanner(
                       adUnitId: story.storyAd.stUnitId,
                       adSize: AdmobBannerSize.BANNER,
+                      isKeepAlive: true,
                     ),
                 ],
               );
@@ -410,7 +407,7 @@ class _StoryWidget extends State<StoryWidget> {
                       MMAdBanner(
                         adUnitId: story.storyAd.aT1UnitId,
                         adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-                        widthPadding: 16,
+                        isKeepAlive: true,
                       ),
                     ],
                     if(isStoryWidgetAdsActivated && (!aT2IsActivated && unStyleParagraphCount == storyAT2AdIndex)) 
@@ -419,7 +416,7 @@ class _StoryWidget extends State<StoryWidget> {
                       MMAdBanner(
                         adUnitId: story.storyAd.aT2UnitId,
                         adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
-                        widthPadding: 16,
+                        isKeepAlive: true,
                       ),
                     ],
                   ],

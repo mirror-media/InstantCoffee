@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
+import 'package:readr_app/models/sectionAd.dart';
 import 'package:readr_app/services/listeningTabContentService.dart';
 import 'package:readr_app/models/recordList.dart';
 
@@ -11,7 +12,9 @@ class ListeningTabContentBloc {
   
   ListeningTabContentService _listeningTabContentService;
 
+  SectionAd _sectionAd;
   RecordList _records;
+  SectionAd get sectionAd => _sectionAd;
   RecordList get records => _records;
 
   StreamController _listeningTabContentController;
@@ -20,7 +23,8 @@ class ListeningTabContentBloc {
   Stream<ApiResponse<RecordList>> get listeningTabContentStream =>
       _listeningTabContentController.stream;
 
-  ListeningTabContentBloc() {
+  ListeningTabContentBloc(SectionAd sectionAd) {
+    _sectionAd = sectionAd;
     _records = RecordList();
     _listeningTabContentService = ListeningTabContentService();
     _listeningTabContentController =
