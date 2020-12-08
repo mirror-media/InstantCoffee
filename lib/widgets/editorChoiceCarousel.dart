@@ -6,8 +6,10 @@ import 'package:readr_app/widgets/carouselDisplayWidget.dart';
 
 class EditorChoiceCarousel extends StatefulWidget {
   final RecordList editorChoiceList;
+  final double aspectRatio;
   EditorChoiceCarousel({
     @required this.editorChoiceList,
+    this.aspectRatio = 16/9,
   });
 
   @override
@@ -23,7 +25,7 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
     _carouselController = CarouselController();
     _options = CarouselOptions(
       viewportFraction: 1.0,
-      //aspectRatio: 2.0,
+      aspectRatio: widget.aspectRatio,
       autoPlay: true,
       autoPlayInterval: Duration(seconds: 8),
       enlargeCenterPage: true,
@@ -55,10 +57,13 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
                 child: InkWell(
                   child: SizedBox(
                     width: width * 0.1,
-                    height: width / 16 * 9,
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      color: Colors.white,
+                    height: width / widget.aspectRatio,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 4.0),
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   onTap: () {
@@ -71,7 +76,7 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
                 child: InkWell(
                   child: SizedBox(
                     width: width * 0.1,
-                    height: width / 16 * 9,
+                    height: width / widget.aspectRatio,
                     child: Icon(
                       Icons.arrow_forward_ios,
                       color: Colors.white,
@@ -89,7 +94,11 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
   List<Widget> _imageSliders(double width, RecordList editorChoiceList) {
     return editorChoiceList
         .map(
-          (item) => CarouselDisplayWidget(record: item, width: width),
+          (item) => CarouselDisplayWidget(
+            record: item, 
+            width: width,
+            aspectRatio: widget.aspectRatio,
+          ),
         )
         .toList();
   }

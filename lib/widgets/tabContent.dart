@@ -126,6 +126,7 @@ class _TabContentState extends State<TabContent> {
               children: [
                 EditorChoiceCarousel(
                   editorChoiceList: editorChoiceList,
+                  aspectRatio: 16 / 10,
                 ),
                 if(isTabContentAdsActivated)
                 ...[

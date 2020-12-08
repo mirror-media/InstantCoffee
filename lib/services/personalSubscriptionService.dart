@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/helpers/apiConstants.dart';
-import 'package:readr_app/models/categoryList.dart';
 import 'package:readr_app/models/recordList.dart';
 
 class PersonalSubscriptionService {
@@ -10,9 +7,7 @@ class PersonalSubscriptionService {
 
   int page = 1;
 
-  Future<RecordList> fetchRecordList(CategoryList categoryList, {int page = 1}) async {
-    String categoryListJson =
-        json.encode(categoryList.getSubscriptionIdStringList);
+  Future<RecordList> fetchRecordList(String categoryListJson, {int page = 1}) async {
     String url = apiBase +
         'meta?where={"categories":{"\$in":$categoryListJson},"device":{"\$in":["all","app"]}}' +
         '&page=$page&sort=-publishedDate&utm_source=app&utm_medium=news&max_results=20';

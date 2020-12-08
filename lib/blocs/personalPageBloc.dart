@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
@@ -95,13 +96,20 @@ class PersonalPageBloc {
     }
 
     try {
-      RecordList latests = await _personalSubscriptionService.fetchRecordList(categoryList, page: page);
-      if (page == 1) {
+      List<String> subscriptionIdStringList = categoryList.getSubscriptionIdStringList;
+      
+      if(subscriptionIdStringList.length == 0) {
         _recordList.clear();
-      }
+      } else {
+        String categoryListJson = json.encode(subscriptionIdStringList);
+        RecordList latests = await _personalSubscriptionService.fetchRecordList(categoryListJson, page: page);
+        if (page == 1) {
+          _recordList.clear();
+        }
 
-      latests = latests.filterDuplicatedSlugByAnother(_recordList);
-      _recordList.addAll(latests);
+        latests = latests.filterDuplicatedSlugByAnother(_recordList);
+        _recordList.addAll(latests);
+      }
       _isLoading = false;
       personalSubscriptionSinkToAdd(ApiResponse.completed(_recordList));
     } catch (e) {

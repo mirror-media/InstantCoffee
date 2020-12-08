@@ -26,27 +26,36 @@ class _ImageAndDescriptionSlideShowWidgetState
   bool backActivated = false;
   bool forwardActivated = false;
 
-  Widget backOrginalWidget = Container(
+  Widget backOrginalWidget(double width) => Container(
+    width: width,
     height: 68,
     color: Colors.transparent,
-    child: Icon(
-      Icons.arrow_back_ios,
-      color: appColor,
-      size: 36,
+    child: Padding(
+      padding: const EdgeInsets.only(left: 6.0),
+      child: Icon(
+        Icons.arrow_back_ios,
+        color: appColor,
+        size: 36,
+      ),
     ),
   );
 
-  Widget backActivatedWidget = Container(
+  Widget backActivatedWidget(double width) => Container(
+    width: width,
     height: 68,
     color: appColor,
-    child: Icon(
-      Icons.arrow_back_ios,
-      color: Colors.white,
-      size: 36,
+    child: Padding(
+      padding: const EdgeInsets.only(left: 6.0),
+      child: Icon(
+        Icons.arrow_back_ios,
+        color: Colors.white,
+        size: 36,
+      ),
     ),
   );
 
-  Widget forwardOrginalWidget = Container(
+  Widget forwardOrginalWidget(double width) => Container(
+    width: width,
     height: 68,
     color: Colors.transparent,
     child: Icon(
@@ -56,7 +65,8 @@ class _ImageAndDescriptionSlideShowWidgetState
     ),
   );
 
-  Widget forwardActivatedWidget = Container(
+  Widget forwardActivatedWidget(double width) => Container(
+    width: width,
     height: 68,
     color: appColor,
     child: Icon(
@@ -84,7 +94,7 @@ class _ImageAndDescriptionSlideShowWidgetState
     var width = MediaQuery.of(context).size.width - 32;
 
     double textSize = 16;
-    double textHeight = 1.8;
+    double textHeight = 1.625;
     double textRows = 2;
     double height = width / theSmallestRatio + textHeight * textSize * textRows;
 
@@ -119,7 +129,9 @@ class _ImageAndDescriptionSlideShowWidgetState
             height: width / carouselRatio,
             alignment: Alignment.center,
             child: InkWell(
-              child: backActivated ? backActivatedWidget : backOrginalWidget,
+              child: backActivated 
+                  ? backActivatedWidget(width * 0.1) 
+                  : backOrginalWidget(width * 0.1),
               onTap: () {
                 carouselController.previousPage();
                 setState(() {
@@ -138,8 +150,8 @@ class _ImageAndDescriptionSlideShowWidgetState
             alignment: Alignment.center,
             child: InkWell(
               child: forwardActivated
-                  ? forwardActivatedWidget
-                  : forwardOrginalWidget,
+                  ? forwardActivatedWidget(width * 0.1)
+                  : forwardOrginalWidget(width * 0.1),
               onTap: () {
                 carouselController.nextPage();
                 setState(() {

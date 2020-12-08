@@ -10,6 +10,9 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   // Initialize without device test ids.
   Admob.initialize();
+  // Or add a list of test ids.
+  // Admob.initialize(testDeviceIds: ['YOUR DEVICE ID']);
+
   runApp(MirrorApp());
 }
 

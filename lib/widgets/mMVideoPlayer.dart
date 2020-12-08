@@ -37,24 +37,28 @@ class MMVideoPlayer extends StatefulWidget {
 class _MMVideoPlayerState extends State<MMVideoPlayer> with AutomaticKeepAliveClientMixin {
   VideoPlayerController _videoPlayerController;
   ChewieController _chewieController;
+  Future<bool> _configChewieFuture;
 
   @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
-    _configVideoPlayer();
+    _configChewieFuture = _configVideoPlayer();
     super.initState();
   }
 
-  void _configVideoPlayer() {
+  Future<bool> _configVideoPlayer() async{
     _videoPlayerController = VideoPlayerController.network(widget.videourl);
+    await _videoPlayerController.initialize();
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
-      aspectRatio: widget.aspectRatio,
+      aspectRatio: _videoPlayerController.value.aspectRatio,
       autoInitialize: true,
       customControls: MaterialControls(),
     );
+
+    return true;
   }
 
   @override
@@ -66,9 +70,25 @@ class _MMVideoPlayerState extends State<MMVideoPlayer> with AutomaticKeepAliveCl
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+
     super.build(context);
-    return Chewie(
-      controller: _chewieController,
+    return FutureBuilder<bool>(
+      initialData: false,
+      future: _configChewieFuture,
+      builder: (context, snapshot) {
+        if(!snapshot.data) {
+          return Container(
+            width: width,
+            height: width/widget.aspectRatio,
+            child: Center(child: CircularProgressIndicator())
+          );
+        }
+
+        return Chewie(
+          controller: _chewieController,
+        );
+      }
     );
   }
 }

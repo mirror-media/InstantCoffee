@@ -101,7 +101,33 @@ class _PersonalWidgetState extends State<PersonalWidget> {
                       ? _personalPageBloc.recordList
                       : snapshot.data.data;
                   Status status = snapshot.data.status;
-                  
+                  if(recordList == null || recordList.length == 0) {
+                    return SliverList(
+                      delegate: SliverChildListDelegate(
+                        [
+                          Center(
+                            child: Text(
+                              '目前沒有訂閱的新聞類別',
+                              style: TextStyle(
+                                color: appColor,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                          Center(
+                            child: Text(
+                              '點上方按鈕進行訂閱！',
+                              style: TextStyle(
+                                color: appColor,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
                   return SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
@@ -182,26 +208,20 @@ class _PersonalWidgetState extends State<PersonalWidget> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(categoryList[index].title),
-                                    if(categoryList[index].id != focusSectionKey)
-                                    ...[
-                                      SizedBox(width: 4.0),
-                                      Icon(
-                                        Icons.remove_circle_outline,
-                                        size: 18,
-                                      ),
-                                    ],
+                                    Text(categoryList[index].title),                                                                         SizedBox(width: 4.0),
+                                    Icon(
+                                      Icons.remove_circle_outline,
+                                      size: 18,
+                                    ),
                                   ],
                                 ),
                               ),
                             ),
                             onTap: () {
-                              if(categoryList[index].id != focusSectionKey) {
-                                categoryList[index].isSubscribed =
-                                    !categoryList[index].isSubscribed;
-                                personalPageBloc
-                                    .setCategoryListInStorage(categoryList);
-                              }
+                              categoryList[index].isSubscribed =
+                                  !categoryList[index].isSubscribed;
+                              personalPageBloc
+                                  .setCategoryListInStorage(categoryList);
                             },
                           ),
                         ),
