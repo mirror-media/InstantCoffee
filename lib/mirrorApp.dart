@@ -28,7 +28,10 @@ class _MirrorAppState extends State<MirrorApp> {
   @override
   void initState() {
     final AppsFlyerOptions options = AppsFlyerOptions(
-        afDevKey: appsFlyerKey, appId: Platform.isIOS ? appleAppId : androidAppId, showDebug: true);
+      afDevKey: appsFlyerKey, 
+      appId: Platform.isIOS ? appleAppId : androidAppId, 
+      showDebug: false
+    );
     _appsflyerSdk = AppsflyerSdk(options);
 
     _settingKey = GlobalKey();
@@ -49,8 +52,6 @@ class _MirrorAppState extends State<MirrorApp> {
         print('-----OpenAttribution-----');
         print(event);
         print('-------------------------');
-        // print(event['data']['campaign']);
-        //_appsflyerSdk.setAdditionalData(event);
         if(event['data']['slug'] != null) {
           RouteGenerator.navigateToStory(context, event['data']['slug'], isListeningWidget: false);
         }
