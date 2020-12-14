@@ -58,6 +58,8 @@ dependencies:
   chewie: ^0.9.10
   # audio service
   audioplayers: ^0.15.1
+  # spin
+  flutter_spinkit: ^4.1.2+1
   # flutter cache manager
   flutter_cache_manager: ^1.4.2
   # package for working with MIME type definitions
@@ -78,13 +80,18 @@ dependencies:
   version: ^1.2.0
   
   # firebase
-  firebase_core: ^0.4.5
+  firebase_core: ^0.5.2+1
   # firebase messaging
-  firebase_messaging: ^6.0.16
+  firebase_messaging: ^7.0.3
   # firebase ad mob
-  firebase_admob: ^0.9.3+4
+  firebase_admob: ^0.10.2
   #flutter_native_admob: ^2.1.0+3
   admob_flutter: ^1.0.0
+
+  # firebase auth
+  firebase_auth: ^0.18.3+1
+  # google sign in
+  google_sign_in: ^4.5.6
 
   # generate app icons
   flutter_launcher_icons: ^0.7.5
@@ -114,6 +121,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/icon/icon.jpg
+    - assets/image/google_icon.png
     - assets/image/wine_warning.png
     - assets/data/records.json
     - assets/data/menu.json
