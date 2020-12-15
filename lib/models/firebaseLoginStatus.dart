@@ -11,5 +11,6 @@ class FirebaseLoginStatus {
 enum FirebaseStatus {
   Cancel,
   Success,
+  EmailVerifyError,
   Error, 
 }

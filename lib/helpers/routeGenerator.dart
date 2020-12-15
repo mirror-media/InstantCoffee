@@ -27,9 +27,13 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case member:
+        Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => MemberPage(),
+          builder: (context) => MemberPage(
+            isEmailLoginAuth: args['isEmailLoginAuth']??false,
+            emailLink: args['emailLink'],
+          ),
           fullscreenDialog: true,
         );
       case notificationSettings:
@@ -87,8 +91,20 @@ class RouteGenerator {
     Navigator.of(context).pushNamed(search);
   }
 
-  static void navigateToMember(BuildContext context) {
-    Navigator.of(context).pushNamed(member);
+  static void navigateToMember(
+    BuildContext context, 
+    {
+      bool isEmailLoginAuth = false,
+      String emailLink,
+    }
+  ) {
+    Navigator.of(context).pushNamed(
+      member,
+      arguments: {
+        'isEmailLoginAuth': isEmailLoginAuth,
+        'emailLink': emailLink,
+      },
+    );
   }
 
   static void navigateToNotificationSettings(BuildContext context, OnBoardingBloc onBoardingBloc) {

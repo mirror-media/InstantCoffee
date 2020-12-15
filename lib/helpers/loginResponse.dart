@@ -11,7 +11,15 @@ class LoginResponse<T> {
 
   LoginResponse.googleLoading(this.message) : status = Status.GoogleLoading;
 
+  LoginResponse.emailLoading(this.message) : status = Status.EmailLoading;
+
+  LoginResponse.emailLinkGetting(this.data) : status = Status.EmailLinkGetting;
+
+  LoginResponse.emailFillingIn(this.data) : status = Status.EmailFillingIn;
+
   LoginResponse.completed(this.data) : status = Status.Completed;
+
+  LoginResponse.emailVerifyError(this.message) : status = Status.EmailVerifyError;
 
   LoginResponse.error(this.message) : status = Status.Error;
 
@@ -25,6 +33,10 @@ enum Status {
   LoadingUI,
   NeedToLogin,
   GoogleLoading,
+  EmailLoading,
+  EmailLinkGetting,
+  EmailFillingIn,
   Completed,
+  EmailVerifyError,
   Error,
 }
