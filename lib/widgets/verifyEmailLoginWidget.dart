@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class VerifyEmailLoginWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return ListView(
       children: [
+        SizedBox(height: 72),
         Center(
           child: Padding(
             padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
             child: Text(
-              'Email登入驗證中',
+              '驗證 Email 中',
               style: TextStyle(
                 fontSize: 28,
               ),
@@ -19,7 +18,28 @@ class VerifyEmailLoginWidget extends StatelessWidget {
           ),
         ),
         SizedBox(height: 24),
-        SpinKitThreeBounce(color: Colors.grey[300], size: 35,),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+            child: Text(
+              '目前正在進行Email登入',
+              style: TextStyle(
+                fontSize: 17,
+              ),
+            ),
+          ),
+        ),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+            child: Text(
+              '請稍等',
+              style: TextStyle(
+                fontSize: 17,
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
