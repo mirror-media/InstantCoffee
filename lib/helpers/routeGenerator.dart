@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:readr_app/blocs/memberBloc.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/mirrorApp.dart';
 import 'package:readr_app/models/userData.dart';
@@ -48,6 +49,7 @@ class RouteGenerator {
           settings: settings,
           builder: (context) => EditUserProfile(
             userData: args['userData'],
+            memberBloc: args['memberBloc'],
           ),
           fullscreenDialog: true,
         );
@@ -57,6 +59,7 @@ class RouteGenerator {
           settings: settings,
           builder: (context) => EditUserContactInfo(
             userData: args['userData'],
+            memberBloc: args['memberBloc'],
           ),
           fullscreenDialog: true,
         );
@@ -131,20 +134,30 @@ class RouteGenerator {
     );
   }
 
-  static void navigateToEditUserProfile(BuildContext context, UserData userData) {
+  static void navigateToEditUserProfile(
+    BuildContext context, 
+    UserData userData,
+    MemberBloc memberBloc,
+  ) {
     Navigator.of(context).pushNamed(
       editUserProfile,
       arguments: {
         'userData': userData,
+        'memberBloc': memberBloc,
       },
     );
   }
 
-  static void navigateToEditUserContactInfo(BuildContext context, UserData userData) {
+  static void navigateToEditUserContactInfo(
+    BuildContext context, 
+    UserData userData, 
+    MemberBloc memberBloc,
+  ) {
     Navigator.of(context).pushNamed(
       editUserContactInfo,
       arguments: {
         'userData': userData,
+        'memberBloc': memberBloc,
       },
     );
   }

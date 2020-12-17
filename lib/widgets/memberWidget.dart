@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/loginBLoc.dart';
+import 'package:readr_app/blocs/memberBloc.dart';
+import 'package:readr_app/helpers/memberResponse.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/userData.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class MemberWidget extends StatefulWidget {
   final LoginBloc loginBloc;
@@ -17,10 +20,63 @@ class MemberWidget extends StatefulWidget {
 }
 
 class _MemberWidgetState extends State<MemberWidget> {
+  MemberBloc _memberBloc;
+  
+  @override
+  void initState() {
+    _memberBloc = MemberBloc();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
+    return StreamBuilder<MemberResponse<UserData>>(
+      initialData: MemberResponse.completed(widget.userData),
+      stream: _memberBloc.userDataStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data.status) {
+            case Status.Loading:
+              return Center(child: CircularProgressIndicator());
+              break;
+
+            case Status.Complete:
+              UserData userData = snapshot.data.data;
+              return _memberSection(width, userData, snapshot.data.status);
+              break;
+
+            case Status.SavingLoading:
+              UserData userData = snapshot.data.data;
+              return _memberSection(width, userData, snapshot.data.status);
+              break;
+
+            case Status.SavingSuccessfully:
+              UserData userData = snapshot.data.data;
+              return _memberSection(width, userData, snapshot.data.status);
+              break;
+
+            case Status.SavingError:
+              UserData userData = snapshot.data.data;
+              return _memberSection(width, userData, snapshot.data.status);
+              break;
+
+            case Status.Error:
+              return Container();
+              break;
+          }
+        }
+        return Container();
+      }
+    );
+  }
+
+  _memberSection(
+    double width, 
+    UserData userData,
+    Status status
+  ) {
     return Container(
       color: Colors.grey[300],
       child: ListView(
@@ -29,18 +85,68 @@ class _MemberWidgetState extends State<MemberWidget> {
             color: const Color(0xFFEFEFEF),
             child: Column(
               children: [
-                SizedBox(height: 48,),
+                if(status != Status.SavingLoading &&
+                  status != Status.SavingError &&
+                  status != Status.SavingSuccessfully
+                )
+                  SizedBox(height: 48,),
+                if(status == Status.SavingLoading)
+                  Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: SpinKitThreeBounce(color: Colors.grey[300], size: 36,),
+                  ),
+                if(status == Status.SavingSuccessfully)...[
+                  Container(
+                    height: 38,
+                    width: width,
+                    color: Color(0xFFF7FEFF),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          '儲存成功',
+                          style: TextStyle(
+                            color: Color(0xFF1D9FB8),
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                ],
+                if(status == Status.SavingError)...[
+                  Container(
+                    height: 38,
+                    width: width,
+                    color: Color(0xFFFFF8F9),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Text(
+                          '儲存失敗，請再試一次',
+                          style: TextStyle(
+                            color: Color(0xFFDB1730),
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                ],
+
                 SizedBox(
                   width: 90,
                   height: 90,
-                  child: widget.userData?.profilePhoto == null
+                  child: userData?.profilePhoto == null
                   ? Image.asset('assets/icon/icon.jpg')
-                  : CachedNetworkImage(imageUrl: widget.userData.profilePhoto),
+                  : CachedNetworkImage(imageUrl: userData.profilePhoto),
                 ),
                 SizedBox(height: 16,),
                 Center(
                   child: Text(
-                    widget.userData.name ?? widget.userData.email,
+                    userData.name ?? userData.email,
                     style: TextStyle(
                       fontSize: 20,
                     ),
@@ -80,7 +186,11 @@ class _MemberWidgetState extends State<MemberWidget> {
                     ),
                   ),
                   onTap: (){
-                    RouteGenerator.navigateToEditUserProfile(context, widget.userData);
+                    RouteGenerator.navigateToEditUserProfile(
+                      context, 
+                      userData,
+                      _memberBloc,
+                    );
                   },
                 ),
 
@@ -107,7 +217,11 @@ class _MemberWidgetState extends State<MemberWidget> {
                     ),
                   ),
                   onTap: (){
-                    RouteGenerator.navigateToEditUserContactInfo(context, widget.userData);
+                    RouteGenerator.navigateToEditUserContactInfo(
+                      context, 
+                      userData,
+                      _memberBloc,
+                    );
                   },
                 ),
               ],

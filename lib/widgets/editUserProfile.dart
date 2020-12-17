@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:readr_app/blocs/memberBloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/userData.dart';
 import 'package:readr_app/widgets/birthdayPicker.dart';
@@ -7,8 +8,10 @@ import 'package:readr_app/widgets/genderPicker.dart';
 
 class EditUserProfile extends StatefulWidget {
   final UserData userData;
+  final MemberBloc memberBloc;
   EditUserProfile({
     @required this.userData,
+    @required this.memberBloc,
   });
 
   @override
@@ -89,7 +92,7 @@ class _EditUserProfileState extends State<EditUserProfile> {
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             onPressed: () {
-              // saveUserDate
+              widget.memberBloc.saveUserDate(_editUserData);
               Navigator.of(context).pop();
             },
           ),

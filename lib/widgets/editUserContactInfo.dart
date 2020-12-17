@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:readr_app/blocs/memberBloc.dart';
 import 'package:readr_app/blocs/userContactInfoBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
@@ -11,8 +12,10 @@ import 'package:readr_app/widgets/districtPicker.dart';
 
 class EditUserContactInfo extends StatefulWidget {
   final UserData userData;
+  final MemberBloc memberBloc;
   EditUserContactInfo({
     @required this.userData,
+    @required this.memberBloc,
   });
   
   @override
@@ -82,7 +85,7 @@ class _EditUserContactInfoState extends State<EditUserContactInfo> {
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             onPressed: () {
-              // saveUserDate
+              widget.memberBloc.saveUserDate(_userContactInfoBloc.editUserData);
               Navigator.of(context).pop();
             }
           ),
