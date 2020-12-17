@@ -43,6 +43,7 @@ class _MirrorAppState extends State<MirrorApp> {
     super.initState();
   }
 
+  // It cant trigger on iOS, cuz AppsFlyer's code on AppDelegate.swift break this feature.
   Future<void> initDynamicLinks() async {
     FirebaseDynamicLinks.instance.onLink(
       onSuccess: (PendingDynamicLinkData dynamicLink) async {
@@ -89,6 +90,7 @@ class _MirrorAppState extends State<MirrorApp> {
         if(event['data']['slug'] != null) {
           RouteGenerator.navigateToStory(context, event['data']['slug'], isListeningWidget: false);
         } else if(event['data']['host'] == 'mirrormedia.page.link') {
+          // This is only for iOS to replace the DynamicLink feature.
           Navigator.of(context).popUntil((route) => route.isFirst);
           RouteGenerator.navigateToMember(
             context, 
