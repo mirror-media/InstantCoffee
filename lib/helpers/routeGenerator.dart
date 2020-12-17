@@ -6,6 +6,7 @@ import 'package:readr_app/pages/memberPage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/pages/searchPage.dart';
 import 'package:readr_app/pages/storyPage.dart';
+import 'package:readr_app/widgets/editUserContactInfo.dart';
 
 import 'package:readr_app/widgets/editUserProfile.dart';
 
@@ -14,6 +15,7 @@ class RouteGenerator {
   static const String search = '/search';
   static const String member = '/member';
   static const String editUserProfile = '/editUserProfile';
+  static const String editUserContactInfo = '/editUserContactInfo';
   static const String notificationSettings = '/notificationSettings';
   static const String story = '/story';
 
@@ -45,6 +47,15 @@ class RouteGenerator {
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => EditUserProfile(
+            userData: args['userData'],
+          ),
+          fullscreenDialog: true,
+        );
+      case editUserContactInfo:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => EditUserContactInfo(
             userData: args['userData'],
           ),
           fullscreenDialog: true,
@@ -123,6 +134,15 @@ class RouteGenerator {
   static void navigateToEditUserProfile(BuildContext context, UserData userData) {
     Navigator.of(context).pushNamed(
       editUserProfile,
+      arguments: {
+        'userData': userData,
+      },
+    );
+  }
+
+  static void navigateToEditUserContactInfo(BuildContext context, UserData userData) {
+    Navigator.of(context).pushNamed(
+      editUserContactInfo,
       arguments: {
         'userData': userData,
       },

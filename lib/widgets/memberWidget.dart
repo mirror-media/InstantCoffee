@@ -106,7 +106,9 @@ class _MemberWidgetState extends State<MemberWidget> {
                       ),
                     ),
                   ),
-                  onTap: (){},
+                  onTap: (){
+                    RouteGenerator.navigateToEditUserContactInfo(context, widget.userData);
+                  },
                 ),
               ],
             ),

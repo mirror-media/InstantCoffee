@@ -129,6 +129,8 @@ flutter:
     - assets/icon/icon.jpg
     - assets/image/google_icon.png
     - assets/image/wine_warning.png
+    - assets/data/countries.json
+    - assets/data/taiwanDistricts.json
     - assets/data/records.json
     - assets/data/menu.json
     - assets/data/defaultNotificationList.json
