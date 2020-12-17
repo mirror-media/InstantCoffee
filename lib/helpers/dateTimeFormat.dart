@@ -20,6 +20,18 @@ class DateTimeFormat {
     return DateFormat(formatType).format(gmt8Date);
   }
 
+  static DateTime changeBirthdayStringToDatetime(String data,) {
+    try{
+      DateTime parsedDate = DateFormat('yyyy-MM-dd').parse(data);
+      return parsedDate;
+    } catch(e) {
+      return null;
+    }
+  }
+
+  static String changeDatetimeToBirthdayString(DateTime data,) {
+    return '${data.year}-${data.month}-${data.day}';
+  }
   /// return string of duration in hh:mm:ss form(has pending 0)
   static String stringDuration(Duration duration) {
     if (duration == null) {

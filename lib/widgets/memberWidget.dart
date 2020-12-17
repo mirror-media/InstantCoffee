@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/loginBLoc.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/userData.dart';
 
 class MemberWidget extends StatefulWidget {
@@ -78,7 +79,9 @@ class _MemberWidgetState extends State<MemberWidget> {
                       ),
                     ),
                   ),
-                  onTap: (){},
+                  onTap: (){
+                    RouteGenerator.navigateToEditUserProfile(context, widget.userData);
+                  },
                 ),
 
                 Padding(
