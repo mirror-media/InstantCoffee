@@ -38,10 +38,6 @@ class _MemberWidgetState extends State<MemberWidget> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
-            case Status.Loading:
-              return Center(child: CircularProgressIndicator());
-              break;
-
             case Status.Complete:
               UserData userData = snapshot.data.data;
               return _memberSection(width, userData, snapshot.data.status);
@@ -60,10 +56,6 @@ class _MemberWidgetState extends State<MemberWidget> {
             case Status.SavingError:
               UserData userData = snapshot.data.data;
               return _memberSection(width, userData, snapshot.data.status);
-              break;
-
-            case Status.Error:
-              return Container();
               break;
           }
         }

@@ -5,8 +5,6 @@ class MemberResponse<T> {
 
   String message;
 
-  MemberResponse.loading(this.message) : status = Status.Loading;
-
   MemberResponse.completed(this.data) : status = Status.Complete;
 
   MemberResponse.savingLoading(this.data, this.message) : status = Status.SavingLoading;
@@ -15,8 +13,6 @@ class MemberResponse<T> {
 
   MemberResponse.savingError(this.data, this.message) : status = Status.SavingError;
 
-  MemberResponse.error(this.message) : status = Status.Error;
-
   @override
   String toString() {
     return "Status : $status \n Message : $message \n Data : $data";
@@ -24,10 +20,8 @@ class MemberResponse<T> {
 }
 
 enum Status { 
-  Loading, 
   Complete,
   SavingLoading,
   SavingSuccessfully,
   SavingError,
-  Error,
 }
