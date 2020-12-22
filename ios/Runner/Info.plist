@@ -26,6 +26,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.231032158952-qt05qfar7ikt0e7237qtjri53mdm7qst</string>
+				<string>com.googleusercontent.apps.305253456270-o63n9u2m3k937v2jbt55dqsjk645d3le</string>
 			</array>
 		</dict>
 		<dict>
@@ -36,6 +37,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.mirrormedia.news</string>
+				<string>com.mirrormedia.news.dev</string>
 			</array>
 		</dict>
 	</array>

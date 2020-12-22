@@ -23,9 +23,12 @@ doc/api/
 # for internal constants
 lib/helpers/constants.dart 
 lib/helpers/apiConstants.dart
-android/app/google-services.json
-# in Runner Runner
-ios/Runner/GoogleService-Info.plist
+# firebase data
+android/app/src/dev/google-services.json
+android/app/src/prod/google-services.json
+ios/config/dev/GoogleService-Info.plist
+ios/config/prod/GoogleService-Info.plist
+
 .flutter-plugins
 .flutter-plugins-dependencies
 # key
