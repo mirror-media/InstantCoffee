@@ -1,4 +1,4 @@
-import 'package:readr_app/helpers/apiConstants.dart';
+import 'package:readr_app/env.dart';
 
 class Record {
   String title;
@@ -40,7 +40,7 @@ class Record {
       origPublishedDate = json['publishTime'];
     }
 
-    String photoUrl = mirrorMediaNotImageUrl;
+    String photoUrl = env.baseConfig.mirrorMediaNotImageUrl;
     if (json.containsKey('heroImage') && json['heroImage'] != null && json['heroImage']['image'] != null) {
       photoUrl = json['heroImage']['image']['resizedTargets']['mobile']['url'];
     } else if (json.containsKey('snippet') && json['snippet'] != null) {

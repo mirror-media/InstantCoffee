@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:readr_app/helpers/apiConstants.dart';
+import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/models/listening.dart';
 import 'package:readr_app/models/storyAd.dart';
@@ -43,7 +43,7 @@ class ListeningWidgetBloc {
     try {
       Listening listening = await _listeningWidgetService.fetchListening(slug);
       RecordList recordList = await _listeningTabContentService.fetchRecordList(
-          apiBase +
+          env.baseConfig.apiBase +
               'youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw');
 
       String storyAdJsonFileLocation = Platform.isIOS

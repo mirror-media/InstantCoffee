@@ -1,5 +1,5 @@
+import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
-import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/models/recordList.dart';
 
 class SearchService {
@@ -9,7 +9,7 @@ class SearchService {
 
   Future<RecordList> search(String keyword, {String sectionId = '', int maxResults = 20, int page = 1}) async {
     final jsonResponse = await _helper.getByUrl(
-      searchApi + '?where={"section":"$sectionId"}&max_results=$maxResults&page=$page&keyword=$keyword'
+      env.baseConfig.searchApi + '?where={"section":"$sectionId"}&max_results=$maxResults&page=$page&keyword=$keyword'
     );
 
     RecordList recordList = RecordList.fromJson(jsonResponse["hits"]["hits"]);

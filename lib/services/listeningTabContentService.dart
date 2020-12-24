@@ -1,5 +1,5 @@
+import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
-import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/helpers/cacheDurationCache.dart';
 import 'package:readr_app/models/recordList.dart';
 
@@ -22,7 +22,7 @@ class ListeningTabContentService {
 
     var jsonObject = jsonResponse['items'];
     _nextPageUrl =
-        listeningWidgetApi + '&pageToken=' + jsonResponse['nextPageToken'];
+        env.baseConfig.listeningWidgetApi + '&pageToken=' + jsonResponse['nextPageToken'];
     RecordList records = RecordList.fromJson(jsonObject);
     return records;
   }

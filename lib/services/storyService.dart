@@ -1,5 +1,5 @@
+import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
-import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/helpers/cacheDurationCache.dart';
 import 'package:readr_app/models/story.dart';
 
@@ -7,7 +7,7 @@ class StoryService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<Story> fetchStory(String slug) async {
-    String endpoint = apiBase +
+    String endpoint = env.baseConfig.apiBase +
         'posts?where={"slug":"' +
         slug +
         '","isAudioSiteOnly":false' +

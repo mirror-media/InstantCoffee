@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:readr_app/helpers/apiConstants.dart';
+import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/models/sectionAd.dart';
 import 'package:readr_app/services/editorChoiceService.dart';
@@ -8,7 +8,7 @@ import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/services/recordService.dart';
 
 class TabContentBloc {
-  String _endpoint = latestAPI;
+  String _endpoint = env.baseConfig.latestAPI;
   bool _isLoading = false;
   
   RecordService _recordService;
@@ -100,13 +100,13 @@ class TabContentBloc {
   switchTab(String id, String type, {bool needCarousel = false}) {
     _recordService.initialPage();
     if (type == 'section') {
-      _endpoint = listingBase + '&where={"sections":{"\$in":["' + id + '"]}}';
+      _endpoint = env.baseConfig.listingBase + '&where={"sections":{"\$in":["' + id + '"]}}';
     } else if (id == 'latest') {
-      _endpoint = latestAPI;
+      _endpoint = env.baseConfig.latestAPI;
     } else if (id == 'popular') {
-      _endpoint = popularListAPI;
+      _endpoint = env.baseConfig.popularListAPI;
     } else if (id == 'personal') {
-      _endpoint = listingBaseSearchByPersonAndFoodSection;
+      _endpoint = env.baseConfig.listingBaseSearchByPersonAndFoodSection;
     }
 
     if (needCarousel) {

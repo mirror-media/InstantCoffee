@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/blocs/sectionBloc.dart';
-import 'package:readr_app/helpers/apiConstants.dart';
+import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/appLinkHelper.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
@@ -96,12 +96,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
       );
 
       _scrollControllerList.add(ScrollController());
-      if (section.key == listeningSectionKey) {
+      if (section.key == env.baseConfig.listeningSectionKey) {
         _tabWidgets.add(ListeningTabContent(
           section: section,
           scrollController: _scrollControllerList[i],
         ));
-      } else if (section.key == personalSectionKey){
+      } else if (section.key == env.baseConfig.personalSectionKey){
         _tabWidgets.add(PersonalWidget(
           onBoardingBloc: widget.onBoardingBloc,
           scrollController: _scrollControllerList[i],

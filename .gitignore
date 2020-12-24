@@ -23,6 +23,7 @@ doc/api/
 # for internal constants
 lib/helpers/constants.dart 
 lib/helpers/apiConstants.dart
+lib/helpers/devApiConstants.dart
 # firebase data
 android/app/src/dev/google-services.json
 android/app/src/prod/google-services.json
