@@ -6,8 +6,8 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:mirrormediadev.onelink.me</string>
-		<string>applinks:mirrormediadev.page.link</string>
+		<string>applinks:mirrormedia.onelink.me</string>
+		<string>applinks:mirrormedia.page.link</string>
 	</array>
 </dict>
 </plist>
