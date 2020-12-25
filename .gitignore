@@ -33,8 +33,10 @@ ios/config/prod/GoogleService-Info.plist
 .flutter-plugins
 .flutter-plugins-dependencies
 # key
-android/key.properties
+android/prod.properties
 android/MirrorMedia.jks
+android/dev.properties
+android/MirrorMediaDev.jks
 
 # Mac OS
 **/.DS_Store
