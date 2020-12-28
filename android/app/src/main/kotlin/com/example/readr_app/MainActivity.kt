@@ -9,7 +9,9 @@ import io.flutter.embedding.android.FlutterActivity
 class MainActivity: FlutterActivity() {
     override fun onNewIntent(@NonNull intent : Intent){
         var uri: String? = intent.data?.toString()
-        if (uri != null && uri!!.startsWith("https://mirrormedia.onelink.me")) {
+        if (uri != null && 
+            (uri!!.startsWith("https://mirrormedia.onelink.me") || uri!!.startsWith("https://mirrormediadev.onelink.me") )
+        ) {
             setIntent(intent)
         } else {
             super.onNewIntent(intent)
