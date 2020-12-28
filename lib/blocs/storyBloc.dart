@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/story.dart';
@@ -38,8 +39,8 @@ class StoryBloc {
       Story story = await _storyService.fetchStory(slug);
 
       String storyAdJsonFileLocation = Platform.isIOS
-      ? 'assets/data/iOSStoryAd.json'
-      : 'assets/data/androidStoryAd.json';
+      ? env.baseConfig.iOSStoryAdJsonLocation
+      : env.baseConfig.androidStoryAdJsonLocation;
       // String storyAdJsonFileLocation = Platform.isIOS
       // ? 'assets/data/iOSTestStoryAd.json'
       // : 'assets/data/androidTestStoryAd.json';

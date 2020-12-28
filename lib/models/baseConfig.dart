@@ -37,6 +37,11 @@ class BaseConfig {
   String get finishSignUpUrl => isDev ? dev.finishSignUpUrl : prod.finishSignUpUrl;
   String get dynamicLinkDomain => isDev ? dev.dynamicLinkDomain : prod.dynamicLinkDomain;
 
+  String get iOSSectionAdJsonLocation => isDev ? dev.iOSSectionAdJsonLocation : prod.iOSSectionAdJsonLocation;
+  String get androidSectionAdJsonLocation => isDev ? dev.androidSectionAdJsonLocation : prod.androidSectionAdJsonLocation;
+  String get iOSStoryAdJsonLocation => isDev ? dev.iOSStoryAdJsonLocation : prod.iOSStoryAdJsonLocation;
+  String get androidStoryAdJsonLocation => isDev ? dev.androidStoryAdJsonLocation : prod.androidStoryAdJsonLocation;
+
   String get appsFlyerKey => isDev ? dev.appsFlyerKey : prod.appsFlyerKey;
   String get firebaseApiKey => isDev ? dev.firebaseApiKey : prod.firebaseApiKey;
 }

@@ -47,8 +47,8 @@ class ListeningWidgetBloc {
               'youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw');
 
       String storyAdJsonFileLocation = Platform.isIOS
-      ? 'assets/data/iOSStoryAd.json'
-      : 'assets/data/androidStoryAd.json';
+      ? env.baseConfig.iOSStoryAdJsonLocation
+      : env.baseConfig.androidStoryAdJsonLocation;
       // String storyAdJsonFileLocation = Platform.isIOS
       // ? 'assets/data/iOSTestStoryAd.json'
       // : 'assets/data/androidTestStoryAd.json';
