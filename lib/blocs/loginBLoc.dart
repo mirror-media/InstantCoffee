@@ -35,12 +35,12 @@ class LoginBloc {
     }
   }
 
-  renderingUI() {
+  renderingUI() async{
     loginSinkToAdd(LoginResponse.loadingUI('Getting login token'));
     if(auth.currentUser == null) {
       loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
     } else {
-      UserData userData = getUserDate();
+      UserData userData = await getUserData();
       loginSinkToAdd(LoginResponse.completed(userData));
     }
   }
@@ -62,18 +62,22 @@ class LoginBloc {
     EmailSignInService emailSignInService = EmailSignInService();
     FirebaseLoginStatus firebaseLoginStatus = await emailSignInService.verifyEmail(auth, email, emailLink);
     if(firebaseLoginStatus.status == FirebaseStatus.Success) {
-      UserData userData = getUserDate();
+      UserData userData = await getUserData();
       loginSinkToAdd(LoginResponse.completed(userData));
     } else {
       loginSinkToAdd(LoginResponse.error('Verify email fail'));
     }
   }
 
-  UserData getUserDate() {
+  Future<UserData> getUserData() async{
+    await Future.delayed(Duration(seconds: 1));
+
     return UserData(
       email: auth.currentUser.email,
-      name: auth.currentUser.displayName,
+      name: null,
       profilePhoto: auth.currentUser.photoURL,
+      phoneNumber: auth.currentUser.phoneNumber,
+      gender: Gender.Null,
     );
   }
 
@@ -87,7 +91,7 @@ class LoginBloc {
       if(frebaseLoginStatus.status == FirebaseStatus.Cancel) {
         loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
       } else if(frebaseLoginStatus.status == FirebaseStatus.Success) {
-        UserData userData = getUserDate();
+        UserData userData = await getUserData();
         Scaffold.of(context).showSnackBar(
           SnackBar(
             content: Text('登入成功')
@@ -113,10 +117,10 @@ class LoginBloc {
       if(frebaseLoginStatus.status == FirebaseStatus.Cancel) {
         loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
       } else if(frebaseLoginStatus.status == FirebaseStatus.Success) {
-        UserData userData = getUserDate();
+        UserData userData = await getUserData();
         Scaffold.of(context).showSnackBar(
           SnackBar(
-            content: Text('${userData.name} 登入成功')
+            content: Text('登入成功')
           )
         );
         loginSinkToAdd(LoginResponse.completed(userData));
