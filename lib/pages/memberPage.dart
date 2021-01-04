@@ -53,6 +53,9 @@ class _MemberPageState extends State<MemberPage> {
                 return _loginStandardWidget(
                   width,
                   Status.NeedToLogin,
+                  facebookLoginFunction: () {
+                    _loginBloc.loginByFacebook(context);
+                  },
                   googleLoginFunction: () {
                     _loginBloc.loginByGoogle(context);
                   },
@@ -61,6 +64,13 @@ class _MemberPageState extends State<MemberPage> {
                       _loginBloc.loginByEmail(_email);
                     }
                   },
+                );
+                break;
+              
+              case Status.FacebookLoading:
+                return _loginStandardWidget(
+                  width,
+                  Status.FacebookLoading,
                 );
                 break;
               
@@ -334,6 +344,7 @@ class _MemberPageState extends State<MemberPage> {
     double width,
     Status status,
     {
+      Function facebookLoginFunction,
       Function googleLoginFunction,
       Function emailLoginFunction,
     }
@@ -349,6 +360,21 @@ class _MemberPageState extends State<MemberPage> {
             ),
           ),
         ),
+        SizedBox(height: 16),
+        if(status != Status.FacebookLoading)
+          Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+            child: _thirdPartyLoginButton(
+              'assets/image/facebook_icon.png', 
+              '使用 Facebook 帳號登入', 
+              facebookLoginFunction,
+            ),
+          ),
+        if(status == Status.FacebookLoading)
+          Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+            child: _thirdPartyLoadingButton(),
+          ),
         SizedBox(height: 16),
         if(status != Status.GoogleLoading)
           Padding(

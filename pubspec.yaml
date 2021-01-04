@@ -98,6 +98,8 @@ dependencies:
   firebase_auth: ^0.18.3+1
   # google sign in
   google_sign_in: ^4.5.6
+  # facebook sign in
+  flutter_facebook_login: ^3.0.0
 
   # generate app icons
   flutter_launcher_icons: ^0.7.5
@@ -127,6 +129,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/icon/icon.jpg
+    - assets/image/facebook_icon.png
     - assets/image/google_icon.png
     - assets/image/wine_warning.png
     - assets/data/countries.json

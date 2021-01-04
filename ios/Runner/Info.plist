@@ -30,6 +30,12 @@
 			</array>
 		</dict>
 		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb175313259598308</string>
+			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
@@ -40,6 +46,17 @@
 				<string>com.mirrormedia.news.dev</string>
 			</array>
 		</dict>
+	</array>
+	<key>FacebookAppID</key>
+	<string>175313259598308</string>
+	<key>FacebookDisplayName</key>
+	<string>鏡傳媒</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>

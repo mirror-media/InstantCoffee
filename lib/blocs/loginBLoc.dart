@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:readr_app/models/firebaseLoginStatus.dart';
 import 'package:readr_app/models/userData.dart';
 import 'package:readr_app/services/emailSignInService.dart';
+import 'package:readr_app/services/facebookSignInService.dart';
 import 'package:readr_app/services/googleSignInService.dart';
 import 'package:readr_app/helpers/loginResponse.dart';
 
@@ -74,6 +75,32 @@ class LoginBloc {
       name: auth.currentUser.displayName,
       profilePhoto: auth.currentUser.photoURL,
     );
+  }
+
+  loginByFacebook(BuildContext context) async {
+    loginSinkToAdd(LoginResponse.facebookLoading('Running facebook login'));
+
+    try {
+      FacebookSignInService facebookSignInService = FacebookSignInService();
+      FirebaseLoginStatus frebaseLoginStatus = await facebookSignInService.signInWithFacebook(auth);
+
+      if(frebaseLoginStatus.status == FirebaseStatus.Cancel) {
+        loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
+      } else if(frebaseLoginStatus.status == FirebaseStatus.Success) {
+        UserData userData = getUserDate();
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text('登入成功')
+          )
+        );
+        loginSinkToAdd(LoginResponse.completed(userData));
+      } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
+        loginSinkToAdd(LoginResponse.error('Firebase facebook login fail'));
+      } 
+    } catch (e) {
+      loginSinkToAdd(LoginResponse.error(e.toString()));
+      print(e);
+    }
   }
 
   loginByGoogle(BuildContext context) async {
