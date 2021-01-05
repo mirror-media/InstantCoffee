@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/tabContentBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/pages/storyPage.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/models/section.dart';
@@ -255,7 +255,7 @@ class _TabContentState extends State<TabContent> {
           ),
         ],
       ),
-      onTap: navigateToStoryPage(context, record.slug),
+      onTap: () => RouteGenerator.navigateToStory(context, record.slug),
     );
   }
 
@@ -307,15 +307,7 @@ class _TabContentState extends State<TabContent> {
           ],
         ),
       ),
-      onTap: navigateToStoryPage(context, record.slug),
+      onTap: () => RouteGenerator.navigateToStory(context, record.slug),
     );
   }
-
-  Function navigateToStoryPage(BuildContext context, String slug) =>
-      () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => StoryPage(slug: slug))
-        );
-      };
 }

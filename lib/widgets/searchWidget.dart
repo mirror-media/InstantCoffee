@@ -3,11 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/searchPageBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/models/sectionList.dart';
-import 'package:readr_app/pages/storyPage.dart';
 
 class SearchWidget extends StatefulWidget {
   final SearchPageBloc searchPageBloc;
@@ -273,12 +273,7 @@ class _SearchWidgetState extends State<SearchWidget> {
           ],
         ),
       ),
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => StoryPage(slug: record.slug)));
-      },
+      onTap: () => RouteGenerator.navigateToStory(context, record.slug),
     );
   }
 

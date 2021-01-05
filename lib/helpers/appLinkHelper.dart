@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:readr_app/pages/storyPage.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:uni_links/uni_links.dart';
 
 class AppLinkHelper {
@@ -33,17 +33,9 @@ class AppLinkHelper {
     }
   }
 
-  _navigateToStoryPage(BuildContext context, String slug ,{isListeningPage = false}) async{
+  _navigateToStoryPage(BuildContext context, String slug ,{isListeningPage = false}) {
     if(slug != null && slug != '') {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => StoryPage(
-            slug: slug,
-            isListeningWidget: isListeningPage,
-          )
-        )
-      );
+      RouteGenerator.navigateToStory(context, slug, isListeningWidget: isListeningPage);
     }
   }
 

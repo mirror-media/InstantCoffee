@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
-import 'package:readr_app/pages/storyPage.dart';
 
 class CarouselDisplayWidget extends StatelessWidget {
   final Record record;
@@ -35,10 +35,7 @@ class CarouselDisplayWidget extends StatelessWidget {
         ],
       ),
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => StoryPage(slug: record.slug)));
+        RouteGenerator.navigateToStory(context, record.slug);
       },
     );
   }

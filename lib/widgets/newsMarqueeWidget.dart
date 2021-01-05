@@ -1,8 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/recordList.dart';
-import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/widgets/marqueeWidget.dart';
 
 class NewsMarqueeWidget extends StatefulWidget {
@@ -69,12 +69,7 @@ class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
             animationDuration: Duration(milliseconds: 4000),
           ),
         ),
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => StoryPage(slug: recordList[i].slug)));
-        },
+        onTap: () => () => RouteGenerator.navigateToStory(context, recordList[i].slug),
       ));
     }
 
