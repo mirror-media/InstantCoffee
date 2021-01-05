@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
-import 'package:readr_app/main.dart';
+import 'package:readr_app/mirrorApp.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/pages/searchPage.dart';
 import 'package:readr_app/pages/storyPage.dart';
