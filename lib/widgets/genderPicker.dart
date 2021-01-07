@@ -5,7 +5,7 @@ class GenderPicker extends StatefulWidget {
   final Gender gender;
   final ValueChanged<Gender> onGenderChange;
   GenderPicker({
-    this.gender = Gender.Null,
+    this.gender = Gender.A_0,
     this.onGenderChange,
   });
 
@@ -17,7 +17,7 @@ class _GenderPickerState extends State<GenderPicker> {
   String male = '男';
   String female = '女';
   String unknown = '不透露';
-  Gender _targetGender = Gender.Null;
+  Gender _targetGender = Gender.A_0;
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _GenderPickerState extends State<GenderPicker> {
             Row(
               children: [
                 Radio<Gender>(
-                  value: Gender.Male,
+                  value: Gender.A_1,
                   groupValue: _targetGender,
                   onChanged: genderChange,
                 ),
@@ -65,7 +65,7 @@ class _GenderPickerState extends State<GenderPicker> {
             Row(
               children: [
                 Radio<Gender>(
-                  value: Gender.Female,
+                  value: Gender.A_2,
                   groupValue: _targetGender,
                   onChanged: genderChange,
                 ),
@@ -80,7 +80,7 @@ class _GenderPickerState extends State<GenderPicker> {
             Row(
               children: [
                 Radio<Gender>(
-                  value: Gender.Unknown,
+                  value: Gender.A_3,
                   groupValue: _targetGender,
                   onChanged: genderChange,
                 ),

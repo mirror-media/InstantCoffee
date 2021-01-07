@@ -57,8 +57,12 @@ class UserData {
 }
 
 enum Gender {
-  Null,
-  Male,
-  Female,
-  Unknown,
+  //Null,
+  A_0,
+  //Male,
+  A_1,
+  //Female,
+  A_2,
+  //Unknown,
+  A_3,
 }
