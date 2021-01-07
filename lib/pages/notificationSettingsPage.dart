@@ -47,6 +47,14 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
     if (_notificationSettingList == null) {
       await _initNotification();
+    } else {
+      NotificationSettingList notificationSettingListFromAsset = await _getNotificationFromAsset();
+      checkAndSyncNotificationSettingList(
+        notificationSettingListFromAsset,
+        _notificationSettingList
+      );
+      _notificationSettingList = notificationSettingListFromAsset;
+      _storage.setItem("notification", _notificationSettingList.toJson());
     }
 
     for(int i=0; i<_notificationSettingList.length; i++) {
@@ -77,6 +85,52 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       }
     });
     setState(() {});
+  }
+
+  Future<NotificationSettingList> _getNotificationFromAsset() async {
+    var jsonSetting =
+        await rootBundle.loadString('assets/data/defaultNotificationList.json');
+    var jsonSettingList = json.decode(jsonSetting)['defaultNotificationList'];
+    return NotificationSettingList.fromJson(jsonSettingList);
+  }
+
+  /// assetList is from defaultNotificationList.json
+  /// userList is from storage notification
+  /// change the title and topic from assetList
+  /// keep the subscription value from userList
+  checkAndSyncNotificationSettingList(NotificationSettingList assetList, NotificationSettingList userList) async{
+    if(assetList != null) {
+      assetList.forEach(
+        (asset) { 
+          NotificationSetting user = userList?.getById(asset.id);
+          if(user != null && user.id == asset.id) {
+            if(user.topic != asset.topic && user.value) {
+              _firebaseMessangingHelper.unsubscribeFromTopic(user.topic);
+              _firebaseMessangingHelper.subscribeToTopic(asset.topic);
+            }
+            asset.value = user.value;
+
+            if(asset.notificationSettingList != null || user.notificationSettingList != null) {
+              checkAndSyncNotificationSettingList(
+                asset.notificationSettingList,
+                user.notificationSettingList
+              );
+            }
+          }
+        }
+      );
+    }
+
+    if(userList != null) {
+      userList.forEach(
+        (user) { 
+          NotificationSetting asset = assetList?.getById(user.id);
+          if(asset == null && user.topic != null && user.value) {
+            _firebaseMessangingHelper.unsubscribeFromTopic(user.topic);
+          }
+        }
+      );
+    }
   }
 
   Future<void> _initNotification() async {
