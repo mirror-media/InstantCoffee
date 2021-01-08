@@ -73,7 +73,7 @@ class LoginBloc {
     if(firebaseLoginStatus.status == FirebaseStatus.Success) {
       handleCreateMember();
     } else {
-      loginSinkToAdd(LoginResponse.error('Verify email fail'));
+      loginSinkToAdd(LoginResponse.loginError('Verify email fail'));
     }
   }
 
@@ -100,7 +100,7 @@ class LoginBloc {
       }
     } else {
       await auth.signOut();
-      loginSinkToAdd(LoginResponse.error('Create member fail'));
+      loginSinkToAdd(LoginResponse.loginError('Create member fail'));
     }
   }
 
@@ -116,10 +116,10 @@ class LoginBloc {
       } else if(frebaseLoginStatus.status == FirebaseStatus.Success) {
         handleCreateMember(context: context);
       } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
-        loginSinkToAdd(LoginResponse.error('Firebase facebook login fail'));
+        loginSinkToAdd(LoginResponse.loginError('Firebase facebook login fail'));
       } 
     } catch (e) {
-      loginSinkToAdd(LoginResponse.error(e.toString()));
+      loginSinkToAdd(LoginResponse.loginError(e.toString()));
       print(e);
     }
   }
@@ -136,10 +136,10 @@ class LoginBloc {
       } else if(frebaseLoginStatus.status == FirebaseStatus.Success) {
         handleCreateMember(context: context);
       } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
-        loginSinkToAdd(LoginResponse.error('Firebase google login fail'));
+        loginSinkToAdd(LoginResponse.loginError('Firebase google login fail'));
       } 
     } catch (e) {
-      loginSinkToAdd(LoginResponse.error(e.toString()));
+      loginSinkToAdd(LoginResponse.loginError(e.toString()));
       print(e);
     }
   }
@@ -160,10 +160,10 @@ class LoginBloc {
 
         loginSinkToAdd(LoginResponse.emailLinkGetting(userData));
       } else {
-        loginSinkToAdd(LoginResponse.error('Firebase sending email fail'));
+        loginSinkToAdd(LoginResponse.loginError('Firebase sending email fail'));
       }
     } catch (e) {
-      loginSinkToAdd(LoginResponse.error(e.toString()));
+      loginSinkToAdd(LoginResponse.loginError(e.toString()));
       print(e);
     }
   }
