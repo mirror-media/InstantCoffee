@@ -1,7 +1,7 @@
 import 'package:readr_app/helpers/EnumParser.dart';
 import 'package:readr_app/models/contactAddress.dart';
 
-class UserData {
+class Member {
   String email;
   String name;
   Gender gender;
@@ -12,7 +12,7 @@ class UserData {
 
   String verifyEmailLink;
 
-  UserData({
+  Member({
     this.email,
     this.name,
     this.gender,
@@ -25,8 +25,8 @@ class UserData {
   });
 
   // deep copy
-  UserData copy() {
-    return UserData(
+  Member copy() {
+    return Member(
       email: this.email,
       name: this.name,
       gender: this.gender,
@@ -39,13 +39,13 @@ class UserData {
     );
   }
 
-  factory UserData.fromJson(Map<String, dynamic> json) {
+  factory Member.fromJson(Map<String, dynamic> json) {
     if(json == null) {
       return null;
     }
 
     String genderString = json['gender'];
-    return UserData(
+    return Member(
       email: json['email'],
       name: json['name'],
       gender: genderString.toEnum(Gender.values),

@@ -2,27 +2,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/memberBloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/models/userData.dart';
+import 'package:readr_app/models/member.dart';
 import 'package:readr_app/widgets/birthdayPicker.dart';
 import 'package:readr_app/widgets/genderPicker.dart';
 
-class EditUserProfile extends StatefulWidget {
-  final UserData userData;
+class EditMemberProfile extends StatefulWidget {
+  final Member member;
   final MemberBloc memberBloc;
-  EditUserProfile({
-    @required this.userData,
+  EditMemberProfile({
+    @required this.member,
     @required this.memberBloc,
   });
 
   @override
-  _EditUserProfileState createState() => _EditUserProfileState();
+  _EditMemberProfileState createState() => _EditMemberProfileState();
 }
 
-class _EditUserProfileState extends State<EditUserProfile> {
-  UserData _editUserData;
+class _EditMemberProfileState extends State<EditMemberProfile> {
+  Member _editMember;
   @override
   void initState() {
-    _editUserData = widget.userData.copy();
+    _editMember = widget.member.copy();
     super.initState();
   }
 
@@ -36,20 +36,20 @@ class _EditUserProfileState extends State<EditUserProfile> {
           SizedBox(height: 32),
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: _emailSection(_editUserData.email),
+            child: _emailSection(_editMember.email),
           ),
           SizedBox(height: 28),
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: _nameTextField(_editUserData),
+            child: _nameTextField(_editMember),
           ),
           SizedBox(height: 24),
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: GenderPicker(
-              gender: _editUserData.gender,
+              gender: _editMember.gender,
               onGenderChange: (Gender gender){
-                _editUserData.gender = gender;
+                _editMember.gender = gender;
               },
             ),
           ),
@@ -57,9 +57,9 @@ class _EditUserProfileState extends State<EditUserProfile> {
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: BirthdayPicker(
-              birthday: _editUserData.birthday,
+              birthday: _editMember.birthday,
               onBirthdayChange: (String birthday){
-                _editUserData.birthday = birthday;
+                _editMember.birthday = birthday;
               },
             ),
           ),
@@ -92,7 +92,7 @@ class _EditUserProfileState extends State<EditUserProfile> {
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             onPressed: () {
-              widget.memberBloc.saveUserDate(_editUserData);
+              widget.memberBloc.saveMember(_editMember);
               Navigator.of(context).pop();
             },
           ),
@@ -123,7 +123,7 @@ class _EditUserProfileState extends State<EditUserProfile> {
     );
   }
 
-  Widget _nameTextField(UserData userData) {
+  Widget _nameTextField(Member member) {
     return Container(
       color: Colors.grey[300],
       child: Column(
@@ -140,7 +140,7 @@ class _EditUserProfileState extends State<EditUserProfile> {
             ),
           ),
           TextFormField(
-            initialValue: userData.name,
+            initialValue: member.name,
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.fromLTRB(12.0, 8.0, 12.0, 8.0),
               hintText: "王大明",
@@ -150,7 +150,7 @@ class _EditUserProfileState extends State<EditUserProfile> {
               ),
             ),
             onChanged: (value){
-              userData.name = value;
+              member.name = value;
             },
           ),
         ],

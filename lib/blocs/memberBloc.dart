@@ -1,33 +1,33 @@
 import 'dart:async';
 
 import 'package:readr_app/helpers/memberResponse.dart';
-import 'package:readr_app/models/userData.dart';
+import 'package:readr_app/models/member.dart';
 
 class MemberBloc {
-  StreamController _userDataController;
-  StreamSink<MemberResponse<UserData>> get userDataSink => _userDataController.sink;
-  Stream<MemberResponse<UserData>> get userDataStream => _userDataController.stream;
+  StreamController _memberController;
+  StreamSink<MemberResponse<Member>> get memberSink => _memberController.sink;
+  Stream<MemberResponse<Member>> get memberStream => _memberController.stream;
   
   MemberBloc() {
-    _userDataController = StreamController<MemberResponse<UserData>>();
+    _memberController = StreamController<MemberResponse<Member>>();
   }
 
-  sinkToAdd(MemberResponse<UserData> value) {
-    if (!_userDataController.isClosed) {
-      userDataSink.add(value);
+  sinkToAdd(MemberResponse<Member> value) {
+    if (!_memberController.isClosed) {
+      memberSink.add(value);
     }
   }
 
-  saveUserDate(UserData userData) async{
-    sinkToAdd(MemberResponse.savingLoading(userData, 'save loading'));
+  saveMember(Member member) async{
+    sinkToAdd(MemberResponse.savingLoading(member, 'save loading'));
     await Future.delayed(Duration(seconds: 2));
-    sinkToAdd(MemberResponse.savingSuccessfully(userData));
-    //sinkToAdd(MemberResponse.savingError(userData, 'error'));
+    sinkToAdd(MemberResponse.savingSuccessfully(member));
+    //sinkToAdd(MemberResponse.savingError(member, 'error'));
     await Future.delayed(Duration(seconds: 1));
-    sinkToAdd(MemberResponse.completed(userData));
+    sinkToAdd(MemberResponse.completed(member));
   }
 
   dispose() {
-    _userDataController?.close();
+    _memberController?.close();
   }
 }

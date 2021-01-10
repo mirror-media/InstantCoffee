@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:readr_app/blocs/userContactInfoBloc.dart';
+import 'package:readr_app/blocs/memberContactInfoBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 
 class CityPicker extends StatefulWidget {
-  final UserContactInfoBloc userContactInfoBloc;
+  final MemberContactInfoBloc memberContactInfoBloc;
   CityPicker({
-    @required this.userContactInfoBloc,
+    @required this.memberContactInfoBloc,
   });
 
   @override
@@ -22,7 +22,7 @@ class _CityPickerState extends State<CityPicker> {
   @override
   void initState() {
     _isPickerActivated = false;
-    _city = widget.userContactInfoBloc.editUserData.contactAddress.city;
+    _city = widget.memberContactInfoBloc.editMember.contactAddress.city;
     setCountryListWidget();
     super.initState();
   }
@@ -30,13 +30,13 @@ class _CityPickerState extends State<CityPicker> {
   @override
   void didUpdateWidget(CityPicker oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _city = widget.userContactInfoBloc.editUserData.contactAddress.city;
+    _city = widget.memberContactInfoBloc.editMember.contactAddress.city;
     //setCountryListWidget();
   }
 
   setCountryListWidget() {
     _cityListWidget = List<Widget>();
-    widget.userContactInfoBloc.cityList.forEach(
+    widget.memberContactInfoBloc.cityList.forEach(
       (city) { 
         _cityListWidget.add(Text(city.name));
       }
@@ -91,11 +91,11 @@ class _CityPickerState extends State<CityPicker> {
               ),
             ),
             onTap: () {
-              if(widget.userContactInfoBloc.editUserData.contactAddress.country != null && 
-              widget.userContactInfoBloc.editUserData.contactAddress.country == '臺灣') {
+              if(widget.memberContactInfoBloc.editMember.contactAddress.country != null && 
+              widget.memberContactInfoBloc.editMember.contactAddress.country == '臺灣') {
                 setState(() {
                   _isPickerActivated = true;
-                  _showPicker(pickerHeight, widget.userContactInfoBloc);
+                  _showPicker(pickerHeight, widget.memberContactInfoBloc);
                 });
               }
             },
@@ -105,10 +105,10 @@ class _CityPickerState extends State<CityPicker> {
     );
   }
 
-  _showPicker(double height, UserContactInfoBloc userContactInfoBloc) async{
+  _showPicker(double height, MemberContactInfoBloc memberContactInfoBloc) async{
     int targetIndex = _city == null
     ? 0
-    : userContactInfoBloc.cityList.findIndexByName(_city);
+    : memberContactInfoBloc.cityList.findIndexByName(_city);
 
     await showModalBottomSheet(
       context: context,
@@ -150,12 +150,12 @@ class _CityPickerState extends State<CityPicker> {
                         ),
                       ),
                       onTap: (){
-                        if(_city != userContactInfoBloc.cityList[targetIndex].name) {
-                          userContactInfoBloc.editUserData.contactAddress.district = null;
+                        if(_city != memberContactInfoBloc.cityList[targetIndex].name) {
+                          memberContactInfoBloc.editMember.contactAddress.district = null;
                         }
-                        _city = userContactInfoBloc.cityList[targetIndex].name;
-                        userContactInfoBloc.editUserData.contactAddress.city = _city;
-                        userContactInfoBloc.sinkToAdd(ApiResponse.completed(userContactInfoBloc.editUserData));
+                        _city = memberContactInfoBloc.cityList[targetIndex].name;
+                        memberContactInfoBloc.editMember.contactAddress.city = _city;
+                        memberContactInfoBloc.sinkToAdd(ApiResponse.completed(memberContactInfoBloc.editMember));
                         Navigator.pop(context);
                       }
                     ),

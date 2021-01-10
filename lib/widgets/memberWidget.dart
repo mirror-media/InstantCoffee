@@ -3,15 +3,15 @@ import 'package:readr_app/blocs/loginBLoc.dart';
 import 'package:readr_app/blocs/memberBloc.dart';
 import 'package:readr_app/helpers/memberResponse.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
-import 'package:readr_app/models/userData.dart';
+import 'package:readr_app/models/member.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class MemberWidget extends StatefulWidget {
   final LoginBloc loginBloc;
-  final UserData userData;
+  final Member member;
   MemberWidget({
     @required this.loginBloc,
-    @required this.userData,
+    @required this.member,
   });
 
   @override
@@ -31,30 +31,30 @@ class _MemberWidgetState extends State<MemberWidget> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    return StreamBuilder<MemberResponse<UserData>>(
-      initialData: MemberResponse.completed(widget.userData),
-      stream: _memberBloc.userDataStream,
+    return StreamBuilder<MemberResponse<Member>>(
+      initialData: MemberResponse.completed(widget.member),
+      stream: _memberBloc.memberStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.Complete:
-              UserData userData = snapshot.data.data;
-              return _memberSection(width, userData, snapshot.data.status);
+              Member member = snapshot.data.data;
+              return _memberSection(width, member, snapshot.data.status);
               break;
 
             case Status.SavingLoading:
-              UserData userData = snapshot.data.data;
-              return _memberSection(width, userData, snapshot.data.status);
+              Member member = snapshot.data.data;
+              return _memberSection(width, member, snapshot.data.status);
               break;
 
             case Status.SavingSuccessfully:
-              UserData userData = snapshot.data.data;
-              return _memberSection(width, userData, snapshot.data.status);
+              Member member = snapshot.data.data;
+              return _memberSection(width, member, snapshot.data.status);
               break;
 
             case Status.SavingError:
-              UserData userData = snapshot.data.data;
-              return _memberSection(width, userData, snapshot.data.status);
+              Member member = snapshot.data.data;
+              return _memberSection(width, member, snapshot.data.status);
               break;
           }
         }
@@ -65,7 +65,7 @@ class _MemberWidgetState extends State<MemberWidget> {
 
   _memberSection(
     double width, 
-    UserData userData,
+    Member member,
     Status status
   ) {
     return Container(
@@ -175,9 +175,9 @@ class _MemberWidgetState extends State<MemberWidget> {
                     ),
                   ),
                   onTap: (){
-                    RouteGenerator.navigateToEditUserProfile(
+                    RouteGenerator.navigateToEditMemberProfile(
                       context, 
-                      userData,
+                      member,
                       _memberBloc,
                     );
                   },
@@ -206,9 +206,9 @@ class _MemberWidgetState extends State<MemberWidget> {
                     ),
                   ),
                   onTap: (){
-                    RouteGenerator.navigateToEditUserContactInfo(
+                    RouteGenerator.navigateToEditMemberContactInfo(
                       context, 
-                      userData,
+                      member,
                       _memberBloc,
                     );
                   },

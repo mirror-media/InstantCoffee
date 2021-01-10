@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:readr_app/blocs/userContactInfoBloc.dart';
+import 'package:readr_app/blocs/memberContactInfoBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 
 class CountryPicker extends StatefulWidget {
-  final UserContactInfoBloc userContactInfoBloc;
+  final MemberContactInfoBloc memberContactInfoBloc;
   CountryPicker({
-    @required this.userContactInfoBloc,
+    @required this.memberContactInfoBloc,
   });
 
   @override
@@ -22,14 +22,14 @@ class _CountryPickerState extends State<CountryPicker> {
   @override
   void initState() {
     _isPickerActivated = false;
-    _country = widget.userContactInfoBloc.editUserData.contactAddress.country;
+    _country = widget.memberContactInfoBloc.editMember.contactAddress.country;
     setCountryListWidget();
     super.initState();
   }
 
   setCountryListWidget() {
     _countryListWidget = List<Widget>();
-    widget.userContactInfoBloc.countryList.forEach(
+    widget.memberContactInfoBloc.countryList.forEach(
       (country) { 
         _countryListWidget.add(Text(country.taiwanName));
       }
@@ -98,7 +98,7 @@ class _CountryPickerState extends State<CountryPicker> {
             onTap: () {
               setState(() {
                 _isPickerActivated = true;
-                _showPicker(pickerHeight, widget.userContactInfoBloc);
+                _showPicker(pickerHeight, widget.memberContactInfoBloc);
               });
             },
           ),
@@ -107,11 +107,11 @@ class _CountryPickerState extends State<CountryPicker> {
     );
   }
 
-  _showPicker(double height, UserContactInfoBloc userContactInfoBloc) async{
+  _showPicker(double height, MemberContactInfoBloc memberContactInfoBloc) async{
     // 228 index is Taiwan
     int targetIndex = _country == null
     ? 228
-    : userContactInfoBloc.countryList.findIndexByTaiwanName(_country);
+    : memberContactInfoBloc.countryList.findIndexByTaiwanName(_country);
 
     await showModalBottomSheet(
       context: context,
@@ -154,13 +154,13 @@ class _CountryPickerState extends State<CountryPicker> {
                       ),
                       onTap: (){
                         setState(() {
-                          _country = userContactInfoBloc.countryList[targetIndex].taiwanName;
-                          userContactInfoBloc.editUserData.contactAddress.country = _country;
+                          _country = memberContactInfoBloc.countryList[targetIndex].taiwanName;
+                          memberContactInfoBloc.editMember.contactAddress.country = _country;
                           if(_country != '臺灣') {
-                            userContactInfoBloc.editUserData.contactAddress.city = null;
-                            userContactInfoBloc.editUserData.contactAddress.district = null;
+                            memberContactInfoBloc.editMember.contactAddress.city = null;
+                            memberContactInfoBloc.editMember.contactAddress.district = null;
                           }
-                          userContactInfoBloc.sinkToAdd(ApiResponse.completed(userContactInfoBloc.editUserData));
+                          memberContactInfoBloc.sinkToAdd(ApiResponse.completed(memberContactInfoBloc.editMember));
                           Navigator.pop(context);
                         });
                       }

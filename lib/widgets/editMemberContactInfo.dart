@@ -2,32 +2,32 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:readr_app/blocs/memberBloc.dart';
-import 'package:readr_app/blocs/userContactInfoBloc.dart';
+import 'package:readr_app/blocs/memberContactInfoBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/models/userData.dart';
+import 'package:readr_app/models/member.dart';
 import 'package:readr_app/widgets/cityPicker.dart';
 import 'package:readr_app/widgets/countryPicker.dart';
 import 'package:readr_app/widgets/districtPicker.dart';
 
-class EditUserContactInfo extends StatefulWidget {
-  final UserData userData;
+class EditMemberContactInfo extends StatefulWidget {
+  final Member member;
   final MemberBloc memberBloc;
-  EditUserContactInfo({
-    @required this.userData,
+  EditMemberContactInfo({
+    @required this.member,
     @required this.memberBloc,
   });
   
   @override
-  _EditUserContactInfoState createState() => _EditUserContactInfoState();
+  _EditMemberContactInfoState createState() => _EditMemberContactInfoState();
 }
 
-class _EditUserContactInfoState extends State<EditUserContactInfo> {
-  UserContactInfoBloc _userContactInfoBloc;
+class _EditMemberContactInfoState extends State<EditMemberContactInfo> {
+  MemberContactInfoBloc _memberContactInfoBloc;
 
   @override
   void initState() {
-    _userContactInfoBloc = UserContactInfoBloc(widget.userData.copy());
+    _memberContactInfoBloc = MemberContactInfoBloc(widget.member.copy());
     super.initState();
   }
 
@@ -36,8 +36,8 @@ class _EditUserContactInfoState extends State<EditUserContactInfo> {
 
     return Scaffold(
       appBar: _buildBar(context),
-      body: StreamBuilder<ApiResponse<UserData>>(
-        stream: _userContactInfoBloc.userDataStream,
+      body: StreamBuilder<ApiResponse<Member>>(
+        stream: _memberContactInfoBloc.memberStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             switch (snapshot.data.status) {
@@ -47,7 +47,7 @@ class _EditUserContactInfoState extends State<EditUserContactInfo> {
 
               case Status.LOADINGMORE:
               case Status.COMPLETED:
-                return _buildBody(_userContactInfoBloc);
+                return _buildBody(_memberContactInfoBloc);
                 break;
 
               case Status.ERROR:
@@ -85,7 +85,7 @@ class _EditUserContactInfoState extends State<EditUserContactInfo> {
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             onPressed: () {
-              widget.memberBloc.saveUserDate(_userContactInfoBloc.editUserData);
+              widget.memberBloc.saveMember(_memberContactInfoBloc.editMember);
               Navigator.of(context).pop();
             }
           ),
@@ -94,22 +94,22 @@ class _EditUserContactInfoState extends State<EditUserContactInfo> {
     );
   }
 
-  Widget _buildBody(UserContactInfoBloc userContactInfoBloc) {
+  Widget _buildBody(MemberContactInfoBloc memberContactInfoBloc) {
     return ListView(
       children: [
         SizedBox(height: 24),
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: _phoneTextField(userContactInfoBloc.editUserData),
+          child: _phoneTextField(memberContactInfoBloc.editMember),
         ),
         SizedBox(height: 24),
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
           child: CountryPicker(
-            userContactInfoBloc: _userContactInfoBloc,
+            memberContactInfoBloc: memberContactInfoBloc,
           ),
         ),
-        if(_userContactInfoBloc.editUserData.contactAddress.country == '臺灣')...[
+        if(memberContactInfoBloc.editMember.contactAddress.country == '臺灣')...[
           SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
@@ -118,14 +118,14 @@ class _EditUserContactInfoState extends State<EditUserContactInfo> {
                 Expanded(
                   flex: 3,
                   child: CityPicker(
-                    userContactInfoBloc: _userContactInfoBloc,
+                    memberContactInfoBloc: memberContactInfoBloc,
                   ),
                 ),
                 SizedBox(width: 12),
                 Expanded(
                   flex: 4,
                   child: DistrictPicker(
-                    userContactInfoBloc: _userContactInfoBloc,
+                    memberContactInfoBloc: memberContactInfoBloc,
                   ),
                 ),
               ],
@@ -135,13 +135,13 @@ class _EditUserContactInfoState extends State<EditUserContactInfo> {
         SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: _adressTextField(userContactInfoBloc.editUserData),
+          child: _adressTextField(memberContactInfoBloc.editMember),
         ),
       ],
     );
   }
 
-  Widget _phoneTextField(UserData userData) {
+  Widget _phoneTextField(Member member) {
     return Container(
       color: Colors.grey[300],
       child: Column(
@@ -158,7 +158,7 @@ class _EditUserContactInfoState extends State<EditUserContactInfo> {
             ),
           ),
           TextFormField(
-            initialValue: userData.phoneNumber,
+            initialValue: member.phoneNumber,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.fromLTRB(12.0, 8.0, 12.0, 8.0),
@@ -169,7 +169,7 @@ class _EditUserContactInfoState extends State<EditUserContactInfo> {
               ),
             ),
             onChanged: (value){
-              userData.phoneNumber = value;
+              member.phoneNumber = value;
             },
           ),
         ],
@@ -177,11 +177,11 @@ class _EditUserContactInfoState extends State<EditUserContactInfo> {
     );
   }
 
-  Widget _adressTextField(UserData userData) {
+  Widget _adressTextField(Member member) {
     return Container(
       color: Colors.grey[300],
       child: TextFormField(
-        initialValue: userData.contactAddress.address,
+        initialValue: member.contactAddress.address,
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.fromLTRB(12.0, 8.0, 12.0, 8.0),
@@ -192,7 +192,7 @@ class _EditUserContactInfoState extends State<EditUserContactInfo> {
           ),
         ),
         onChanged: (value){
-          userData.contactAddress.address = value;
+          member.contactAddress.address = value;
         },
       ),
     );

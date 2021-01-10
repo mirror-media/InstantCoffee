@@ -3,7 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/blocs/loginBLoc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/loginResponse.dart';
-import 'package:readr_app/models/userData.dart';
+import 'package:readr_app/models/member.dart';
 import 'package:readr_app/widgets/emailVerifyErrorWidget.dart';
 import 'package:readr_app/widgets/fillInEmailLoginWidget.dart';
 import 'package:readr_app/widgets/loginErrorWidget.dart';
@@ -40,7 +40,7 @@ class _MemberPageState extends State<MemberPage> {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: _buildBar(context),
-      body: StreamBuilder<LoginResponse<UserData>>(
+      body: StreamBuilder<LoginResponse<Member>>(
         stream: _loginBloc.loginStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -108,7 +108,7 @@ class _MemberPageState extends State<MemberPage> {
               case Status.Completed:
                 return MemberWidget(
                   loginBloc: _loginBloc,
-                  userData: snapshot.data.data,
+                  member: snapshot.data.data,
                 );
                 break;
 

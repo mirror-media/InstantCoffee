@@ -6,45 +6,45 @@ import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/models/cityList.dart';
 import 'package:readr_app/models/contactAddress.dart';
 import 'package:readr_app/models/countryList.dart';
-import 'package:readr_app/models/userData.dart';
+import 'package:readr_app/models/member.dart';
 
-class UserContactInfoBloc {
-  UserData _editUserData;
+class MemberContactInfoBloc {
+  Member _editMember;
   CountryList _countryList;
   CityList _cityList;
-  UserData get editUserData => _editUserData;
+  Member get editMember => _editMember;
   CountryList get countryList => _countryList;
   CityList get cityList => _cityList;
 
-  StreamController _userDataController;
-  StreamSink<ApiResponse<UserData>> get userDataSink => _userDataController.sink;
-  Stream<ApiResponse<UserData>> get userDataStream => _userDataController.stream;
+  StreamController _memberController;
+  StreamSink<ApiResponse<Member>> get memberSink => _memberController.sink;
+  Stream<ApiResponse<Member>> get memberStream => _memberController.stream;
 
-  UserContactInfoBloc(UserData userData) {
+  MemberContactInfoBloc(Member member) {
     _countryList = CountryList();
     _cityList = CityList();
 
-    _userDataController = StreamController<ApiResponse<UserData>>();
-    initialize(userData);
+    _memberController = StreamController<ApiResponse<Member>>();
+    initialize(member);
   }
 
-  sinkToAdd(ApiResponse<UserData> value) {
-    if (!_userDataController.isClosed) {
-      userDataSink.add(value);
+  sinkToAdd(ApiResponse<Member> value) {
+    if (!_memberController.isClosed) {
+      memberSink.add(value);
     }
   }
 
-  initialize(UserData userData) async {
+  initialize(Member member) async {
     sinkToAdd(ApiResponse.loading('Fetching Story page'));
 
     try {
-      _editUserData = userData;
-      if(_editUserData.contactAddress == null) {
-        _editUserData.contactAddress = ContactAddress();
+      _editMember = member;
+      if(_editMember.contactAddress == null) {
+        _editMember.contactAddress = ContactAddress();
       }
       await fetchCountryListAndCityListFromJson();
 
-      sinkToAdd(ApiResponse.completed(_editUserData));
+      sinkToAdd(ApiResponse.completed(_editMember));
     } catch (e) {
       sinkToAdd(ApiResponse.error(e.toString()));
       print(e);
@@ -62,6 +62,6 @@ class UserContactInfoBloc {
   }
 
   dispose() {
-    _userDataController?.close();
+    _memberController?.close();
   }
 }
