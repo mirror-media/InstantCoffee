@@ -29,8 +29,8 @@ class DateTimeFormat {
     }
   }
 
-  static String changeDatetimeToBirthdayString(DateTime data,) {
-    return '${data.year}-${data.month}-${data.day}';
+  static String changeDatetimeToIso8601String(DateTime data) {
+    return data.toIso8601String().split('T')[0];
   }
   /// return string of duration in hh:mm:ss form(has pending 0)
   static String stringDuration(Duration duration) {
