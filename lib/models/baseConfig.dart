@@ -8,7 +8,8 @@ class BaseConfig {
   });
 
   String get apiBase => isDev ? dev.apiBase : prod.apiBase;
-  String get graphqlApi => isDev ? dev.graphqlApi : prod.graphqlApi;
+  String get memberApi => isDev ? dev.memberApi : prod.memberApi;
+
   String get mirrorMediaNotImageUrl => isDev ? dev.mirrorMediaNotImageUrl : prod.mirrorMediaNotImageUrl;
   String get latestAPI => isDev ? dev.latestAPI : prod.latestAPI;
   String get sectionAPI => isDev ? dev.sectionAPI : prod.sectionAPI;
@@ -27,6 +28,7 @@ class BaseConfig {
   String get personalSectionKey => isDev ? dev.personalSectionKey : prod.personalSectionKey;
   String get wineSectionKey => isDev ? dev.wineSectionKey : prod.wineSectionKey;
   String get listeningSectionKey => isDev ? dev.listeningSectionKey : prod.listeningSectionKey;
+  String get memberSectionKey => isDev ? dev.memberSectionKey : prod.memberSectionKey;
   String get focusSectionKey => isDev ? dev.focusSectionKey : prod.focusSectionKey;
 
   String get appleAppId => isDev ? dev.appleAppId : prod.appleAppId;
