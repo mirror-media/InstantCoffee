@@ -1,21 +1,21 @@
-class CreateMemberRes {
+class MemberRes {
   final bool success;
   final String msg;
 
-  CreateMemberRes({
+  MemberRes({
     this.success,
     this.msg,
   });
 
-  factory CreateMemberRes.fromJson(Map<String, dynamic> json) {
+  factory MemberRes.fromJson(Map<String, dynamic> json) {
     if(json == null) {
-      return CreateMemberRes(
+      return MemberRes(
         success: false,
         msg: 'error',
       );
     }
 
-    return CreateMemberRes(
+    return MemberRes(
       success: json['success'],
       msg: json['msg'],
     );

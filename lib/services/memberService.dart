@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
-import 'package:readr_app/models/createMemberRes.dart';
+import 'package:readr_app/models/memberRes.dart';
 import 'package:readr_app/models/graphqlBody.dart';
 import 'package:readr_app/models/member.dart';
 
@@ -37,8 +37,8 @@ class MemberService {
         }
       );
 
-      CreateMemberRes createMemberRes = CreateMemberRes.fromJson(jsonResponse['data']['createMember']);
-      return createMemberRes.success;
+      MemberRes memberRes = MemberRes.fromJson(jsonResponse['data']['createMember']);
+      return memberRes.success;
     } catch(e) {
       return false;
     }
@@ -48,17 +48,17 @@ class MemberService {
     String query = 
     """
     query (\$firebaseId : String!){
-        member(firebaseId: \$firebaseId) {
-            email
-            name
-            gender
-            birthday
-            phone
-            country
-            city
-            district
-            address
-        }
+      member(firebaseId: \$firebaseId) {
+        email
+        name
+        gender
+        birthday
+        phone
+        country
+        city
+        district
+        address
+      }
     }
     """;
     Map<String,String> variables = {"firebaseId" : "$firebaseId"};
@@ -73,12 +73,94 @@ class MemberService {
       env.baseConfig.graphqlApi,
       jsonEncode(graphqlBody.toJson()),
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token"
+        "Content-Type": "application/json; charset=utf-8",
+        "Authorization": "Bearer $token",
+        "Accept-Charset": "big-5",
+        "Accept-Encoding": "gzip"
       }
     );
 
     Member member = Member.fromJson(jsonResponse['data']['member']);
     return member;
+  }
+
+  Future<bool> updateMemberProfile(String firebaseId, String token, String name, Gender gender, String birthday) async{
+    String mutation = 
+    """
+    mutation (\$address: String, \$birthday: Date, \$city: String, \$country: String, \$district: String, \$firebaseId: String!, \$gender: Int, \$name: String, \$nickname: String, \$phone: String, \$profileImage: String){
+      updateMember(address: \$address, birthday: \$birthday, city: \$city, country: \$country, district: \$district, firebaseId: \$firebaseId, gender: \$gender, name: \$name, nickname: \$nickname, phone: \$phone, profileImage: \$profileImage) {
+        success
+      }
+    }
+    """;
+    Map<String,String> variables = {
+      "firebaseId" : "$firebaseId",
+      "name" : "$name",
+      "gender" : "${gender.index}",
+      "birthday" : birthday == null ? birthday : "$birthday",
+    };
+
+    GraphqlBody graphqlBody = GraphqlBody(
+      operationName: '',
+      query: mutation,
+      variables: variables,
+    );
+
+    try {
+      final jsonResponse = await _helper.postByUrl(
+        env.baseConfig.graphqlApi,
+        jsonEncode(graphqlBody.toJson()),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token"
+        }
+      );
+
+      MemberRes memberRes = MemberRes.fromJson(jsonResponse['data']['updateMember']);
+      return memberRes.success;
+    } catch(e) {
+      return false;
+    }
+  }
+
+  Future<bool> updateMemberContactInfo(String firebaseId, String token, String phoneNumber, String country, String city, String district, String address) async{
+    String mutation = 
+    """
+    mutation (\$address: String, \$birthday: Date, \$city: String, \$country: String, \$district: String, \$firebaseId: String!, \$gender: Int, \$name: String, \$nickname: String, \$phone: String, \$profileImage: String){
+      updateMember(address: \$address, birthday: \$birthday, city: \$city, country: \$country, district: \$district, firebaseId: \$firebaseId, gender: \$gender, name: \$name, nickname: \$nickname, phone: \$phone, profileImage: \$profileImage) {
+        success
+      }
+    }
+    """;
+    Map<String,String> variables = {
+      "firebaseId" : "$firebaseId",
+      "phone" : "$phoneNumber",
+      "country" : country == null ? country : "$country",
+      "city" : city == null ? city : "$city",
+      "district" : district == null ? district : "$district",
+      "address" : address == null ? address : "$address",
+    };
+
+    GraphqlBody graphqlBody = GraphqlBody(
+      operationName: '',
+      query: mutation,
+      variables: variables,
+    );
+
+    try {
+      final jsonResponse = await _helper.postByUrl(
+        env.baseConfig.graphqlApi,
+        jsonEncode(graphqlBody.toJson()),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token"
+        }
+      );
+
+      MemberRes memberRes = MemberRes.fromJson(jsonResponse['data']['updateMember']);
+      return memberRes.success;
+    } catch(e) {
+      return false;
+    }
   }
 }

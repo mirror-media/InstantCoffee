@@ -92,7 +92,7 @@ class _EditMemberProfileState extends State<EditMemberProfile> {
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             onPressed: () {
-              widget.memberBloc.saveMember(_editMember);
+              widget.memberBloc.saveMember(widget.member, _editMember, isProfile: true);
               Navigator.of(context).pop();
             },
           ),

@@ -85,7 +85,7 @@ class _EditMemberContactInfoState extends State<EditMemberContactInfo> {
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             onPressed: () {
-              widget.memberBloc.saveMember(_memberContactInfoBloc.editMember);
+              widget.memberBloc.saveMember(widget.member, _memberContactInfoBloc.editMember, isProfile: false);
               Navigator.of(context).pop();
             }
           ),
