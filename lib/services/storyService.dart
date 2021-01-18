@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
-import 'package:readr_app/helpers/cacheDurationCache.dart';
 import 'package:readr_app/models/storyRes.dart';
 
 class StoryService {
@@ -22,13 +21,12 @@ class StoryService {
         '}&related=full';
     //&clean=content
 
-    final jsonResponse = await _helper.getByCache(
+    final jsonResponse = await _helper.getByUrl(
       endpoint,
       headers: {
         'Cache-control': 'no-cache',
         "Authorization": "Bearer $token"
       },
-      maxAge: storyCacheDuration
     );
     StoryRes storyRes = StoryRes.fromJson(jsonResponse);
     return storyRes;

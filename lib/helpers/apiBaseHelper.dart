@@ -55,12 +55,17 @@ class ApiBaseHelper {
     return _returnResponse(http.Response(null, 404));
   }
 
-  Future<dynamic> getByUrl(String url) async {
+  Future<dynamic> getByUrl(
+    String url,
+    {
+      Map<String,String> headers = const {'Cache-control': 'no-cache'},
+    }
+  ) async {
     //print('Call Api Get, url $url');
     var responseJson;
     try {
       final response =
-          await http.get(url, headers: {'Cache-control': 'no-cache'});
+          await http.get(url, headers: headers);
       responseJson = _returnResponse(response);
     } on SocketException {
       print('No Internet connection');
