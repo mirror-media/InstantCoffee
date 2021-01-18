@@ -8,7 +8,13 @@ import 'package:readr_app/helpers/appException.dart';
 import 'package:readr_app/helpers/mMCacheManager.dart';
 
 class ApiBaseHelper {
-  Future<dynamic> getByCache(String url, {Duration maxAge = const Duration(days: 30),}) async {
+  Future<dynamic> getByCache(
+    String url, 
+    {
+      Duration maxAge = const Duration(days: 30),
+      Map<String,String> headers = const {'Cache-control': 'no-cache'},
+    }
+  ) async {
     //print('Get cache, url $url');
     MMCacheManager mMCacheManager = MMCacheManager();
     final cacheFile = await mMCacheManager.getFileFromCache(url);
@@ -19,7 +25,7 @@ class ApiBaseHelper {
       var responseJson;
       try {
         final response =
-            await http.get(url, headers: {'Cache-control': 'no-cache'});
+            await http.get(url, headers: headers);
         responseJson = _returnResponse(response);
         // save cache file
         mMCacheManager.putFile(url, response.bodyBytes, maxAge: maxAge, fileExtension: 'json');

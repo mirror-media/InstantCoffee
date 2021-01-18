@@ -14,6 +14,7 @@ import 'package:readr_app/models/people.dart';
 import 'package:readr_app/models/peopleList.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/story.dart';
+import 'package:readr_app/models/storyRes.dart';
 import 'package:readr_app/models/tagList.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -43,7 +44,7 @@ class _StoryWidget extends State<StoryWidget> {
     var width = MediaQuery.of(context).size.width;
     var height = width / 16 * 9;
 
-    return StreamBuilder<ApiResponse<Story>>(
+    return StreamBuilder<ApiResponse<StoryRes>>(
       stream: _storyBloc.storyStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -54,14 +55,17 @@ class _StoryWidget extends State<StoryWidget> {
 
             case Status.LOADINGMORE:
             case Status.COMPLETED:
-              Story story = snapshot.data.data;
+              StoryRes storyRes = snapshot.data.data;
+              Story story = storyRes.story;
+              bool isMember = storyRes.isMember && story.categories.isMemberOnly();
+              bool isAdsActivated = isStoryWidgetAdsActivated && !isMember;
               Color sectionColor = _storyBloc.getSectionColor(story);
 
               return Column(
                 children: [
                   Expanded(
                     child: ListView(children: [
-                      if(isStoryWidgetAdsActivated)
+                      if(isAdsActivated)
                       ...[
                         SizedBox(height: 16),
                         MMAdBanner(
@@ -80,10 +84,10 @@ class _StoryWidget extends State<StoryWidget> {
                       _buildAuthors(context, story),
                       SizedBox(height: 16),
                       _buildBrief(story, sectionColor),
-                      _buildContent(story),
+                      _buildContent(story, isAdsActivated),
                       //SizedBox(height: 32),
                       SizedBox(height: 16),
-                      if(isStoryWidgetAdsActivated)
+                      if(isAdsActivated)
                         MMAdBanner(
                           adUnitId: story.storyAd.aT3UnitId,
                           adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
@@ -94,7 +98,7 @@ class _StoryWidget extends State<StoryWidget> {
                       _buildRelatedWidget(context, story.relatedStory),
                       SizedBox(height: 16),
                       _buildMoreContentWidget(),
-                      if(isStoryWidgetAdsActivated)
+                      if(isAdsActivated)
                       ...[
                         SizedBox(height: 16),
                         MMAdBanner(
@@ -106,7 +110,7 @@ class _StoryWidget extends State<StoryWidget> {
                       ],
                       SizedBox(height: 16),
                       _buildTagWidget(context, story.tags),
-                      if(isStoryWidgetAdsActivated)
+                      if(isAdsActivated)
                       ...[
                         MMAdBanner(
                           adUnitId: story.storyAd.fTUnitId,
@@ -122,7 +126,7 @@ class _StoryWidget extends State<StoryWidget> {
                       "assets/image/wine_warning.png",
                       height: 50.0,
                     ),
-                  if(isStoryWidgetAdsActivated && !_isWineCategory(story.categories))
+                  if(isAdsActivated && !_isWineCategory(story.categories))
                     MMAdBanner(
                       adUnitId: story.storyAd.stUnitId,
                       adSize: AdmobBannerSize.BANNER,
@@ -393,7 +397,7 @@ class _StoryWidget extends State<StoryWidget> {
     return Container();
   }
 
-  _buildContent(Story story) {
+  _buildContent(Story story, bool isAdsActivated) {
     ParagraphFormat paragraphFormat = ParagraphFormat();
     int unStyleParagraphCount = 0;
     bool aT1IsActivated = false;
@@ -426,7 +430,7 @@ class _StoryWidget extends State<StoryWidget> {
                 child: Column(
                   children: [
                     paragraphFormat.parseTheParagraph(paragraph, context),
-                    if(isStoryWidgetAdsActivated && (!aT1IsActivated && unStyleParagraphCount == storyAT1AdIndex)) 
+                    if(isAdsActivated && (!aT1IsActivated && unStyleParagraphCount == storyAT1AdIndex)) 
                     ...[
                       SizedBox(height: 16),
                       MMAdBanner(
@@ -435,7 +439,7 @@ class _StoryWidget extends State<StoryWidget> {
                         isKeepAlive: true,
                       ),
                     ],
-                    if(isStoryWidgetAdsActivated && (!aT2IsActivated && unStyleParagraphCount == storyAT2AdIndex)) 
+                    if(isAdsActivated && (!aT2IsActivated && unStyleParagraphCount == storyAT2AdIndex)) 
                     ...[
                       SizedBox(height: 16),
                       MMAdBanner(

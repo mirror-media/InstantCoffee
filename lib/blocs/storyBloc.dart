@@ -9,6 +9,7 @@ import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/story.dart';
 import 'package:readr_app/models/storyAd.dart';
+import 'package:readr_app/models/storyRes.dart';
 import 'package:readr_app/services/storyService.dart';
 
 class StoryBloc {
@@ -16,17 +17,17 @@ class StoryBloc {
 
   StreamController _storyController;
 
-  StreamSink<ApiResponse<Story>> get storySink => _storyController.sink;
+  StreamSink<ApiResponse<StoryRes>> get storySink => _storyController.sink;
 
-  Stream<ApiResponse<Story>> get storyStream => _storyController.stream;
+  Stream<ApiResponse<StoryRes>> get storyStream => _storyController.stream;
 
   StoryBloc(String slug) {
     _storyService = StoryService();
-    _storyController = StreamController<ApiResponse<Story>>();
+    _storyController = StreamController<ApiResponse<StoryRes>>();
     fetchStory(slug);
   }
 
-  sinkToAdd(ApiResponse<Story> value) {
+  sinkToAdd(ApiResponse<StoryRes> value) {
     if (!_storyController.isClosed) {
       storySink.add(value);
     }
@@ -36,7 +37,8 @@ class StoryBloc {
     sinkToAdd(ApiResponse.loading('Fetching Story page'));
 
     try {
-      Story story = await _storyService.fetchStory(slug);
+      StoryRes storyRes = await _storyService.fetchStory(slug);
+      Story story = storyRes.story;
 
       String storyAdJsonFileLocation = Platform.isIOS
       ? env.baseConfig.iOSStoryAdJsonLocation
@@ -60,7 +62,7 @@ class StoryBloc {
         }
       }
 
-      sinkToAdd(ApiResponse.completed(story));
+      sinkToAdd(ApiResponse.completed(storyRes));
     } catch (e) {
       sinkToAdd(ApiResponse.error(e.toString()));
       print(e);

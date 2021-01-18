@@ -4,6 +4,7 @@ class Category {
   String title;
   bool isCampaign;
   bool isSubscribed;
+  bool isMemberOnly;
 
   Category({
     this.id,
@@ -11,6 +12,7 @@ class Category {
     this.title,
     this.isCampaign,
     this.isSubscribed,
+    this.isMemberOnly,
   });
 
   factory Category.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class Category {
       title: json['title'],
       isCampaign: json['isCampaign'],
       isSubscribed: json['isSubscribed'] ?? true,
+      isMemberOnly: json['isMemberOnly'] ?? false,
     );
   }
 
@@ -29,6 +32,7 @@ class Category {
         'title': title,
         'isCampaign': isCampaign,
         'isSubscribed': isSubscribed,
+        'isMemberOnly': isMemberOnly,
       };
 
   @override
