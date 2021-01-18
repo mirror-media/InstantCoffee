@@ -75,8 +75,6 @@ class MemberService {
       headers: {
         "Content-Type": "application/json; charset=utf-8",
         "Authorization": "Bearer $token",
-        "Accept-Charset": "big-5",
-        "Accept-Encoding": "gzip"
       }
     );
 
@@ -95,8 +93,8 @@ class MemberService {
     """;
     Map<String,String> variables = {
       "firebaseId" : "$firebaseId",
-      "name" : "$name",
-      "gender" : "${gender.index}",
+      "name" : name == null ? name : "$name",
+      "gender" : gender == null ? gender : "${gender.index}",
       "birthday" : birthday == null ? birthday : "$birthday",
     };
 
@@ -134,7 +132,7 @@ class MemberService {
     """;
     Map<String,String> variables = {
       "firebaseId" : "$firebaseId",
-      "phone" : "$phoneNumber",
+      "phone" : phoneNumber == null ? phoneNumber : "$phoneNumber",
       "country" : country == null ? country : "$country",
       "city" : city == null ? city : "$city",
       "district" : district == null ? district : "$district",
