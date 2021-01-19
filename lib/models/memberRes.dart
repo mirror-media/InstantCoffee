@@ -16,7 +16,7 @@ class MemberRes {
     }
 
     return MemberRes(
-      success: json['success'],
+      success: json['success'] ?? false,
       msg: json['msg'],
     );
   }

@@ -40,9 +40,9 @@ class Member {
   }
 
   factory Member.fromJson(Map<String, dynamic> json) {
-    if(json == null) {
-      return null;
-    }
+    // if(json == null) {
+    //   return null;
+    // }
 
     String genderString = json['gender'];
     return Member(
