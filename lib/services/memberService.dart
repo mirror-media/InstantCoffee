@@ -161,4 +161,40 @@ class MemberService {
       return false;
     }
   }
+
+  Future<bool> deleteMember(String firebaseId, String token) async{
+    String mutation = 
+    """
+    mutation (\$firebaseId: String!){
+        deleteMember(firebaseId: \$firebaseId) {
+            success
+        }
+    }
+    """;
+    Map<String,String> variables = {
+      "firebaseId" : "$firebaseId"
+    };
+
+    GraphqlBody graphqlBody = GraphqlBody(
+      operationName: '',
+      query: mutation,
+      variables: variables,
+    );
+
+    try {
+      final jsonResponse = await _helper.postByUrl(
+        env.baseConfig.memberApi,
+        jsonEncode(graphqlBody.toJson()),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token"
+        }
+      );
+
+      MemberRes memberRes = MemberRes.fromJson(jsonResponse['data']['deleteMember']);
+      return memberRes.success;
+    } catch(e) {
+      return false;
+    }
+  }
 }
