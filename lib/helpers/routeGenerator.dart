@@ -7,6 +7,7 @@ import 'package:readr_app/pages/memberPage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/pages/searchPage.dart';
 import 'package:readr_app/pages/storyPage.dart';
+import 'package:readr_app/widgets/deleteMemberWidget.dart';
 import 'package:readr_app/widgets/editMemberProfile.dart';
 import 'package:readr_app/widgets/editMemberContactInfo.dart';
 
@@ -16,6 +17,7 @@ class RouteGenerator {
   static const String member = '/member';
   static const String editMemberProfile = '/editMemberProfile';
   static const String editMemberContactInfo = '/editMemberContactInfo';
+  static const String deleteMember = '/deleteMember';
   static const String notificationSettings = '/notificationSettings';
   static const String story = '/story';
 
@@ -59,6 +61,15 @@ class RouteGenerator {
           builder: (context) => EditMemberContactInfo(
             member: args['member'],
             memberBloc: args['memberBloc'],
+          ),
+          fullscreenDialog: true,
+        );
+      case deleteMember:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => DeleteMemberWidget(
+            member: args['member'],
           ),
           fullscreenDialog: true,
         );
@@ -157,6 +168,18 @@ class RouteGenerator {
       arguments: {
         'member': member,
         'memberBloc': memberBloc,
+      },
+    );
+  }
+
+  static void navigateToDeleteMember(
+    BuildContext context, 
+    Member member, 
+  ) {
+    Navigator.of(context).pushNamed(
+      deleteMember,
+      arguments: {
+        'member': member,
       },
     );
   }
