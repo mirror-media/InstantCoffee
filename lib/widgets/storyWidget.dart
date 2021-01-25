@@ -91,8 +91,7 @@ class _StoryWidget extends State<StoryWidget> {
                         ),
                       SizedBox(height: 16),
                       _buildUpdateDateWidget(story),
-                      if(!story.isAdvertised)
-                        _buildRelatedWidget(context, story.relatedStory),
+                      _buildRelatedWidget(context, story.relatedStory),
                       SizedBox(height: 16),
                       _buildMoreContentWidget(),
                       if(isStoryWidgetAdsActivated)
