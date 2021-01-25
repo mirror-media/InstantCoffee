@@ -20,7 +20,9 @@ class FirebaseMessangingHelper {
     _isInTheStoryPage = false;
   }
 
-  configFirebaseMessaging(BuildContext context) {
+  configFirebaseMessaging(BuildContext context) async{
+    String token = await _firebaseMessaging.getToken();
+    print('FCM token: ' + token);
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
@@ -119,7 +121,7 @@ class FirebaseMessangingHelper {
           if(notificationSetting.value && element.value) {
             subscribeToTopic(element.topic);
           }
-          else if(!notificationSetting.value && element.value){
+          else if(!notificationSetting.value || !element.value){
             unsubscribeFromTopic(element.topic);
           }
         }

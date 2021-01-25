@@ -12,9 +12,9 @@ enum OnBoardingStatus { FirstPage, SecondPage, ThirdPage, FourthPage, NULL }
 class OnBoardingBloc {
   LocalStorage _storage;
 
+  Function closeFunction;
   List<OnBoardingHint> onBoardingHintList;
   OnBoardingStatus status;
-  bool isNeedInkWell;
   bool _isOnBoarding;
   bool get isOnBoarding => _isOnBoarding;
 
@@ -27,7 +27,6 @@ class OnBoardingBloc {
   OnBoardingBloc() {
     onBoardingHintList = List<OnBoardingHint>();
     status = OnBoardingStatus.FirstPage;
-    isNeedInkWell = false;
     _storage = LocalStorage('setting');
     _onBoardingController = StreamController<OnBoarding>.broadcast();
   }
@@ -99,6 +98,7 @@ class OnBoardingBloc {
       height: 0,
     );
     sinkToAdd(onBoarding);
+    closeFunction?.call();
   }
 
   checkOnBoarding(OnBoarding data) {
@@ -114,9 +114,9 @@ class OnBoardingBloc {
 
   Future<OnBoarding> getSizeAndPosition(GlobalKey key) async{
     await setOnBoardingFromStorage();
-    RenderBox _tabBox = key.currentContext.findRenderObject();
-    Size size = _tabBox.size;
-    Offset offset = _tabBox.localToGlobal(Offset.zero);
+    RenderBox _box = key.currentContext.findRenderObject();
+    Size size = _box.size;
+    Offset offset = _box.localToGlobal(Offset.zero);
     
     OnBoarding onBoarding = OnBoarding(
       isOnBoarding: isOnBoarding,
@@ -162,7 +162,8 @@ class OnBoardingBloc {
     double left, double top, OnBoardingHint onBoardingHint) {
     var width = MediaQuery.of(context).size.width;
     return Positioned(
-      left: onBoardingHint.page == (3-1)
+      // set hint to horizontal mid
+      left: onBoardingHint.page == (3-1) || onBoardingHint.page == (5-1)
       ? width/2 - onBoardingHint.hintText.length/2*16
       : left + onBoardingHint.left,
       top: top + onBoardingHint.top,

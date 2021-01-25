@@ -65,10 +65,11 @@ class _PersonalWidgetState extends State<PersonalWidget> {
                   OnBoarding onBoarding = await widget.onBoardingBloc.getSizeAndPosition(_categoryKey);
                   onBoarding.left = 0;
                   onBoarding.height += 16;
+                  onBoarding.isNeedInkWell = true;
                   
+
                   widget.onBoardingBloc.checkOnBoarding(onBoarding);
                   widget.onBoardingBloc.status = OnBoardingStatus.ThirdPage;
-                  widget.onBoardingBloc.isNeedInkWell = true;
                 }
               });
               return _buildPersonalWidget(widget.scrollController, context, categoryList, _personalPageBloc);

@@ -2,8 +2,8 @@ import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/slugBloc.dart';
 import 'package:readr_app/blocs/storyBloc.dart';
+import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
-
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/helpers/paragraphFormat.dart';
@@ -91,7 +91,8 @@ class _StoryWidget extends State<StoryWidget> {
                         ),
                       SizedBox(height: 16),
                       _buildUpdateDateWidget(story),
-                      _buildRelatedWidget(context, story.relatedStory),
+                      if(!story.isAdvertised)
+                        _buildRelatedWidget(context, story.relatedStory),
                       SizedBox(height: 16),
                       _buildMoreContentWidget(),
                       if(isStoryWidgetAdsActivated)
@@ -117,7 +118,12 @@ class _StoryWidget extends State<StoryWidget> {
                       ],
                     ]),
                   ),
-                  if(isStoryWidgetAdsActivated)
+                  if(_isWineCategory(story.categories))
+                    Image.asset(
+                      "assets/image/wine_warning.png",
+                      height: 50.0,
+                    ),
+                  if(isStoryWidgetAdsActivated && !_isWineCategory(story.categories))
                     MMAdBanner(
                       adUnitId: story.storyAd.stUnitId,
                       adSize: AdmobBannerSize.BANNER,
@@ -198,8 +204,28 @@ class _StoryWidget extends State<StoryWidget> {
     );
   }
 
+  bool _isWineCategory(List<Category> categories) {
+    if(categories == null) {
+      return false;
+    }
+
+    for(Category category in categories) {
+      if(category.id == wineSectionKey) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   Widget _buildCategory(BuildContext context, Story story, Color sectionColor) {
-    List<Category> categories = story.categories;
+    List<Category> categories = List<Category>();
+    if(story.categories != null) {
+      categories = story.categories;
+    }
+
+    if(story.isAdvertised) {
+      return Container();
+    }
 
     return InkWell(
       child: Row(

@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/helpers/apiConstants.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/onBoarding.dart';
 import 'package:readr_app/pages/homePage.dart';
 
@@ -26,7 +28,7 @@ class _MirrorAppState extends State<MirrorApp> {
   @override
   void initState() {
     final AppsFlyerOptions options = AppsFlyerOptions(
-        afDevKey: appsFlyerKey, appId: appleAppId, showDebug: true);
+        afDevKey: appsFlyerKey, appId: Platform.isIOS ? appleAppId : androidAppId, showDebug: true);
     _appsflyerSdk = AppsflyerSdk(options);
 
     _settingKey = GlobalKey();
@@ -37,14 +39,36 @@ class _MirrorAppState extends State<MirrorApp> {
     super.initState();
   }
 
-  Future<dynamic> _initialAppsFlyer() async{
-    var k;
-    k = await _appsflyerSdk.initSdk(
+  Future<void> _initialAppsFlyer() async{
+    var k = await _appsflyerSdk.initSdk(
       registerConversionDataCallback: true,
       registerOnAppOpenAttributionCallback: true
     );
-
-    return k;
+    _appsflyerSdk.appOpenAttributionStream.listen(
+      (event) {
+        print('-----OpenAttribution-----');
+        print(event);
+        print('-------------------------');
+        // print(event['data']['campaign']);
+        //_appsflyerSdk.setAdditionalData(event);
+        if(event['data']['slug'] != null) {
+          RouteGenerator.navigateToStory(context, event['data']['slug'], isListeningWidget: false);
+        }
+      }
+    );
+    _appsflyerSdk.conversionDataStream.listen(
+      (event) {
+        print('-----ConversionData-----');
+        print(event);
+        print('------------------------');
+        if(event['data']['is_first_launch']) {
+          if(event['data']['slug'] != null) {
+            RouteGenerator.navigateToStory(context, event['data']['slug'], isListeningWidget: false);
+          }
+        }
+      }
+    );
+    print(k);
   }
   
   _waiting() async{
@@ -99,7 +123,7 @@ class _MirrorAppState extends State<MirrorApp> {
                     isUpdateAvailable: _isUpdateAvailable,
                   ),
                   if(onBoarding.isOnBoarding && 
-                  !_onBoardingBloc.isNeedInkWell)
+                  !onBoarding.isNeedInkWell)
                     _onBoardingBloc.getClipPathOverlay(
                       onBoarding.left,
                       onBoarding.top,
@@ -107,17 +131,25 @@ class _MirrorAppState extends State<MirrorApp> {
                       onBoarding.height,
                     ),
                   if(onBoarding.isOnBoarding && 
-                  _onBoardingBloc.isNeedInkWell)
+                  onBoarding.isNeedInkWell)
                     GestureDetector(
                       onTap: () async{
                         if(_onBoardingBloc.isOnBoarding && 
                         _onBoardingBloc.status == OnBoardingStatus.ThirdPage) {
                           OnBoarding onBoarding = await _onBoardingBloc.getSizeAndPosition(_settingKey);
+                          onBoarding.isNeedInkWell = true;
 
                           _onBoardingBloc.checkOnBoarding(onBoarding);
                           _onBoardingBloc.status = OnBoardingStatus.FourthPage;
+                          onBoarding.function = () {
+                            RouteGenerator.navigateToNotificationSettings(
+                              context, 
+                              _onBoardingBloc
+                            );
+                          };
+                        } else {
+                          onBoarding.function?.call();
                         }
-                        _onBoardingBloc.isNeedInkWell = false;
                       },
                       child: _onBoardingBloc.getCustomPaintOverlay(
                         context,

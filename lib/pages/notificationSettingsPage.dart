@@ -11,6 +11,7 @@ import 'package:readr_app/models/notificationSetting.dart';
 import 'package:readr_app/models/notificationSettingList.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/onBoarding.dart';
+import 'package:readr_app/widgets/appExpansionTile.dart';
 
 class NotificationSettingsPage extends StatefulWidget {
   final OnBoardingBloc onBoardingBloc;
@@ -24,14 +25,16 @@ class NotificationSettingsPage extends StatefulWidget {
 }
 
 class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
-  List<GlobalKey> _notificationCupertinoSwitchKeys;
+  List<GlobalKey> _notificationKeys;
+  List<GlobalKey<AppExpansionTileState>> _expansionTileKeys;
   final LocalStorage _storage = LocalStorage('setting');
   FirebaseMessangingHelper _firebaseMessangingHelper = FirebaseMessangingHelper();
   NotificationSettingList _notificationSettingList = NotificationSettingList();
 
   @override
   void initState() {
-    _notificationCupertinoSwitchKeys = List<GlobalKey>();
+    _notificationKeys = List<GlobalKey>();
+    _expansionTileKeys = List<GlobalKey<AppExpansionTileState>>();
     _setNotificationSettingList();
     super.initState();
   }
@@ -47,14 +50,27 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     }
 
     for(int i=0; i<_notificationSettingList.length; i++) {
-      _notificationCupertinoSwitchKeys.add(GlobalKey());
+      _notificationKeys.add(GlobalKey());
+      _expansionTileKeys.add(GlobalKey());
     }
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{  
       if(widget.onBoardingBloc.isOnBoarding && 
       widget.onBoardingBloc.status == OnBoardingStatus.FourthPage) {
         // await navigation completed, or onBoarding will get the wrong position
         await Future.delayed(Duration(milliseconds: 300));
-        OnBoarding onBoarding = await widget.onBoardingBloc.getSizeAndPosition(_notificationCupertinoSwitchKeys[0]);
+        OnBoarding onBoarding = await widget.onBoardingBloc.getSizeAndPosition(_notificationKeys[1]);
+        onBoarding.left = 0;
+        onBoarding.height += 16;
+        onBoarding.isNeedInkWell = true;
+        onBoarding.function = () {
+          _notificationSettingList[1].value = true;
+          _storage.setItem(
+              "notification", _notificationSettingList.toJson());
+
+          _firebaseMessangingHelper.subscribeTheNotification(_notificationSettingList[1]);
+          _expansionTileKeys[1].currentState.expand();
+          widget.onBoardingBloc.closeOnBoarding();
+        };
 
         widget.onBoardingBloc.checkOnBoarding(onBoarding);
         widget.onBoardingBloc.status = OnBoardingStatus.NULL;
@@ -71,6 +87,13 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     _notificationSettingList =
         NotificationSettingList.fromJson(jsonSettingList);
     _storage.setItem("notification", jsonSettingList);
+
+    // reset all of topics by defaultNotificationList.json
+    _notificationSettingList.forEach(
+      (notificationSetting) { 
+        _firebaseMessangingHelper.subscribeTheNotification(notificationSetting);
+      }
+    );
   }
 
   @override
@@ -98,6 +121,20 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   onBoarding.width,
                   onBoarding.height,
                 ),
+                if(onBoarding.isOnBoarding && 
+                onBoarding.isNeedInkWell)
+                  GestureDetector(
+                    onTap: () async{
+                      onBoarding.function?.call();
+                    },
+                    child: widget.onBoardingBloc.getCustomPaintOverlay(
+                      context,
+                      onBoarding.left,
+                      onBoarding.top,
+                      onBoarding.width,
+                      onBoarding.height,
+                    ),
+                  ),
               if(onBoarding.isOnBoarding)
                 widget.onBoardingBloc.getHint(
                   context,
@@ -164,10 +201,12 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       itemCount: notificationSettingList.length,
       itemBuilder: (context, listViewIndex) {
         return Padding(
+          key: _notificationKeys[listViewIndex],
           padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
           child: ListTileTheme(
             contentPadding: EdgeInsets.all(0),
-            child: ExpansionTile(
+            child: AppExpansionTile(
+              key: _expansionTileKeys[listViewIndex],
               initiallyExpanded: notificationSettingList[listViewIndex].value,
               leading: null,
               title: ListTile(
@@ -180,7 +219,6 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
               ),
               trailing: IgnorePointer(
                 child: CupertinoSwitch(
-                    key: _notificationCupertinoSwitchKeys[listViewIndex],
                     value: notificationSettingList[listViewIndex].value,
                     onChanged: (bool value) {}),
               ),
@@ -208,12 +246,12 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     if (notificationSetting.id == 'horoscopes') {
       return [
         _buildCheckbox(
-            context, notificationSetting.notificationSettingList, false, 4, 2.0)
+            context, notificationSetting, false, 4, 2.0)
       ];
     } else if (notificationSetting.id == 'subscriptionChannels') {
       return [
         _buildCheckbox(
-            context, notificationSetting.notificationSettingList, true, 2, 4)
+            context, notificationSetting, true, 2, 4)
       ];
     }
 
@@ -222,10 +260,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
   Widget _buildCheckbox(
       BuildContext context,
-      List<NotificationSetting> checkboxList,
+      NotificationSetting notificationSetting,
       bool isRepeatable,
       int count,
       double ratio) {
+    List<NotificationSetting> checkboxList = notificationSetting.notificationSettingList;
     return GridView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
@@ -252,7 +291,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
               _storage.setItem(
                   "notification", _notificationSettingList.toJson());
 
-              _firebaseMessangingHelper.subscribeTheNotification(checkboxList[checkboxIndex]);
+              _firebaseMessangingHelper.subscribeTheNotification(notificationSetting);
             },
             child: IgnorePointer(
               child: Row(children: [
