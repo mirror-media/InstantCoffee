@@ -108,9 +108,8 @@ class _CountryPickerState extends State<CountryPicker> {
   }
 
   _showPicker(double height, MemberContactInfoBloc memberContactInfoBloc) async{
-    // 228 index is Taiwan
     int targetIndex = _country == null
-    ? 228
+    ? memberContactInfoBloc.countryList.findIndexByTaiwanName('臺灣')
     : memberContactInfoBloc.countryList.findIndexByTaiwanName(_country);
 
     await showModalBottomSheet(
