@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/mirrorApp.dart';
+import 'package:readr_app/pages/memberPage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/pages/searchPage.dart';
 import 'package:readr_app/pages/storyPage.dart';
@@ -8,6 +9,7 @@ import 'package:readr_app/pages/storyPage.dart';
 class RouteGenerator {
   static const String root = '/';
   static const String search = '/search';
+  static const String member = '/member';
   static const String notificationSettings = '/notificationSettings';
   static const String story = '/story';
 
@@ -22,6 +24,12 @@ class RouteGenerator {
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => SearchPage(),
+          fullscreenDialog: true,
+        );
+      case member:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => MemberPage(),
           fullscreenDialog: true,
         );
       case notificationSettings:
@@ -79,6 +87,10 @@ class RouteGenerator {
     Navigator.of(context).pushNamed(search);
   }
 
+  static void navigateToMember(BuildContext context) {
+    Navigator.of(context).pushNamed(member);
+  }
+
   static void navigateToNotificationSettings(BuildContext context, OnBoardingBloc onBoardingBloc) {
     Navigator.of(context).pushNamed(
       notificationSettings,
@@ -86,7 +98,7 @@ class RouteGenerator {
     );
   }
 
-  static void navigateToStory(BuildContext context, String slug, {bool isListeningWidget}) {
+  static void navigateToStory(BuildContext context, String slug, {bool isListeningWidget = false}) {
     Navigator.of(context).pushNamed(
       story,
       arguments: {

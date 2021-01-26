@@ -219,6 +219,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
           tooltip: 'Search',
           onPressed: () => RouteGenerator.navigateToSearch(context),
         ),
+        IconButton(
+          icon: Icon(Icons.person),
+          tooltip: 'Member',
+          onPressed: () => RouteGenerator.navigateToMember(context),
+        ),
       ],
     );
   }
