@@ -33,16 +33,13 @@ class Member {
       birthday: this.birthday,
 
       phoneNumber: this.phoneNumber,
-      contactAddress: this.contactAddress,
+      contactAddress: this.contactAddress.copy(),
 
       verifyEmailLink: this.verifyEmailLink,
     );
   }
 
   factory Member.fromJson(Map<String, dynamic> json) {
-    // if(json == null) {
-    //   return null;
-    // }
 
     String genderString = json['gender'];
     return Member(
