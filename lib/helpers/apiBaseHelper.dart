@@ -23,10 +23,10 @@ class ApiBaseHelper {
       else {
         res = file.path;
       }
-      return _returnResponse(http.Response(res, 200));
+      return returnResponse(http.Response(res, 200));
     }
     
-    return _returnResponse(http.Response(null, 404));
+    return returnResponse(http.Response(null, 404));
   }
 
   /// Get the json file from cache first.
@@ -50,7 +50,7 @@ class ApiBaseHelper {
       try {
         final response =
             await http.get(url, headers: headers);
-        responseJson = _returnResponse(response);
+        responseJson = returnResponse(response);
         // save cache file
         mMCacheManager.putFile(url, response.bodyBytes, maxAge: maxAge, fileExtension: 'json');
       } on SocketException {
@@ -74,9 +74,9 @@ class ApiBaseHelper {
         res = file.path;
       }
       
-      return _returnResponse(http.Response(res, 200));
+      return returnResponse(http.Response(res, 200));
     }
-    return _returnResponse(http.Response(null, 404));
+    return returnResponse(http.Response(null, 404));
   }
 
   Future<dynamic> getByUrl(
@@ -90,7 +90,7 @@ class ApiBaseHelper {
     try {
       final response =
           await http.get(url, headers: headers);
-      responseJson = _returnResponse(response);
+      responseJson = returnResponse(response);
     } on SocketException {
       print('No Internet connection');
       throw FetchDataException('No Internet connection');
@@ -108,7 +108,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response = await http.post(url, headers: headers, body: body);
-      responseJson = _returnResponse(response);
+      responseJson = returnResponse(response);
     } on SocketException {
       print('No Internet connection');
       throw FetchDataException('No Internet connection');
@@ -126,7 +126,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response = await http.put(url, body: body);
-      responseJson = _returnResponse(response);
+      responseJson = returnResponse(response);
     } on SocketException {
       print('No Internet connection');
       throw FetchDataException('No Internet connection');
@@ -144,7 +144,7 @@ class ApiBaseHelper {
     var apiResponse;
     try {
       final response = await http.delete(url);
-      apiResponse = _returnResponse(response);
+      apiResponse = returnResponse(response);
     } on SocketException {
       print('No Internet connection');
       throw FetchDataException('No Internet connection');
@@ -158,7 +158,7 @@ class ApiBaseHelper {
   }
 }
 
-dynamic _returnResponse(http.Response response) {
+dynamic returnResponse(http.Response response) {
   switch (response.statusCode) {
     case 200:
       String utf8Json = utf8.decode(response.bodyBytes);
