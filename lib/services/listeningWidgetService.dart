@@ -10,7 +10,7 @@ class ListeningWidgetService {
     String endpoint =
         env.baseConfig.apiBase + 'youtube/videos?part=snippet&maxResults=1&id=' + youtubeId;
 
-    final jsonResponse = await _helper.getByCache(endpoint, maxAge: listeningWidgetCacheDuration);
+    final jsonResponse = await _helper.getByCacheAndAutoCache(endpoint, maxAge: listeningWidgetCacheDuration);
     Listening listening = Listening.fromJson(jsonResponse["items"][0]);
     return listening;
   }

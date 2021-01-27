@@ -7,7 +7,7 @@ class EditorChoiceService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<RecordList> fetchRecordList() async {
-    final jsonResponse = await _helper.getByCache(env.baseConfig.editorChoiceApi, maxAge: editorChoiceCacheDuration);
+    final jsonResponse = await _helper.getByCacheAndAutoCache(env.baseConfig.editorChoiceApi, maxAge: editorChoiceCacheDuration);
 
     RecordList records = new RecordList.fromJson(jsonResponse["choices"]);
     return records;

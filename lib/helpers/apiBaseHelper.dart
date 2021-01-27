@@ -8,7 +8,7 @@ import 'package:readr_app/helpers/appException.dart';
 import 'package:readr_app/helpers/mMCacheManager.dart';
 
 class ApiBaseHelper {
-  Future<dynamic> getByCache(
+  Future<dynamic> getByCacheAndAutoCache(
     String url, 
     {
       Duration maxAge = const Duration(days: 30),
@@ -108,7 +108,6 @@ class ApiBaseHelper {
       throw FetchDataException('No Internet connection');
     }
     print('Api put done.');
-    print(responseJson.toString());
     return responseJson;
   }
 
