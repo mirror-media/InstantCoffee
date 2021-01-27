@@ -5,7 +5,7 @@ import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
-import 'package:readr_app/helpers/apiConstants.dart';
+import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/onBoarding.dart';
@@ -29,8 +29,10 @@ class _MirrorAppState extends State<MirrorApp> {
   @override
   void initState() {
     final AppsFlyerOptions options = AppsFlyerOptions(
-      afDevKey: appsFlyerKey, 
-      appId: Platform.isIOS ? appleAppId : androidAppId, 
+      afDevKey: env.baseConfig.appsFlyerKey, 
+      appId: Platform.isIOS 
+      ? env.baseConfig.appleAppId 
+      : env.baseConfig.androidAppId, 
       showDebug: false
     );
     _appsflyerSdk = AppsflyerSdk(options);

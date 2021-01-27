@@ -14,7 +14,12 @@
         android:allowBackup="false"
 
         android:usesCleartextTraffic="true"
+        android:label="鏡週刊dev"
         android:icon="@mipmap/launcher_icon">
+        <!-- test admob id https://developers.google.com/admob/android/quick-start -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7986335951683342~1205438796"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask"
@@ -48,6 +53,41 @@
             <intent-filter>
                 <action android:name="FLUTTER_NOTIFICATION_CLICK" />
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!-- App Links
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                android:scheme="https"
+                android:host="nuxt-dev.mirrormedia.mg"
+                android:pathPattern=".*" />
+            </intent-filter>
+            -->
+            <!-- Scheme App Links -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                android:scheme="mirrormediadev"
+                android:host="story"
+                android:pathPattern=".*" />
+                <data
+                android:scheme="mirrormediadev"
+                android:host="video"
+                android:pathPattern=".*" />
+            </intent-filter>
+            <!-- OneLink App Links -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Appsflyer OneLink -->
+                <data android:scheme="https"
+                    android:host="mirrormediadev.onelink.me"
+                    android:pathPrefix="/WUUj" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

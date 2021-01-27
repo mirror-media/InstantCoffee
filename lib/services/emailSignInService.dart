@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:readr_app/helpers/apiConstants.dart';
+import 'package:readr_app/env.dart';
 import 'package:readr_app/models/firebaseLoginStatus.dart';
 
 class EmailSignInService {
@@ -7,16 +7,16 @@ class EmailSignInService {
     var acs = ActionCodeSettings(
       // URL you want to redirect back to. The domain (www.example.com) for this
       // URL must be whitelisted in the Firebase Console.
-      url: finishSignUpUrl,
+      url: env.baseConfig.finishSignUpUrl,
       // This must be true
       handleCodeInApp: true,
-      iOSBundleId: iOSBundleId,
-      androidPackageName: androidPackageName,
+      iOSBundleId: env.baseConfig.iOSBundleId,
+      androidPackageName: env.baseConfig.androidPackageName,
       // installIfNotAvailable
       androidInstallApp: true,      
       // minimumVersion
       androidMinimumVersion: "12",
-      dynamicLinkDomain: dynamicLinkDomain,
+      dynamicLinkDomain: env.baseConfig.dynamicLinkDomain,
     );
     var emailAuth = email;
     try{

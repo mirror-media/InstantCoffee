@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
+import 'package:readr_app/models/baseConfig.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +16,8 @@ void main() async{
   Admob.initialize();
   // Or add a list of test ids.
   // Admob.initialize(testDeviceIds: ['YOUR DEVICE ID']);
-
+  BuildEnvironment.init(
+      flavor: BuildFlavor.production, baseConfig: BaseConfig());
   runApp(MyApp());
 }
 

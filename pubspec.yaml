@@ -136,13 +136,17 @@ flutter:
     - assets/data/defaultNotificationList.json
     # section ad data
     - assets/data/iOSTestSectionAd.json
+    - assets/data/iOSDevSectionAd.json   
     - assets/data/iOSSectionAd.json
     - assets/data/androidTestSectionAd.json
+    - assets/data/androidDevSectionAd.json
     - assets/data/androidSectionAd.json
     # story ad data
     - assets/data/iOSTestStoryAd.json
+    - assets/data/iOSDevStoryAd.json
     - assets/data/iOSStoryAd.json
     - assets/data/androidTestStoryAd.json
+    - assets/data/androidDevStoryAd.json
     - assets/data/androidStoryAd.json
 
   # An image asset can refer to one or more resolution-specific "variants", see

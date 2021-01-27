@@ -1,4 +1,4 @@
-import 'package:readr_app/helpers/apiConstants.dart';
+import 'package:readr_app/env.dart';
 import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/categoryList.dart';
 import 'package:readr_app/models/paragrpahList.dart';
@@ -84,7 +84,7 @@ class Story {
     ParagraphList apiDatas = json["content"] == null
         ? ParagraphList()
         : ParagraphList.fromJson(json["content"]["apiData"]);
-    String photoUrl = mirrorMediaNotImageUrl;
+    String photoUrl = env.baseConfig.mirrorMediaNotImageUrl;
     String videoUrl;
     RecordList relatedBuilder = RecordList();
     CategoryList categoryBuilder = CategoryList();

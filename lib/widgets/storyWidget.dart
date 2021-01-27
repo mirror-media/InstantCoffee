@@ -2,7 +2,7 @@ import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/slugBloc.dart';
 import 'package:readr_app/blocs/storyBloc.dart';
-import 'package:readr_app/helpers/apiConstants.dart';
+import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
@@ -209,7 +209,7 @@ class _StoryWidget extends State<StoryWidget> {
     }
 
     for(Category category in categories) {
-      if(category.id == wineSectionKey) {
+      if(category.id == env.baseConfig.wineSectionKey) {
         return true;
       }
     }

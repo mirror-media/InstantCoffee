@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/models/sectionAd.dart';
 import 'package:readr_app/models/sectionList.dart';
@@ -38,8 +39,8 @@ class SectionBloc {
       SectionList sectionList = await _sectionService.fetchSectionList();
       
       String sectionAdJsonFileLocation = Platform.isIOS
-      ? 'assets/data/iOSSectionAd.json'
-      : 'assets/data/androidSectionAd.json';
+      ? env.baseConfig.iOSSectionAdJsonLocation
+      : env.baseConfig.androidSectionAdJsonLocation;
       // String sectionAdJsonFileLocation = Platform.isIOS
       // ? 'assets/data/iOSTestSectionAd.json'
       // : 'assets/data/androidTestSectionAd.json';

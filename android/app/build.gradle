@@ -25,10 +25,16 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
-def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+def devKeystoreProperties = new Properties()
+def devKeystorePropertiesFile = rootProject.file('dev.properties')
+if (devKeystorePropertiesFile.exists()) {
+    devKeystoreProperties.load(new FileInputStream(devKeystorePropertiesFile))
+}
+
+def prodKeystoreProperties = new Properties()
+def prodKeystorePropertiesFile = rootProject.file('prod.properties')
+if (prodKeystorePropertiesFile.exists()) {
+    prodKeystoreProperties.load(new FileInputStream(prodKeystorePropertiesFile))
 }
 
 android {
@@ -54,11 +60,29 @@ android {
     }
     
     signingConfigs {
-        release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword keystoreProperties['storePassword']
+        dev {
+            keyAlias devKeystoreProperties['keyAlias']
+            keyPassword devKeystoreProperties['keyPassword']
+            storeFile devKeystoreProperties['storeFile'] ? file(devKeystoreProperties['storeFile']) : null
+            storePassword devKeystoreProperties['storePassword']
+        }
+        prod {
+            keyAlias prodKeystoreProperties['keyAlias']
+            keyPassword prodKeystoreProperties['keyPassword']
+            storeFile prodKeystoreProperties['storeFile'] ? file(prodKeystoreProperties['storeFile']) : null
+            storePassword prodKeystoreProperties['storePassword']
+        }
+    }
+
+    flavorDimensions 'flavors'
+    productFlavors {
+        dev {
+            dimension "flavors"
+            applicationIdSuffix ".dev"
+            versionNameSuffix " Dev"
+        }
+        prod {
+            dimension "flavors"
         }
     }
 
@@ -66,7 +90,8 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.release
+            productFlavors.dev.signingConfig signingConfigs.dev
+            productFlavors.prod.signingConfig signingConfigs.prod
         }
     }
 }
