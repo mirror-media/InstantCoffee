@@ -8,6 +8,30 @@ import 'package:readr_app/helpers/appException.dart';
 import 'package:readr_app/helpers/mMCacheManager.dart';
 
 class ApiBaseHelper {
+  /// get cache file by key
+  /// the key is url
+  Future<dynamic> getByCache(String url) async {
+    MMCacheManager mMCacheManager = MMCacheManager();
+    final cacheFile = await mMCacheManager.getFileFromCache(url);
+    var file = cacheFile?.file;
+    if (file != null && await file.exists()) {
+      var mimeStr = lookupMimeType(file.path);
+      String res;
+      if(mimeStr == 'application/json') {
+        res = await file.readAsString();
+      }
+      else {
+        res = file.path;
+      }
+      return _returnResponse(http.Response(res, 200));
+    }
+    
+    return _returnResponse(http.Response(null, 404));
+  }
+
+  /// Get the json file from cache first.
+  /// If there is no json file from cache, 
+  /// fetch the json file from get api and save the json file to cache.
   Future<dynamic> getByCacheAndAutoCache(
     String url, 
     {
