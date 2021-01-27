@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:readr_app/blocs/memberBloc.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/mirrorApp.dart';
+import 'package:readr_app/models/userData.dart';
 import 'package:readr_app/pages/memberPage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/pages/searchPage.dart';
 import 'package:readr_app/pages/storyPage.dart';
+import 'package:readr_app/widgets/editUserContactInfo.dart';
+
+import 'package:readr_app/widgets/editUserProfile.dart';
 
 class RouteGenerator {
   static const String root = '/';
   static const String search = '/search';
   static const String member = '/member';
+  static const String editUserProfile = '/editUserProfile';
+  static const String editUserContactInfo = '/editUserContactInfo';
   static const String notificationSettings = '/notificationSettings';
   static const String story = '/story';
 
@@ -33,6 +40,26 @@ class RouteGenerator {
           builder: (context) => MemberPage(
             isEmailLoginAuth: args['isEmailLoginAuth']??false,
             emailLink: args['emailLink'],
+          ),
+          fullscreenDialog: true,
+        );
+      case editUserProfile:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => EditUserProfile(
+            userData: args['userData'],
+            memberBloc: args['memberBloc'],
+          ),
+          fullscreenDialog: true,
+        );
+      case editUserContactInfo:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => EditUserContactInfo(
+            userData: args['userData'],
+            memberBloc: args['memberBloc'],
           ),
           fullscreenDialog: true,
         );
@@ -103,6 +130,34 @@ class RouteGenerator {
       arguments: {
         'isEmailLoginAuth': isEmailLoginAuth,
         'emailLink': emailLink,
+      },
+    );
+  }
+
+  static void navigateToEditUserProfile(
+    BuildContext context, 
+    UserData userData,
+    MemberBloc memberBloc,
+  ) {
+    Navigator.of(context).pushNamed(
+      editUserProfile,
+      arguments: {
+        'userData': userData,
+        'memberBloc': memberBloc,
+      },
+    );
+  }
+
+  static void navigateToEditUserContactInfo(
+    BuildContext context, 
+    UserData userData, 
+    MemberBloc memberBloc,
+  ) {
+    Navigator.of(context).pushNamed(
+      editUserContactInfo,
+      arguments: {
+        'userData': userData,
+        'memberBloc': memberBloc,
       },
     );
   }
