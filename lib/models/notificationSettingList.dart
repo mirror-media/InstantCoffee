@@ -52,4 +52,12 @@ class NotificationSettingList extends CustomizedList<NotificationSetting> {
     }
     return json.encode(notificationSettingMaps);
   }
+
+  NotificationSetting getById(String id) {
+    try{
+      return l.firstWhere((element) => element.id == id);
+    } catch(e) {
+      return null;
+    }
+  }
 }

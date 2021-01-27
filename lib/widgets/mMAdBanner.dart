@@ -29,7 +29,7 @@ class _MMAdBannerState extends State<MMAdBanner> with AutomaticKeepAliveClientMi
       return true;
     } else if(Platform.isIOS) {
       // Run this before displaying any ad on iOS,
-      // return await Admob.requestTrackingAuthorization();
+      await Admob.requestTrackingAuthorization();
       return true;
     }
 
@@ -100,7 +100,8 @@ class _AnimatedOpacityBannerState extends State<AnimatedOpacityBanner> {
         adUnitId: widget.adUnitId,
         adSize: widget.adSize,
         listener: (AdmobAdEvent event, Map<String, dynamic> args) async{
-          //print(event.toString());
+          // print(event.toString());
+          // print(args.toString());
           if(event == AdmobAdEvent.loaded && !_visible && Platform.isAndroid) {
             //await Future.delayed(Duration(milliseconds: 500));
             if(mounted) {

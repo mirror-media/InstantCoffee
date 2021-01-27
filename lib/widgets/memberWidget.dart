@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/loginBLoc.dart';
 import 'package:readr_app/blocs/memberBloc.dart';
@@ -131,14 +130,12 @@ class _MemberWidgetState extends State<MemberWidget> {
                 SizedBox(
                   width: 90,
                   height: 90,
-                  child: userData?.profilePhoto == null
-                  ? Image.asset('assets/icon/icon.jpg')
-                  : CachedNetworkImage(imageUrl: userData.profilePhoto),
+                  child: Image.asset('assets/icon/icon.jpg'),
                 ),
                 SizedBox(height: 16,),
                 Center(
                   child: Text(
-                    userData.name ?? userData.email,
+                    '你好',
                     style: TextStyle(
                       fontSize: 20,
                     ),

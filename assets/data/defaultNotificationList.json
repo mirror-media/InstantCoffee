@@ -17,7 +17,7 @@
                     {"type": "checkbox", "id": "sagittarius", "title": "射手座", "topic": "sagittarius", "value": false},
                     {"type": "checkbox", "id": "capricorn", "title": "摩羯座", "topic": "capricorn", "value": false},
                     {"type": "checkbox", "id": "aquarius", "title": "水瓶座", "topic": "aquarius", "value": false},
-                    {"type": "checkbox", "id": "pisces", "title": "牡羊座", "topic": "pisces", "value": false}
+                    {"type": "checkbox", "id": "pisces", "title": "雙魚座", "topic": "pisces", "value": false}
                 ]
             },
             {
