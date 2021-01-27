@@ -4,20 +4,34 @@ import 'package:readr_app/blocs/loginBLoc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/loginResponse.dart';
 import 'package:readr_app/models/userData.dart';
+import 'package:readr_app/widgets/emailVerifyErrorWidget.dart';
+import 'package:readr_app/widgets/fillInEmailLoginWidget.dart';
 import 'package:readr_app/widgets/loginErrorWidget.dart';
 import 'package:readr_app/widgets/memberWidget.dart';
+import 'package:readr_app/widgets/receiveEmailNotificationWidget.dart';
+import 'package:readr_app/widgets/verifyEmailLoginWidget.dart';
 
 class MemberPage extends StatefulWidget {
+  final bool isEmailLoginAuth;
+  final String emailLink;
+  MemberPage({
+    this.isEmailLoginAuth = false,
+    this.emailLink,
+  });
+
   @override
   _MemberPageState createState() => _MemberPageState();
 }
 
 class _MemberPageState extends State<MemberPage> {
   LoginBloc _loginBloc;
+  final _formKey = GlobalKey<FormState>();
+  String _email;
 
   @override
   void initState() {
-    _loginBloc = LoginBloc();
+    _loginBloc = LoginBloc(widget.isEmailLoginAuth, widget.emailLink);
+    _email = '';
     super.initState();
   }
 
@@ -42,6 +56,11 @@ class _MemberPageState extends State<MemberPage> {
                   googleLoginFunction: () {
                     _loginBloc.loginByGoogle(context);
                   },
+                  emailLoginFunction: () {
+                    if (_formKey.currentState.validate()) {
+                      _loginBloc.loginByEmail(_email);
+                    }
+                  },
                 );
                 break;
               
@@ -52,11 +71,39 @@ class _MemberPageState extends State<MemberPage> {
                 );
                 break;
               
+              case Status.EmailLoading:
+                if(widget.isEmailLoginAuth) {
+                  return VerifyEmailLoginWidget();
+                }
+
+                return _loginStandardWidget(
+                  width,
+                  Status.EmailLoading,
+                );
+                break;
+
+              case Status.EmailLinkGetting:
+                return ReceiveEmailNotificationWidget(
+                  email: _email,
+                );
+                break;
+
+              case Status.EmailFillingIn:
+                return FillInEmailLoginWidget(
+                  loginBloc: _loginBloc,
+                  emailLink: snapshot.data.data.verifyEmailLink,
+                );
+                break;
+              
               case Status.Completed:
                 return MemberWidget(
                   loginBloc: _loginBloc,
                   userData: snapshot.data.data,
                 );
+                break;
+
+              case Status.EmailVerifyError:
+                return EmailVerifyErrorWidget();
                 break;
 
               case Status.Error:
@@ -121,6 +168,142 @@ class _MemberPageState extends State<MemberPage> {
     );
   }
 
+  Widget _dividerBlock() {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.only(right: 15.0),
+            child: Divider(
+              color: Colors.black,
+              height: 50,
+            )
+          ),
+        ),
+        Text("或"),
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.only(left: 15.0),
+            child: Divider(
+              color: Colors.black,
+              height: 50,
+            )
+          ),
+        ),
+      ],
+    );
+  }
+
+  String validateEmail(String value) {
+    Pattern pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(value) || value == null)
+      return 'Enter a valid email address';
+    else
+      return null;
+  }
+
+  Widget _emailTextField(double width, {bool isEnabled = true}) {
+    return Container(
+      child: Form(
+        key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: TextFormField(
+          enabled: isEnabled,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+          ),
+          validator: validateEmail,
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(3.0),
+              ),
+              borderSide: BorderSide(
+                color: Colors.grey,
+                width: 1,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(3.0),
+              ),
+              borderSide: BorderSide(
+                color: Colors.grey,
+                width: 1,
+              ),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(3.0),
+              ),
+              borderSide: BorderSide(
+                color: Colors.grey,
+                width: 1,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(3.0),
+              ),
+              borderSide: BorderSide(
+                color: Colors.grey,
+                width: 1,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(3.0),
+              ),
+              borderSide: BorderSide(
+                color: Colors.grey,
+                width: 1,
+              ),
+            ),
+            labelText: '以email登入',
+            labelStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 17,
+            ),
+            hintText: "name@example.com",
+            hintStyle: TextStyle(
+              color: Colors.grey,
+              fontSize: 17,
+            ),
+          ),
+          onChanged: (value) {
+            _email = value;
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _emailLoginButton(Function ontapFunction) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(5.0),
+      child: Container(
+        height: 50.0,
+        decoration: BoxDecoration(
+          color: appColor,
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        child: Center(
+          child: Text(
+            '登入',
+            style: TextStyle(
+              fontSize: 17,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+      onTap: ontapFunction,
+    );
+  }
+
   Widget _thirdPartyLoadingButton() {
     return Container(
       height: 50.0,
@@ -136,11 +319,23 @@ class _MemberPageState extends State<MemberPage> {
     );
   }
 
+  Widget _emailLoadingButton() {
+    return Container(
+      height: 50.0,
+      decoration: BoxDecoration(
+        color: appColor,
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+      child: SpinKitThreeBounce(color: Colors.white, size: 35,),
+    );
+  }
+
   Widget _loginStandardWidget(
     double width,
     Status status,
     {
       Function googleLoginFunction,
+      Function emailLoginFunction,
     }
   ) {
     return ListView(
@@ -168,6 +363,27 @@ class _MemberPageState extends State<MemberPage> {
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: _thirdPartyLoadingButton(),
+          ),
+        SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+          child: _dividerBlock(),
+        ),
+        SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+          child: _emailTextField(width, isEnabled: status == Status.NeedToLogin),
+        ),
+        SizedBox(height: 16),
+        if(status != Status.EmailLoading)
+          Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+            child: _emailLoginButton(emailLoginFunction),
+          ),
+        if(status == Status.EmailLoading)
+          Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+            child: _emailLoadingButton(),
           ),
       ],
     );

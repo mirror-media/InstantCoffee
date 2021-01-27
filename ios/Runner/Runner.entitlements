@@ -8,6 +8,7 @@
   <array>
     <!-- <string>applinks:www.mirrormedia.mg</string> -->
     <string>applinks:mirrormedia.onelink.me</string>
+    <string>applinks:mirrormedia.page.link</string>
   </array>
 </dict>
 </plist>

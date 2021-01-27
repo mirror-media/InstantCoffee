@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/helpers/apiConstants.dart';
@@ -42,6 +43,39 @@ class _MirrorAppState extends State<MirrorApp> {
     super.initState();
   }
 
+  // It cant trigger on iOS, cuz AppsFlyer's code on AppDelegate.swift break this feature.
+  Future<void> initDynamicLinks() async {
+    FirebaseDynamicLinks.instance.onLink(
+      onSuccess: (PendingDynamicLinkData dynamicLink) async {
+        final Uri deepLink = dynamicLink?.link;
+
+        if (deepLink != null && deepLink.path == '/__/auth/action') {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+          RouteGenerator.navigateToMember(
+            context, 
+            isEmailLoginAuth: true,
+            emailLink: deepLink.toString(),
+          );
+        }
+      },
+      onError: (OnLinkErrorException e) async {
+        print('onLinkError');
+        print(e.message);
+      }
+    );
+    
+    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri deepLink = data?.link;
+
+    if (deepLink != null && deepLink.path == '/__/auth/action') {
+      RouteGenerator.navigateToMember(
+        context, 
+        isEmailLoginAuth: true,
+        emailLink: deepLink.toString(),
+      );
+    }
+  }
+
   Future<void> _initialAppsFlyer() async{
     var k = await _appsflyerSdk.initSdk(
       registerConversionDataCallback: true,
@@ -52,8 +86,17 @@ class _MirrorAppState extends State<MirrorApp> {
         print('-----OpenAttribution-----');
         print(event);
         print('-------------------------');
+
         if(event['data']['slug'] != null) {
           RouteGenerator.navigateToStory(context, event['data']['slug'], isListeningWidget: false);
+        } else if(event['data']['host'] == 'mirrormedia.page.link') {
+          // This is only for iOS to replace the DynamicLink feature.
+          Navigator.of(context).popUntil((route) => route.isFirst);
+          RouteGenerator.navigateToMember(
+            context, 
+            isEmailLoginAuth: true,
+            emailLink: event['data']['link'].toString(),
+          );
         }
       }
     );
@@ -80,6 +123,7 @@ class _MirrorAppState extends State<MirrorApp> {
     await _onBoardingBloc.setOnBoardingFromStorage();
 
     await _initialAppsFlyer();
+    await initDynamicLinks();
     _configController.sink.add(true);
   }
 

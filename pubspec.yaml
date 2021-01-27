@@ -37,6 +37,8 @@ dependencies:
   webview_flutter: ^1.0.1
   # local storage
   localstorage: ^3.0.2+5
+  # A Flutter plugin to store data in secure storage
+  flutter_secure_storage: ^3.3.5
   # drag and drop object
   reorderables: ^0.3.2
   # A mixture between dependency injection (DI) and state management
@@ -87,6 +89,8 @@ dependencies:
   firebase_admob: ^0.10.2
   #flutter_native_admob: ^2.1.0+3
   admob_flutter: ^1.0.0
+  # firebase dynamic links 
+  firebase_dynamic_links: ^0.6.2
 
   # firebase auth
   firebase_auth: ^0.18.3+1
