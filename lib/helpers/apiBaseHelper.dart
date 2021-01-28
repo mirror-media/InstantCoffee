@@ -9,13 +9,13 @@ import 'package:readr_app/helpers/mMCacheManager.dart';
 
 class ApiBaseHelper {
   Future<dynamic> getByCache(String url, {Duration maxAge = const Duration(days: 30),}) async {
-    print('Get cache, url $url');
+    //print('Get cache, url $url');
     MMCacheManager mMCacheManager = MMCacheManager();
     final cacheFile = await mMCacheManager.getFileFromCache(url);
     if ( cacheFile == null ||
       cacheFile != null && cacheFile.validTill.isBefore(DateTime.now())
     ) {
-      print('Call Api Get, url $url');
+      //print('Call Api Get, url $url');
       var responseJson;
       try {
         final response =
@@ -26,6 +26,8 @@ class ApiBaseHelper {
       } on SocketException {
         print('No Internet connection');
         throw FetchDataException('No Internet connection');
+      } catch(e) {
+        print('error: $e');
       }
       print('Api get done.');
       return responseJson;
@@ -48,7 +50,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getByUrl(String url) async {
-    print('Call Api Get, url $url');
+    //print('Call Api Get, url $url');
     var responseJson;
     try {
       final response =
@@ -66,11 +68,11 @@ class ApiBaseHelper {
     getByUrl(baseUrl + endpoint);
   }
 
-  Future<dynamic> postByUrl(String url, dynamic body) async {
-    print('Call Api Post, url $url');
+  Future<dynamic> postByUrl(String url, dynamic body, {Map<String, String> headers}) async {
+    //print('Call Api Post, url $url');
     var responseJson;
     try {
-      final response = await http.post(url, body: body);
+      final response = await http.post(url, headers: headers, body: body);
       responseJson = _returnResponse(response);
     } on SocketException {
       print('No Internet connection');
@@ -85,7 +87,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> putByUrl(String url, dynamic body) async {
-    print('Call Api Put, url $url');
+    //print('Call Api Put, url $url');
     var responseJson;
     try {
       final response = await http.put(url, body: body);
@@ -104,7 +106,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> deleteByUrl(String url) async {
-    print('Call Api delete, url $url');
+    //print('Call Api delete, url $url');
     var apiResponse;
     try {
       final response = await http.delete(url);
@@ -134,7 +136,9 @@ dynamic _returnResponse(http.Response response) {
         // properties responded by editor choice api
         (responseJson.containsKey('choices') && responseJson['choices'].length > 0) || 
         // properties responded by search api
-        (responseJson.containsKey('hits') && responseJson['hits'].containsKey('hits')) ;
+        (responseJson.containsKey('hits') && responseJson['hits'].containsKey('hits')) ||
+        // properties responded by member graphql
+        (responseJson.containsKey('data'));
       if(!hasData) {
         throw BadRequestException(response.body.toString());
       }

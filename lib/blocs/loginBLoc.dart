@@ -9,6 +9,7 @@ import 'package:readr_app/services/emailSignInService.dart';
 import 'package:readr_app/services/facebookSignInService.dart';
 import 'package:readr_app/services/googleSignInService.dart';
 import 'package:readr_app/helpers/loginResponse.dart';
+import 'package:readr_app/services/memberService.dart';
 
 class LoginBloc {
   FirebaseAuth auth;
@@ -62,8 +63,7 @@ class LoginBloc {
     EmailSignInService emailSignInService = EmailSignInService();
     FirebaseLoginStatus firebaseLoginStatus = await emailSignInService.verifyEmail(auth, email, emailLink);
     if(firebaseLoginStatus.status == FirebaseStatus.Success) {
-      UserData userData = await getUserData();
-      loginSinkToAdd(LoginResponse.completed(userData));
+      handleCreateMember();
     } else {
       loginSinkToAdd(LoginResponse.error('Verify email fail'));
     }
@@ -81,6 +81,27 @@ class LoginBloc {
     );
   }
 
+  void handleCreateMember({BuildContext context}) async{
+    MemberService memberService = MemberService();
+    String token = await auth.currentUser.getIdToken();
+    bool createSuccess = await memberService.createMember(auth.currentUser.email, auth.currentUser.uid, token);
+    if(createSuccess) {
+      UserData userData = await getUserData();
+      if(context != null) {
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text('登入成功')
+          )
+        );
+      }
+
+      loginSinkToAdd(LoginResponse.completed(userData));
+    } else {
+      await auth.signOut();
+      loginSinkToAdd(LoginResponse.error('Create member fail'));
+    }
+  }
+
   loginByFacebook(BuildContext context) async {
     loginSinkToAdd(LoginResponse.facebookLoading('Running facebook login'));
 
@@ -91,13 +112,7 @@ class LoginBloc {
       if(frebaseLoginStatus.status == FirebaseStatus.Cancel) {
         loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
       } else if(frebaseLoginStatus.status == FirebaseStatus.Success) {
-        UserData userData = await getUserData();
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            content: Text('登入成功')
-          )
-        );
-        loginSinkToAdd(LoginResponse.completed(userData));
+        handleCreateMember(context: context);
       } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
         loginSinkToAdd(LoginResponse.error('Firebase facebook login fail'));
       } 
@@ -117,13 +132,7 @@ class LoginBloc {
       if(frebaseLoginStatus.status == FirebaseStatus.Cancel) {
         loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
       } else if(frebaseLoginStatus.status == FirebaseStatus.Success) {
-        UserData userData = await getUserData();
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            content: Text('登入成功')
-          )
-        );
-        loginSinkToAdd(LoginResponse.completed(userData));
+        handleCreateMember(context: context);
       } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
         loginSinkToAdd(LoginResponse.error('Firebase google login fail'));
       } 
