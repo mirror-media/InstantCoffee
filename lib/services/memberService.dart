@@ -29,7 +29,7 @@ class MemberService {
 
     try {
       final jsonResponse = await _helper.postByUrl(
-        env.baseConfig.graphqlApi,
+        env.baseConfig.memberApi,
         jsonEncode(graphqlBody.toJson()),
         headers: {
           "Content-Type": "application/json",
@@ -70,7 +70,7 @@ class MemberService {
     );
 
     final jsonResponse = await _helper.postByUrl(
-      env.baseConfig.graphqlApi,
+      env.baseConfig.memberApi,
       jsonEncode(graphqlBody.toJson()),
       headers: {
         "Content-Type": "application/json; charset=utf-8",
@@ -108,7 +108,7 @@ class MemberService {
 
     try {
       final jsonResponse = await _helper.postByUrl(
-        env.baseConfig.graphqlApi,
+        env.baseConfig.memberApi,
         jsonEncode(graphqlBody.toJson()),
         headers: {
           "Content-Type": "application/json",
@@ -149,7 +149,7 @@ class MemberService {
 
     try {
       final jsonResponse = await _helper.postByUrl(
-        env.baseConfig.graphqlApi,
+        env.baseConfig.memberApi,
         jsonEncode(graphqlBody.toJson()),
         headers: {
           "Content-Type": "application/json",

@@ -82,6 +82,16 @@ class CategoryList extends CustomizedList<Category> {
     return true;
   }
 
+  bool isMemberOnly() {
+    for(int i=0; i<l.length; i++) {
+      if(l[i].isMemberOnly) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   // static methods
   static CategoryList getTheNewestCategoryList(
       {CategoryList localCategoryList, CategoryList onlineCategoryList}) {
