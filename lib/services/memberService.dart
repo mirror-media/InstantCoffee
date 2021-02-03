@@ -4,7 +4,7 @@ import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/models/createMemberRes.dart';
 import 'package:readr_app/models/graphqlBody.dart';
-import 'package:readr_app/models/userData.dart';
+import 'package:readr_app/models/member.dart';
 
 class MemberService {
   ApiBaseHelper _helper = ApiBaseHelper();
@@ -44,7 +44,7 @@ class MemberService {
     }
   }
 
-  Future<UserData> fetchMemberData(String firebaseId, String token) async{
+  Future<Member> fetchMemberData(String firebaseId, String token) async{
     String query = 
     """
     query (\$firebaseId : String!){
@@ -78,7 +78,7 @@ class MemberService {
       }
     );
 
-    UserData userData = UserData.fromJson(jsonResponse['data']['member']);
-    return userData;
+    Member member = Member.fromJson(jsonResponse['data']['member']);
+    return member;
   }
 }

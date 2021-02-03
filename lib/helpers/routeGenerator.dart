@@ -2,21 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/memberBloc.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/mirrorApp.dart';
-import 'package:readr_app/models/userData.dart';
+import 'package:readr_app/models/member.dart';
 import 'package:readr_app/pages/memberPage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/pages/searchPage.dart';
 import 'package:readr_app/pages/storyPage.dart';
-import 'package:readr_app/widgets/editUserContactInfo.dart';
-
-import 'package:readr_app/widgets/editUserProfile.dart';
+import 'package:readr_app/widgets/editMemberProfile.dart';
+import 'package:readr_app/widgets/editMemberContactInfo.dart';
 
 class RouteGenerator {
   static const String root = '/';
   static const String search = '/search';
   static const String member = '/member';
-  static const String editUserProfile = '/editUserProfile';
-  static const String editUserContactInfo = '/editUserContactInfo';
+  static const String editMemberProfile = '/editMemberProfile';
+  static const String editMemberContactInfo = '/editMemberContactInfo';
   static const String notificationSettings = '/notificationSettings';
   static const String story = '/story';
 
@@ -43,22 +42,22 @@ class RouteGenerator {
           ),
           fullscreenDialog: true,
         );
-      case editUserProfile:
+      case editMemberProfile:
         Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => EditUserProfile(
-            userData: args['userData'],
+          builder: (context) => EditMemberProfile(
+            member: args['member'],
             memberBloc: args['memberBloc'],
           ),
           fullscreenDialog: true,
         );
-      case editUserContactInfo:
+      case editMemberContactInfo:
         Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => EditUserContactInfo(
-            userData: args['userData'],
+          builder: (context) => EditMemberContactInfo(
+            member: args['member'],
             memberBloc: args['memberBloc'],
           ),
           fullscreenDialog: true,
@@ -134,29 +133,29 @@ class RouteGenerator {
     );
   }
 
-  static void navigateToEditUserProfile(
+  static void navigateToEditMemberProfile(
     BuildContext context, 
-    UserData userData,
+    Member member,
     MemberBloc memberBloc,
   ) {
     Navigator.of(context).pushNamed(
-      editUserProfile,
+      editMemberProfile,
       arguments: {
-        'userData': userData,
+        'member': member,
         'memberBloc': memberBloc,
       },
     );
   }
 
-  static void navigateToEditUserContactInfo(
+  static void navigateToEditMemberContactInfo(
     BuildContext context, 
-    UserData userData, 
+    Member member, 
     MemberBloc memberBloc,
   ) {
     Navigator.of(context).pushNamed(
-      editUserContactInfo,
+      editMemberContactInfo,
       arguments: {
-        'userData': userData,
+        'member': member,
         'memberBloc': memberBloc,
       },
     );

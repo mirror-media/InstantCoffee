@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:readr_app/models/userData.dart';
+import 'package:readr_app/models/member.dart';
 
 class GenderPicker extends StatefulWidget {
   final Gender gender;

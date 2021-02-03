@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:readr_app/models/firebaseLoginStatus.dart';
-import 'package:readr_app/models/userData.dart';
+import 'package:readr_app/models/member.dart';
 import 'package:readr_app/services/emailSignInService.dart';
 import 'package:readr_app/services/facebookSignInService.dart';
 import 'package:readr_app/services/googleSignInService.dart';
@@ -15,14 +15,14 @@ class LoginBloc {
   FirebaseAuth auth;
 
   StreamController _loginController;
-  StreamSink<LoginResponse<UserData>> get loginSink =>
+  StreamSink<LoginResponse<Member>> get loginSink =>
       _loginController.sink;
-  Stream<LoginResponse<UserData>> get loginStream =>
+  Stream<LoginResponse<Member>> get loginStream =>
       _loginController.stream;
 
   LoginBloc(bool isEmailLoginAuth, String emailLink) {
     auth = FirebaseAuth.instance;
-    _loginController = StreamController<LoginResponse<UserData>>();
+    _loginController = StreamController<LoginResponse<Member>>();
     if(!isEmailLoginAuth) {
       renderingUI();
     } else {
@@ -30,7 +30,7 @@ class LoginBloc {
     }
   }
 
-  loginSinkToAdd(LoginResponse<UserData> value) {
+  loginSinkToAdd(LoginResponse<Member> value) {
     if (!_loginController.isClosed) {
       loginSink.add(value);
     }
@@ -44,8 +44,8 @@ class LoginBloc {
       try {
         String token = await auth.currentUser.getIdToken();
         MemberService memberService = MemberService();
-        UserData userData = await memberService.fetchMemberData(auth.currentUser.uid, token);
-        loginSinkToAdd(LoginResponse.completed(userData));
+        Member member = await memberService.fetchMemberData(auth.currentUser.uid, token);
+        loginSinkToAdd(LoginResponse.completed(member));
       } catch(e) {
         // fetch member fail
         print(e);
@@ -62,8 +62,8 @@ class LoginBloc {
       await verifyEmail(email, emailLink);
       await storage.delete(key: 'email');
     } else {
-      UserData userData = UserData(verifyEmailLink: emailLink);
-      loginSinkToAdd(LoginResponse.emailFillingIn(userData));
+      Member member = Member(verifyEmailLink: emailLink);
+      loginSinkToAdd(LoginResponse.emailFillingIn(member));
     }
   }
 
@@ -83,7 +83,7 @@ class LoginBloc {
     bool createSuccess = await memberService.createMember(auth.currentUser.email, auth.currentUser.uid, token);
     if(createSuccess) {
       try {
-        UserData userData = await memberService.fetchMemberData(auth.currentUser.uid, token);
+        Member member = await memberService.fetchMemberData(auth.currentUser.uid, token);
         if(context != null) {
           Scaffold.of(context).showSnackBar(
             SnackBar(
@@ -92,7 +92,7 @@ class LoginBloc {
           );
         }
 
-        loginSinkToAdd(LoginResponse.completed(userData));
+        loginSinkToAdd(LoginResponse.completed(member));
       } catch(e) {
         // fetch member fail
         print(e);
@@ -154,11 +154,11 @@ class LoginBloc {
       if(isSentSuccessfully) {
         final storage = FlutterSecureStorage();
         await storage.write(key: 'email', value: email);
-        UserData userData = UserData(
+        Member member = Member(
           email: email,
         );
 
-        loginSinkToAdd(LoginResponse.emailLinkGetting(userData));
+        loginSinkToAdd(LoginResponse.emailLinkGetting(member));
       } else {
         loginSinkToAdd(LoginResponse.loginError('Firebase sending email fail'));
       }
