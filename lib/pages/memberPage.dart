@@ -116,8 +116,12 @@ class _MemberPageState extends State<MemberPage> {
                 return EmailVerifyErrorWidget();
                 break;
 
-              case Status.Error:
+              case Status.LoginError:
                 return LoginErrorWidget();
+                break;
+
+              case Status.Error:
+                return Container();
                 break;
             }
           }

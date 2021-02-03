@@ -23,6 +23,8 @@ class LoginResponse<T> {
 
   LoginResponse.emailVerifyError(this.message) : status = Status.EmailVerifyError;
 
+  LoginResponse.loginError(this.message) : status = Status.LoginError;
+
   LoginResponse.error(this.message) : status = Status.Error;
 
   @override
@@ -41,5 +43,7 @@ enum Status {
   EmailFillingIn,
   Completed,
   EmailVerifyError,
+  LoginError,
+  // return Error when fetching member data fail
   Error,
 }
