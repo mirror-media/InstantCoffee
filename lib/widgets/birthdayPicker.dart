@@ -132,7 +132,7 @@ class _BirthdayPickerState extends State<BirthdayPicker> {
                       ),
                       onTap: (){
                         setState(() {
-                          _birthday = DateTimeFormat.changeDatetimeToBirthdayString(targetDateTime);
+                          _birthday = DateTimeFormat.changeDatetimeToIso8601String(targetDateTime);
                           onBirthdayChange(_birthday);
                           Navigator.pop(context);
                         });

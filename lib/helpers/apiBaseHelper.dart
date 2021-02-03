@@ -127,7 +127,8 @@ class ApiBaseHelper {
 dynamic _returnResponse(http.Response response) {
   switch (response.statusCode) {
     case 200:
-      var responseJson = json.decode(response.body.toString());
+      String utf8Json = utf8.decode(response.bodyBytes);
+      var responseJson = json.decode(utf8Json);
 
       bool hasData = (responseJson.containsKey('_items') && responseJson['_items'].length > 0) || 
         (responseJson.containsKey('items') && responseJson['items'].length > 0) || 
