@@ -1,9 +1,9 @@
+import 'package:readr_app/helpers/EnumParser.dart';
 import 'package:readr_app/models/contactAddress.dart';
 
 class UserData {
   String email;
   String name;
-  String profilePhoto;
   Gender gender;
   String birthday;
 
@@ -15,7 +15,6 @@ class UserData {
   UserData({
     this.email,
     this.name,
-    this.profilePhoto,
     this.gender,
     this.birthday,
 
@@ -30,7 +29,6 @@ class UserData {
     return UserData(
       email: this.email,
       name: this.name,
-      profilePhoto: this.profilePhoto,
       gender: this.gender,
       birthday: this.birthday,
 
@@ -41,12 +39,35 @@ class UserData {
     );
   }
 
+  factory UserData.fromJson(Map<String, dynamic> json) {
+    if(json == null) {
+      return null;
+    }
+
+    String genderString = json['gender'];
+    return UserData(
+      email: json['email'],
+      name: json['name'],
+      gender: genderString.toEnum(Gender.values),
+      birthday: json['birthday'],
+
+      phoneNumber: json['phone'],
+      contactAddress: ContactAddress(
+        country: json['country'],
+        city: json['city'],
+        district: json['district'],
+        address: json['adress'],
+      ),
+
+      verifyEmailLink: json['verifyEmailLink'],
+    );
+  }
+
   @override
   String toString() {
     return """\n
     email : $email, 
     name : $name, 
-    profilePhoto : $profilePhoto, 
     gender : $gender,
     birthday : $birthday,
 
@@ -57,8 +78,12 @@ class UserData {
 }
 
 enum Gender {
-  Null,
-  Male,
-  Female,
-  Unknown,
+  //Null,
+  A_0,
+  //Male,
+  A_1,
+  //Female,
+  A_2,
+  //Unknown,
+  A_3,
 }

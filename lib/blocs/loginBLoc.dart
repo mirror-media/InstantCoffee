@@ -41,8 +41,16 @@ class LoginBloc {
     if(auth.currentUser == null) {
       loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
     } else {
-      UserData userData = await getUserData();
-      loginSinkToAdd(LoginResponse.completed(userData));
+      try {
+        String token = await auth.currentUser.getIdToken();
+        MemberService memberService = MemberService();
+        UserData userData = await memberService.fetchMemberData(auth.currentUser.uid, token);
+        loginSinkToAdd(LoginResponse.completed(userData));
+      } catch(e) {
+        // fetch member fail
+        print(e);
+        loginSinkToAdd(LoginResponse.error(e.toString()));
+      }
     }
   }
 
@@ -69,33 +77,27 @@ class LoginBloc {
     }
   }
 
-  Future<UserData> getUserData() async{
-    await Future.delayed(Duration(seconds: 1));
-
-    return UserData(
-      email: auth.currentUser.email,
-      name: null,
-      profilePhoto: auth.currentUser.photoURL,
-      phoneNumber: auth.currentUser.phoneNumber,
-      gender: Gender.Null,
-    );
-  }
-
   void handleCreateMember({BuildContext context}) async{
     MemberService memberService = MemberService();
     String token = await auth.currentUser.getIdToken();
     bool createSuccess = await memberService.createMember(auth.currentUser.email, auth.currentUser.uid, token);
     if(createSuccess) {
-      UserData userData = await getUserData();
-      if(context != null) {
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            content: Text('登入成功')
-          )
-        );
-      }
+      try {
+        UserData userData = await memberService.fetchMemberData(auth.currentUser.uid, token);
+        if(context != null) {
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text('登入成功')
+            )
+          );
+        }
 
-      loginSinkToAdd(LoginResponse.completed(userData));
+        loginSinkToAdd(LoginResponse.completed(userData));
+      } catch(e) {
+        // fetch member fail
+        print(e);
+        loginSinkToAdd(LoginResponse.error(e.toString()));
+      }
     } else {
       await auth.signOut();
       loginSinkToAdd(LoginResponse.error('Create member fail'));
