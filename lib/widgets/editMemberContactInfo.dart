@@ -135,7 +135,7 @@ class _EditMemberContactInfoState extends State<EditMemberContactInfo> {
         SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: _adressTextField(memberContactInfoBloc.editMember),
+          child: _addressTextField(memberContactInfoBloc.editMember),
         ),
       ],
     );
@@ -177,12 +177,11 @@ class _EditMemberContactInfoState extends State<EditMemberContactInfo> {
     );
   }
 
-  Widget _adressTextField(Member member) {
+  Widget _addressTextField(Member member) {
     return Container(
       color: Colors.grey[300],
       child: TextFormField(
         initialValue: member.contactAddress.address,
-        keyboardType: TextInputType.number,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.fromLTRB(12.0, 8.0, 12.0, 8.0),
           hintText: '自填地址',
