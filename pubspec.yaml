@@ -70,7 +70,12 @@ dependencies:
   mime: ^0.9.7
   # app link
   uni_links: ^0.4.0
-  
+  # mirrormedia constants
+  constants: 
+    git:
+      url: git://github.com/mirror-media/constants.git
+      ref: master
+      version: ^2.0.0
   # appsflyer
   appsflyer_sdk: ^6.0.5
   
@@ -132,8 +137,8 @@ flutter:
     - assets/image/facebook_icon.png
     - assets/image/google_icon.png
     - assets/image/wine_warning.png
-    - assets/data/countries.json
-    - assets/data/taiwanDistricts.json
+    - packages/constants/countries.json
+    - packages/constants/taiwan-districts.json
     - assets/data/records.json
     - assets/data/menu.json
     - assets/data/defaultNotificationList.json
