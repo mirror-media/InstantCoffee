@@ -12,14 +12,14 @@ class ContactAddress {
   });
 
   // deep copy
-  // ContactAddress copy() {
-  //   return ContactAddress(
-  //     country: this.country,
-  //     city: this.city,
-  //     district: this.district,
-  //     address: this.address,
-  //   );
-  // }
+  ContactAddress copy() {
+    return ContactAddress(
+      country: this.country,
+      city: this.city,
+      district: this.district,
+      address: this.address,
+    );
+  }
 
   @override
   String toString() {
