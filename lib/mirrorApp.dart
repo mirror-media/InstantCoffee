@@ -91,7 +91,7 @@ class _MirrorAppState extends State<MirrorApp> {
 
         if(event['data']['slug'] != null) {
           RouteGenerator.navigateToStory(context, event['data']['slug'], isListeningWidget: false);
-        } else if(event['data']['host'] == 'mirrormedia.page.link') {
+        } else if(event['data']['host'] == env.baseConfig.dynamicLinkDomain) {
           // This is only for iOS to replace the DynamicLink feature.
           Navigator.of(context).popUntil((route) => route.isFirst);
           RouteGenerator.navigateToMember(
