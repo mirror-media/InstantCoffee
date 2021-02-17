@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
-import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
+import 'package:readr_app/helpers/appsFlyerHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/onBoarding.dart';
 import 'package:readr_app/pages/homePage.dart';
@@ -17,7 +15,7 @@ class MirrorApp extends StatefulWidget {
 }
 
 class _MirrorAppState extends State<MirrorApp> {
-  AppsflyerSdk _appsflyerSdk;
+  AppsFlyerHelper _appsFlyerHelper;
   
   GlobalKey _settingKey;
   AppUpgradeHelper _appUpgradeHelper;
@@ -28,14 +26,7 @@ class _MirrorAppState extends State<MirrorApp> {
 
   @override
   void initState() {
-    final AppsFlyerOptions options = AppsFlyerOptions(
-      afDevKey: env.baseConfig.appsFlyerKey, 
-      appId: Platform.isIOS 
-      ? env.baseConfig.appleAppId 
-      : env.baseConfig.androidAppId, 
-      showDebug: false
-    );
-    _appsflyerSdk = AppsflyerSdk(options);
+    _appsFlyerHelper = AppsFlyerHelper();
 
     _settingKey = GlobalKey();
     _appUpgradeHelper = AppUpgradeHelper();
@@ -46,6 +37,7 @@ class _MirrorAppState extends State<MirrorApp> {
   }
 
   // It cant trigger on iOS, cuz AppsFlyer's code on AppDelegate.swift break this feature.
+  // The iOS DynamicLinks method will implement in initialAppsFlyer function.
   Future<void> initDynamicLinks() async {
     FirebaseDynamicLinks.instance.onLink(
       onSuccess: (PendingDynamicLinkData dynamicLink) async {
@@ -77,45 +69,6 @@ class _MirrorAppState extends State<MirrorApp> {
       );
     }
   }
-
-  Future<void> _initialAppsFlyer() async{
-    var k = await _appsflyerSdk.initSdk(
-      registerConversionDataCallback: true,
-      registerOnAppOpenAttributionCallback: true
-    );
-    _appsflyerSdk.appOpenAttributionStream.listen(
-      (event) {
-        print('-----OpenAttribution-----');
-        print(event);
-        print('-------------------------');
-
-        if(event['data']['slug'] != null) {
-          RouteGenerator.navigateToStory(context, event['data']['slug'], isListeningWidget: false);
-        } else if(event['data']['host'] == env.baseConfig.dynamicLinkDomain) {
-          // This is only for iOS to replace the DynamicLink feature.
-          Navigator.of(context).popUntil((route) => route.isFirst);
-          RouteGenerator.navigateToMember(
-            context, 
-            isEmailLoginAuth: true,
-            emailLink: event['data']['link'].toString(),
-          );
-        }
-      }
-    );
-    _appsflyerSdk.conversionDataStream.listen(
-      (event) {
-        print('-----ConversionData-----');
-        print(event);
-        print('------------------------');
-        if(event['data']['is_first_launch']) {
-          if(event['data']['slug'] != null) {
-            RouteGenerator.navigateToStory(context, event['data']['slug'], isListeningWidget: false);
-          }
-        }
-      }
-    );
-    print(k);
-  }
   
   _waiting() async{
     _isUpdateAvailable = await _appUpgradeHelper.isUpdateAvailable();
@@ -124,7 +77,7 @@ class _MirrorAppState extends State<MirrorApp> {
     _onBoardingBloc.setOnBoardingHintList();
     await _onBoardingBloc.setOnBoardingFromStorage();
 
-    await _initialAppsFlyer();
+    await _appsFlyerHelper.initialAppsFlyer(context);
     await initDynamicLinks();
     _configController.sink.add(true);
   }
