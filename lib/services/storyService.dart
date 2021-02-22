@@ -21,14 +21,16 @@ class StoryService {
     _auth = FirebaseAuth.instance;
   }
   
+  /// Check the file exists in cache first.
+  /// If file exists, get the json file by cache,
+  /// or get the json file from api,
+  /// and check the json file is member only or not.
+  /// If the json file is not member only, 
+  /// save the file in cache.
   Future<StoryRes> fetchStory(String slug) async {
     String token = await _auth?.currentUser?.getIdToken();
     String endpoint = env.baseConfig.storyPageApi +
-        'posts?where={"slug":"' +
-        slug +
-        '","isAudioSiteOnly":false' +
-        '}&related=full';
-    //&clean=content
+        'posts?where={"slug":"$slug","isAudioSiteOnly":false}&related=full';//&clean=content
 
     bool isCacheFileExists = await _mMCacheManager.isFileExistsAndNotExpired(endpoint);
     var jsonResponse;
