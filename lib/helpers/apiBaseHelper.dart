@@ -8,7 +8,31 @@ import 'package:readr_app/helpers/appException.dart';
 import 'package:readr_app/helpers/mMCacheManager.dart';
 
 class ApiBaseHelper {
-  Future<dynamic> getByCache(
+  /// get cache file by key
+  /// the key is url
+  Future<dynamic> getByCache(String url) async {
+    MMCacheManager mMCacheManager = MMCacheManager();
+    final cacheFile = await mMCacheManager.getFileFromCache(url);
+    var file = cacheFile?.file;
+    if (file != null && await file.exists()) {
+      var mimeStr = lookupMimeType(file.path);
+      String res;
+      if(mimeStr == 'application/json') {
+        res = await file.readAsString();
+      }
+      else {
+        res = file.path;
+      }
+      return returnResponse(http.Response(res, 200));
+    }
+    
+    return returnResponse(http.Response(null, 404));
+  }
+
+  /// Get the json file from cache first.
+  /// If there is no json file from cache, 
+  /// fetch the json file from get api and save the json file to cache.
+  Future<dynamic> getByCacheAndAutoCache(
     String url, 
     {
       Duration maxAge = const Duration(days: 30),
@@ -26,7 +50,7 @@ class ApiBaseHelper {
       try {
         final response =
             await http.get(url, headers: headers);
-        responseJson = _returnResponse(response);
+        responseJson = returnResponse(response);
         // save cache file
         mMCacheManager.putFile(url, response.bodyBytes, maxAge: maxAge, fileExtension: 'json');
       } on SocketException {
@@ -50,9 +74,9 @@ class ApiBaseHelper {
         res = file.path;
       }
       
-      return _returnResponse(http.Response(res, 200));
+      return returnResponse(http.Response(res, 200));
     }
-    return _returnResponse(http.Response(null, 404));
+    return returnResponse(http.Response(null, 404));
   }
 
   Future<dynamic> getByUrl(
@@ -66,7 +90,7 @@ class ApiBaseHelper {
     try {
       final response =
           await http.get(url, headers: headers);
-      responseJson = _returnResponse(response);
+      responseJson = returnResponse(response);
     } on SocketException {
       print('No Internet connection');
       throw FetchDataException('No Internet connection');
@@ -84,7 +108,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response = await http.post(url, headers: headers, body: body);
-      responseJson = _returnResponse(response);
+      responseJson = returnResponse(response);
     } on SocketException {
       print('No Internet connection');
       throw FetchDataException('No Internet connection');
@@ -102,13 +126,12 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response = await http.put(url, body: body);
-      responseJson = _returnResponse(response);
+      responseJson = returnResponse(response);
     } on SocketException {
       print('No Internet connection');
       throw FetchDataException('No Internet connection');
     }
     print('Api put done.');
-    print(responseJson.toString());
     return responseJson;
   }
 
@@ -121,7 +144,7 @@ class ApiBaseHelper {
     var apiResponse;
     try {
       final response = await http.delete(url);
-      apiResponse = _returnResponse(response);
+      apiResponse = returnResponse(response);
     } on SocketException {
       print('No Internet connection');
       throw FetchDataException('No Internet connection');
@@ -135,7 +158,7 @@ class ApiBaseHelper {
   }
 }
 
-dynamic _returnResponse(http.Response response) {
+dynamic returnResponse(http.Response response) {
   switch (response.statusCode) {
     case 200:
       String utf8Json = utf8.decode(response.bodyBytes);

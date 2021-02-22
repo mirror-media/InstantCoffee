@@ -9,7 +9,7 @@ class SectionService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<SectionList> fetchSectionList({bool needMenu = true}) async {
-    final jsonResponse = await _helper.getByCache(env.baseConfig.sectionAPI, maxAge: sectionCacheDuration);
+    final jsonResponse = await _helper.getByCacheAndAutoCache(env.baseConfig.sectionAPI, maxAge: sectionCacheDuration);
 
     SectionList sessions = SectionList.fromJson(jsonResponse["_items"]);
     if(needMenu) {

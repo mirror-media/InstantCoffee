@@ -7,7 +7,7 @@ class CategoryService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<CategoryList> fetchCategoryList() async {
-    final jsonResponse = await _helper.getByCache(env.baseConfig.sectionAPI, maxAge: categoryCacheDuration);
+    final jsonResponse = await _helper.getByCacheAndAutoCache(env.baseConfig.sectionAPI, maxAge: categoryCacheDuration);
     var sectionJson = jsonResponse["_items"];
 
     CategoryList categoryList = CategoryList();

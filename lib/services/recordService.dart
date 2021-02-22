@@ -14,7 +14,7 @@ class RecordService {
   Future<RecordList> fetchRecordList(String url) async {
     dynamic jsonResponse;
     if(page <= 2) {
-      jsonResponse = await _helper.getByCache(url, maxAge: contentTabCacheDuration);
+      jsonResponse = await _helper.getByCacheAndAutoCache(url, maxAge: contentTabCacheDuration);
     }
     else {
       jsonResponse = await _helper.getByUrl(url);

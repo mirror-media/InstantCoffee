@@ -14,7 +14,7 @@ class ListeningTabContentService {
   Future<RecordList> fetchRecordList(String url) async {
     dynamic jsonResponse;
     if(page <= 2) {
-      jsonResponse = await _helper.getByCache(url, maxAge: listeningTabContentCacheDuration);
+      jsonResponse = await _helper.getByCacheAndAutoCache(url, maxAge: listeningTabContentCacheDuration);
     }
     else {
       jsonResponse = await _helper.getByUrl(url);

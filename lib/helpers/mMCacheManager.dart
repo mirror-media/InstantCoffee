@@ -28,4 +28,9 @@ class MMCacheManager extends BaseCacheManager {
     var directory = await getTemporaryDirectory();
     return path.join(directory.path, key);
   }
+
+  Future<bool> isFileExistsAndNotExpired(String url) async {
+    final cacheFile = await _instance.getFileFromCache(url);
+    return cacheFile != null && cacheFile.validTill.isAfter(DateTime.now());
+  }
 }
