@@ -12,14 +12,18 @@ class MemberService {
   Future<bool> createMember(String email, String firebaseId, String token, {String nickname}) async{
     String mutation = 
     """
-    mutation (\$email: String!, \$firebaseId : String!, \$nickname : String){
-      createMember(email: \$email, firebaseId: \$firebaseId, nickname: \$nickname) {
+    mutation (\$email: String, \$firebaseId : String!){
+      createMember(email: \$email, firebaseId: \$firebaseId) {
         success
         msg
       }
     }
     """;
-    Map<String,String> variables = {"email" : "$email", "firebaseId" : "$firebaseId"};
+
+    Map<String,String> variables = {
+      "email" : email == null ? null : "$email", 
+      "firebaseId" : "$firebaseId"
+    };
 
     GraphqlBody graphqlBody = GraphqlBody(
       operationName: '',
@@ -93,9 +97,9 @@ class MemberService {
     """;
     Map<String,String> variables = {
       "firebaseId" : "$firebaseId",
-      "name" : name == null ? name : "$name",
-      "gender" : gender == null ? gender : "${gender.index}",
-      "birthday" : birthday == null ? birthday : "$birthday",
+      "name" : name == null ? "" : "$name",
+      "gender" : gender == null ? "${Gender.A_0.index}" : "${gender.index}",
+      "birthday" : birthday == null ? null : "$birthday",
     };
 
     GraphqlBody graphqlBody = GraphqlBody(
@@ -132,11 +136,11 @@ class MemberService {
     """;
     Map<String,String> variables = {
       "firebaseId" : "$firebaseId",
-      "phone" : phoneNumber == null ? phoneNumber : "$phoneNumber",
-      "country" : country == null ? country : "$country",
-      "city" : city == null ? city : "$city",
-      "district" : district == null ? district : "$district",
-      "address" : address == null ? address : "$address",
+      "phone" : phoneNumber == null ? "" : "$phoneNumber",
+      "country" : country == null ? "" : "$country",
+      "city" : city == null ? "" : "$city",
+      "district" : district == null ? "" : "$district",
+      "address" : address == null ? "" : "$address",
     };
 
     GraphqlBody graphqlBody = GraphqlBody(
