@@ -52,11 +52,11 @@ class MemberContactInfoBloc {
   }
 
   Future<void> fetchCountryListAndCityListFromJson() async{
-    String jsonCountries = await rootBundle.loadString('assets/data/countries.json');
+    String jsonCountries = await rootBundle.loadString('packages/constants/countries.json');
     final jsonCountryList = json.decode(jsonCountries);
     _countryList = CountryList.fromJson(jsonCountryList);
 
-    String jsonCities = await rootBundle.loadString('assets/data/taiwanDistricts.json');
+    String jsonCities = await rootBundle.loadString('packages/constants/taiwan-districts.json');
     final jsonCityList = json.decode(jsonCities);
     _cityList = CityList.fromJson(jsonCityList);
   }
