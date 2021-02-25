@@ -18,6 +18,7 @@ import 'package:readr_app/models/storyRes.dart';
 import 'package:readr_app/models/tagList.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:readr_app/widgets/downloadMagazineWidget.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
 
@@ -98,6 +99,9 @@ class _StoryWidget extends State<StoryWidget> {
                       _buildRelatedWidget(context, story.relatedStory),
                       SizedBox(height: 16),
                       _buildMoreContentWidget(),
+                      SizedBox(height: 16),
+                      _downloadMagazinesWidget(),
+                      SizedBox(height: 24),
                       if(isAdsActivated)
                       ...[
                         SizedBox(height: 16),
@@ -635,6 +639,13 @@ class _StoryWidget extends State<StoryWidget> {
         widget.slugBloc.slug = relatedItem.slug;
         _storyBloc.fetchStory(relatedItem.slug);
       },
+    );
+  }
+
+  _downloadMagazinesWidget() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+      child: DownloadMagazineWidget(),
     );
   }
 }
