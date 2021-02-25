@@ -26,6 +26,8 @@ class BaseConfig {
 
   String get searchApi => isDev ? dev.searchApi : prod.searchApi;
 
+  String get magazinesApi => isDev ? dev.magazinesApi : prod.magazinesApi;
+
   String get personalSectionKey => isDev ? dev.personalSectionKey : prod.personalSectionKey;
   String get wineSectionKey => isDev ? dev.wineSectionKey : prod.wineSectionKey;
   String get listeningSectionKey => isDev ? dev.listeningSectionKey : prod.listeningSectionKey;
