@@ -3,6 +3,7 @@ import 'package:readr_app/blocs/memberBloc.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/mirrorApp.dart';
 import 'package:readr_app/models/member.dart';
+import 'package:readr_app/pages/magazinePage.dart';
 import 'package:readr_app/pages/memberPage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/pages/searchPage.dart';
@@ -20,6 +21,7 @@ class RouteGenerator {
   static const String deleteMember = '/deleteMember';
   static const String notificationSettings = '/notificationSettings';
   static const String story = '/story';
+  static const String magazine = '/magazine';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -102,6 +104,11 @@ class RouteGenerator {
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
         return _errorRoute(settings);
+      case magazine:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => MagazinePage()
+        );
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return _errorRoute(settings);
@@ -198,6 +205,12 @@ class RouteGenerator {
         'slug': slug,
         'isListeningWidget': isListeningWidget,
       },
+    );
+  }
+
+  static void navigateToMagazine(BuildContext context) {
+    Navigator.of(context).pushNamed(
+      magazine,
     );
   }
 
