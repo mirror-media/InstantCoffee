@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/memberBloc.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/mirrorApp.dart';
+import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/member.dart';
+import 'package:readr_app/pages/magazineBrowser.dart';
 import 'package:readr_app/pages/magazinePage.dart';
 import 'package:readr_app/pages/memberPage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
@@ -22,6 +24,7 @@ class RouteGenerator {
   static const String notificationSettings = '/notificationSettings';
   static const String story = '/story';
   static const String magazine = '/magazine';
+  static const String magazineBrowser = '/magazineBrowser';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -108,6 +111,14 @@ class RouteGenerator {
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => MagazinePage()
+        );
+      case magazineBrowser:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => MagazineBrowser(
+            magazine: args['magazine'],
+          )
         );
       default:
         // If there is no such named route in the switch statement, e.g. /third
@@ -211,6 +222,18 @@ class RouteGenerator {
   static void navigateToMagazine(BuildContext context) {
     Navigator.of(context).pushNamed(
       magazine,
+    );
+  }
+
+  static void navigateToMagazineBrowser(
+    BuildContext context,
+    Magazine magazine
+  ) {
+    Navigator.of(context).pushNamed(
+      magazineBrowser,
+      arguments: {
+        'magazine': magazine,
+      },
     );
   }
 
