@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/magazineList.dart';
 
@@ -303,7 +304,7 @@ class _MagazineListWidgetState extends State<MagazineListWidget> {
         _hasError = false;
       });
     } else {
-      // TODO: navigate to magazine browser
+      RouteGenerator.navigateToMagazineBrowser(context, magazine);
     }
   }
 }
