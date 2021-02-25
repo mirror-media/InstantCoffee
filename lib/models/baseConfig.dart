@@ -8,6 +8,7 @@ class BaseConfig {
   });
 
   String get apiBase => isDev ? dev.apiBase : prod.apiBase;
+  String get graphqlApi => isDev ? dev.graphqlApi : prod.graphqlApi;
   String get memberApi => isDev ? dev.memberApi : prod.memberApi;
   String get storyPageApi => isDev ? dev.storyPageApi : prod.storyPageApi;
 

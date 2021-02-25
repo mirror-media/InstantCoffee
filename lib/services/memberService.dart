@@ -201,4 +201,20 @@ class MemberService {
       return false;
     }
   }
+
+  Future<bool> checkTokenState(String token) async{
+    try {
+      final jsonResponse = await _helper.getByUrl(
+        env.baseConfig.graphqlApi+"api/v1/tokenState",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token"
+        }
+      );
+
+      return jsonResponse['tokenState'] == 'OK';
+    } catch(e) {
+      return false;
+    }
+  }
 }
