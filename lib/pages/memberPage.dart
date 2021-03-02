@@ -30,7 +30,11 @@ class _MemberPageState extends State<MemberPage> {
 
   @override
   void initState() {
-    _loginBloc = LoginBloc(widget.isEmailLoginAuth, widget.emailLink);
+    _loginBloc = LoginBloc(
+      widget.isEmailLoginAuth,
+      widget.emailLink
+    );
+
     _email = '';
     super.initState();
   }
@@ -82,10 +86,6 @@ class _MemberPageState extends State<MemberPage> {
                 break;
               
               case Status.EmailLoading:
-                if(widget.isEmailLoginAuth) {
-                  return VerifyEmailLoginWidget();
-                }
-
                 return _loginStandardWidget(
                   width,
                   Status.EmailLoading,
@@ -98,10 +98,15 @@ class _MemberPageState extends State<MemberPage> {
                 );
                 break;
 
+              case Status.VerifyEmailLoading:
+                return VerifyEmailLoginWidget(
+                  loginBloc: _loginBloc,
+                );
+                break;
+
               case Status.EmailFillingIn:
                 return FillInEmailLoginWidget(
                   loginBloc: _loginBloc,
-                  emailLink: snapshot.data.data.verifyEmailLink,
                 );
                 break;
               

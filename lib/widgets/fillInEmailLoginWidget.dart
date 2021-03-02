@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:readr_app/blocs/loginBLoc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/loginResponse.dart';
 
 class FillInEmailLoginWidget extends StatefulWidget {
   final LoginBloc loginBloc;
-  final String emailLink;
   FillInEmailLoginWidget({
     @required this.loginBloc,
-    @required this.emailLink,
   });
 
   @override
@@ -16,6 +15,7 @@ class FillInEmailLoginWidget extends StatefulWidget {
 }
 
 class _FillInEmailLoginWidgetState extends State<FillInEmailLoginWidget> {
+  final storage = FlutterSecureStorage();
   final _formKey = GlobalKey<FormState>();
   String _email;
 
@@ -45,10 +45,10 @@ class _FillInEmailLoginWidgetState extends State<FillInEmailLoginWidget> {
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
           child: _emailLoginButton(
-            () {
+            () async{
               if (_formKey.currentState.validate()) {
-                widget.loginBloc.loginSinkToAdd(LoginResponse.emailLoading('Verify email login'));
-                widget.loginBloc.verifyEmail(_email, widget.emailLink);
+                await storage.write(key: 'email', value: _email);
+                widget.loginBloc.loginSinkToAdd(LoginResponse.verifyEmailLoading('Verify email login'));
               }
             },
           ),

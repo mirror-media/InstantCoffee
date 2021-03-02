@@ -10,8 +10,6 @@ class Member {
   String phoneNumber;
   ContactAddress contactAddress;
 
-  String verifyEmailLink;
-
   Member({
     this.email,
     this.name,
@@ -20,8 +18,6 @@ class Member {
 
     this.phoneNumber,
     this.contactAddress,
-
-    this.verifyEmailLink,
   });
 
   // deep copy
@@ -34,8 +30,6 @@ class Member {
 
       phoneNumber: this.phoneNumber,
       contactAddress: this.contactAddress.copy(),
-
-      verifyEmailLink: this.verifyEmailLink,
     );
   }
 
@@ -55,8 +49,6 @@ class Member {
         district: json['district'],
         address: json['adress'],
       ),
-
-      verifyEmailLink: json['verifyEmailLink'],
     );
   }
 
