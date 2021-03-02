@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/memberBloc.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
@@ -13,6 +15,7 @@ import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/widgets/deleteMemberWidget.dart';
 import 'package:readr_app/widgets/editMemberProfile.dart';
 import 'package:readr_app/widgets/editMemberContactInfo.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RouteGenerator {
   static const String root = '/';
@@ -228,13 +231,24 @@ class RouteGenerator {
   static void navigateToMagazineBrowser(
     BuildContext context,
     Magazine magazine
-  ) {
-    Navigator.of(context).pushNamed(
-      magazineBrowser,
-      arguments: {
-        'magazine': magazine,
-      },
-    );
+  ) async{
+    // https://github.com/flutter/flutter/issues/48245
+    // There is a issue when opening pdf file in webview on android, 
+    // so change to launch URL on android.
+    if(Platform.isAndroid) {
+      if (await canLaunch(magazine.pdfUrl)) {
+        await launch(magazine.pdfUrl);
+      } else {
+        throw 'Could not launch $magazine.pdfUrl';
+      }
+    } else {
+      Navigator.of(context).pushNamed(
+        magazineBrowser,
+        arguments: {
+          'magazine': magazine,
+        },
+      );
+    }
   }
 
   static void printRouteSettings(BuildContext context) {
