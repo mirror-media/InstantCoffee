@@ -47,6 +47,8 @@ class RouteGenerator {
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => MemberPage(
+            routeName: args['routeName']??member,
+            routeArguments: args['routeArguments'],
             isEmailLoginAuth: args['isEmailLoginAuth']??false,
             emailLink: args['emailLink'],
           ),
@@ -152,6 +154,8 @@ class RouteGenerator {
   static void navigateToMember(
     BuildContext context, 
     {
+      String routeName = member,
+      Object routeArguments,
       bool isEmailLoginAuth = false,
       String emailLink,
     }
@@ -159,6 +163,8 @@ class RouteGenerator {
     Navigator.of(context).pushNamed(
       member,
       arguments: {
+        'routeName': routeName,
+        'routeArguments': routeArguments,
         'isEmailLoginAuth': isEmailLoginAuth,
         'emailLink': emailLink,
       },

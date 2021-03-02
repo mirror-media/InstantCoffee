@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/firebaseLoginStatus.dart';
 import 'package:readr_app/models/member.dart';
 import 'package:readr_app/services/emailSignInService.dart';
@@ -14,6 +15,8 @@ import 'package:readr_app/services/memberService.dart';
 class LoginBloc {
   FirebaseAuth auth;
 
+  String _routeName;
+  Object _routeArguments;
   String _emailLink;
 
   StreamController _loginController;
@@ -23,10 +26,14 @@ class LoginBloc {
       _loginController.stream;
 
   LoginBloc(
+    String routeName,
+    Object routeArguments,
     bool isEmailLoginAuth,
     String emailLink,
   ) {
     auth = FirebaseAuth.instance;
+    _routeName = routeName;
+    _routeArguments = routeArguments;
     _emailLink = emailLink;
 
     _loginController = StreamController<LoginResponse<Member>>();
@@ -100,6 +107,13 @@ class LoginBloc {
         );
 
         loginSinkToAdd(LoginResponse.completed(member));
+        if(_routeName != RouteGenerator.member) {
+          Navigator.of(context).pop();
+          Navigator.of(context).pushNamed(
+            _routeName,
+            arguments: _routeArguments,
+          );
+        }
       } catch(e) {
         // fetch member fail
         print(e);

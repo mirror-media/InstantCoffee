@@ -39,7 +39,10 @@ class CheckTokenStateBloc {
       if(isLogin) {
         RouteGenerator.navigateToMagazine(context);
       } else {
-        RouteGenerator.navigateToMember(context);
+        RouteGenerator.navigateToMember(
+          context, 
+          routeName: RouteGenerator.magazine
+        );
       }
       sinkToAdd(ApiResponse.completed(isLogin));
     } catch (e) {
