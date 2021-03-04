@@ -17,7 +17,9 @@ class LoginResponse<T> {
 
   LoginResponse.emailLinkGetting(this.data) : status = Status.EmailLinkGetting;
 
-  LoginResponse.emailFillingIn(this.data) : status = Status.EmailFillingIn;
+  LoginResponse.verifyEmailLoading(this.message) : status = Status.VerifyEmailLoading;
+
+  LoginResponse.emailFillingIn(this.message) : status = Status.EmailFillingIn;
 
   LoginResponse.completed(this.data) : status = Status.Completed;
 
@@ -40,6 +42,7 @@ enum Status {
   GoogleLoading,
   EmailLoading,
   EmailLinkGetting,
+  VerifyEmailLoading,
   EmailFillingIn,
   Completed,
   EmailVerifyError,

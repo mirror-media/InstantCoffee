@@ -1,6 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:readr_app/blocs/loginBLoc.dart';
 
-class VerifyEmailLoginWidget extends StatelessWidget {
+class VerifyEmailLoginWidget extends StatefulWidget {
+  final LoginBloc loginBloc;
+  VerifyEmailLoginWidget({
+    @required this.loginBloc,
+  });
+
+  @override
+  _VerifyEmailLoginWidgetState createState() => _VerifyEmailLoginWidgetState();
+}
+
+class _VerifyEmailLoginWidgetState extends State<VerifyEmailLoginWidget> {
+  @override
+  void initState() {
+    Future.delayed(Duration(seconds: 0), () {
+      widget.loginBloc.verifyEmail(context);
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(

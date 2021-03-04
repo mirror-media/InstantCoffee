@@ -8,6 +8,7 @@ class BaseConfig {
   });
 
   String get apiBase => isDev ? dev.apiBase : prod.apiBase;
+  String get graphqlApi => isDev ? dev.graphqlApi : prod.graphqlApi;
   String get memberApi => isDev ? dev.memberApi : prod.memberApi;
   String get storyPageApi => isDev ? dev.storyPageApi : prod.storyPageApi;
 
@@ -25,6 +26,8 @@ class BaseConfig {
   String get popularListAPI => isDev ? dev.popularListAPI : prod.popularListAPI;
 
   String get searchApi => isDev ? dev.searchApi : prod.searchApi;
+
+  String get magazinesApi => isDev ? dev.magazinesApi : prod.magazinesApi;
 
   String get personalSectionKey => isDev ? dev.personalSectionKey : prod.personalSectionKey;
   String get wineSectionKey => isDev ? dev.wineSectionKey : prod.wineSectionKey;

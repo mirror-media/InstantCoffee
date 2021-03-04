@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/firebaseLoginStatus.dart';
 import 'package:readr_app/models/member.dart';
 import 'package:readr_app/services/emailSignInService.dart';
@@ -14,19 +15,33 @@ import 'package:readr_app/services/memberService.dart';
 class LoginBloc {
   FirebaseAuth auth;
 
+  String _routeName;
+  Object _routeArguments;
+  String _emailLink;
+
   StreamController _loginController;
   StreamSink<LoginResponse<Member>> get loginSink =>
       _loginController.sink;
   Stream<LoginResponse<Member>> get loginStream =>
       _loginController.stream;
 
-  LoginBloc(bool isEmailLoginAuth, String emailLink) {
+  LoginBloc(
+    String routeName,
+    Object routeArguments,
+    bool isEmailLoginAuth,
+    String emailLink,
+  ) {
     auth = FirebaseAuth.instance;
+    _routeName = routeName;
+    _routeArguments = routeArguments;
+    _emailLink = emailLink;
+
     _loginController = StreamController<LoginResponse<Member>>();
+
     if(!isEmailLoginAuth) {
       renderingUI();
     } else {
-      renderingEmailLoginAuthUI(emailLink);
+      renderingEmailLoginAuthUI();
     }
   }
 
@@ -54,45 +69,51 @@ class LoginBloc {
     }
   }
 
-  renderingEmailLoginAuthUI(String emailLink) async{
+  renderingEmailLoginAuthUI() async{
     final storage = FlutterSecureStorage();
     String email = await storage.read(key: 'email');
     if(email != null) {
-      loginSinkToAdd(LoginResponse.emailLoading('Verify email login'));
-      await verifyEmail(email, emailLink);
-      await storage.delete(key: 'email');
+      loginSinkToAdd(LoginResponse.verifyEmailLoading('Verify email login'));
     } else {
-      Member member = Member(verifyEmailLink: emailLink);
-      loginSinkToAdd(LoginResponse.emailFillingIn(member));
+      loginSinkToAdd(LoginResponse.emailFillingIn('need to fill in email'));
     }
   }
 
-  Future<void> verifyEmail(email, emailLink) async{
+  Future<void> verifyEmail(BuildContext context) async{
+    final storage = FlutterSecureStorage();
+    String email = await storage.read(key: 'email');
     EmailSignInService emailSignInService = EmailSignInService();
-    FirebaseLoginStatus firebaseLoginStatus = await emailSignInService.verifyEmail(auth, email, emailLink);
+    FirebaseLoginStatus firebaseLoginStatus = await emailSignInService.verifyEmail(auth, email, _emailLink);
     if(firebaseLoginStatus.status == FirebaseStatus.Success) {
-      handleCreateMember();
+      handleCreateMember(context);
     } else {
       loginSinkToAdd(LoginResponse.loginError('Verify email fail'));
     }
+    await storage.delete(key: 'email');
   }
 
-  void handleCreateMember({BuildContext context}) async{
+  void handleCreateMember(BuildContext context) async{
     MemberService memberService = MemberService();
     String token = await auth.currentUser.getIdToken();
     bool createSuccess = await memberService.createMember(auth.currentUser.email, auth.currentUser.uid, token);
     if(createSuccess) {
       try {
         Member member = await memberService.fetchMemberData(auth.currentUser.uid, token);
-        if(context != null) {
-          Scaffold.of(context).showSnackBar(
-            SnackBar(
-              content: Text('登入成功')
-            )
-          );
-        }
+
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text('登入成功')
+          )
+        );
 
         loginSinkToAdd(LoginResponse.completed(member));
+        if(_routeName != RouteGenerator.member) {
+          Navigator.of(context).pop();
+          Navigator.of(context).pushNamed(
+            _routeName,
+            arguments: _routeArguments,
+          );
+        }
       } catch(e) {
         // fetch member fail
         print(e);
@@ -114,7 +135,7 @@ class LoginBloc {
       if(frebaseLoginStatus.status == FirebaseStatus.Cancel) {
         loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
       } else if(frebaseLoginStatus.status == FirebaseStatus.Success) {
-        handleCreateMember(context: context);
+        handleCreateMember(context);
       } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
         loginSinkToAdd(LoginResponse.loginError('Firebase facebook login fail'));
       } 
@@ -134,7 +155,7 @@ class LoginBloc {
       if(frebaseLoginStatus.status == FirebaseStatus.Cancel) {
         loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
       } else if(frebaseLoginStatus.status == FirebaseStatus.Success) {
-        handleCreateMember(context: context);
+        handleCreateMember(context);
       } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
         loginSinkToAdd(LoginResponse.loginError('Firebase google login fail'));
       } 

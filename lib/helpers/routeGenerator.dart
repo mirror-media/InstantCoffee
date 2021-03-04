@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/memberBloc.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/mirrorApp.dart';
+import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/member.dart';
+import 'package:readr_app/pages/magazineBrowser.dart';
+import 'package:readr_app/pages/magazinePage.dart';
 import 'package:readr_app/pages/memberPage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/pages/searchPage.dart';
@@ -10,6 +15,7 @@ import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/widgets/deleteMemberWidget.dart';
 import 'package:readr_app/widgets/editMemberProfile.dart';
 import 'package:readr_app/widgets/editMemberContactInfo.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RouteGenerator {
   static const String root = '/';
@@ -20,6 +26,8 @@ class RouteGenerator {
   static const String deleteMember = '/deleteMember';
   static const String notificationSettings = '/notificationSettings';
   static const String story = '/story';
+  static const String magazine = '/magazine';
+  static const String magazineBrowser = '/magazineBrowser';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -39,6 +47,8 @@ class RouteGenerator {
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => MemberPage(
+            routeName: args['routeName']??member,
+            routeArguments: args['routeArguments'],
             isEmailLoginAuth: args['isEmailLoginAuth']??false,
             emailLink: args['emailLink'],
           ),
@@ -102,6 +112,19 @@ class RouteGenerator {
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
         return _errorRoute(settings);
+      case magazine:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => MagazinePage()
+        );
+      case magazineBrowser:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => MagazineBrowser(
+            magazine: args['magazine'],
+          )
+        );
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return _errorRoute(settings);
@@ -131,6 +154,8 @@ class RouteGenerator {
   static void navigateToMember(
     BuildContext context, 
     {
+      String routeName = member,
+      Object routeArguments,
       bool isEmailLoginAuth = false,
       String emailLink,
     }
@@ -138,6 +163,8 @@ class RouteGenerator {
     Navigator.of(context).pushNamed(
       member,
       arguments: {
+        'routeName': routeName,
+        'routeArguments': routeArguments,
         'isEmailLoginAuth': isEmailLoginAuth,
         'emailLink': emailLink,
       },
@@ -199,6 +226,35 @@ class RouteGenerator {
         'isListeningWidget': isListeningWidget,
       },
     );
+  }
+
+  static void navigateToMagazine(BuildContext context) {
+    Navigator.of(context).pushNamed(
+      magazine,
+    );
+  }
+
+  static void navigateToMagazineBrowser(
+    BuildContext context,
+    Magazine magazine
+  ) async{
+    // https://github.com/flutter/flutter/issues/48245
+    // There is a issue when opening pdf file in webview on android, 
+    // so change to launch URL on android.
+    if(Platform.isAndroid) {
+      if (await canLaunch(magazine.pdfUrl)) {
+        await launch(magazine.pdfUrl);
+      } else {
+        throw 'Could not launch $magazine.pdfUrl';
+      }
+    } else {
+      Navigator.of(context).pushNamed(
+        magazineBrowser,
+        arguments: {
+          'magazine': magazine,
+        },
+      );
+    }
   }
 
   static void printRouteSettings(BuildContext context) {
