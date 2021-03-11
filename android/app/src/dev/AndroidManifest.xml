@@ -85,6 +85,16 @@
                 android:pathPattern=".*" />
             </intent-filter>
             -->
+            <!-- Page Links -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                android:scheme="https"
+                android:host="mirrormediadev.page.link"
+                android:pathPattern=".*" />
+            </intent-filter>
             <!-- Scheme App Links -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
