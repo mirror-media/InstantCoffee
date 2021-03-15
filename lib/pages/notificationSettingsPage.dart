@@ -7,11 +7,13 @@ import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/notificationSetting.dart';
 import 'package:readr_app/models/notificationSettingList.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/onBoarding.dart';
 import 'package:readr_app/widgets/appExpansionTile.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NotificationSettingsPage extends StatefulWidget {
   final OnBoardingBloc onBoardingBloc;
@@ -152,6 +154,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
     return StreamBuilder<OnBoarding>(
       initialData: OnBoarding(isOnBoarding: false),
       stream: widget.onBoardingBloc.onBoardingStream,
@@ -163,10 +167,21 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
             children: [
               Scaffold(
                 appBar: _buildBar(context),
-                body: ListView(children: [
-                  _buildDescriptionSection(context),
-                  _buildNotificationSettingListSection(context, _notificationSettingList),
-                ]),
+                body: SafeArea(
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(child: _buildDescriptionSection(context)),
+                      SliverToBoxAdapter(child: _buildNotificationSettingListSection(context, _notificationSettingList)),
+                      SliverFillRemaining(
+                        hasScrollBody: false,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(height: 150, child: _contactInfo(width))
+                        ),
+                      ),
+                    ]
+                  ),
+                ),
               ),
               if(onBoarding.isOnBoarding)
                 widget.onBoardingBloc.getClipPathOverlay(
@@ -358,5 +373,70 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
             ),
           );
         });
+  }
+
+  Widget _contactInfo(double width) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Divider(height: 2),
+        SizedBox(height: 16),
+        InkWell(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+            child: Container(
+              width: width,
+              child: Text(
+                '聯絡我們',
+                style: TextStyle(color: Color(0xff4A4A4A), fontSize: 16.0),
+              ),
+            ),
+          ),
+          onTap: () async{
+            final Uri emailLaunchUri = Uri(
+              scheme: 'mailto',
+              path: 'service@mirrormedia.mg',
+            );
+
+            if (await canLaunch(emailLaunchUri.toString())) {
+              await launch(emailLaunchUri.toString());
+            } else {
+              throw 'Could not launch service@mirrormedia.mg';
+            }
+          }
+        ),
+        InkWell(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+            child: Container(
+              width: width,
+              child: Text(
+                '隱私條款',
+                style: TextStyle(color: Color(0xff4A4A4A), fontSize: 16.0),
+              ),
+            ),
+          ),
+          onTap: () async{
+            RouteGenerator.navigateToStory(context, 'privacy');
+          }
+        ),
+        InkWell(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+            child: Container(
+              width: width,
+              child: Text(
+                '服務條款',
+                style: TextStyle(color: Color(0xff4A4A4A), fontSize: 16.0),
+              ),
+            ),
+          ),
+          onTap: () {
+            RouteGenerator.navigateToStory(context, 'service-rule');
+          }
+        ),
+        SizedBox(height: 16),
+      ]
+    );
   }
 }
