@@ -90,18 +90,18 @@ dependencies:
   version: ^1.2.0
   
   # firebase
-  firebase_core: ^0.5.2+1
+  firebase_core: ^0.5.3
   # firebase messaging
   firebase_messaging: ^7.0.3
   # firebase ad mob
   # firebase_admob: ^0.10.2
   #flutter_native_admob: ^2.1.0+3
-  admob_flutter: ^1.0.0
+  admob_flutter: ^1.0.1
   # firebase dynamic links 
-  firebase_dynamic_links: ^0.6.2
+  firebase_dynamic_links: ^0.6.3
 
   # firebase auth
-  firebase_auth: ^0.18.3+1
+  firebase_auth: ^0.18.4+1
   # google sign in
   google_sign_in: ^4.5.6
   # facebook sign in

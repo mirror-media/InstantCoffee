@@ -103,7 +103,7 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // fcm
-    implementation 'com.google.firebase:firebase-messaging:20.1.2'
+    implementation 'com.google.firebase:firebase-messaging:20.2.4'
     // https://github.com/flutter/flutter/issues/53047
     implementation 'com.android.support:multidex:1.0.3'
 }
