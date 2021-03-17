@@ -13,6 +13,8 @@ class LoginResponse<T> {
 
   LoginResponse.googleLoading(this.message) : status = Status.GoogleLoading;
 
+  LoginResponse.appleLoading(this.message) : status = Status.AppleLoading;
+
   LoginResponse.emailLoading(this.message) : status = Status.EmailLoading;
 
   LoginResponse.emailLinkGetting(this.data) : status = Status.EmailLinkGetting;
@@ -40,6 +42,7 @@ enum Status {
   NeedToLogin,
   FacebookLoading,
   GoogleLoading,
+  AppleLoading,
   EmailLoading,
   EmailLinkGetting,
   VerifyEmailLoading,

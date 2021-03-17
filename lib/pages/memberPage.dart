@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/blocs/loginBLoc.dart';
@@ -70,6 +72,9 @@ class _MemberPageState extends State<MemberPage> {
                   googleLoginFunction: () {
                     _loginBloc.loginByGoogle(context);
                   },
+                  appleLoginFunction: () {
+                    _loginBloc.loginByApple(context);
+                  },
                   emailLoginFunction: () {
                     if (_formKey.currentState.validate()) {
                       _loginBloc.loginByEmail(_email);
@@ -89,6 +94,13 @@ class _MemberPageState extends State<MemberPage> {
                 return _loginStandardWidget(
                   width,
                   Status.GoogleLoading,
+                );
+                break;
+
+              case Status.AppleLoading:
+                return _loginStandardWidget(
+                  width,
+                  Status.AppleLoading,
                 );
                 break;
               
@@ -177,8 +189,13 @@ class _MemberPageState extends State<MemberPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              imageLocation,
+            Padding(
+              padding: contentText.contains('Apple')
+              ? const EdgeInsets.only(top: 4.0, bottom: 4.0)
+              : const EdgeInsets.all(0),
+              child: Image.asset(
+                imageLocation,
+              ),
             ),
             SizedBox(width: 4.0),
             Text(
@@ -362,6 +379,7 @@ class _MemberPageState extends State<MemberPage> {
     {
       Function facebookLoginFunction,
       Function googleLoginFunction,
+      Function appleLoginFunction,
       Function emailLoginFunction,
     }
   ) {
@@ -407,6 +425,24 @@ class _MemberPageState extends State<MemberPage> {
             child: _thirdPartyLoadingButton(),
           ),
         SizedBox(height: 16),
+        if(Platform.isIOS)
+        ...[
+          if(status != Status.AppleLoading)
+            Padding(
+              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+              child: _thirdPartyLoginButton(
+                'assets/image/apple_icon.png', 
+                '使用 Apple 帳號登入', 
+                appleLoginFunction
+              ),
+            ),
+          if(status == Status.AppleLoading)
+            Padding(
+              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+              child: _thirdPartyLoadingButton(),
+            ),
+          SizedBox(height: 16),
+        ],
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
           child: _dividerBlock(),
