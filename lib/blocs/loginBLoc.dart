@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/firebaseLoginStatus.dart';
 import 'package:readr_app/models/member.dart';
+import 'package:readr_app/services/appleSignInService.dart';
 import 'package:readr_app/services/emailSignInService.dart';
 import 'package:readr_app/services/facebookSignInService.dart';
 import 'package:readr_app/services/googleSignInService.dart';
@@ -158,6 +159,26 @@ class LoginBloc {
         handleCreateMember(context);
       } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
         loginSinkToAdd(LoginResponse.loginError('Firebase google login fail'));
+      } 
+    } catch (e) {
+      loginSinkToAdd(LoginResponse.loginError(e.toString()));
+      print(e);
+    }
+  }
+
+  loginByApple(BuildContext context) async {
+    loginSinkToAdd(LoginResponse.appleLoading('Running apple login'));
+
+    try {
+      AppleSignInService appleSignInService = AppleSignInService();
+      FirebaseLoginStatus frebaseLoginStatus = await appleSignInService.signInWithApple(auth);
+
+      if(frebaseLoginStatus.status == FirebaseStatus.Cancel) {
+        loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
+      } else if(frebaseLoginStatus.status == FirebaseStatus.Success) {
+        handleCreateMember(context);
+      } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
+        loginSinkToAdd(LoginResponse.loginError('Firebase apple login fail'));
       } 
     } catch (e) {
       loginSinkToAdd(LoginResponse.loginError(e.toString()));

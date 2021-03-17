@@ -106,6 +106,8 @@ dependencies:
   google_sign_in: ^4.5.6
   # facebook sign in
   flutter_facebook_login: ^3.0.0
+  # apple sign in
+  sign_in_with_apple: ^2.5.4
 
   # generate app icons
   flutter_launcher_icons: ^0.7.5
@@ -137,6 +139,7 @@ flutter:
     - assets/icon/icon.jpg
     - assets/image/facebook_icon.png
     - assets/image/google_icon.png
+    - assets/image/apple_icon.png
     - assets/image/wine_warning.png
     - packages/constants/countries.json
     - packages/constants/taiwan-districts.json
