@@ -9,6 +9,7 @@ import 'package:readr_app/helpers/appException.dart';
 import 'package:readr_app/helpers/cacheDurationCache.dart';
 import 'package:readr_app/helpers/mMCacheManager.dart';
 import 'package:readr_app/models/storyRes.dart';
+import 'package:readr_app/services/memberService.dart';
 
 class StoryService {
   MMCacheManager _mMCacheManager;
@@ -41,10 +42,7 @@ class StoryService {
       try {
         final response = await http.get(
           endpoint, 
-          headers: {
-            'Cache-control': 'no-cache',
-            "Authorization": "Bearer $token"
-          },
+          headers: MemberService.getHeaders(token),
         );
         fileBytes = response.bodyBytes;
         jsonResponse = returnResponse(response);

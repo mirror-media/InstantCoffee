@@ -9,6 +9,17 @@ import 'package:readr_app/models/member.dart';
 class MemberService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
+  static Map<String,String> getHeaders(String token) {
+    Map<String,String> headers = {
+      "Content-Type": "application/json",
+    };
+    if(token != null) {
+      headers.addAll({"Authorization": "Bearer $token"});
+    }
+
+    return headers;
+  }
+
   Future<bool> createMember(String email, String firebaseId, String token, {String nickname}) async{
     String mutation = 
     """
@@ -35,10 +46,7 @@ class MemberService {
       final jsonResponse = await _helper.postByUrl(
         env.baseConfig.memberApi,
         jsonEncode(graphqlBody.toJson()),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $token"
-        }
+        headers: getHeaders(token),
       );
 
       MemberRes memberRes = MemberRes.fromJson(jsonResponse['data']['createMember']);
@@ -76,10 +84,7 @@ class MemberService {
     final jsonResponse = await _helper.postByUrl(
       env.baseConfig.memberApi,
       jsonEncode(graphqlBody.toJson()),
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-        "Authorization": "Bearer $token",
-      }
+      headers: getHeaders(token),
     );
 
     Member member = Member.fromJson(jsonResponse['data']['member']);
@@ -112,10 +117,7 @@ class MemberService {
       final jsonResponse = await _helper.postByUrl(
         env.baseConfig.memberApi,
         jsonEncode(graphqlBody.toJson()),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $token"
-        }
+        headers: getHeaders(token),
       );
 
       MemberRes memberRes = MemberRes.fromJson(jsonResponse['data']['updateMember']);
@@ -153,10 +155,7 @@ class MemberService {
       final jsonResponse = await _helper.postByUrl(
         env.baseConfig.memberApi,
         jsonEncode(graphqlBody.toJson()),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $token"
-        }
+        headers: getHeaders(token),
       );
 
       MemberRes memberRes = MemberRes.fromJson(jsonResponse['data']['updateMember']);
@@ -189,10 +188,7 @@ class MemberService {
       final jsonResponse = await _helper.postByUrl(
         env.baseConfig.memberApi,
         jsonEncode(graphqlBody.toJson()),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $token"
-        }
+        headers: getHeaders(token),
       );
 
       MemberRes memberRes = MemberRes.fromJson(jsonResponse['data']['deleteMember']);
@@ -206,10 +202,7 @@ class MemberService {
     try {
       final jsonResponse = await _helper.getByUrl(
         env.baseConfig.graphqlApi+"api/v1/tokenState",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $token"
-        }
+        headers: getHeaders(token),
       );
 
       return jsonResponse['tokenState'] == 'OK';
