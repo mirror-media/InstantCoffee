@@ -7,6 +7,7 @@ import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/helpers/paragraphFormat.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/paragraph.dart';
 import 'package:readr_app/models/paragrpahList.dart';
@@ -19,6 +20,7 @@ import 'package:readr_app/models/tagList.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:readr_app/widgets/downloadMagazineWidget.dart';
+import 'package:readr_app/widgets/fadingEffectPainter.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
 
@@ -60,6 +62,7 @@ class _StoryWidget extends State<StoryWidget> {
               Story story = storyRes.story;
               bool isMember = storyRes.isMember && story.categories.isMemberOnly();
               bool isAdsActivated = isStoryWidgetAdsActivated && !isMember;
+              bool isCompletedArticle = storyRes.isMember || !story.categories.isMemberOnly();
               Color sectionColor = _storyBloc.getSectionColor(story);
 
               return Column(
@@ -85,9 +88,14 @@ class _StoryWidget extends State<StoryWidget> {
                       _buildAuthors(context, story),
                       SizedBox(height: 16),
                       _buildBrief(story, sectionColor),
-                      _buildContent(story, isAdsActivated),
+                      _buildContent(story, isAdsActivated, !isCompletedArticle),
                       //SizedBox(height: 32),
                       SizedBox(height: 16),
+                      if(!isCompletedArticle)
+                      ...[
+                        _buildJoinMemberBlock(context, width),
+                        SizedBox(height: 16),
+                      ],
                       if(isAdsActivated)
                         MMAdBanner(
                           adUnitId: story.storyAd.aT3UnitId,
@@ -401,7 +409,7 @@ class _StoryWidget extends State<StoryWidget> {
     return Container();
   }
 
-  _buildContent(Story story, bool isAdsActivated) {
+  _buildContent(Story story, bool isAdsActivated, bool isNeedFadding) {
     ParagraphFormat paragraphFormat = ParagraphFormat();
     int unStyleParagraphCount = 0;
     bool aT1IsActivated = false;
@@ -433,7 +441,12 @@ class _StoryWidget extends State<StoryWidget> {
                 padding: const EdgeInsets.only(top: 16.0),
                 child: Column(
                   children: [
-                    paragraphFormat.parseTheParagraph(paragraph, context),
+                    CustomPaint(
+                      foregroundPainter: (isNeedFadding && index == story.apiDatas.length-1)
+                      ? FadingEffect()
+                      : null,
+                      child: paragraphFormat.parseTheParagraph(paragraph, context),
+                    ),
                     if(isAdsActivated && (!aT1IsActivated && unStyleParagraphCount == storyAT1AdIndex)) 
                     ...[
                       SizedBox(height: 16),
@@ -458,6 +471,88 @@ class _StoryWidget extends State<StoryWidget> {
             }
             return Container();
           }),
+    );
+  }
+
+  Widget _buildJoinMemberBlock(BuildContext context, double width) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+      child: Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20.0, 24.0, 20.0, 24.0),
+          child: Column(
+            children: [
+              Text(
+                '歡迎加入鏡會員，閱讀完整文章',
+                style: TextStyle(
+                  color: Color(0xff054F77),
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(height: 24),
+              RaisedButton(
+                color: appColor,
+                child: Container(
+                  width: width,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Text(
+                        '成為會員',
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                onPressed: () => RouteGenerator.navigateToMember(
+                  context,
+                  routeName: RouteGenerator.story,
+                  routeArguments: {
+                    'slug': widget.slugBloc.slug,
+                  },
+                ),
+              ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '已經是會員了？',
+                    style: TextStyle(
+                      color: Color(0xff9B9B9B),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  InkWell(
+                    child: Text(
+                      '立即登入',
+                      style: TextStyle(
+                        color: Color(0xff9B9B9B),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                    onTap: () => RouteGenerator.navigateToMember(
+                      context,
+                      routeName: RouteGenerator.story,
+                      routeArguments: {
+                        'slug': widget.slugBloc.slug,
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ]
+          ),
+        )
+      ),
     );
   }
 

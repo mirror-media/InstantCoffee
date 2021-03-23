@@ -17,6 +17,7 @@ class StoryPage extends StatelessWidget {
     SlugBloc _slugBloc = SlugBloc(slug);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: appColor,
         leading: IconButton(

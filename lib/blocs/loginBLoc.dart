@@ -109,7 +109,12 @@ class LoginBloc {
 
         loginSinkToAdd(LoginResponse.completed(member));
         if(_routeName != RouteGenerator.member) {
-          Navigator.of(context).pop();
+          if(_routeName == RouteGenerator.story) {
+            Navigator.of(context).popUntil(ModalRoute.withName(RouteGenerator.root));
+          } else {
+            Navigator.of(context).pop();
+          }
+          
           Navigator.of(context).pushNamed(
             _routeName,
             arguments: _routeArguments,
