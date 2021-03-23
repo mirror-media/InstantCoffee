@@ -34,11 +34,15 @@ class _EditMemberProfileState extends State<EditMemberProfile> {
       body: ListView(
         children: [
           SizedBox(height: 32),
-          Padding(
-            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: _emailSection(_editMember.email),
-          ),
-          SizedBox(height: 28),
+          // privaterelay.appleid.com is a anonymous email provided by apple
+          if(!_editMember.email.contains('privaterelay.appleid.com'))
+          ...[
+            Padding(
+              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+              child: _emailSection(_editMember.email),
+            ),
+            SizedBox(height: 28),
+          ],
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: _nameTextField(_editMember),
