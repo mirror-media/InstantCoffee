@@ -187,23 +187,23 @@ class _MemberPageState extends State<MemberPage> {
           borderRadius: BorderRadius.circular(5.0),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
               padding: contentText.contains('Apple')
-              ? const EdgeInsets.only(top: 4.0, bottom: 4.0)
+              ? const EdgeInsets.all(6.0)
               : const EdgeInsets.all(0),
               child: Image.asset(
                 imageLocation,
               ),
             ),
-            SizedBox(width: 4.0),
             Text(
               contentText,
               style: TextStyle(
                 fontSize: 17,
               ),
             ),
+            Container(),
           ],
         ),
       ),
@@ -305,7 +305,7 @@ class _MemberPageState extends State<MemberPage> {
                 width: 1,
               ),
             ),
-            labelText: '以email登入',
+            labelText: '使用 email 登入',
             labelStyle: TextStyle(
               color: Colors.black,
               fontSize: 17,
@@ -400,7 +400,7 @@ class _MemberPageState extends State<MemberPage> {
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: _thirdPartyLoginButton(
               'assets/image/facebook_icon.png', 
-              '使用 Facebook 帳號登入', 
+              '使用 Facebook 登入', 
               facebookLoginFunction,
             ),
           ),
@@ -415,7 +415,7 @@ class _MemberPageState extends State<MemberPage> {
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: _thirdPartyLoginButton(
               'assets/image/google_icon.png', 
-              '使用 Google 帳號登入', 
+              '使用 Google 登入', 
               googleLoginFunction
             ),
           ),
@@ -432,7 +432,7 @@ class _MemberPageState extends State<MemberPage> {
               padding: const EdgeInsets.only(left: 24.0, right: 24.0),
               child: _thirdPartyLoginButton(
                 'assets/image/apple_icon.png', 
-                '使用 Apple 帳號登入', 
+                '使用 Apple 登入', 
                 appleLoginFunction
               ),
             ),
