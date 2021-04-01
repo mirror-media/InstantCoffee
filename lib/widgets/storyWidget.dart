@@ -225,7 +225,8 @@ class _StoryWidget extends State<StoryWidget> {
     }
 
     for(Category category in categories) {
-      if(category.id == env.baseConfig.wineSectionKey) {
+      if(category.id == env.baseConfig.wineSectionKey ||
+      category.id == env.baseConfig.wine1SectionKey) {
         return true;
       }
     }
