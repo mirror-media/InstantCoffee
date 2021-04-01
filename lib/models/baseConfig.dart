@@ -31,6 +31,7 @@ class BaseConfig {
 
   String get personalSectionKey => isDev ? dev.personalSectionKey : prod.personalSectionKey;
   String get wineSectionKey => isDev ? dev.wineSectionKey : prod.wineSectionKey;
+  String get wine1SectionKey => isDev ? dev.wine1SectionKey : prod.wine1SectionKey;
   String get listeningSectionKey => isDev ? dev.listeningSectionKey : prod.listeningSectionKey;
   String get memberSectionKey => isDev ? dev.memberSectionKey : prod.memberSectionKey;
   String get focusSectionKey => isDev ? dev.focusSectionKey : prod.focusSectionKey;
