@@ -105,7 +105,7 @@ class _MagazineListWidgetState extends State<MagazineListWidget> {
                   ),
                   child: Center(
                     child: Text(
-                      '所有期數都在上面瞜',
+                      '所有期數都在上面囉',
                       style: TextStyle(fontSize: 15),
                     ),
                   ),
