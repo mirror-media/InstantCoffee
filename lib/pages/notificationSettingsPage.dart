@@ -376,8 +376,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   }
 
   Widget _contactInfo(double width) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Wrap(
       children: [
         Divider(height: 2),
         SizedBox(height: 16),
@@ -395,13 +394,13 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
           onTap: () async{
             final Uri emailLaunchUri = Uri(
               scheme: 'mailto',
-              path: 'service@mirrormedia.mg',
+              path: 'mm-onlineservice@mirrormedia.mg',
             );
 
             if (await canLaunch(emailLaunchUri.toString())) {
               await launch(emailLaunchUri.toString());
             } else {
-              throw 'Could not launch service@mirrormedia.mg';
+              throw 'Could not launch mm-onlineservice@mirrormedia.mg';
             }
           }
         ),
