@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginErrorWidget extends StatelessWidget {
   @override
@@ -30,22 +31,36 @@ class LoginErrorWidget extends StatelessWidget {
             ),
           ),
         ),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
-            child: Text(
-              'service@mirrormedia.mg',
-              style: TextStyle(
-                fontSize: 17,
+        InkWell(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+              child: Text(
+                'E-MAIL: mm-onlineservice@mirrormedia.mg',
+                style: TextStyle(
+                  fontSize: 17,
+                ),
               ),
             ),
           ),
+          onTap: () async{
+            final Uri emailLaunchUri = Uri(
+              scheme: 'mailto',
+              path: 'mm-onlineservice@mirrormedia.mg',
+            );
+
+            if (await canLaunch(emailLaunchUri.toString())) {
+              await launch(emailLaunchUri.toString());
+            } else {
+              throw 'Could not launch mm-onlineservice@mirrormedia.mg';
+            }
+          }
         ),
         Center(
           child: Padding(
             padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
             child: Text(
-              '02-6633-2805',
+              '(02)6633-3966',
               style: TextStyle(
                 fontSize: 17,
               ),
