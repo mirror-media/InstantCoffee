@@ -13,7 +13,7 @@ class EmailSignInService {
       iOSBundleId: env.baseConfig.iOSBundleId,
       androidPackageName: env.baseConfig.androidPackageName,
       // installIfNotAvailable
-      androidInstallApp: true,      
+      androidInstallApp: false,
       // minimumVersion
       androidMinimumVersion: "12",
       dynamicLinkDomain: env.baseConfig.dynamicLinkDomain,
