@@ -35,7 +35,7 @@ class _EditMemberProfileState extends State<EditMemberProfile> {
         children: [
           SizedBox(height: 32),
           // privaterelay.appleid.com is a anonymous email provided by apple
-          if(!_editMember.email.contains('privaterelay.appleid.com'))
+          if(_editMember.email != null && !_editMember.email.contains('privaterelay.appleid.com'))
           ...[
             Padding(
               padding: const EdgeInsets.only(left: 24.0, right: 24.0),
