@@ -49,8 +49,6 @@ class RouteGenerator {
           builder: (context) => MemberPage(
             routeName: args['routeName']??member,
             routeArguments: args['routeArguments'],
-            isEmailLoginAuth: args['isEmailLoginAuth']??false,
-            emailLink: args['emailLink'],
           ),
           fullscreenDialog: true,
         );
@@ -156,8 +154,6 @@ class RouteGenerator {
     {
       String routeName = member,
       Object routeArguments,
-      bool isEmailLoginAuth = false,
-      String emailLink,
     }
   ) {
     Navigator.of(context).pushNamed(
@@ -165,8 +161,6 @@ class RouteGenerator {
       arguments: {
         'routeName': routeName,
         'routeArguments': routeArguments,
-        'isEmailLoginAuth': isEmailLoginAuth,
-        'emailLink': emailLink,
       },
     );
   }
