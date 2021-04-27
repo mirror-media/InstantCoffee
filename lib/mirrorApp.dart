@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
@@ -35,40 +34,6 @@ class _MirrorAppState extends State<MirrorApp> {
     _waiting();
     super.initState();
   }
-
-  // It cant trigger on iOS, cuz AppsFlyer's code on AppDelegate.swift break this feature.
-  // The iOS DynamicLinks method will implement in initialAppsFlyer function.
-  Future<void> initDynamicLinks() async {
-    FirebaseDynamicLinks.instance.onLink(
-      onSuccess: (PendingDynamicLinkData dynamicLink) async {
-        final Uri deepLink = dynamicLink?.link;
-
-        if (deepLink != null && deepLink.path == '/__/auth/action') {
-          Navigator.of(context).popUntil((route) => route.isFirst);
-          RouteGenerator.navigateToMember(
-            context, 
-            isEmailLoginAuth: true,
-            emailLink: deepLink.toString(),
-          );
-        }
-      },
-      onError: (OnLinkErrorException e) async {
-        print('onLinkError');
-        print(e.message);
-      }
-    );
-    
-    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
-    final Uri deepLink = data?.link;
-
-    if (deepLink != null && deepLink.path == '/__/auth/action') {
-      RouteGenerator.navigateToMember(
-        context, 
-        isEmailLoginAuth: true,
-        emailLink: deepLink.toString(),
-      );
-    }
-  }
   
   _waiting() async{
     _isUpdateAvailable = await _appUpgradeHelper.isUpdateAvailable();
@@ -78,7 +43,6 @@ class _MirrorAppState extends State<MirrorApp> {
     await _onBoardingBloc.setOnBoardingFromStorage();
 
     await _appsFlyerHelper.initialAppsFlyer(context);
-    await initDynamicLinks();
     _configController.sink.add(true);
   }
 

@@ -15,17 +15,7 @@ class LoginResponse<T> {
 
   LoginResponse.appleLoading(this.message) : status = Status.AppleLoading;
 
-  LoginResponse.emailLoading(this.message) : status = Status.EmailLoading;
-
-  LoginResponse.emailLinkGetting(this.data) : status = Status.EmailLinkGetting;
-
-  LoginResponse.verifyEmailLoading(this.message) : status = Status.VerifyEmailLoading;
-
-  LoginResponse.emailFillingIn(this.message) : status = Status.EmailFillingIn;
-
   LoginResponse.completed(this.data) : status = Status.Completed;
-
-  LoginResponse.emailVerifyError(this.message) : status = Status.EmailVerifyError;
 
   LoginResponse.loginError(this.message) : status = Status.LoginError;
 
@@ -43,12 +33,7 @@ enum Status {
   FacebookLoading,
   GoogleLoading,
   AppleLoading,
-  EmailLoading,
-  EmailLinkGetting,
-  VerifyEmailLoading,
-  EmailFillingIn,
   Completed,
-  EmailVerifyError,
   LoginError,
   // return Error when fetching member data fail
   Error,
