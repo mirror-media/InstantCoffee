@@ -61,6 +61,43 @@ class LoginBloc {
     }
   }
 
+  renderingUIAfterEmailLogin(BuildContext context) async{
+    loginSinkToAdd(LoginResponse.loadingUI('Getting login token'));
+    if(auth.currentUser == null) {
+      loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
+    } else {
+      try {
+        String token = await auth.currentUser.getIdToken();
+        MemberService memberService = MemberService();
+        Member member = await memberService.fetchMemberData(auth.currentUser.uid, token);
+        loginSinkToAdd(LoginResponse.completed(member));
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text('登入成功')
+          )
+        );
+
+        loginSinkToAdd(LoginResponse.completed(member));
+        if(_routeName != RouteGenerator.member) {
+          if(_routeName == RouteGenerator.story) {
+            Navigator.of(context).popUntil(ModalRoute.withName(RouteGenerator.root));
+          } else {
+            Navigator.of(context).pop();
+          }
+          
+          Navigator.of(context).pushNamed(
+            _routeName,
+            arguments: _routeArguments,
+          );
+        }
+      } catch(e) {
+        // fetch member fail
+        print(e);
+        loginSinkToAdd(LoginResponse.error(e.toString()));
+      }
+    }
+  }
+
   void handleCreateMember(BuildContext context) async{
     MemberService memberService = MemberService();
     String token = await auth.currentUser.getIdToken();
@@ -159,7 +196,7 @@ class LoginBloc {
     }
   }
 
-  fetchSignInMethodsForEmail(email) async {
+  fetchSignInMethodsForEmail(BuildContext context, email) async {
     loginSinkToAdd(LoginResponse.fetchSignInMethodsForEmailLoading('Running fetch sign in methods for email'));
 
     try {
@@ -173,8 +210,8 @@ class LoginBloc {
         // TODO: go to reset email and password
         loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
       } else {
-        // TODO: create member by email and password
-        loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
+        await RouteGenerator.navigateToEmailRegistered(context, email: email);
+        renderingUIAfterEmailLogin(context);
       }
     } catch (e) {
       loginSinkToAdd(LoginResponse.loginError(e.toString()));

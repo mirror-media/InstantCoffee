@@ -176,13 +176,13 @@ class RouteGenerator {
     );
   }
 
-  static void navigateToEmailRegistered(
+  static Future<void> navigateToEmailRegistered(
     BuildContext context, 
     {
       String email,
     }
-  ) {
-    Navigator.of(context).pushNamed(
+  ) async{
+    await Navigator.of(context).pushNamed(
       emailRegistered,
       arguments: {
         'email': email,

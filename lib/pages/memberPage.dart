@@ -68,7 +68,7 @@ class _MemberPageState extends State<MemberPage> {
                   },
                   emailLoginFunction: () {
                     if (_formKey.currentState.validate()) {
-                      _loginBloc.fetchSignInMethodsForEmail(_email);
+                      _loginBloc.fetchSignInMethodsForEmail(context, _email);
                     }
                   },
                 );
