@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/emailRegistered/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/pages/emailRegistered/createUserWithEmailAndPasswordWidget.dart';
+import 'package:readr_app/services/emailSignInService.dart';
 
 class EmailRegisteredPage extends StatelessWidget {
   final String email;
@@ -11,7 +15,10 @@ class EmailRegisteredPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      body: Center(child: Text(email)),
+      body: BlocProvider(
+        create: (context) => EmailRegisteredBloc(emailSignInRepos: EmailSignInServices()),
+        child: CreateUserWithEmailAndPasswordWidget(email: email,),
+      ),
     );
   }
 
