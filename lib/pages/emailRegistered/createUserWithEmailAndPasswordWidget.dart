@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/emailRegistered/bloc.dart';
 import 'package:readr_app/blocs/emailRegistered/events.dart';
 import 'package:readr_app/blocs/emailRegistered/states.dart';
@@ -25,11 +24,38 @@ class _CreateUserWithEmailAndPasswordWidgetState extends State<CreateUserWithEma
   final _emailEditingController = TextEditingController();
   final _passwordEditingController = TextEditingController();
   bool _isHidden = true;
+  bool _emailIsValid = false;
+  bool _passwordIsValid = false;
 
   @override
   void initState() {
     _emailEditingController.text = widget.email;
+    _emailIsValid = _isEmailValid();
+    _emailEditingController.addListener(
+      () {
+        setState(() {
+          _emailIsValid = _isEmailValid();
+        });
+      }
+    );
+    _passwordEditingController.addListener(
+      () {
+        setState(() {
+          _passwordIsValid = _isPasswordValid();
+        });
+      }
+    );
     super.initState();
+  }
+
+  bool _isEmailValid() {
+    Pattern pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
+    RegExp regex = RegExp(pattern);
+    return _emailEditingController.text != null && regex.hasMatch(_emailEditingController.text);
+  }
+
+  bool _isPasswordValid() {
+    return _passwordEditingController.text != null && _passwordEditingController.text.length >= 6;
   }
 
   _createUserWithEmailAndPassword(String email, String password) async {
@@ -130,7 +156,7 @@ class _CreateUserWithEmailAndPasswordWidgetState extends State<CreateUserWithEma
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: isLoading
             ? _emailLoadingButton()
-            : _registerButton(),
+            : _registerButton(_emailIsValid && _passwordIsValid),
           ),
         ),
         SliverToBoxAdapter(child: SizedBox(height: 24)),
@@ -205,13 +231,15 @@ class _CreateUserWithEmailAndPasswordWidgetState extends State<CreateUserWithEma
     );
   }
   
-  Widget _registerButton() {
+  Widget _registerButton(bool emailAndPasswordIsValid) {
     return InkWell(
       borderRadius: BorderRadius.circular(5.0),
       child: Container(
         height: 50.0,
         decoration: BoxDecoration(
-          color: appColor,
+          color: emailAndPasswordIsValid
+          ? appColor
+          : Color(0xffE3E3E3),
           borderRadius: BorderRadius.circular(5.0),
         ),
         child: Center(
@@ -219,54 +247,22 @@ class _CreateUserWithEmailAndPasswordWidgetState extends State<CreateUserWithEma
             '註冊會員',
             style: TextStyle(
               fontSize: 17,
-              color: Colors.white,
+              color: emailAndPasswordIsValid
+              ? Colors.white
+              : Colors.grey
             ),
           ),
         ),
       ),
-      onTap: () async{
-        if (_isEmailValid() && _isPasswordValid()) {
+      onTap: emailAndPasswordIsValid
+      ? () async{
           _createUserWithEmailAndPassword(
             _emailEditingController.text, 
             _passwordEditingController.text
           );
-        } else {
-          if(!_isEmailValid()) {
-            await Fluttertoast.showToast(
-              msg: 'Email 格式錯誤',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0
-            );
-            await Future.delayed(Duration(seconds: 1));
-          }
-          if(!_isPasswordValid()) {
-            await Fluttertoast.showToast(
-              msg: '密碼在 6 位數以上',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0
-            );
-          }
         }
-      }
+      : null
     );
-  }
-
-  bool _isEmailValid() {
-    Pattern pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
-    RegExp regex = RegExp(pattern);
-    return _emailEditingController.text != null && regex.hasMatch(_emailEditingController.text);
-  }
-
-  bool _isPasswordValid() {
-    return _passwordEditingController.text != null && _passwordEditingController.text.length >= 6;
   }
 
   Widget _errorWidget() {
