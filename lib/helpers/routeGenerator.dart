@@ -6,6 +6,7 @@ import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/mirrorApp.dart';
 import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/member.dart';
+import 'package:readr_app/pages/emailRegistered/emailRegisteredPage.dart';
 import 'package:readr_app/pages/magazineBrowser.dart';
 import 'package:readr_app/pages/magazinePage.dart';
 import 'package:readr_app/pages/memberPage.dart';
@@ -21,6 +22,7 @@ class RouteGenerator {
   static const String root = '/';
   static const String search = '/search';
   static const String member = '/member';
+  static const String emailRegistered = '/emailRegistered';
   static const String editMemberProfile = '/editMemberProfile';
   static const String editMemberContactInfo = '/editMemberContactInfo';
   static const String deleteMember = '/deleteMember';
@@ -49,6 +51,15 @@ class RouteGenerator {
           builder: (context) => MemberPage(
             routeName: args['routeName']??member,
             routeArguments: args['routeArguments'],
+          ),
+          fullscreenDialog: true,
+        );
+      case emailRegistered:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => EmailRegisteredPage(
+            email: args['email'],
           ),
           fullscreenDialog: true,
         );
@@ -161,6 +172,20 @@ class RouteGenerator {
       arguments: {
         'routeName': routeName,
         'routeArguments': routeArguments,
+      },
+    );
+  }
+
+  static void navigateToEmailRegistered(
+    BuildContext context, 
+    {
+      String email,
+    }
+  ) {
+    Navigator.of(context).pushNamed(
+      emailRegistered,
+      arguments: {
+        'email': email,
       },
     );
   }
