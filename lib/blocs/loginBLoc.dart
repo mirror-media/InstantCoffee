@@ -6,6 +6,7 @@ import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/firebaseLoginStatus.dart';
 import 'package:readr_app/models/member.dart';
 import 'package:readr_app/services/appleSignInService.dart';
+import 'package:readr_app/services/emailSignInService.dart';
 import 'package:readr_app/services/facebookSignInService.dart';
 import 'package:readr_app/services/googleSignInService.dart';
 import 'package:readr_app/helpers/loginResponse.dart';
@@ -152,6 +153,29 @@ class LoginBloc {
       } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
         loginSinkToAdd(LoginResponse.loginError('Firebase apple login fail'));
       } 
+    } catch (e) {
+      loginSinkToAdd(LoginResponse.loginError(e.toString()));
+      print(e);
+    }
+  }
+
+  fetchSignInMethodsForEmail(email) async {
+    loginSinkToAdd(LoginResponse.fetchSignInMethodsForEmailLoading('Running fetch sign in methods for email'));
+
+    try {
+      EmailSignInServices emailSignInServices = EmailSignInServices();
+      List<String> signInMethodsStringList = await emailSignInServices.fetchSignInMethodsForEmail(email);
+
+      if (signInMethodsStringList.contains('emailPassword')) {
+        // TODO: log in by email and password
+        loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
+      } else if(signInMethodsStringList.contains('emailLink')) {
+        // TODO: go to reset email and password
+        loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
+      } else {
+        // TODO: create member by email and password
+        loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
+      }
     } catch (e) {
       loginSinkToAdd(LoginResponse.loginError(e.toString()));
       print(e);
