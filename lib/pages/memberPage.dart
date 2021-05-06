@@ -8,6 +8,7 @@ import 'package:readr_app/helpers/loginResponse.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/member.dart';
 import 'package:readr_app/widgets/loginErrorWidget.dart';
+import 'package:readr_app/widgets/memberLoginPolicy.dart';
 import 'package:readr_app/widgets/memberWidget.dart';
 
 class MemberPage extends StatefulWidget {
@@ -352,86 +353,118 @@ class _MemberPageState extends State<MemberPage> {
       Function emailLoginFunction,
     }
   ) {
-    return ListView(
-      children: [
-        SizedBox(height: 72),
-        Center(
-          child: Text(
-            '會員登入',
-            style: TextStyle(
-              fontSize: 28,
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(child: SizedBox(height: 72)),
+        SliverToBoxAdapter(
+          child: Center(
+            child: Text(
+              '會員登入',
+              style: TextStyle(
+                fontSize: 28,
+              ),
             ),
           ),
         ),
-        SizedBox(height: 16),
+        SliverToBoxAdapter(child: SizedBox(height: 16)),
         if(status != Status.FacebookLoading)
-          Padding(
-            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: _thirdPartyLoginButton(
-              'assets/image/facebook_icon.png', 
-              '使用 Facebook 登入', 
-              facebookLoginFunction,
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+              child: _thirdPartyLoginButton(
+                'assets/image/facebook_icon.png', 
+                '使用 Facebook 登入', 
+                facebookLoginFunction,
+              ),
             ),
           ),
         if(status == Status.FacebookLoading)
-          Padding(
-            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: _thirdPartyLoadingButton(),
-          ),
-        SizedBox(height: 16),
-        if(status != Status.GoogleLoading)
-          Padding(
-            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: _thirdPartyLoginButton(
-              'assets/image/google_icon.png', 
-              '使用 Google 登入', 
-              googleLoginFunction
-            ),
-          ),
-        if(status == Status.GoogleLoading)
-          Padding(
-            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: _thirdPartyLoadingButton(),
-          ),
-        SizedBox(height: 16),
-        if(Platform.isIOS)
-        ...[
-          if(status != Status.AppleLoading)
-            Padding(
-              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-              child: _thirdPartyLoginButton(
-                'assets/image/apple_icon.png', 
-                '使用 Apple 登入', 
-                appleLoginFunction
-              ),
-            ),
-          if(status == Status.AppleLoading)
-            Padding(
+          SliverToBoxAdapter(
+            child: Padding(
               padding: const EdgeInsets.only(left: 24.0, right: 24.0),
               child: _thirdPartyLoadingButton(),
             ),
-          SizedBox(height: 16),
+          ),
+        SliverToBoxAdapter(child: SizedBox(height: 16)),
+        if(status != Status.GoogleLoading)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+              child: _thirdPartyLoginButton(
+                'assets/image/google_icon.png', 
+                '使用 Google 登入', 
+                googleLoginFunction
+              ),
+            ),
+          ),
+        if(status == Status.GoogleLoading)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+              child: _thirdPartyLoadingButton(),
+            ),
+          ),
+        SliverToBoxAdapter(child: SizedBox(height: 16)),
+        if(Platform.isIOS)
+        ...[
+          if(status != Status.AppleLoading)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                child: _thirdPartyLoginButton(
+                  'assets/image/apple_icon.png', 
+                  '使用 Apple 登入', 
+                  appleLoginFunction
+                ),
+              ),
+            ),
+          if(status == Status.AppleLoading)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                child: _thirdPartyLoadingButton(),
+              ),
+            ),
+          SliverToBoxAdapter(child: SizedBox(height: 16)),
         ],
-        Padding(
-          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: _dividerBlock(),
-        ),
-        SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: _emailTextField(width, isEnabled: status == Status.NeedToLogin),
-        ),
-        SizedBox(height: 16),
-        if(status != Status.FetchSignInMethodsForEmailLoading)
-          Padding(
+        SliverToBoxAdapter(
+          child: Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: _emailLoginButton(emailLoginFunction),
+            child: _dividerBlock(),
+          ),
+        ),
+        SliverToBoxAdapter(child: SizedBox(height: 16)),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+            child: _emailTextField(width, isEnabled: status == Status.NeedToLogin),
+          ),
+        ),
+        SliverToBoxAdapter(child: SizedBox(height: 16)),
+        if(status != Status.FetchSignInMethodsForEmailLoading)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+              child: _emailLoginButton(emailLoginFunction),
+            ),
           ),
         if(status == Status.FetchSignInMethodsForEmailLoading)
-          Padding(
-            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: _emailLoadingButton(),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+              child: _emailLoadingButton(),
+            ),
           ),
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 44.0),
+              child: Container(height: 50, child: MemberLoginPolicy()),
+            )
+          ),
+        ),
       ],
     );
   }

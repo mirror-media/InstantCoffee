@@ -8,6 +8,7 @@ import 'package:readr_app/blocs/emailRegistered/states.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/pages/emailRegistered/emailValidatorWidget.dart';
 import 'package:readr_app/pages/emailRegistered/passwordValidatorWidget.dart';
+import 'package:readr_app/widgets/memberLoginPolicy.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CreateUserWithEmailAndPasswordWidget extends StatefulWidget {
@@ -78,49 +79,71 @@ class _CreateUserWithEmailAndPasswordWidgetState extends State<CreateUserWithEma
   Widget _buildEmailRegisteredBlock(EmailRegisteredState state) {
     bool isLoading = state is EmailRegisteredLoading;
 
-    return ListView(
-      children: [
-        SizedBox(height: 56),
-        Padding(
-          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: _emailTextField(),
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(child: SizedBox(height: 56)),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+            child: _emailTextField(),
+          ),
         ),
-        SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: EmailValidatorWidget(editingController: _emailEditingController,),
+        SliverToBoxAdapter(child: SizedBox(height: 8)),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+            child: EmailValidatorWidget(editingController: _emailEditingController,),
+          ),
         ),
-        SizedBox(height: 32),
-        Padding(
-          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: _passwordField(),
+        SliverToBoxAdapter(child: SizedBox(height: 32)),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+            child: _passwordField(),
+          ),
         ),
-        SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: PasswordValidatorWidget(editingController: _passwordEditingController,),
+        SliverToBoxAdapter(child: SizedBox(height: 8)),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+            child: PasswordValidatorWidget(editingController: _passwordEditingController,),
+          ),
         ),
-        SizedBox(height: 24),
+        SliverToBoxAdapter(child: SizedBox(height: 24)),
         if(state is EmailAlreadyInUse)
         ...[
-          Center(
-            child: Text(
-              '這個 Email 已經註冊過囉',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.red
+          SliverToBoxAdapter(
+            child: Center(
+              child: Text(
+                '這個 Email 已經註冊過囉',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.red
+                ),
               ),
             ),
           ),
-          SizedBox(height: 12),
+          SliverToBoxAdapter(child: SizedBox(height: 12)),
         ],
-        Padding(
-          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: isLoading
-          ? _emailLoadingButton()
-          : _registerButton(),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+            child: isLoading
+            ? _emailLoadingButton()
+            : _registerButton(),
+          ),
         ),
-        SizedBox(height: 24),
+        SliverToBoxAdapter(child: SizedBox(height: 24)),
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 44.0),
+              child: Container(height: 50, child: MemberLoginPolicy()),
+            )
+          ),
+        ),
       ],
     );
   }
