@@ -6,6 +6,7 @@ import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/mirrorApp.dart';
 import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/member.dart';
+import 'package:readr_app/pages/emailLogin/emailLoginPage.dart';
 import 'package:readr_app/pages/emailRegistered/emailRegisteredPage.dart';
 import 'package:readr_app/pages/magazineBrowser.dart';
 import 'package:readr_app/pages/magazinePage.dart';
@@ -23,6 +24,7 @@ class RouteGenerator {
   static const String search = '/search';
   static const String member = '/member';
   static const String emailRegistered = '/emailRegistered';
+  static const String emailLogin = '/emailLogin';
   static const String editMemberProfile = '/editMemberProfile';
   static const String editMemberContactInfo = '/editMemberContactInfo';
   static const String deleteMember = '/deleteMember';
@@ -59,6 +61,15 @@ class RouteGenerator {
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => EmailRegisteredPage(
+            email: args['email'],
+          ),
+          fullscreenDialog: true,
+        );
+      case emailLogin:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => EmailLoginPage(
             email: args['email'],
           ),
           fullscreenDialog: true,
@@ -184,6 +195,20 @@ class RouteGenerator {
   ) async{
     await Navigator.of(context).pushNamed(
       emailRegistered,
+      arguments: {
+        'email': email,
+      },
+    );
+  }
+
+  static Future<void> navigateToEmailLogin(
+    BuildContext context, 
+    {
+      String email,
+    }
+  ) async{
+    await Navigator.of(context).pushNamed(
+      emailLogin,
       arguments: {
         'email': email,
       },
