@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/pages/passwordResetPrompt/passwordResetPromptWidget.dart';
 
 class PasswordResetPromptPage extends StatelessWidget {
   final String email;
@@ -11,7 +12,7 @@ class PasswordResetPromptPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      body: Center(child: Text(email),)
+      body: PasswordResetPromptWidget(email: email),
     );
   }
   
