@@ -4,6 +4,7 @@ import 'package:readr_app/models/firebaseLoginStatus.dart';
 abstract class EmailSignInRepos {
   Future<List<String>> fetchSignInMethodsForEmail(String email);
   Future<FirebaseLoginStatus> createUserWithEmailAndPassword(String email, String password);
+  Future<FirebaseLoginStatus> signInWithEmailAndPassword(String email, String password);
 }
 
 class EmailSignInServices implements EmailSignInRepos{
@@ -34,6 +35,24 @@ class EmailSignInServices implements EmailSignInRepos{
     return FirebaseLoginStatus(
       status: FirebaseStatus.Success,
       message: 'Create user with email and password: with firebase success',
+    );
+  }
+
+  Future<FirebaseLoginStatus> signInWithEmailAndPassword(String email, String password) async {
+    try {
+      // Once signed in, get the UserCredential
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+    } catch(onError) {
+      print('Error sign in with email and password: $onError');
+      return FirebaseLoginStatus(
+        status: FirebaseStatus.Error,
+        message: onError.toString(),
+      );
+    }
+
+    return FirebaseLoginStatus(
+      status: FirebaseStatus.Success,
+      message: 'Sign in with email and password: with firebase success',
     );
   }
 }
