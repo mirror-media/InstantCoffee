@@ -208,8 +208,8 @@ class LoginBloc {
         renderingUIAfterEmailLogin(context);
         loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
       } else if(signInMethodsStringList.contains('emailLink')) {
-        // TODO: go to reset email and password
-        loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
+        await RouteGenerator.navigateToPasswordResetPrompt(context, email: email);
+        renderingUIAfterEmailLogin(context);
       } else {
         await RouteGenerator.navigateToEmailRegistered(context, email: email);
         renderingUIAfterEmailLogin(context);
