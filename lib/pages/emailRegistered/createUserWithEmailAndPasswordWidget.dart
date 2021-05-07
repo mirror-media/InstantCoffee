@@ -4,9 +4,6 @@ import 'package:readr_app/blocs/emailRegistered/bloc.dart';
 import 'package:readr_app/blocs/emailRegistered/states.dart';
 import 'package:readr_app/pages/emailRegistered/emailRegisteredErrorWidget.dart';
 import 'package:readr_app/pages/emailRegistered/emailRegisteredForm.dart';
-import 'package:readr_app/pages/emailRegistered/emailValidatorWidget.dart';
-import 'package:readr_app/pages/emailRegistered/passwordValidatorWidget.dart';
-import 'package:readr_app/widgets/memberLoginPolicy.dart';
 
 class CreateUserWithEmailAndPasswordWidget extends StatefulWidget {
   final String email;

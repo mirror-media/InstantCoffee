@@ -5,8 +5,8 @@ import 'package:readr_app/blocs/emailRegistered/bloc.dart';
 import 'package:readr_app/blocs/emailRegistered/events.dart';
 import 'package:readr_app/blocs/emailRegistered/states.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/pages/emailRegistered/emailValidatorWidget.dart';
-import 'package:readr_app/pages/emailRegistered/passwordValidatorWidget.dart';
+import 'package:readr_app/pages/shared/emailValidatorWidget.dart';
+import 'package:readr_app/pages/shared/passwordValidatorWidget.dart';
 import 'package:readr_app/widgets/memberLoginPolicy.dart';
 
 class EmailRegisteredForm extends StatefulWidget {
