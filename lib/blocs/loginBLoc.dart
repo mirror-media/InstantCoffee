@@ -203,8 +203,9 @@ class LoginBloc {
       EmailSignInServices emailSignInServices = EmailSignInServices();
       List<String> signInMethodsStringList = await emailSignInServices.fetchSignInMethodsForEmail(email);
 
-      if (signInMethodsStringList.contains('emailPassword')) {
-        // TODO: log in by email and password
+      if (signInMethodsStringList.contains('password')) {
+        await RouteGenerator.navigateToEmailLogin(context, email: email);
+        renderingUIAfterEmailLogin(context);
         loginSinkToAdd(LoginResponse.needToLogin('Waiting for login'));
       } else if(signInMethodsStringList.contains('emailLink')) {
         // TODO: go to reset email and password
