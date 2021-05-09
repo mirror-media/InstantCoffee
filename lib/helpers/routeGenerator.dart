@@ -12,6 +12,7 @@ import 'package:readr_app/pages/magazineBrowser.dart';
 import 'package:readr_app/pages/magazinePage.dart';
 import 'package:readr_app/pages/memberPage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
+import 'package:readr_app/pages/passwordResetEmail/passwordResetEmailPage.dart';
 import 'package:readr_app/pages/passwordResetPrompt/passwordResetPromptPage.dart';
 import 'package:readr_app/pages/searchPage.dart';
 import 'package:readr_app/pages/storyPage.dart';
@@ -27,6 +28,7 @@ class RouteGenerator {
   static const String emailRegistered = '/emailRegistered';
   static const String emailLogin = '/emailLogin';
   static const String passwordResetPrompt = '/passwordResetPrompt';
+  static const String passwordResetEmail = '/passwordResetEmail';
   static const String editMemberProfile = '/editMemberProfile';
   static const String editMemberContactInfo = '/editMemberContactInfo';
   static const String deleteMember = '/deleteMember';
@@ -81,6 +83,15 @@ class RouteGenerator {
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => PasswordResetPromptPage(
+            email: args['email'],
+          ),
+          fullscreenDialog: true,
+        );
+      case passwordResetEmail:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => PasswordResetEmailPage(
             email: args['email'],
           ),
           fullscreenDialog: true,
@@ -234,6 +245,20 @@ class RouteGenerator {
   ) async{
     await Navigator.of(context).pushNamed(
       passwordResetPrompt,
+      arguments: {
+        'email': email,
+      },
+    );
+  }
+
+  static Future<void> navigateToPasswordResetEmail(
+    BuildContext context,
+    {
+      String email,
+    }
+  ) async{
+    await Navigator.of(context).pushNamed(
+      passwordResetEmail,
       arguments: {
         'email': email,
       },

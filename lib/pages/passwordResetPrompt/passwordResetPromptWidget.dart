@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 
 class PasswordResetPromptWidget extends StatelessWidget {
   final String email;
@@ -35,14 +36,14 @@ class PasswordResetPromptWidget extends StatelessWidget {
         SizedBox(height: 24),
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: _navigateToResetPasswordButton(),
+          child: _navigateToResetPasswordButton(context),
         ),
         SizedBox(height: 24),
       ],
     );
   }
 
-  Widget _navigateToResetPasswordButton() {
+  Widget _navigateToResetPasswordButton(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(5.0),
       child: Container(
@@ -62,7 +63,7 @@ class PasswordResetPromptWidget extends StatelessWidget {
         ),
       ),
       onTap: () {
-        print('Go to reset password');
+        RouteGenerator.navigateToPasswordResetEmail(context, email: email);
       },
     );
   }
