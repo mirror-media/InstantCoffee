@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/passwordResetEmail/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/pages/passwordResetEmail/passwordResetEmailWidget.dart';
+import 'package:readr_app/services/emailSignInService.dart';
 
 class PasswordResetEmailPage extends StatelessWidget {
   final String email;
@@ -11,7 +15,10 @@ class PasswordResetEmailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      body: Center(child: Text(email)),
+      body: BlocProvider(
+        create: (context) => PasswordResetEmailBloc(emailSignInRepos: EmailSignInServices()),
+        child: PasswordResetEmailWidget(email: email),
+      ),
     );
   }
   
