@@ -30,7 +30,7 @@ class SignInWithEmailAndPassword extends EmailLoginEvents {
       if(frebaseLoginStatus.status == FirebaseStatus.Success) {
         yield EmailLoginSuccess();
       } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
-        if(frebaseLoginStatus.message == '[firebase_auth/wrong-password] The password is invalid or the user does not have a password.') {
+        if(frebaseLoginStatus.message == 'wrong-password') {
           yield EmailLoginFail();
         } else {
           yield EmailLoginError(
