@@ -28,7 +28,6 @@ class EmailRegisteredForm extends StatefulWidget {
 class _EmailRegisteredFormState extends State<EmailRegisteredForm> {
   TextEditingController _emailEditingController;
   TextEditingController _passwordEditingController;
-  bool _isLoading;
   bool _isHidden = true;
   bool _emailIsValid = false;
   bool _passwordIsValid = false;
@@ -38,7 +37,6 @@ class _EmailRegisteredFormState extends State<EmailRegisteredForm> {
     _emailEditingController = widget.emailEditingController;
     _passwordEditingController = widget.passwordEditingController;
     _emailEditingController.text = widget.email;
-    _isLoading = widget.state is EmailRegisteredLoading;
     _emailIsValid = _isEmailValid();
     _emailEditingController.addListener(
       () {
@@ -130,7 +128,7 @@ class _EmailRegisteredFormState extends State<EmailRegisteredForm> {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: _isLoading
+            child: widget.state is EmailRegisteredLoading
             ? _emailLoadingButton()
             : _registerButton(_emailIsValid && _passwordIsValid),
           ),
