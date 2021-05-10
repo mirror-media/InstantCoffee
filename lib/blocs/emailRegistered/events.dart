@@ -48,7 +48,7 @@ class CreateUserWithEmailAndPassword extends EmailRegisteredEvents {
           );
         }
       } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
-        if(frebaseLoginStatus.message == '[firebase_auth/email-already-in-use] The email address is already in use by another account.') {
+        if(frebaseLoginStatus.message == 'email-already-in-use') {
           yield EmailAlreadyInUse();
         } else {
           yield EmailRegisteredFail(

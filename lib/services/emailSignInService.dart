@@ -30,7 +30,7 @@ class EmailSignInServices implements EmailSignInRepos{
       print('Error create user with email and password: $onError');
       return FirebaseLoginStatus(
         status: FirebaseStatus.Error,
-        message: onError.toString(),
+        message: onError.code,
       );
     }
 
