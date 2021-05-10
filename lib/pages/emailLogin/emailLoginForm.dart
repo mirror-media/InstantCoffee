@@ -23,14 +23,12 @@ class EmailLoginForm extends StatefulWidget {
 
 class _EmailLoginFormState extends State<EmailLoginForm> {
   TextEditingController _passwordEditingController;
-  bool _isLoading;
   bool _isHidden = true;
   bool _passwordIsValid = false;
 
   @override
   void initState() {
     _passwordEditingController = widget.passwordEditingController;
-    _isLoading = widget.state is EmailLoginLoading;
     _passwordEditingController.addListener(
       () {
         setState(() {
@@ -87,7 +85,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
         ],
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: _isLoading
+          child: widget.state is EmailLoginLoading
           ? _emailLoadingButton()
           : _loginButton(_passwordIsValid),
         ),
