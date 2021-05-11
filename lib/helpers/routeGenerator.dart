@@ -12,6 +12,7 @@ import 'package:readr_app/pages/magazineBrowser.dart';
 import 'package:readr_app/pages/magazinePage.dart';
 import 'package:readr_app/pages/memberPage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
+import 'package:readr_app/pages/passwordReset/passwordResetPage.dart';
 import 'package:readr_app/pages/passwordResetEmail/passwordResetEmailPage.dart';
 import 'package:readr_app/pages/passwordResetPrompt/passwordResetPromptPage.dart';
 import 'package:readr_app/pages/searchPage.dart';
@@ -29,6 +30,7 @@ class RouteGenerator {
   static const String emailLogin = '/emailLogin';
   static const String passwordResetPrompt = '/passwordResetPrompt';
   static const String passwordResetEmail = '/passwordResetEmail';
+  static const String passwordReset = '/passwordReset';
   static const String editMemberProfile = '/editMemberProfile';
   static const String editMemberContactInfo = '/editMemberContactInfo';
   static const String deleteMember = '/deleteMember';
@@ -93,6 +95,15 @@ class RouteGenerator {
           settings: settings,
           builder: (context) => PasswordResetEmailPage(
             email: args['email'],
+          ),
+          fullscreenDialog: true,
+        );
+      case passwordReset:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => PasswordResetPage(
+            code: args['code'],
           ),
           fullscreenDialog: true,
         );
@@ -261,6 +272,20 @@ class RouteGenerator {
       passwordResetEmail,
       arguments: {
         'email': email,
+      },
+    );
+  }
+  
+  static void navigateToPasswordReset(
+    BuildContext context, 
+    {
+      String code,
+    }
+  ) {
+    Navigator.of(context).pushNamed(
+      passwordReset,
+      arguments: {
+        'code': code,
       },
     );
   }
