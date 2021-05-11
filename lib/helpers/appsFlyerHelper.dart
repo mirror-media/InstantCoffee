@@ -37,6 +37,18 @@ class AppsFlyerHelper {
 
         if(event['data']['slug'] != null) {
           RouteGenerator.navigateToStory(context, event['data']['slug'], isListeningWidget: false);
+        } else if(event['data']['host'] == env.baseConfig.dynamicLinkDomain && Platform.isIOS) {
+          // This is only for iOS to replace the DynamicLink feature.
+          Uri deepLink = Uri.parse(event['data']['link']);
+          if (deepLink != null && 
+            deepLink.path == '/__/auth/action' && 
+            deepLink.queryParameters['mode'] == 'resetPassword') {
+            Navigator.of(context).popUntil((route) => route.isFirst);  
+            RouteGenerator.navigateToPasswordReset(
+              context, 
+              code: deepLink.queryParameters['oobCode'],
+            );
+          }
         }
       }
     );
