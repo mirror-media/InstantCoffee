@@ -15,13 +15,6 @@ class PasswordResetEmailWidget extends StatefulWidget {
 }
 
 class _PasswordResetEmailWidgetState extends State<PasswordResetEmailWidget> {
-  final _emailEditingController = TextEditingController();
-
-  @override
-  void dispose() {
-    _emailEditingController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +24,6 @@ class _PasswordResetEmailWidgetState extends State<PasswordResetEmailWidget> {
         return PasswordResetEmailForm(
           email: widget.email,
           state: state,
-          emailEditingController: _emailEditingController
         );
       }
     );

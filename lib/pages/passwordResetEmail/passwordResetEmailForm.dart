@@ -3,16 +3,13 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/blocs/passwordResetEmail/states.dart';
 import 'package:readr_app/pages/passwordResetEmail/sendPasswordResetEmailButton.dart';
-import 'package:readr_app/pages/shared/emailValidatorWidget.dart';
 
 class PasswordResetEmailForm extends StatefulWidget {
   final String email;
   final PasswordResetEmailState state;
-  final TextEditingController emailEditingController;
   PasswordResetEmailForm({
     @required this.email,
     @required this.state,
-    @required this.emailEditingController,
   });
 
   @override
@@ -20,12 +17,12 @@ class PasswordResetEmailForm extends StatefulWidget {
 }
 
 class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
-  TextEditingController _emailEditingController;
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _emailEditingController = TextEditingController();
   bool _emailIsValid = false;
 
   @override
   void initState() {
-    _emailEditingController = widget.emailEditingController;
     _emailEditingController.text = widget.email;
     _emailIsValid = _isEmailValid();
     _emailEditingController.addListener(
@@ -42,6 +39,12 @@ class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
     Pattern pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
     RegExp regex = RegExp(pattern);
     return _emailEditingController.text != null && regex.hasMatch(_emailEditingController.text);
+  }
+  
+  @override
+  void dispose() {
+    _emailEditingController.dispose();
+    super.dispose();
   }
 
   @override
@@ -63,11 +66,6 @@ class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
           child: _emailTextField(),
-        ),
-        SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: EmailValidatorWidget(editingController: _emailEditingController,),
         ),
         SizedBox(height: 24),
         if(widget.state is PasswordResetEmailSendingFail)
@@ -156,10 +154,21 @@ class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
     );
   }
 
+  String _validateEmail(String value) {
+    Pattern pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(value) || value == null)
+      return '請輸入有效的 Email 地址';
+    else
+      return null;
+  }
+
   Widget _emailTextField() {
     return Form(
+      key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: TextFormField(
+        validator: _validateEmail,
         controller: _emailEditingController,
         style: TextStyle(
           color: Colors.black,
@@ -167,9 +176,13 @@ class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
         ),
         decoration: InputDecoration(
           labelText: 'Email',
+          contentPadding: EdgeInsets.all(12.0),
           labelStyle: TextStyle(
-            color: Colors.black,
-            fontSize: 17,
+            color: _emailIsValid? Colors.black : Colors.red ,
+            fontSize: 16,
+          ),
+          errorStyle: TextStyle(
+            fontSize: 16.0,
           ),
         ),
       ),
