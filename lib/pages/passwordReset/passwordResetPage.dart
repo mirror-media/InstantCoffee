@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/passwordReset/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/pages/passwordReset/passwordResetWidget.dart';
+import 'package:readr_app/services/emailSignInService.dart';
 
 class PasswordResetPage extends StatelessWidget {
   final String code;
@@ -11,7 +15,12 @@ class PasswordResetPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      body: Container(),
+      body: BlocProvider(
+        create: (context) => PasswordResetBloc(emailSignInRepos: EmailSignInServices()),
+        child: PasswordResetWidget(
+          code: code,
+        ),
+      ),
     );
   }
 
@@ -22,7 +31,7 @@ class PasswordResetPage extends StatelessWidget {
         onPressed: () => Navigator.of(context).pop(),
       ),
       centerTitle: true,
-      title: Text('更改密碼'),
+      title: Text('修改密碼'),
       backgroundColor: appColor,
     );
   }
