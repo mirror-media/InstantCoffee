@@ -113,7 +113,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
             ? Icon(Icons.visibility)
             : Icon(Icons.visibility_off),
           ),
-          labelText: '設定密碼',
+          labelText: '密碼',
           labelStyle: TextStyle(
             color: Colors.black,
             fontSize: 17,
