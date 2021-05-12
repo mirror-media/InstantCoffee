@@ -8,6 +8,7 @@ abstract class EmailSignInRepos {
   Future<FirebaseLoginStatus> signInWithEmailAndPassword(String email, String password);
   Future<FirebaseLoginStatus> sendPasswordResetEmail(String email);
   Future<bool> confirmPasswordReset(String code, String newPassword);
+  Future<bool> confirmOldPassword(String oldPassword);
 }
 
 class EmailSignInServices implements EmailSignInRepos{
@@ -106,6 +107,23 @@ class EmailSignInServices implements EmailSignInRepos{
     } 
     
     print('Confirm password reset successfully');
+    return true;
+  }
+
+  Future<bool> confirmOldPassword(String oldPassword) async {
+    var user = _auth.currentUser;
+    var credential = EmailAuthProvider.credential(
+      email: user.email,
+      password: oldPassword,
+    );
+
+    try {
+      await user.reauthenticateWithCredential(credential);
+    } catch(onError) {
+      print('Confirm old password with firebase $onError');
+      return false;
+    }
+
     return true;
   }
 }
