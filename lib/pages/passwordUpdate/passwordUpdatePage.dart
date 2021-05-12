@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/pages/passwordUpdate/PasswordUpdateWidget.dart';
+import 'package:readr_app/services/emailSignInService.dart';
 
 class PasswordUpdatePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      body: Center(child: Text('修改密碼')),
+      body: BlocProvider(
+        create: (context) => PasswordUpdateBloc(emailSignInRepos: EmailSignInServices()),
+        child: PasswordUpdateWidget(),
+      ),
     );
   }
 
