@@ -5,6 +5,7 @@ import 'package:readr_app/blocs/emailLogin/bloc.dart';
 import 'package:readr_app/blocs/emailLogin/events.dart';
 import 'package:readr_app/blocs/emailLogin/states.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/pages/shared/passwordValidatorWidget.dart';
 
 class EmailLoginForm extends StatefulWidget {
@@ -89,6 +90,9 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
           ? _emailLoadingButton()
           : _loginButton(_passwordIsValid),
         ),
+        SizedBox(height: 24),
+        Center(child: _forgetPasswordButton()),
+        SizedBox(height: 24),
       ],
     );
   }
@@ -161,6 +165,22 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
           );
         }
       : null
+    );
+  }
+
+  Widget _forgetPasswordButton() {
+    return InkWell(
+      child: Text(
+        '忘記密碼',
+        style: TextStyle(
+          fontSize: 13,
+          color: appColor,
+        ),
+      ),
+      onTap: () => RouteGenerator.navigateToPasswordResetEmail(
+        context, 
+        email: widget.email
+      ),
     );
   }
 }
