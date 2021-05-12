@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:readr_app/blocs/passwordReset/states.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/services/emailSignInService.dart';
@@ -24,8 +23,7 @@ class ConfirmPasswordReset extends PasswordResetEvents {
     print(this.toString());
     try{
       yield PasswordResetLoading();
-      FirebaseAuth auth = FirebaseAuth.instance;
-      bool isSuccess = await emailSignInRepos.confirmPasswordReset(auth, code, newPassword);
+      bool isSuccess = await emailSignInRepos.confirmPasswordReset(code, newPassword);
       if(isSuccess) {
         yield PasswordResetSuccess();
       } else {

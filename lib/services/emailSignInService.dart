@@ -7,7 +7,7 @@ abstract class EmailSignInRepos {
   Future<FirebaseLoginStatus> createUserWithEmailAndPassword(String email, String password);
   Future<FirebaseLoginStatus> signInWithEmailAndPassword(String email, String password);
   Future<FirebaseLoginStatus> sendPasswordResetEmail(String email);
-  Future<bool> confirmPasswordReset(FirebaseAuth auth, String code, String newPassword);
+  Future<bool> confirmPasswordReset(String code, String newPassword);
 }
 
 class EmailSignInServices implements EmailSignInRepos{
@@ -94,9 +94,9 @@ class EmailSignInServices implements EmailSignInRepos{
     );
   }
 
-  Future<bool> confirmPasswordReset(FirebaseAuth auth, String code, String newPassword) async {
+  Future<bool> confirmPasswordReset(String code, String newPassword) async {
     try{
-      await auth.confirmPasswordReset(
+      await _auth.confirmPasswordReset(
         code: code, 
         newPassword: newPassword
       );
