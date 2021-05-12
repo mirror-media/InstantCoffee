@@ -136,6 +136,21 @@ class LoginBloc {
     }
   }
 
+  bool checkIsEmailAndPasswordLogin() {
+    if(auth.currentUser == null) {
+      return false;
+    }
+
+    for(int i=0; i<auth.currentUser.providerData.length; i++) {
+      UserInfo userInfo =auth.currentUser.providerData[i];
+      if(userInfo.providerId == 'password') {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   loginByFacebook(BuildContext context) async {
     loginSinkToAdd(LoginResponse.facebookLoading('Running facebook login'));
 
