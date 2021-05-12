@@ -192,6 +192,35 @@ class _MemberWidgetState extends State<MemberWidget> {
                   ),
                 ),
 
+                if(widget.loginBloc.checkIsEmailAndPasswordLogin())
+                ...[
+                  InkWell(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+                      child: Container(
+                        width: width,
+                        child: Text(
+                          '修改密碼',
+                          style: TextStyle(
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                    ),
+                    onTap: (){
+                      print('修改密碼');
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                    child: Container(
+                      color: Colors.grey,
+                      width: width,
+                      height: 1,
+                    ),
+                  ),
+                ],
+
                 InkWell(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
