@@ -208,7 +208,7 @@ class _MemberWidgetState extends State<MemberWidget> {
                       ),
                     ),
                     onTap: (){
-                      print('修改密碼');
+                      RouteGenerator.navigateToPasswordUpdate(context);
                     },
                   ),
                   Padding(

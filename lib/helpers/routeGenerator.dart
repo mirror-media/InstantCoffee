@@ -15,6 +15,7 @@ import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/pages/passwordReset/passwordResetPage.dart';
 import 'package:readr_app/pages/passwordResetEmail/passwordResetEmailPage.dart';
 import 'package:readr_app/pages/passwordResetPrompt/passwordResetPromptPage.dart';
+import 'package:readr_app/pages/passwordUpdate/passwordUpdatePage.dart';
 import 'package:readr_app/pages/searchPage.dart';
 import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/widgets/deleteMemberWidget.dart';
@@ -31,6 +32,7 @@ class RouteGenerator {
   static const String passwordResetPrompt = '/passwordResetPrompt';
   static const String passwordResetEmail = '/passwordResetEmail';
   static const String passwordReset = '/passwordReset';
+  static const String passwordUpdate = '/passwordUpdate';
   static const String editMemberProfile = '/editMemberProfile';
   static const String editMemberContactInfo = '/editMemberContactInfo';
   static const String deleteMember = '/deleteMember';
@@ -105,6 +107,12 @@ class RouteGenerator {
           builder: (_) => PasswordResetPage(
             code: args['code'],
           ),
+          fullscreenDialog: true,
+        );
+      case passwordUpdate:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => PasswordUpdatePage(),
           fullscreenDialog: true,
         );
       case editMemberProfile:
@@ -288,6 +296,10 @@ class RouteGenerator {
         'code': code,
       },
     );
+  }
+
+  static void navigateToPasswordUpdate(BuildContext context) {
+    Navigator.of(context).pushNamed(passwordUpdate);
   }
 
   static void navigateToEditMemberProfile(
