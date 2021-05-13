@@ -9,6 +9,7 @@ abstract class EmailSignInRepos {
   Future<FirebaseLoginStatus> sendPasswordResetEmail(String email);
   Future<bool> confirmPasswordReset(String code, String newPassword);
   Future<bool> confirmOldPassword(String oldPassword);
+  Future<bool> updatePassword(String newPassword);
 }
 
 class EmailSignInServices implements EmailSignInRepos{
@@ -124,6 +125,19 @@ class EmailSignInServices implements EmailSignInRepos{
       return false;
     }
 
+    return true;
+  }
+
+  Future<bool> updatePassword(String newPassword) async {
+    try{
+      await _auth.currentUser.updatePassword(newPassword);
+      await _auth.signOut();
+    } catch(onError) {
+      print('Error update password $onError');
+      return false;
+    } 
+  
+    print('Update password successfully');
     return true;
   }
 }
