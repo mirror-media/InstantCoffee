@@ -9,6 +9,12 @@ class OldPasswordConfirmFail extends OldPasswordConfirm {}
 
 class PasswordUpdateInitState extends PasswordUpdateState {}
 
+class PasswordUpdateLoading extends PasswordUpdateState {}
+
+class PasswordUpdateSuccess extends PasswordUpdateState {}
+
+class PasswordUpdateFail extends PasswordUpdateState {}
+
 class PasswordUpdateError extends PasswordUpdateState {
   final error;
   PasswordUpdateError({this.error});

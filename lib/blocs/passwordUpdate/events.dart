@@ -48,3 +48,43 @@ class ConfirmOldPassword extends PasswordUpdateEvents {
     }
   }
 }
+
+class UpdatePassword extends PasswordUpdateEvents {
+  final String newPassword;
+  UpdatePassword({
+    this.newPassword
+  });
+
+  @override
+  String toString() => 'UpdatePassword';
+
+  @override
+  Stream<PasswordUpdateState> run(EmailSignInRepos emailSignInRepos) async*{
+    print(this.toString());
+    try{
+      yield PasswordUpdateLoading();
+      bool isSuccess = await emailSignInRepos.updatePassword(newPassword);
+      if(isSuccess) {
+        yield PasswordUpdateSuccess();
+      } else {
+        yield PasswordUpdateFail();
+      }
+    } on SocketException {
+      yield PasswordUpdateError(
+        error: NoInternetException('No Internet'),
+      );
+    } on HttpException {
+      yield PasswordUpdateError(
+        error: NoServiceFoundException('No Service Found'),
+      );
+    } on FormatException {
+      yield PasswordUpdateError(
+        error: InvalidFormatException('Invalid Response format'),
+      );
+    } catch (e) {
+      yield PasswordUpdateError(
+        error: UnknownException(e.toString()),
+      );
+    }
+  }
+}
