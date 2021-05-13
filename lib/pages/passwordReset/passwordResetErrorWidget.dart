@@ -23,7 +23,7 @@ class PasswordResetErrorWidget extends StatelessWidget {
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
           child: Center(
             child: Text(
-              '請重新嘗試更改密碼',
+              '請重新嘗試設定密碼',
               style: TextStyle(
                 fontSize: 28
               ),
