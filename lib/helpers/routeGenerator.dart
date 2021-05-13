@@ -110,9 +110,12 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case passwordUpdate:
+        Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => PasswordUpdatePage(),
+          builder: (_) => PasswordUpdatePage(
+            memberBloc: args['memberBloc'],
+          ),
           fullscreenDialog: true,
         );
       case editMemberProfile:
@@ -298,8 +301,16 @@ class RouteGenerator {
     );
   }
 
-  static void navigateToPasswordUpdate(BuildContext context) {
-    Navigator.of(context).pushNamed(passwordUpdate);
+  static Future<void> navigateToPasswordUpdate(
+    BuildContext context,
+    MemberBloc memberBloc,
+  ) async{
+    await Navigator.of(context).pushNamed(
+      passwordUpdate,
+      arguments: {
+        'memberBloc': memberBloc,
+      },
+    );
   }
 
   static void navigateToEditMemberProfile(

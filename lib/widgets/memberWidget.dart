@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/loginBLoc.dart';
 import 'package:readr_app/blocs/memberBloc.dart';
+import 'package:readr_app/helpers/loginResponse.dart' as loginStatus;
 import 'package:readr_app/helpers/memberResponse.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/member.dart';
@@ -207,8 +208,17 @@ class _MemberWidgetState extends State<MemberWidget> {
                         ),
                       ),
                     ),
-                    onTap: (){
-                      RouteGenerator.navigateToPasswordUpdate(context);
+                    onTap: () async{
+                      await RouteGenerator.navigateToPasswordUpdate(context, _memberBloc);
+                      if(_memberBloc.passwordUpdateSuccess) {
+                        if(widget.loginBloc.auth.currentUser == null) {
+                          widget.loginBloc.loginSinkToAdd(loginStatus.LoginResponse.needToLogin('Waiting for login'));
+                        } 
+                      } else {
+                        _memberBloc.sinkToAdd(MemberResponse.savingError(member, 'error'));
+                        await Future.delayed(Duration(seconds: 1));
+                        _memberBloc.sinkToAdd(MemberResponse.completed(member));
+                      }
                     },
                   ),
                   Padding(
