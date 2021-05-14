@@ -12,6 +12,22 @@ import 'package:readr_app/services/memberService.dart';
 
 abstract class LoginEvents{
   Stream<LoginState> run(LoginRepos loginRepos);
+  Stream<LoginState> handleFirebaseLogin(
+    BuildContext context,
+    String routeName,
+    Object routeArguments,
+    FirebaseLoginStatus frebaseLoginStatus
+  ) async*{ 
+    if(frebaseLoginStatus.status == FirebaseStatus.Cancel) {
+      yield LoginInitState();
+    } else if(frebaseLoginStatus.status == FirebaseStatus.Success) {
+      yield* handleCreateMember(context, routeName, routeArguments);
+    } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
+      yield LoginFail(
+        error: UnknownException(frebaseLoginStatus.message),
+      );
+    } 
+  }
   Stream<LoginState> handleCreateMember(
     BuildContext context,
     String routeName,
@@ -117,15 +133,12 @@ class SignInWithGoogle extends LoginEvents {
     try{
       yield GoogleLoading();
       FirebaseLoginStatus frebaseLoginStatus = await loginRepos.signInWithGoogle();
-      if(frebaseLoginStatus.status == FirebaseStatus.Cancel) {
-        yield LoginInitState();
-      } else if(frebaseLoginStatus.status == FirebaseStatus.Success) {
-        yield* this.handleCreateMember(context, routeName, routeArguments);
-      } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
-        yield LoginFail(
-          error: UnknownException(frebaseLoginStatus.message),
-        );
-      } 
+      yield* handleFirebaseLogin(
+        context, 
+        routeName, 
+        routeArguments,
+        frebaseLoginStatus,
+      );
     } on SocketException {
       yield LoginFail(
         error: NoInternetException('No Internet'),
