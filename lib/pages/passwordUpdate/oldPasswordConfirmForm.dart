@@ -122,7 +122,7 @@ class _OldPasswordConfirmFormState extends State<OldPasswordConfirmForm> {
             ? Icon(Icons.visibility)
             : Icon(Icons.visibility_off),
           ),
-          labelText: '設定新密碼',
+          labelText: '目前的密碼',
           labelStyle: TextStyle(
             color: Colors.black,
             fontSize: 17,
