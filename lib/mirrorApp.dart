@@ -80,6 +80,7 @@ class _MirrorAppState extends State<MirrorApp> {
     await _onBoardingBloc.setOnBoardingFromStorage();
 
     await _appsFlyerHelper.initialAppsFlyer(context);
+    await initDynamicLinks();
     _configController.sink.add(true);
   }
 
