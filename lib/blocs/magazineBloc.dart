@@ -5,7 +5,7 @@ import 'package:readr_app/models/magazineList.dart';
 import 'package:readr_app/services/magazineService.dart';
 
 class MagazineBloc {
-  MagazineService _magazineService;
+  MagazineServices _magazineServices;
 
   StreamController _magazineListController;
 
@@ -16,7 +16,7 @@ class MagazineBloc {
       _magazineListController.stream;
 
   MagazineBloc() {
-    _magazineService = MagazineService();
+    _magazineServices = MagazineServices();
     _magazineListController = StreamController<ApiResponse<MagazineList>>();
     fetchMagazineList();
   }
@@ -31,7 +31,7 @@ class MagazineBloc {
     sinkToAdd(ApiResponse.loading('Fetching Magazine List'));
 
     try {
-      MagazineList magazineList = await _magazineService.fetchMagazineList();
+      MagazineList magazineList = await _magazineServices.fetchMagazineListByType('weekly');
 
       sinkToAdd(ApiResponse.completed(magazineList));
     } catch (e) {
