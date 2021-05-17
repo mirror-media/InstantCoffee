@@ -6,10 +6,16 @@ import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/mirrorApp.dart';
 import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/member.dart';
+import 'package:readr_app/pages/emailLogin/emailLoginPage.dart';
+import 'package:readr_app/pages/emailRegistered/emailRegisteredPage.dart';
 import 'package:readr_app/pages/magazineBrowser.dart';
 import 'package:readr_app/pages/magazinePage.dart';
 import 'package:readr_app/pages/memberPage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
+import 'package:readr_app/pages/passwordReset/passwordResetPage.dart';
+import 'package:readr_app/pages/passwordResetEmail/passwordResetEmailPage.dart';
+import 'package:readr_app/pages/passwordResetPrompt/passwordResetPromptPage.dart';
+import 'package:readr_app/pages/passwordUpdate/passwordUpdatePage.dart';
 import 'package:readr_app/pages/searchPage.dart';
 import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/widgets/deleteMemberWidget.dart';
@@ -21,6 +27,12 @@ class RouteGenerator {
   static const String root = '/';
   static const String search = '/search';
   static const String member = '/member';
+  static const String emailRegistered = '/emailRegistered';
+  static const String emailLogin = '/emailLogin';
+  static const String passwordResetPrompt = '/passwordResetPrompt';
+  static const String passwordResetEmail = '/passwordResetEmail';
+  static const String passwordReset = '/passwordReset';
+  static const String passwordUpdate = '/passwordUpdate';
   static const String editMemberProfile = '/editMemberProfile';
   static const String editMemberContactInfo = '/editMemberContactInfo';
   static const String deleteMember = '/deleteMember';
@@ -49,6 +61,60 @@ class RouteGenerator {
           builder: (context) => MemberPage(
             routeName: args['routeName']??member,
             routeArguments: args['routeArguments'],
+          ),
+          fullscreenDialog: true,
+        );
+      case emailRegistered:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => EmailRegisteredPage(
+            email: args['email'],
+          ),
+          fullscreenDialog: true,
+        );
+      case emailLogin:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => EmailLoginPage(
+            email: args['email'],
+          ),
+          fullscreenDialog: true,
+        );
+      case passwordResetPrompt:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => PasswordResetPromptPage(
+            email: args['email'],
+          ),
+          fullscreenDialog: true,
+        );
+      case passwordResetEmail:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => PasswordResetEmailPage(
+            email: args['email'],
+          ),
+          fullscreenDialog: true,
+        );
+      case passwordReset:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => PasswordResetPage(
+            code: args['code'],
+          ),
+          fullscreenDialog: true,
+        );
+      case passwordUpdate:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => PasswordUpdatePage(
+            memberBloc: args['memberBloc'],
           ),
           fullscreenDialog: true,
         );
@@ -161,6 +227,88 @@ class RouteGenerator {
       arguments: {
         'routeName': routeName,
         'routeArguments': routeArguments,
+      },
+    );
+  }
+
+  static Future<void> navigateToEmailRegistered(
+    BuildContext context, 
+    {
+      String email,
+    }
+  ) async{
+    await Navigator.of(context).pushNamed(
+      emailRegistered,
+      arguments: {
+        'email': email,
+      },
+    );
+  }
+
+  static Future<void> navigateToEmailLogin(
+    BuildContext context, 
+    {
+      String email,
+    }
+  ) async{
+    await Navigator.of(context).pushNamed(
+      emailLogin,
+      arguments: {
+        'email': email,
+      },
+    );
+  }
+
+  static Future<void> navigateToPasswordResetPrompt(
+    BuildContext context,
+    {
+      String email,
+    }
+  ) async{
+    await Navigator.of(context).pushNamed(
+      passwordResetPrompt,
+      arguments: {
+        'email': email,
+      },
+    );
+  }
+
+  static Future<void> navigateToPasswordResetEmail(
+    BuildContext context,
+    {
+      String email,
+    }
+  ) async{
+    await Navigator.of(context).pushNamed(
+      passwordResetEmail,
+      arguments: {
+        'email': email,
+      },
+    );
+  }
+  
+  static void navigateToPasswordReset(
+    BuildContext context, 
+    {
+      String code,
+    }
+  ) {
+    Navigator.of(context).pushNamed(
+      passwordReset,
+      arguments: {
+        'code': code,
+      },
+    );
+  }
+
+  static Future<void> navigateToPasswordUpdate(
+    BuildContext context,
+    MemberBloc memberBloc,
+  ) async{
+    await Navigator.of(context).pushNamed(
+      passwordUpdate,
+      arguments: {
+        'memberBloc': memberBloc,
       },
     );
   }

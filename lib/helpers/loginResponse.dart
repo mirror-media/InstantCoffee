@@ -15,6 +15,8 @@ class LoginResponse<T> {
 
   LoginResponse.appleLoading(this.message) : status = Status.AppleLoading;
 
+  LoginResponse.fetchSignInMethodsForEmailLoading(this.message) : status = Status.FetchSignInMethodsForEmailLoading;
+
   LoginResponse.completed(this.data) : status = Status.Completed;
 
   LoginResponse.loginError(this.message) : status = Status.LoginError;
@@ -33,6 +35,7 @@ enum Status {
   FacebookLoading,
   GoogleLoading,
   AppleLoading,
+  FetchSignInMethodsForEmailLoading,
   Completed,
   LoginError,
   // return Error when fetching member data fail

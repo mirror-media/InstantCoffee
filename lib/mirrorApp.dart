@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
@@ -22,6 +23,42 @@ class _MirrorAppState extends State<MirrorApp> {
   OnBoardingBloc _onBoardingBloc;
 
   bool _isUpdateAvailable = false;
+  
+  // It cant trigger on iOS, cuz AppsFlyer's code on AppDelegate.swift break this feature.
+  // The iOS DynamicLinks method will implement in initialAppsFlyer function.
+  Future<void> initDynamicLinks() async {
+    FirebaseDynamicLinks.instance.onLink(
+      onSuccess: (PendingDynamicLinkData dynamicLink) async {
+        final Uri deepLink = dynamicLink?.link;
+
+        if (deepLink != null && 
+          deepLink.path == '/__/auth/action' && 
+          deepLink.queryParameters['mode'] == 'resetPassword') {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+          RouteGenerator.navigateToPasswordReset(
+            context, 
+            code: deepLink.queryParameters['oobCode'],
+          );
+        }
+      },
+      onError: (OnLinkErrorException e) async {
+        print('onLinkError');
+        print(e.message);
+      }
+    );
+    
+    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri deepLink = data?.link;
+
+    if (deepLink != null && 
+      deepLink.path == '/__/auth/action' && 
+      deepLink.queryParameters['mode'] == 'resetPassword') {
+      RouteGenerator.navigateToPasswordReset(
+        context, 
+        code: deepLink.queryParameters['oobCode'],
+      );
+    }
+  }
 
   @override
   void initState() {
