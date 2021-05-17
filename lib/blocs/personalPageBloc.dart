@@ -20,6 +20,8 @@ class PersonalPageBloc {
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+  bool _needLoadingMore = true;
+  bool get needLoadingMore => _needLoadingMore;
 
   StreamController _categoryController;
   StreamSink<ApiResponse<CategoryList>> get categorySink =>
@@ -97,12 +99,13 @@ class PersonalPageBloc {
 
     try {
       List<String> subscriptionIdStringList = categoryList.getSubscriptionIdStringList;
-      
       if(subscriptionIdStringList.length == 0) {
         _recordList.clear();
       } else {
         String categoryListJson = json.encode(subscriptionIdStringList);
         RecordList latests = await _personalSubscriptionService.fetchRecordList(categoryListJson, page: page);
+        _needLoadingMore = latests.length != 0;
+
         if (page == 1) {
           _recordList.clear();
         }
@@ -133,7 +136,7 @@ class PersonalPageBloc {
   }
 
   loadingMore(int index) {
-    if(!_isLoading && index == _recordList.length - 5) {
+    if(_needLoadingMore && !_isLoading && index == _recordList.length - 5) {
       fetchSubscriptionList(_categoryList, page: _personalSubscriptionService.nextPage());
     }
   }
