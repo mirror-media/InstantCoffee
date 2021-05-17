@@ -32,6 +32,8 @@ class SearchPageBloc {
   RecordList get searchList => _searchList;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+  bool _needLoadingMore = true;
+  bool get needLoadingMore => _needLoadingMore;
   
   SearchService _searchService;
   StreamController _searchController;
@@ -108,6 +110,7 @@ class SearchPageBloc {
 
     try {
       RecordList recordList = await _searchService.search(keyword, sectionId: initialTargetSection.key, page: _searchService.page);
+      _needLoadingMore = recordList.length != 0;
       if(page == 1) {
         _searchService.initialPage();
         _searchList.clear();
@@ -125,7 +128,7 @@ class SearchPageBloc {
   }
 
   loadingMore(String keyword, int index) {
-    if(!_isLoading && index == _searchList.length - 5) {
+    if(_needLoadingMore && !_isLoading && index == _searchList.length - 5) {
       search(keyword, page: _searchService.nextPage());
     }
   }
