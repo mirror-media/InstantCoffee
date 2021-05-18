@@ -25,6 +25,22 @@ const Map<String, int> sectionColorMaps = {
   'external': 0xffFB9D18,
 };
 
+
+/// assets
+const String hamiPng = 'assets/image/magazine/hami.png';
+const String konoPng = 'assets/image/magazine/kono.png';
+const String myBookPng = 'assets/image/magazine/my_book.png';
+const String pubuPng = 'assets/image/magazine/pubu.png';
+const String readmooPng = 'assets/image/magazine/readmoo.png';
+
+// online magazine URL
+const String hamiMagazineURL = 'https://bookstore.emome.net/Searchs/finish/keyword:%E9%8F%A1%E9%80%B1%E5%88%8A';
+const String myBookMagazineURL = 'https://mybook.taiwanmobile.com/search?publisher=%E9%8F%A1%E9%80%B1%E5%88%8A';
+const String pubuMagazineURL = 'https://www.pubu.com.tw/magazine-list/%E9%8F%A1%E9%80%B1%E5%88%8A-773';
+const String readmooMagazineURL = 'https://readmoo.com/mag/248?header_v2_subject_category';
+const String konoMagazineAURL = 'https://www.thekono.com/magazines/mirrormedia_a';
+const String konoMagazineBURL = 'https://www.thekono.com/magazines/mirrormedia_b';
+
 const bool isTabContentAdsActivated = true;
 const bool isListeningTabContentAdsActivated = true;
 // AT index in tab content(carousel)

@@ -166,6 +166,12 @@ flutter:
     - assets/data/androidTestStoryAd.json
     - assets/data/androidDevStoryAd.json
     - assets/data/androidStoryAd.json
+    # magazine image
+    - assets/image/magazine/hami.png
+    - assets/image/magazine/kono.png
+    - assets/image/magazine/my_book.png
+    - assets/image/magazine/pubu.png
+    - assets/image/magazine/readmoo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
