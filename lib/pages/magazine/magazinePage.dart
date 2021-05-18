@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/magazine/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/pages/magazine/magazineWidget.dart';
+import 'package:readr_app/pages/magazine/onlineMagazineWidget.dart';
 import 'package:readr_app/services/magazineService.dart';
 
 class MagazinePage extends StatelessWidget {
@@ -16,6 +17,7 @@ class MagazinePage extends StatelessWidget {
             create: (context) => MagazineBloc(magazineRepos: MagazineServices()),
             child: MagazineWidget(),
           ),
+          OnlineMagazineWidget(),
         ],
       ),
     );
