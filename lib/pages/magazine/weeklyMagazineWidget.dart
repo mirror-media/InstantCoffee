@@ -11,7 +11,10 @@ class WeeklyMagazineWidget extends StatefulWidget {
   _WeeklyMagazineWidgetState createState() => _WeeklyMagazineWidgetState();
 }
 
-class _WeeklyMagazineWidgetState extends State<WeeklyMagazineWidget> {
+class _WeeklyMagazineWidgetState extends State<WeeklyMagazineWidget> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   void initState() {
     _fetchMagazineListByWeeklyType();
@@ -26,6 +29,7 @@ class _WeeklyMagazineWidgetState extends State<WeeklyMagazineWidget> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return BlocBuilder<MagazineBloc, MagazineState>(
       builder: (BuildContext context, MagazineState state) {
         if (state is MagazineError) {
