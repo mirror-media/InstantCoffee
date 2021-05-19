@@ -107,7 +107,9 @@ class _StoryWidget extends State<StoryWidget> {
                       _buildRelatedWidget(context, story.relatedStory),
                       SizedBox(height: 16),
                       _buildMoreContentWidget(),
-                      SizedBox(height: 16),
+                      SizedBox(height: 24),
+                      _buildQuoteWarningText(),
+                      SizedBox(height: 24),
                       _downloadMagazinesWidget(),
                       SizedBox(height: 24),
                       if(isAdsActivated)
@@ -650,6 +652,19 @@ class _StoryWidget extends State<StoryWidget> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
       child: paragraphFormat.parseTheTextToHtmlWidget(moreContentHtml, null, fontSize: 18),
+    );
+  }
+
+  Widget _buildQuoteWarningText() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+      child: Text(
+        '本新聞文字、照片、影片專供鏡週刊會員閱覽，未經鏡週刊授權，任何媒體、社群網站、論壇等均不得引用、改寫、轉貼，以免訟累。',
+        style: TextStyle(
+          color: Colors.grey[600],
+          fontSize: 14,
+        ),
+      ),
     );
   }
 
