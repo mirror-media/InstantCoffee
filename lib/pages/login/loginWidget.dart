@@ -33,7 +33,7 @@ class _LoginWidgetState extends State<LoginWidget> {
         }
         if (state is LoginFail) {
           final error = state.error;
-          print('EmailLoginError: ${error.message}');
+          print('LoginError: ${error.message}');
           return LoginErrorWidget();
         }
         if (state is LoginSuccess) {
