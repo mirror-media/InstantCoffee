@@ -4,17 +4,12 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/login/states.dart';
-import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/widgets/memberLoginPolicy.dart';
 
 class LoginForm extends StatefulWidget {
   final LoginState state;
-  final String routeName;
-  final Object routeArguments;
   LoginForm({
     @required this.state,
-    this.routeName = RouteGenerator.magazine,
-    this.routeArguments,
   });
 
   @override
@@ -22,11 +17,10 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  _signInWithGoogle(String routeName, Object routeArguments) async {
+  _signInWithGoogle() async {
     context.read<LoginBloc>().add(
       SignInWithGoogle(
         context,
-        routeName: routeName, routeArguments: routeArguments
       )
     );
   }
@@ -66,7 +60,7 @@ class _LoginFormState extends State<LoginForm> {
                 'assets/image/google_icon.png',
                 '使用 Google 登入',
                 state is LoginInitState
-                ? () => _signInWithGoogle(widget.routeName, widget.routeArguments)
+                ? () => _signInWithGoogle()
                 : null,
               ),
             ),

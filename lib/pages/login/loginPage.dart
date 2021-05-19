@@ -19,11 +19,12 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       appBar: _buildBar(context),
       body: BlocProvider(
-        create: (context) => LoginBloc(loginRepos: LoginServices()),
-        child: LoginWidget(
+        create: (context) => LoginBloc(
+          loginRepos: LoginServices(),
           routeName: routeName,
           routeArguments: routeArguments,
-        )
+        ),
+        child: LoginWidget()
       ),
     );
   }

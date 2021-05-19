@@ -11,7 +11,11 @@ import 'package:readr_app/services/loginService.dart';
 import 'package:readr_app/services/memberService.dart';
 
 abstract class LoginEvents{
-  Stream<LoginState> run(LoginRepos loginRepos);
+  Stream<LoginState> run(
+    LoginRepos loginRepos,
+    String routeName,
+    Object routeArguments,
+  );
   Stream<LoginState> handleFirebaseLogin(
     BuildContext context,
     String routeName,
@@ -89,7 +93,11 @@ class CheckIsLoginOrNot extends LoginEvents {
   String toString() => 'CheckIsLoginOrNot';
 
   @override
-  Stream<LoginState> run(LoginRepos loginRepos) async*{
+  Stream<LoginState> run(
+    LoginRepos loginRepos,
+    String routeName,
+    Object routeArguments,
+  ) async*{
     print(this.toString());
     if(_auth.currentUser == null) {
       yield LoginInitState();
@@ -114,21 +122,19 @@ class CheckIsLoginOrNot extends LoginEvents {
 
 class SignInWithGoogle extends LoginEvents {
   final BuildContext context;
-  final String routeName;
-  final Object routeArguments;
   SignInWithGoogle(
     this.context,
-    {
-      this.routeName = RouteGenerator.magazine,
-      this.routeArguments,
-    }
   );
   
   @override
   String toString() => 'SignInWithGoogle';
 
   @override
-  Stream<LoginState> run(LoginRepos loginRepos) async*{
+  Stream<LoginState> run(
+    LoginRepos loginRepos,
+    String routeName,
+    Object routeArguments,
+  ) async*{
     print(this.toString());
     try{
       yield GoogleLoading();

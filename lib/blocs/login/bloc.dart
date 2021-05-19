@@ -5,11 +5,21 @@ import 'package:readr_app/services/loginService.dart';
 
 class LoginBloc extends Bloc<LoginEvents, LoginState> {
   final LoginRepos loginRepos;
+  final String routeName;
+  final Object routeArguments;
 
-  LoginBloc({this.loginRepos}) : super(LoadingUI());
+  LoginBloc({
+    this.loginRepos,
+    this.routeName,
+    this.routeArguments,
+  }) : super(LoadingUI());
 
   @override
   Stream<LoginState> mapEventToState(LoginEvents event) async* {
-    yield* event.run(loginRepos);
+    yield* event.run(
+      loginRepos,
+      routeName,
+      routeArguments,
+    );
   }
 }
