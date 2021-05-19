@@ -6,6 +6,7 @@ import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/magazineList.dart';
+import 'package:readr_app/pages/magazine/magazineItemWidget.dart';
 
 class WeeklyMagazineListWidget extends StatefulWidget {
   final MagazineList magazineList;
@@ -120,11 +121,8 @@ class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
                 padding: const EdgeInsets.only(
                 left: 24.0, right: 24,
               ),
-              child: _buildMagazine(
-                context,
-                width, 
-                24, 
-                widget.magazineList[index],
+              child: MagazineItemWidget(
+                magazine: widget.magazineList[index],
               ),
             );
           }
@@ -247,68 +245,6 @@ class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
           ),
         ),
       ]
-    );
-  }
-
-  Widget _buildMagazine(
-    BuildContext context,
-    double width, 
-    double padding, 
-    Magazine magazine,
-  ) {
-    double imageWidth = (width-padding*2)/4.5;
-    double imageHeight = imageWidth/0.75;
-
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 20.0, bottom: 20.0,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _displayMagazineImage(imageWidth, imageHeight, magazine),
-          SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _displayIssueAndPublishedDate(magazine),
-                SizedBox(height: 8.0),
-                RichText(
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
-                  text: TextSpan(
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20.0,
-                    ),
-                    text: magazine.title,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          InkWell(
-            child: Container(
-              height: imageHeight,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Icon(
-                    Icons.download_sharp,
-                    size: 36,
-                    color: appColor,
-                  ),
-                ),
-              ),
-            ),
-            onTap: () {
-              _navigateToMagazineBrowser(magazine);
-            },
-          ),
-        ],
-      ),
     );
   }
 

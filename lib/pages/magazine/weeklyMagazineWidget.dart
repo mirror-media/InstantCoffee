@@ -6,12 +6,15 @@ import 'package:readr_app/blocs/magazine/states.dart';
 import 'package:readr_app/models/magazineList.dart';
 import 'package:readr_app/pages/magazine/weeklyMagazineListWidget.dart';
 
-class MagazineWidget extends StatefulWidget {
+class WeeklyMagazineWidget extends StatefulWidget {
   @override
-  _MagazineWidgetState createState() => _MagazineWidgetState();
+  _WeeklyMagazineWidgetState createState() => _WeeklyMagazineWidgetState();
 }
 
-class _MagazineWidgetState extends State<MagazineWidget> {
+class _WeeklyMagazineWidgetState extends State<WeeklyMagazineWidget> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   void initState() {
     _fetchMagazineListByWeeklyType();
@@ -26,6 +29,7 @@ class _MagazineWidgetState extends State<MagazineWidget> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return BlocBuilder<MagazineBloc, MagazineState>(
       builder: (BuildContext context, MagazineState state) {
         if (state is MagazineError) {

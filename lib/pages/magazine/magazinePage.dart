@@ -2,22 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/magazine/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/pages/magazine/magazineWidget.dart';
+import 'package:readr_app/pages/magazine/specialMagazineWidget.dart';
+import 'package:readr_app/pages/magazine/weeklyMagazineWidget.dart';
 import 'package:readr_app/pages/magazine/onlineMagazineWidget.dart';
 import 'package:readr_app/services/magazineService.dart';
 
-class MagazinePage extends StatelessWidget {
+class MagazinePage extends StatefulWidget {
+  @override
+  _MagazinePageState createState() => _MagazinePageState();
+}
+
+class _MagazinePageState extends State<MagazinePage> {
+  ScrollController _listviewController = ScrollController();
+  
+  @override
+  void dispose() {
+    _listviewController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      body:  ListView(
+      body: ListView(
+        controller: _listviewController,
         children: [
           BlocProvider(
             create: (context) => MagazineBloc(magazineRepos: MagazineServices()),
-            child: MagazineWidget(),
+            child: WeeklyMagazineWidget(),
           ),
           OnlineMagazineWidget(),
+          BlocProvider(
+            create: (context) => MagazineBloc(magazineRepos: MagazineServices()),
+            child: SpecialMagazineWidget(
+              listviewController: _listviewController,
+            ),
+          ),
         ],
       ),
     );

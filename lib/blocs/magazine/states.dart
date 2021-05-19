@@ -6,6 +6,11 @@ class MagazineInitState extends MagazineState {}
 
 class MagazineLoading extends MagazineState {}
 
+class MagazineLoadingMore extends MagazineState {
+  final MagazineList magazineList;
+  MagazineLoadingMore({this.magazineList});
+}
+
 class MagazineLoaded extends MagazineState {
   final MagazineList magazineList;
   MagazineLoaded({this.magazineList});
