@@ -10,7 +10,7 @@ class LoginPage extends StatelessWidget {
   final String routeName;
   final Object routeArguments;
   LoginPage({
-    this.routeName = RouteGenerator.magazine,
+    this.routeName = RouteGenerator.login,
     this.routeArguments,
   });
 
