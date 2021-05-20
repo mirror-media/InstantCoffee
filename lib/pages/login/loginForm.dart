@@ -20,8 +20,8 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  GlobalKey<FormState> _formKey;
-  String _email;
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String _email = '';
 
   _signInWithGoogle() async {
     context.read<LoginBloc>().add(
@@ -280,79 +280,77 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   Widget _emailTextField(double width, {bool isEnabled = true}) {
-    return Container(
-      child: Form(
-        key: _formKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: TextFormField(
-          enabled: isEnabled,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-          ),
-          validator: validateEmail,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(3.0),
-              ),
-              borderSide: BorderSide(
-                color: Colors.grey,
-                width: 1,
-              ),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(3.0),
-              ),
-              borderSide: BorderSide(
-                color: Colors.grey,
-                width: 1,
-              ),
-            ),
-            disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(3.0),
-              ),
-              borderSide: BorderSide(
-                color: Colors.grey,
-                width: 1,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(3.0),
-              ),
-              borderSide: BorderSide(
-                color: Colors.grey,
-                width: 1,
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(3.0),
-              ),
-              borderSide: BorderSide(
-                color: Colors.grey,
-                width: 1,
-              ),
-            ),
-            labelText: '以 email 繼續',
-            labelStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 17,
-            ),
-            hintText: "name@example.com",
-            hintStyle: TextStyle(
-              color: Colors.grey,
-              fontSize: 17,
-            ),
-          ),
-          onChanged: (value) {
-            _email = value;
-          },
+    return Form(
+      key: _formKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      child: TextFormField(
+        enabled: isEnabled,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 16,
         ),
+        validator: validateEmail,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(3.0),
+            ),
+            borderSide: BorderSide(
+              color: Colors.grey,
+              width: 1,
+            ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(3.0),
+            ),
+            borderSide: BorderSide(
+              color: Colors.grey,
+              width: 1,
+            ),
+          ),
+          disabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(3.0),
+            ),
+            borderSide: BorderSide(
+              color: Colors.grey,
+              width: 1,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(3.0),
+            ),
+            borderSide: BorderSide(
+              color: Colors.grey,
+              width: 1,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(3.0),
+            ),
+            borderSide: BorderSide(
+              color: Colors.grey,
+              width: 1,
+            ),
+          ),
+          labelText: '以 email 繼續',
+          labelStyle: TextStyle(
+            color: Colors.black,
+            fontSize: 17,
+          ),
+          hintText: "name@example.com",
+          hintStyle: TextStyle(
+            color: Colors.grey,
+            fontSize: 17,
+          ),
+        ),
+        onChanged: (value) {
+          _email = value;
+        },
       ),
     );
   }
@@ -376,7 +374,11 @@ class _LoginFormState extends State<LoginForm> {
           ),
         ),
       ),
-      onTap: () => _fetchSignInMethodsForEmail(_email)
+      onTap: () {
+        if (_formKey.currentState.validate()) {
+          _fetchSignInMethodsForEmail(_email);
+        }
+      }
     );
   }
   
