@@ -11,7 +11,6 @@ import 'package:readr_app/pages/emailRegistered/emailRegisteredPage.dart';
 import 'package:readr_app/pages/login/loginPage.dart';
 import 'package:readr_app/pages/magazineBrowser.dart';
 import 'package:readr_app/pages/magazinePage.dart';
-import 'package:readr_app/pages/memberPage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/pages/passwordReset/passwordResetPage.dart';
 import 'package:readr_app/pages/passwordResetEmail/passwordResetEmailPage.dart';
@@ -27,7 +26,6 @@ import 'package:url_launcher/url_launcher.dart';
 class RouteGenerator {
   static const String root = '/';
   static const String search = '/search';
-  static const String member = '/member';
   static const String login = '/login';
   static const String emailRegistered = '/emailRegistered';
   static const String emailLogin = '/emailLogin';
@@ -56,22 +54,12 @@ class RouteGenerator {
           builder: (context) => SearchPage(),
           fullscreenDialog: true,
         );
-      case member:
-        Map args = settings.arguments;
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (context) => MemberPage(
-            routeName: args['routeName']??member,
-            routeArguments: args['routeArguments'],
-          ),
-          fullscreenDialog: true,
-        );
       case login:
         Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => LoginPage(
-            routeName: args['routeName']??member,
+            routeName: args['routeName']??login,
             routeArguments: args['routeArguments'],
           ),
           fullscreenDialog: true,
@@ -227,26 +215,10 @@ class RouteGenerator {
     Navigator.of(context).pushNamed(search);
   }
 
-  static void navigateToMember(
-    BuildContext context, 
-    {
-      String routeName = member,
-      Object routeArguments,
-    }
-  ) {
-    Navigator.of(context).pushNamed(
-      member,
-      arguments: {
-        'routeName': routeName,
-        'routeArguments': routeArguments,
-      },
-    );
-  }
-
   static void navigateToLogin(
     BuildContext context, 
     {
-      String routeName = member,
+      String routeName = login,
       Object routeArguments,
     }
   ) {
