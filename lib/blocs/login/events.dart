@@ -47,41 +47,83 @@ abstract class LoginEvents{
     );
     
     if(createSuccess) {
-      try {
-        Member member = await memberService.fetchMemberData(auth.currentUser.uid, token);
-
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            content: Text('登入成功')
-          )
-        );
-
-        yield LoginSuccess(
-          member: member,
-        );
-        if(routeName != RouteGenerator.member) {
-          if(routeName == RouteGenerator.story) {
-            Navigator.of(context).popUntil(ModalRoute.withName(RouteGenerator.root));
-          } else {
-            Navigator.of(context).pop();
-          }
-          
-          Navigator.of(context).pushNamed(
-            routeName,
-            arguments: routeArguments,
-          );
-        }
-      } catch(e) {
-        // fetch member fail
-        print(e.toString());
-        LoginFail(
-          error: UnknownException('Fetch member fail'),
-        );
-      }
+      yield* fetchMemberToLogin(
+        auth,
+        context,
+        routeName,
+        routeArguments,
+      );
     } else {
       await auth.signOut();
       LoginFail(
         error: UnknownException('Create member fail'),
+      );
+    }
+  }
+  Stream<LoginState> renderingUIAfterEmailLogin(
+    BuildContext context,
+    String routeName,
+    Object routeArguments,
+  ) async*{
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    if(auth.currentUser == null) {
+      yield LoginInitState();
+    } else {
+      yield* fetchMemberToLogin(
+        auth,
+        context,
+        routeName,
+        routeArguments,
+      );
+    }
+  }
+  Stream<LoginState> fetchMemberToLogin(
+    FirebaseAuth auth,
+    BuildContext context,
+    String routeName,
+    Object routeArguments,
+  ) async*{
+    try {
+      String token = await auth.currentUser.getIdToken();
+      MemberService memberService = MemberService();
+      Member member = await memberService.fetchMemberData(auth.currentUser.uid, token);
+      yield LoginSuccess(
+        member: member,
+      );
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text('登入成功')
+        )
+      );
+      navigateToRouteName(
+        context,
+        routeName,
+        routeArguments,
+      );
+    } catch(e) {
+      // fetch member fail
+      print(e.toString());
+      LoginFail(
+        error: UnknownException('Fetch member fail'),
+      );
+    }
+  }
+  navigateToRouteName(
+    BuildContext context,
+    String routeName,
+    Object routeArguments,
+  ) {
+    if(routeName != RouteGenerator.member) {
+      if(routeName == RouteGenerator.story) {
+        Navigator.of(context).popUntil(ModalRoute.withName(RouteGenerator.root));
+      } else {
+        Navigator.of(context).pop();
+      }
+      
+      Navigator.of(context).pushNamed(
+        routeName,
+        arguments: routeArguments,
       );
     }
   }
@@ -235,6 +277,70 @@ class SignInWithApple extends LoginEvents {
         routeArguments,
         frebaseLoginStatus,
       );
+    } on SocketException {
+      yield LoginFail(
+        error: NoInternetException('No Internet'),
+      );
+    } on HttpException {
+      yield LoginFail(
+        error: NoServiceFoundException('No Service Found'),
+      );
+    } on FormatException {
+      yield LoginFail(
+        error: InvalidFormatException('Invalid Response format'),
+      );
+    } catch (e) {
+      yield LoginFail(
+        error: UnknownException(e.toString()),
+      );
+    }
+  }
+}
+
+class FetchSignInMethodsForEmail extends LoginEvents {
+  final BuildContext context;
+  final String email;
+  FetchSignInMethodsForEmail(
+    this.context,
+    this.email,
+  );
+  
+  @override
+  String toString() => 'SignInWithApple';
+
+  @override
+  Stream<LoginState> run(
+    LoginRepos loginRepos,
+    String routeName,
+    Object routeArguments,
+  ) async*{
+    print(this.toString());
+    try{
+      yield FetchSignInMethodsForEmailLoading();
+      List<String> signInMethodsStringList = await loginRepos.fetchSignInMethodsForEmail(email);
+
+      if (signInMethodsStringList.contains('password')) {
+        await RouteGenerator.navigateToEmailLogin(context, email: email);
+        yield* renderingUIAfterEmailLogin(
+          context,
+          routeName,
+          routeArguments,
+        );
+      } else if(signInMethodsStringList.contains('emailLink')) {
+        await RouteGenerator.navigateToPasswordResetPrompt(context, email: email);
+        yield* renderingUIAfterEmailLogin(
+          context,
+          routeName,
+          routeArguments,
+        );
+      } else {
+        await RouteGenerator.navigateToEmailRegistered(context, email: email);
+        yield* renderingUIAfterEmailLogin(
+          context,
+          routeName,
+          routeArguments,
+        );
+      }
     } on SocketException {
       yield LoginFail(
         error: NoInternetException('No Internet'),

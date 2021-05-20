@@ -17,6 +17,8 @@ class FacebookLoading extends LoginState {}
 
 class AppleLoading extends LoginState {}
 
+class FetchSignInMethodsForEmailLoading extends LoginState {}
+
 class LoginFail extends LoginState {
   final error;
   LoginFail({this.error});
