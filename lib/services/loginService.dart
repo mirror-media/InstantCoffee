@@ -9,6 +9,7 @@ abstract class LoginRepos {
   Future<FirebaseLoginStatus> signInWithGoogle();
   Future<FirebaseLoginStatus> signInWithFacebook();
   Future<FirebaseLoginStatus> signInWithApple();
+  Future<List<String>> fetchSignInMethodsForEmail(String email);
 }
 
 class LoginServices implements LoginRepos{
@@ -139,5 +140,15 @@ class LoginServices implements LoginRepos{
       status: FirebaseStatus.Success,
       message: 'Apple sign in with firebase success',
     );
+  }
+
+  Future<List<String>> fetchSignInMethodsForEmail(String email) async {
+    List<String> resultList = List<String>();
+    try {
+      resultList = await _auth.fetchSignInMethodsForEmail(email);
+    } catch(onError) {
+      print('Fetch sign in methods for email: $onError');
+    }
+    return resultList;
   }
 }
