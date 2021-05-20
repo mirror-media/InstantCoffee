@@ -222,7 +222,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
         IconButton(
           icon: Icon(Icons.person),
           tooltip: 'Member',
-          onPressed: () => RouteGenerator.navigateToMember(context),
+          onPressed: () => RouteGenerator.navigateToLogin(context),
         ),
       ],
     );

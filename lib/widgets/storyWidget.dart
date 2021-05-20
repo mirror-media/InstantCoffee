@@ -510,7 +510,7 @@ class _StoryWidget extends State<StoryWidget> {
                     ),
                   ),
                 ),
-                onPressed: () => RouteGenerator.navigateToMember(
+                onPressed: () => RouteGenerator.navigateToLogin(
                   context,
                   routeName: RouteGenerator.story,
                   routeArguments: {
@@ -540,7 +540,7 @@ class _StoryWidget extends State<StoryWidget> {
                         decoration: TextDecoration.underline,
                       ),
                     ),
-                    onTap: () => RouteGenerator.navigateToMember(
+                    onTap: () => RouteGenerator.navigateToLogin(
                       context,
                       routeName: RouteGenerator.story,
                       routeArguments: {

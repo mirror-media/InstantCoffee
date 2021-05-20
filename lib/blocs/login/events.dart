@@ -114,7 +114,7 @@ abstract class LoginEvents{
     String routeName,
     Object routeArguments,
   ) {
-    if(routeName != RouteGenerator.member) {
+    if(routeName != RouteGenerator.login) {
       if(routeName == RouteGenerator.story) {
         Navigator.of(context).popUntil(ModalRoute.withName(RouteGenerator.root));
       } else {
