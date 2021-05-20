@@ -10,6 +10,7 @@ abstract class LoginRepos {
   Future<FirebaseLoginStatus> signInWithFacebook();
   Future<FirebaseLoginStatus> signInWithApple();
   Future<List<String>> fetchSignInMethodsForEmail(String email);
+  Future<void> signOut();
 }
 
 class LoginServices implements LoginRepos{
@@ -150,5 +151,25 @@ class LoginServices implements LoginRepos{
       print('Fetch sign in methods for email: $onError');
     }
     return resultList;
+  }
+
+  Future<void> signOut() async{
+    await _auth.signOut();
+  }
+
+  static bool checkIsEmailAndPasswordLogin() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    if(auth.currentUser == null) {
+      return false;
+    }
+
+    for(int i=0; i<auth.currentUser.providerData.length; i++) {
+      UserInfo userInfo =auth.currentUser.providerData[i];
+      if(userInfo.providerId == 'password') {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
