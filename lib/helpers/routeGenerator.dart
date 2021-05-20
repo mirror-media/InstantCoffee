@@ -10,7 +10,7 @@ import 'package:readr_app/pages/emailLogin/emailLoginPage.dart';
 import 'package:readr_app/pages/emailRegistered/emailRegisteredPage.dart';
 import 'package:readr_app/pages/login/loginPage.dart';
 import 'package:readr_app/pages/magazineBrowser.dart';
-import 'package:readr_app/pages/magazinePage.dart';
+import 'package:readr_app/pages/magazine/magazinePage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/pages/passwordReset/passwordResetPage.dart';
 import 'package:readr_app/pages/passwordResetEmail/passwordResetEmailPage.dart';

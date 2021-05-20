@@ -17,9 +17,9 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # iOS and android is the same version
 # dev version
-# version: 3.1.0+5
+# version: 3.1.3+6
 # prod version
-version: 3.1.2+325
+version: 3.1.3+327
 
 environment:
   sdk: ">=2.10.0 <3.0.0"
@@ -166,6 +166,12 @@ flutter:
     - assets/data/androidTestStoryAd.json
     - assets/data/androidDevStoryAd.json
     - assets/data/androidStoryAd.json
+    # magazine image
+    - assets/image/magazine/hami.png
+    - assets/image/magazine/kono.png
+    - assets/image/magazine/my_book.png
+    - assets/image/magazine/pubu.png
+    - assets/image/magazine/readmoo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

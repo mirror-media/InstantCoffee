@@ -4,6 +4,7 @@ import 'package:readr_app/models/customizedList.dart';
 import 'package:readr_app/models/magazine.dart';
 
 class MagazineList extends CustomizedList<Magazine> {
+  int total;
   // constructor
   MagazineList();
 

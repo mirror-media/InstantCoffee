@@ -9,7 +9,8 @@ import 'package:readr_app/models/recordList.dart';
 class ListeningTabContentBloc {
   String _endpoint = env.baseConfig.listeningWidgetApi;
   bool _isLoading = false;
-  
+  bool _needLoadingMore = true;
+
   ListeningTabContentService _listeningTabContentService;
 
   SectionAd _sectionAd;
@@ -49,7 +50,8 @@ class ListeningTabContentBloc {
     try {
       RecordList latests =
           await _listeningTabContentService.fetchRecordList(_endpoint);
-      
+      _needLoadingMore = latests.length != 0;
+
       if (_listeningTabContentService.page == 1) {
         _records.clear();
       }
@@ -73,7 +75,7 @@ class ListeningTabContentBloc {
   }
 
   loadingMore(int index) {
-    if(!_isLoading && index == _records.length - 5) {
+    if(_needLoadingMore && !_isLoading && index == _records.length - 5) {
       _listeningTabContentService.nextPage();
       _endpoint = _listeningTabContentService.getNextUrl;
       fetchRecordList();
