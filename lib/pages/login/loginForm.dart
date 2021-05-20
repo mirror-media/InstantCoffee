@@ -6,6 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/login/states.dart';
+import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/widgets/memberLoginPolicy.dart';
 
 class LoginForm extends StatefulWidget {
@@ -19,6 +20,9 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  GlobalKey<FormState> _formKey;
+  String _email;
+
   _signInWithGoogle() async {
     context.read<LoginBloc>().add(
       SignInWithGoogle(
@@ -39,6 +43,15 @@ class _LoginFormState extends State<LoginForm> {
     context.read<LoginBloc>().add(
       SignInWithApple(
         context,
+      )
+    );
+  }
+
+  _fetchSignInMethodsForEmail(String email) async {
+    context.read<LoginBloc>().add(
+      FetchSignInMethodsForEmail(
+        context,
+        email
       )
     );
   }
@@ -136,6 +149,34 @@ class _LoginFormState extends State<LoginForm> {
             ),
           SliverToBoxAdapter(child: SizedBox(height: 16)),
         ],
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+            child: _dividerBlock(),
+          ),
+        ),
+        SliverToBoxAdapter(child: SizedBox(height: 16)),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+            child: _emailTextField(width, isEnabled: widget.state is LoginInitState),
+          ),
+        ),
+        SliverToBoxAdapter(child: SizedBox(height: 16)),
+        if(!(widget.state is FetchSignInMethodsForEmailLoading))
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+              child: _emailLoginButton(),
+            ),
+          ),
+        if(widget.state is FetchSignInMethodsForEmailLoading)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+              child: _emailLoadingButton(),
+            ),
+          ),
         SliverFillRemaining(
           hasScrollBody: false,
           child: Align(
@@ -200,6 +241,153 @@ class _LoginFormState extends State<LoginForm> {
         borderRadius: BorderRadius.circular(5.0),
       ),
       child: SpinKitThreeBounce(color: Colors.grey, size: 35,),
+    );
+  }
+
+  Widget _dividerBlock() {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.only(right: 15.0),
+            child: Divider(
+              color: Colors.black,
+              height: 50,
+            )
+          ),
+        ),
+        Text("或"),
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.only(left: 15.0),
+            child: Divider(
+              color: Colors.black,
+              height: 50,
+            )
+          ),
+        ),
+      ],
+    );
+  }
+
+  String validateEmail(String value) {
+    Pattern pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(value) || value == null)
+      return 'Email 格式填寫錯誤';
+    else
+      return null;
+  }
+
+  Widget _emailTextField(double width, {bool isEnabled = true}) {
+    return Container(
+      child: Form(
+        key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: TextFormField(
+          enabled: isEnabled,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+          ),
+          validator: validateEmail,
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(3.0),
+              ),
+              borderSide: BorderSide(
+                color: Colors.grey,
+                width: 1,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(3.0),
+              ),
+              borderSide: BorderSide(
+                color: Colors.grey,
+                width: 1,
+              ),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(3.0),
+              ),
+              borderSide: BorderSide(
+                color: Colors.grey,
+                width: 1,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(3.0),
+              ),
+              borderSide: BorderSide(
+                color: Colors.grey,
+                width: 1,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(3.0),
+              ),
+              borderSide: BorderSide(
+                color: Colors.grey,
+                width: 1,
+              ),
+            ),
+            labelText: '以 email 繼續',
+            labelStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 17,
+            ),
+            hintText: "name@example.com",
+            hintStyle: TextStyle(
+              color: Colors.grey,
+              fontSize: 17,
+            ),
+          ),
+          onChanged: (value) {
+            _email = value;
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _emailLoginButton() {
+    return InkWell(
+      borderRadius: BorderRadius.circular(5.0),
+      child: Container(
+        height: 50.0,
+        decoration: BoxDecoration(
+          color: appColor,
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        child: Center(
+          child: Text(
+            '下一步',
+            style: TextStyle(
+              fontSize: 17,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+      onTap: () => _fetchSignInMethodsForEmail(_email)
+    );
+  }
+  
+  Widget _emailLoadingButton() {
+    return Container(
+      height: 50.0,
+      decoration: BoxDecoration(
+        color: appColor,
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+      child: SpinKitThreeBounce(color: Colors.white, size: 35,),
     );
   }
 }
