@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/login/states.dart';
+import 'package:readr_app/models/member.dart';
 import 'package:readr_app/pages/login/loginErrorWidget.dart';
 import 'package:readr_app/pages/login/loginForm.dart';
+import 'package:readr_app/pages/login/memberWidget.dart';
 
 class LoginWidget extends StatefulWidget {
   @override
@@ -37,7 +39,11 @@ class _LoginWidgetState extends State<LoginWidget> {
           return LoginErrorWidget();
         }
         if (state is LoginSuccess) {
-          return Center(child: Text('Login sucessfully.'));
+          Member member = state.member;
+
+          return MemberWidget(
+            member: member,
+          );
         }
 
         // state is Init, Third Party Loading

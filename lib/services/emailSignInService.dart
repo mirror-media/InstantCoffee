@@ -131,7 +131,6 @@ class EmailSignInServices implements EmailSignInRepos{
   Future<bool> updatePassword(String newPassword) async {
     try{
       await _auth.currentUser.updatePassword(newPassword);
-      await _auth.signOut();
     } catch(onError) {
       print('Error update password $onError');
       return false;
