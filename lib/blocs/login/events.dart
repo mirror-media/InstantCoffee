@@ -360,3 +360,38 @@ class FetchSignInMethodsForEmail extends LoginEvents {
     }
   }
 }
+
+class SignOut extends LoginEvents {
+  @override
+  String toString() => 'SignOut';
+
+  @override
+  Stream<LoginState> run(
+    LoginRepos loginRepos,
+    String routeName,
+    Object routeArguments,
+  ) async*{
+    print(this.toString());
+    try{
+      yield LoadingUI();
+      await loginRepos.signOut();
+      yield LoginInitState();
+    } on SocketException {
+      yield LoginFail(
+        error: NoInternetException('No Internet'),
+      );
+    } on HttpException {
+      yield LoginFail(
+        error: NoServiceFoundException('No Service Found'),
+      );
+    } on FormatException {
+      yield LoginFail(
+        error: InvalidFormatException('Invalid Response format'),
+      );
+    } catch (e) {
+      yield LoginFail(
+        error: UnknownException(e.toString()),
+      );
+    }
+  }
+}
