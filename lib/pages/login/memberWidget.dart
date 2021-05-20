@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:readr_app/blocs/loginBLoc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/login/bloc.dart';
+import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/memberBloc.dart';
-import 'package:readr_app/helpers/loginResponse.dart' as loginStatus;
 import 'package:readr_app/helpers/memberResponse.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/member.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:readr_app/services/loginService.dart';
 
 class MemberWidget extends StatefulWidget {
-  final LoginBloc loginBloc;
   final Member member;
   MemberWidget({
-    @required this.loginBloc,
     @required this.member,
   });
 
@@ -26,6 +26,12 @@ class _MemberWidgetState extends State<MemberWidget> {
   void initState() {
     _memberBloc = MemberBloc();
     super.initState();
+  }
+
+  _signOut() async {
+    context.read<LoginBloc>().add(
+      SignOut()
+    );
   }
 
   @override
@@ -193,7 +199,7 @@ class _MemberWidgetState extends State<MemberWidget> {
                   ),
                 ),
 
-                if(widget.loginBloc.checkIsEmailAndPasswordLogin())
+                if(LoginServices.checkIsEmailAndPasswordLogin())
                 ...[
                   InkWell(
                     child: Padding(
@@ -211,9 +217,7 @@ class _MemberWidgetState extends State<MemberWidget> {
                     onTap: () async{
                       await RouteGenerator.navigateToPasswordUpdate(context, _memberBloc);
                       if(_memberBloc.passwordUpdateSuccess) {
-                        if(widget.loginBloc.auth.currentUser == null) {
-                          widget.loginBloc.loginSinkToAdd(loginStatus.LoginResponse.needToLogin('Waiting for login'));
-                        } 
+                        _signOut();
                       } else {
                         _memberBloc.sinkToAdd(MemberResponse.savingError(member, 'error'));
                         await Future.delayed(Duration(seconds: 1));
@@ -289,7 +293,7 @@ class _MemberWidgetState extends State<MemberWidget> {
                             FlatButton(
                               child: Text('確認'),
                                 onPressed: () async{
-                                  widget.loginBloc.signOut();
+                                  _signOut();
                                   Navigator.of(context).pop();
                                 }
                             )

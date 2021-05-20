@@ -8,9 +8,9 @@ import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/member.dart';
 import 'package:readr_app/pages/emailLogin/emailLoginPage.dart';
 import 'package:readr_app/pages/emailRegistered/emailRegisteredPage.dart';
-import 'package:readr_app/pages/magazine/magazinePage.dart';
+import 'package:readr_app/pages/login/loginPage.dart';
 import 'package:readr_app/pages/magazineBrowser.dart';
-import 'package:readr_app/pages/memberPage.dart';
+import 'package:readr_app/pages/magazine/magazinePage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/pages/passwordReset/passwordResetPage.dart';
 import 'package:readr_app/pages/passwordResetEmail/passwordResetEmailPage.dart';
@@ -26,7 +26,7 @@ import 'package:url_launcher/url_launcher.dart';
 class RouteGenerator {
   static const String root = '/';
   static const String search = '/search';
-  static const String member = '/member';
+  static const String login = '/login';
   static const String emailRegistered = '/emailRegistered';
   static const String emailLogin = '/emailLogin';
   static const String passwordResetPrompt = '/passwordResetPrompt';
@@ -54,12 +54,12 @@ class RouteGenerator {
           builder: (context) => SearchPage(),
           fullscreenDialog: true,
         );
-      case member:
+      case login:
         Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => MemberPage(
-            routeName: args['routeName']??member,
+          builder: (context) => LoginPage(
+            routeName: args['routeName']??login,
             routeArguments: args['routeArguments'],
           ),
           fullscreenDialog: true,
@@ -215,15 +215,15 @@ class RouteGenerator {
     Navigator.of(context).pushNamed(search);
   }
 
-  static void navigateToMember(
+  static void navigateToLogin(
     BuildContext context, 
     {
-      String routeName = member,
+      String routeName = login,
       Object routeArguments,
     }
   ) {
     Navigator.of(context).pushNamed(
-      member,
+      login,
       arguments: {
         'routeName': routeName,
         'routeArguments': routeArguments,
