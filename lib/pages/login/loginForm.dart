@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -28,6 +30,14 @@ class _LoginFormState extends State<LoginForm> {
   _signInWithFacebook() async {
     context.read<LoginBloc>().add(
       SignInWithFacebook(
+        context,
+      )
+    );
+  }
+
+  _signInWithApple() async {
+    context.read<LoginBloc>().add(
+      SignInWithApple(
         context,
       )
     );
@@ -101,6 +111,31 @@ class _LoginFormState extends State<LoginForm> {
               child: _thirdPartyLoadingButton(),
             ),
           ),
+        SliverToBoxAdapter(child: SizedBox(height: 16)),
+        if(Platform.isIOS)
+        ...[
+          if(!(widget.state is AppleLoading))
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                child: _thirdPartyLoginButton(
+                  'assets/image/apple_icon.png', 
+                  '使用 Apple 登入', 
+                  state is LoginInitState
+                  ? () => _signInWithApple()
+                  : null,
+                ),
+              ),
+            ),
+          if(widget.state is AppleLoading)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                child: _thirdPartyLoadingButton(),
+              ),
+            ),
+          SliverToBoxAdapter(child: SizedBox(height: 16)),
+        ],
         SliverFillRemaining(
           hasScrollBody: false,
           child: Align(
