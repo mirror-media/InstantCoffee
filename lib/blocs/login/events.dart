@@ -164,3 +164,48 @@ class SignInWithGoogle extends LoginEvents {
     }
   }
 }
+
+class SignInWithFacebook extends LoginEvents {
+  final BuildContext context;
+  SignInWithFacebook(
+    this.context,
+  );
+  
+  @override
+  String toString() => 'SignInWithFacebook';
+
+  @override
+  Stream<LoginState> run(
+    LoginRepos loginRepos,
+    String routeName,
+    Object routeArguments,
+  ) async*{
+    print(this.toString());
+    try{
+      yield FacebookLoading();
+      FirebaseLoginStatus frebaseLoginStatus = await loginRepos.signInWithFacebook();
+      yield* handleFirebaseLogin(
+        context, 
+        routeName, 
+        routeArguments,
+        frebaseLoginStatus,
+      );
+    } on SocketException {
+      yield LoginFail(
+        error: NoInternetException('No Internet'),
+      );
+    } on HttpException {
+      yield LoginFail(
+        error: NoServiceFoundException('No Service Found'),
+      );
+    } on FormatException {
+      yield LoginFail(
+        error: InvalidFormatException('Invalid Response format'),
+      );
+    } catch (e) {
+      yield LoginFail(
+        error: UnknownException(e.toString()),
+      );
+    }
+  }
+}
