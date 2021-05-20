@@ -25,6 +25,14 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
+  _signInWithFacebook() async {
+    context.read<LoginBloc>().add(
+      SignInWithFacebook(
+        context,
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -66,6 +74,27 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
         if(widget.state is GoogleLoading)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+              child: _thirdPartyLoadingButton(),
+            ),
+          ),
+        SliverToBoxAdapter(child: SizedBox(height: 16)),
+        if(!(widget.state is FacebookLoading))
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+              child: _thirdPartyLoginButton(
+                'assets/image/facebook_icon.png',
+                '使用 Facebook 登入',
+                state is LoginInitState
+                ? () => _signInWithFacebook()
+                : null,
+              ),
+            ),
+          ),
+        if(widget.state is FacebookLoading)
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.only(left: 24.0, right: 24.0),
