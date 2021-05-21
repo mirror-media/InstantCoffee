@@ -24,6 +24,7 @@ class _MagazinePageState extends State<MagazinePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: _buildBar(context),
       body: ListView(
         controller: _listviewController,
