@@ -167,6 +167,7 @@ flutter:
     - assets/data/androidDevStoryAd.json
     - assets/data/androidStoryAd.json
     # magazine image
+    - assets/image/magazine/magazineDownloadIcon.png
     - assets/image/magazine/hami.png
     - assets/image/magazine/kono.png
     - assets/image/magazine/my_book.png

@@ -55,10 +55,15 @@ class MagazineItemWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Center(
-                  child: Icon(
-                    Icons.download_sharp,
-                    size: 36,
-                    color: appColor,
+                  child: Ink(
+                    width: 31,
+                    height: 33,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(magazineDownloadIconPng),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
                 ),
               ),
