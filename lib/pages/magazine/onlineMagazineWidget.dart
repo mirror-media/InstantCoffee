@@ -73,6 +73,7 @@ class OnlineMagazineWidget extends StatelessWidget {
             ],
           ),
         ),
+        SizedBox(height: 20),
       ],
     );
   }
