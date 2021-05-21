@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/magazine/states.dart';
 import 'package:readr_app/models/magazineList.dart';
 import 'package:readr_app/pages/magazine/magazineItemWidget.dart';
+import 'package:readr_app/pages/magazine/magazineListLabel.dart';
 
 class SpecialMagazineListWidget extends StatefulWidget {
   final MagazineList magazineList;
@@ -71,13 +72,19 @@ class _SpecialMagazineListWidgetState extends State<SpecialMagazineListWidget> {
             ]
           );
         }
-        return Padding(
-          padding: const EdgeInsets.only(
-            left: 24.0, right: 24,
-          ),
-          child: MagazineItemWidget(
-            magazine: widget.magazineList[index],
-          ),
+        return Column(
+          children: [
+            if(index == 0)
+              MagazineListLabel(label: '特刊'),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 24.0, right: 24,
+              ),
+              child: MagazineItemWidget(
+                magazine: widget.magazineList[index],
+              ),
+            ),
+          ],
         );
       }
     );

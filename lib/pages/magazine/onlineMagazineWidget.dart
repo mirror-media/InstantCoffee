@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/pages/magazine/magazineListLabel.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OnlineMagazineWidget extends StatelessWidget {
@@ -11,20 +12,7 @@ class OnlineMagazineWidget extends StatelessWidget {
 
     return Column(
       children: [
-        Container(
-          width: width,
-          color: Color(0xffE5E5E5),
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 36.0, bottom: 12.0,
-              left: 24.0, right: 24.0
-            ),
-            child: Text(
-              '購買線上雜誌',
-              style: TextStyle(fontSize: 15),
-            ),
-          ),
-        ),
+        MagazineListLabel(label: '購買線上雜誌'),
         SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.only(
@@ -85,6 +73,7 @@ class OnlineMagazineWidget extends StatelessWidget {
             ],
           ),
         ),
+        SizedBox(height: 20),
       ],
     );
   }
