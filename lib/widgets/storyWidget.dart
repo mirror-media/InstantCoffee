@@ -108,8 +108,11 @@ class _StoryWidget extends State<StoryWidget> {
                       SizedBox(height: 16),
                       _buildMoreContentWidget(),
                       SizedBox(height: 24),
-                      _buildQuoteWarningText(),
-                      SizedBox(height: 24),
+                      if(isMember)
+                      ...[
+                        _buildQuoteWarningText(),
+                        SizedBox(height: 24),
+                      ],
                       _downloadMagazinesWidget(),
                       SizedBox(height: 24),
                       if(isAdsActivated)
