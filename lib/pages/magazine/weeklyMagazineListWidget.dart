@@ -7,6 +7,7 @@ import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/magazineList.dart';
 import 'package:readr_app/pages/magazine/magazineItemWidget.dart';
+import 'package:readr_app/pages/magazine/magazineListLabel.dart';
 
 class WeeklyMagazineListWidget extends StatefulWidget {
   final MagazineList magazineList;
@@ -50,20 +51,7 @@ class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
     return Column(
       children: [
         if(_currentMagazineList.length > 0)
-          Container(
-            width: width,
-            color: Color(0xffE5E5E5),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 36.0, bottom: 12.0,
-                left: 24.0, right: 24.0
-              ),
-              child: Text(
-                '當期雜誌',
-                style: TextStyle(fontSize: 15),
-              ),
-            ),
-          ),
+          MagazineListLabel(label: '當期雜誌'),
         SizedBox(height: 16),
         ListView.separated(
           shrinkWrap: true,
@@ -92,20 +80,7 @@ class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
         ),
         SizedBox(height: 16),
         if(_remainMagazineList.length > 0)
-          Container(
-            width: width,
-            color: Color(0xffE5E5E5),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 36.0, bottom: 12.0,
-                left: 24.0, right: 24.0
-              ),
-              child: Text(
-                '所有期數',
-                style: TextStyle(fontSize: 15),
-              ),
-            ),
-          ),
+          MagazineListLabel(label: '近期雜誌',),
         ListView.separated(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
