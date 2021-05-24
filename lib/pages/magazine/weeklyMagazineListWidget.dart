@@ -73,7 +73,7 @@ class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
                 context,
                 width, 
                 24, 
-                widget.magazineList[index]
+                _currentMagazineList[index]
               ),
             );
           }
@@ -97,7 +97,7 @@ class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
                 left: 24.0, right: 24,
               ),
               child: MagazineItemWidget(
-                magazine: widget.magazineList[index],
+                magazine: _remainMagazineList[index],
               ),
             );
           }
