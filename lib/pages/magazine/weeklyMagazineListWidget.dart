@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/magazineList.dart';
@@ -103,36 +102,6 @@ class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
           }
         ),
       ],
-    );
-  }
-
-  Widget _displayIssueAndPublishedDate(Magazine magazine) {
-    DateTimeFormat dateTimeFormat = DateTimeFormat();
-    String publishedDate = dateTimeFormat.changeDatabaseStringToDisplayString(
-      magazine.publishedDate, 
-      'yyyy/MM/dd'
-    );
-
-    return Row(
-      children: [
-        Flexible(
-          fit: FlexFit.loose,
-          child: Text(
-            magazine.issue,
-            style: TextStyle(
-              fontSize: 13,
-              color: appColor,
-            ),
-            softWrap: false,
-            overflow: TextOverflow.fade,
-          ),
-        ),
-        SizedBox(width: 8),
-        Text(
-          publishedDate,
-          style: TextStyle(fontSize: 13),
-        ),
-      ]
     );
   }
 
