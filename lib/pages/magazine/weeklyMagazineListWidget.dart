@@ -178,8 +178,17 @@ class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _displayIssueAndPublishedDate(magazine),
+                    Text(
+                      magazine.issue,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: appColor,
+                      ),
+                      softWrap: false,
+                      overflow: TextOverflow.fade,
+                    ),
                     SizedBox(height: 8.0),
                     RichText(
                       overflow: TextOverflow.ellipsis,
