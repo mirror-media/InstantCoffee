@@ -19,6 +19,13 @@ class MagazineItemWidget extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     double imageWidth = (width-padding*2)/4.5;
     double imageHeight = imageWidth/0.75;
+
+    DateTimeFormat dateTimeFormat = DateTimeFormat();
+    String publishedDate = dateTimeFormat.changeDatabaseStringToDisplayString(
+      magazine.publishedDate, 
+      'yyyy/MM/dd'
+    );
+
     return Padding(
       padding: const EdgeInsets.only(
         top: 20.0, bottom: 20.0,
@@ -33,7 +40,20 @@ class MagazineItemWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _displayIssueAndPublishedDate(magazine),
+                Text(
+                  magazine.issue,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: appColor,
+                  ),
+                  softWrap: false,
+                  overflow: TextOverflow.fade,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  publishedDate,
+                  style: TextStyle(fontSize: 13),
+                ),
                 SizedBox(height: 8.0),
                 RichText(
                   overflow: TextOverflow.ellipsis,
@@ -49,61 +69,34 @@ class MagazineItemWidget extends StatelessWidget {
               ],
             ),
           ),
-          InkWell(
-            child: Container(
-              height: imageHeight,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Ink(
-                    width: 31,
-                    height: 33,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(magazineDownloadIconPng),
-                        fit: BoxFit.contain,
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            child: InkWell(
+              child: Container(
+                height: imageHeight,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Ink(
+                      width: 31,
+                      height: 33,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(magazineDownloadIconPng),
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
+              onTap: () {
+                _navigateToMagazineBrowser(context, magazine);
+              },
             ),
-            onTap: () {
-              _navigateToMagazineBrowser(context, magazine);
-            },
           ),
         ],
       ),
-    );
-  }
-  
-  Widget _displayIssueAndPublishedDate(Magazine magazine) {
-    DateTimeFormat dateTimeFormat = DateTimeFormat();
-    String publishedDate = dateTimeFormat.changeDatabaseStringToDisplayString(
-      magazine.publishedDate, 
-      'yyyy/MM/dd'
-    );
-
-    return Row(
-      children: [
-        Flexible(
-          fit: FlexFit.loose,
-          child: Text(
-            magazine.issue,
-            style: TextStyle(
-              fontSize: 13,
-              color: appColor,
-            ),
-            softWrap: false,
-            overflow: TextOverflow.fade,
-          ),
-        ),
-        SizedBox(width: 8),
-        Text(
-          publishedDate,
-          style: TextStyle(fontSize: 13),
-        ),
-      ]
     );
   }
 
