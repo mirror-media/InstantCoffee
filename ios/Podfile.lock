@@ -7,10 +7,6 @@ PODS:
     - AppAuth/ExternalUserAgent (= 1.4.0)
   - AppAuth/Core (1.4.0)
   - AppAuth/ExternalUserAgent (1.4.0)
-  - appsflyer_sdk (6.0.5):
-    - AppsFlyerFramework (= 6.0.5)
-    - Flutter
-  - AppsFlyerFramework (6.0.5)
   - audioplayers (0.0.1):
     - Flutter
   - device_info (0.0.1):
@@ -183,7 +179,6 @@ PODS:
 
 DEPENDENCIES:
   - admob_flutter (from `.symlinks/plugins/admob_flutter/ios`)
-  - appsflyer_sdk (from `.symlinks/plugins/appsflyer_sdk/ios`)
   - audioplayers (from `.symlinks/plugins/audioplayers/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
@@ -211,7 +206,6 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AppAuth
-    - AppsFlyerFramework
     - FBSDKCoreKit
     - FBSDKLoginKit
     - Firebase
@@ -239,8 +233,6 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   admob_flutter:
     :path: ".symlinks/plugins/admob_flutter/ios"
-  appsflyer_sdk:
-    :path: ".symlinks/plugins/appsflyer_sdk/ios"
   audioplayers:
     :path: ".symlinks/plugins/audioplayers/ios"
   device_info:
@@ -291,8 +283,6 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   admob_flutter: 370023e0bc3f49a44ba94f14009e0728bffe43e8
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
-  appsflyer_sdk: ae116aa17b55361c8a82712863a0becedc7bafd8
-  AppsFlyerFramework: 3ae29222e2cb7d11cd176c71c780542979eb0c08
   audioplayers: 84f968cea3f2deab00ec4f8ff53358b3c0b3992c
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   FBSDKCoreKit: 1d5acf7c9d7a2f92bb1a242dc60cae5b7adb91df

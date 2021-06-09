@@ -4,7 +4,6 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
-import 'package:readr_app/helpers/appsFlyerHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/onBoarding.dart';
 import 'package:readr_app/pages/homePage.dart';
@@ -15,8 +14,6 @@ class MirrorApp extends StatefulWidget {
 }
 
 class _MirrorAppState extends State<MirrorApp> {
-  AppsFlyerHelper _appsFlyerHelper;
-  
   GlobalKey _settingKey;
   AppUpgradeHelper _appUpgradeHelper;
   StreamController _configController;
@@ -62,8 +59,6 @@ class _MirrorAppState extends State<MirrorApp> {
 
   @override
   void initState() {
-    _appsFlyerHelper = AppsFlyerHelper();
-
     _settingKey = GlobalKey();
     _appUpgradeHelper = AppUpgradeHelper();
     _configController = StreamController<bool>();
@@ -78,8 +73,6 @@ class _MirrorAppState extends State<MirrorApp> {
 
     _onBoardingBloc.setOnBoardingHintList();
     await _onBoardingBloc.setOnBoardingFromStorage();
-
-    await _appsFlyerHelper.initialAppsFlyer(context);
     await initDynamicLinks();
     _configController.sink.add(true);
   }
