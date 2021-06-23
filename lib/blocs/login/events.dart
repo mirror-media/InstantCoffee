@@ -55,7 +55,7 @@ abstract class LoginEvents{
       );
     } else {
       await auth.signOut();
-      LoginFail(
+      yield LoginFail(
         error: UnknownException('Create member fail'),
       );
     }
@@ -104,7 +104,7 @@ abstract class LoginEvents{
     } catch(e) {
       // fetch member fail
       print(e.toString());
-      LoginFail(
+      yield LoginFail(
         error: UnknownException('Fetch member fail'),
       );
     }
@@ -154,7 +154,7 @@ class CheckIsLoginOrNot extends LoginEvents {
       } catch(e) {
         // fetch member fail
         print(e.toString());
-        LoginFail(
+        yield LoginFail(
           error: UnknownException('Fetch member fail'),
         );
       }
