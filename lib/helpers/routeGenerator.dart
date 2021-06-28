@@ -16,7 +16,7 @@ import 'package:readr_app/pages/passwordReset/passwordResetPage.dart';
 import 'package:readr_app/pages/passwordResetEmail/passwordResetEmailPage.dart';
 import 'package:readr_app/pages/passwordResetPrompt/passwordResetPromptPage.dart';
 import 'package:readr_app/pages/passwordUpdate/passwordUpdatePage.dart';
-import 'package:readr_app/pages/searchPage.dart';
+import 'package:readr_app/pages/search/searchPage.dart';
 import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/widgets/deleteMemberWidget.dart';
 import 'package:readr_app/widgets/editMemberProfile.dart';

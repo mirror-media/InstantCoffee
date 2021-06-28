@@ -4,6 +4,7 @@ import 'package:readr_app/models/customizedList.dart';
 import 'package:readr_app/models/record.dart';
 
 class RecordList extends CustomizedList<Record> {
+  int allRecordCount = 0;
   // constructor
   RecordList();
 
