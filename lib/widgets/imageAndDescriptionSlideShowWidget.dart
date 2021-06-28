@@ -94,9 +94,9 @@ class _ImageAndDescriptionSlideShowWidgetState
     var width = MediaQuery.of(context).size.width - 32;
 
     double textSize = 16;
-    double textHeight = 1.625;
-    double textRows = 2;
-    double height = width / theSmallestRatio + textHeight * textSize * textRows;
+    double textHeight = 1.4;
+    double textRows = 6;
+    double height = width / theSmallestRatio + 8 + textHeight * textSize * textRows;
 
     carouselRatio = width / height;
     options = CarouselOptions(
