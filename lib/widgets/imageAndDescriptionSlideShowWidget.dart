@@ -95,7 +95,7 @@ class _ImageAndDescriptionSlideShowWidgetState
 
     double textSize = 16;
     double textHeight = 1.4;
-    double textRows = 6;
+    double textRows = 4;
     double height = width / theSmallestRatio + 8 + textHeight * textSize * textRows;
 
     carouselRatio = width / height;
