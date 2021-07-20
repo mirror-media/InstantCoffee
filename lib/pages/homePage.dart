@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
@@ -41,6 +43,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
   /// tab controller
   int _initialTabIndex;
   TabController _tabController;
+  StreamController<Color> _tabColorController;
 
   List<GlobalKey> _tabKeys;
   List<Tab> _tabs;
@@ -89,7 +92,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
           child: Text(
             section.title,
             style: TextStyle(
-              fontWeight: FontWeight.bold, /*fontSize: 20.0*/
+              fontWeight: FontWeight.bold,
+              color: section.name == 'member'
+              ? Color(0xffDB1730)
+              : null,
             ),
           ),
         ),
@@ -115,13 +121,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
       }
     }
 
+    _tabColorController = StreamController<Color>();
+
     // set controller
     _tabController = TabController(
       vsync: this,
       length: sectionItems.length,
       initialIndex:
           _tabController == null ? _initialTabIndex : _tabController.index,
-    );
+    )..addListener(() { 
+      // when index is member
+      if (_tabController.index == 3) {
+        _tabColorController.sink.add(Color(0xffDB1730));
+      } else {
+        _tabColorController.sink.add(appColor);
+      }
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{  
       if(widget.onBoardingBloc.isOnBoarding && 
@@ -236,19 +251,27 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
           constraints: BoxConstraints(maxHeight: 150.0),
           child: Material(
             color: Color.fromARGB(255, 229, 229, 229),
-            child: TabBar(
-              isScrollable: true,
-              indicatorColor: appColor,
-              unselectedLabelColor: Colors.grey,
-              labelColor: appColor,
-              tabs: tabs.toList(),
-              controller: tabController,
-              onTap: (int index) {
-                if (_initialTabIndex == index) {
-                  _scrollToTop(index);
-                }
-                _initialTabIndex = index;
-              },
+            child: StreamBuilder<Color>(
+              initialData: appColor,
+              stream: _tabColorController.stream,
+              builder: (context, snapshot) {
+                Color tabBarColor = snapshot.data;
+
+                return TabBar(
+                  isScrollable: true,
+                  indicatorColor: tabBarColor,
+                  unselectedLabelColor: Colors.grey,
+                  labelColor: appColor,
+                  tabs: tabs.toList(),
+                  controller: tabController,
+                  onTap: (int index) {
+                    if (_initialTabIndex == index) {
+                      _scrollToTop(index);
+                    }
+                    _initialTabIndex = index;
+                  },
+                );
+              }
             ),
           ),
         ),
