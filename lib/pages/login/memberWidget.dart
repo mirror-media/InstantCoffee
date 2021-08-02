@@ -216,12 +216,14 @@ class _MemberWidgetState extends State<MemberWidget> {
                     ),
                     onTap: () async{
                       await RouteGenerator.navigateToPasswordUpdate(context, _memberBloc);
-                      if(_memberBloc.passwordUpdateSuccess) {
-                        _signOut();
-                      } else {
-                        _memberBloc.sinkToAdd(MemberResponse.savingError(member, 'error'));
-                        await Future.delayed(Duration(seconds: 1));
-                        _memberBloc.sinkToAdd(MemberResponse.completed(member));
+                      if(_memberBloc.passwordUpdateSuccess != null) {
+                        if(_memberBloc.passwordUpdateSuccess) {
+                          _signOut();
+                        } else {
+                          _memberBloc.sinkToAdd(MemberResponse.savingError(member, 'error'));
+                          await Future.delayed(Duration(seconds: 1));
+                          _memberBloc.sinkToAdd(MemberResponse.completed(member));
+                        }
                       }
                     },
                   ),

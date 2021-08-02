@@ -7,7 +7,7 @@ import 'package:readr_app/services/memberService.dart';
 
 class MemberBloc {
   FirebaseAuth auth;
-  bool passwordUpdateSuccess = true;
+  bool passwordUpdateSuccess;
 
   StreamController _memberController;
   StreamSink<MemberResponse<Member>> get memberSink => _memberController.sink;
