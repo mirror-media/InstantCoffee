@@ -5,6 +5,7 @@ import 'package:readr_app/blocs/passwordReset/bloc.dart';
 import 'package:readr_app/blocs/passwordReset/events.dart';
 import 'package:readr_app/blocs/passwordReset/states.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/pages/shared/passwordFormField.dart';
 import 'package:readr_app/pages/shared/passwordValidatorWidget.dart';
 
 class PasswordResetForm extends StatefulWidget {
@@ -20,7 +21,6 @@ class PasswordResetForm extends StatefulWidget {
 
 class _PasswordResetFormState extends State<PasswordResetForm> {
   final _passwordEditingController = TextEditingController();
-  bool _isHidden = true;
   bool _passwordIsValid = false;
 
   @override
@@ -43,12 +43,6 @@ class _PasswordResetFormState extends State<PasswordResetForm> {
 
   bool _isPasswordValid() {
     return _passwordEditingController.text != null && _passwordEditingController.text.length >= 6;
-  }
-
-  void _togglePasswordView() {
-    setState(() {
-      _isHidden = !_isHidden;
-    });
   }
 
   @override
@@ -76,7 +70,10 @@ class _PasswordResetFormState extends State<PasswordResetForm> {
         SizedBox(height: 24),
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: _passwordField(),
+          child: PasswordFormField(
+            title: '設定新密碼',
+            passwordEditingController: _passwordEditingController,
+          ),
         ),
         SizedBox(height: 8),
         Padding(
@@ -105,32 +102,6 @@ class _PasswordResetFormState extends State<PasswordResetForm> {
         ),
         SizedBox(height: 24),
       ],
-    );
-  }
-
-  Widget _passwordField() {
-    return Form(
-      child: TextFormField(
-        controller: _passwordEditingController,
-        obscureText: _isHidden,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 17,
-        ),
-        decoration: InputDecoration(
-          suffixIcon: IconButton(
-            onPressed: () => _togglePasswordView(),
-            icon: _isHidden 
-            ? Icon(Icons.visibility)
-            : Icon(Icons.visibility_off),
-          ),
-          labelText: '設定新密碼',
-          labelStyle: TextStyle(
-            color: Colors.black,
-            fontSize: 17,
-          ),
-        ),
-      ),
     );
   }
   
