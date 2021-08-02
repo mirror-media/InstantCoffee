@@ -6,6 +6,7 @@ import 'package:readr_app/blocs/emailRegistered/events.dart';
 import 'package:readr_app/blocs/emailRegistered/states.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/pages/shared/emailValidatorWidget.dart';
+import 'package:readr_app/pages/shared/passwordFormField.dart';
 import 'package:readr_app/pages/shared/passwordValidatorWidget.dart';
 import 'package:readr_app/widgets/memberLoginPolicy.dart';
 
@@ -28,7 +29,6 @@ class EmailRegisteredForm extends StatefulWidget {
 class _EmailRegisteredFormState extends State<EmailRegisteredForm> {
   TextEditingController _emailEditingController;
   TextEditingController _passwordEditingController;
-  bool _isHidden = true;
   bool _emailIsValid = false;
   bool _passwordIsValid = false;
 
@@ -71,12 +71,6 @@ class _EmailRegisteredFormState extends State<EmailRegisteredForm> {
     return _passwordEditingController.text != null && _passwordEditingController.text.length >= 6;
   }
 
-  void _togglePasswordView() {
-    setState(() {
-      _isHidden = !_isHidden;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
@@ -99,7 +93,10 @@ class _EmailRegisteredFormState extends State<EmailRegisteredForm> {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: _passwordField(),
+            child: PasswordFormField(
+              title: '設定密碼',
+              passwordEditingController: _passwordEditingController,
+            ),
           ),
         ),
         SliverToBoxAdapter(child: SizedBox(height: 8)),
@@ -159,32 +156,6 @@ class _EmailRegisteredFormState extends State<EmailRegisteredForm> {
         ),
         decoration: InputDecoration(
           labelText: 'Email',
-          labelStyle: TextStyle(
-            color: Colors.black,
-            fontSize: 17,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _passwordField() {
-    return Form(
-      child: TextFormField(
-        controller: _passwordEditingController,
-        obscureText: _isHidden,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 17,
-        ),
-        decoration: InputDecoration(
-          suffixIcon: IconButton(
-            onPressed: () => _togglePasswordView(),
-            icon: _isHidden 
-            ? Icon(Icons.visibility)
-            : Icon(Icons.visibility_off),
-          ),
-          labelText: '設定密碼',
           labelStyle: TextStyle(
             color: Colors.black,
             fontSize: 17,

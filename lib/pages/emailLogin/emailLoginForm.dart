@@ -6,6 +6,7 @@ import 'package:readr_app/blocs/emailLogin/events.dart';
 import 'package:readr_app/blocs/emailLogin/states.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
+import 'package:readr_app/pages/shared/passwordFormField.dart';
 import 'package:readr_app/pages/shared/passwordValidatorWidget.dart';
 
 class EmailLoginForm extends StatefulWidget {
@@ -24,7 +25,6 @@ class EmailLoginForm extends StatefulWidget {
 
 class _EmailLoginFormState extends State<EmailLoginForm> {
   TextEditingController _passwordEditingController;
-  bool _isHidden = true;
   bool _passwordIsValid = false;
 
   @override
@@ -50,12 +50,6 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
     return _passwordEditingController.text != null && _passwordEditingController.text.length >= 6;
   }
 
-  void _togglePasswordView() {
-    setState(() {
-      _isHidden = !_isHidden;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -63,7 +57,10 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
         SizedBox(height: 48),
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: _passwordField(),
+          child: PasswordFormField(
+            title: '密碼',
+            passwordEditingController: _passwordEditingController,
+          ),
         ),
         SizedBox(height: 8),
         Padding(
@@ -94,32 +91,6 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
         Center(child: _forgetPasswordButton()),
         SizedBox(height: 24),
       ],
-    );
-  }
-
-  Widget _passwordField() {
-    return Form(
-      child: TextFormField(
-        controller: _passwordEditingController,
-        obscureText: _isHidden,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 17,
-        ),
-        decoration: InputDecoration(
-          suffixIcon: IconButton(
-            onPressed: () => _togglePasswordView(),
-            icon: _isHidden 
-            ? Icon(Icons.visibility)
-            : Icon(Icons.visibility_off),
-          ),
-          labelText: '密碼',
-          labelStyle: TextStyle(
-            color: Colors.black,
-            fontSize: 17,
-          ),
-        ),
-      ),
     );
   }
   
