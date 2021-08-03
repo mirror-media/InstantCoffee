@@ -21,72 +21,61 @@ PODS:
     - FBSDKLoginKit/Login (= 5.15.1)
   - FBSDKLoginKit/Login (5.15.1):
     - FBSDKCoreKit (~> 5.0)
-  - Firebase/Auth (6.33.0):
+  - Firebase/Auth (8.3.0):
     - Firebase/CoreOnly
-    - FirebaseAuth (~> 6.9.2)
-  - Firebase/CoreOnly (6.33.0):
-    - FirebaseCore (= 6.10.3)
-  - Firebase/DynamicLinks (6.33.0):
+    - FirebaseAuth (~> 8.3.0)
+  - Firebase/CoreOnly (8.3.0):
+    - FirebaseCore (= 8.3.0)
+  - Firebase/DynamicLinks (8.3.0):
     - Firebase/CoreOnly
-    - FirebaseDynamicLinks (~> 4.3.1)
-  - Firebase/Messaging (6.33.0):
+    - FirebaseDynamicLinks (~> 8.3.0)
+  - Firebase/Messaging (8.3.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 4.7.0)
-  - firebase_auth (0.18.4-1):
-    - Firebase/Auth (~> 6.33.0)
-    - Firebase/CoreOnly (~> 6.33.0)
+    - FirebaseMessaging (~> 8.3.0)
+  - firebase_auth (3.0.1):
+    - Firebase/Auth (= 8.3.0)
     - firebase_core
     - Flutter
-  - firebase_core (0.5.3):
-    - Firebase/CoreOnly (~> 6.33.0)
+  - firebase_core (1.4.0):
+    - Firebase/CoreOnly (= 8.3.0)
     - Flutter
-  - firebase_dynamic_links (0.6.3):
-    - Firebase/CoreOnly (~> 6.33.0)
-    - Firebase/DynamicLinks (~> 6.33.0)
+  - firebase_dynamic_links (2.0.7):
+    - Firebase/DynamicLinks (= 8.3.0)
     - firebase_core
     - Flutter
-  - firebase_messaging (7.0.3):
-    - Firebase/CoreOnly (~> 6.33.0)
-    - Firebase/Messaging (~> 6.33.0)
+  - firebase_messaging (10.0.4):
+    - Firebase/Messaging (= 8.3.0)
     - firebase_core
     - Flutter
-  - FirebaseAuth (6.9.2):
-    - FirebaseCore (~> 6.10)
-    - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
-    - GoogleUtilities/Environment (~> 6.7)
-    - GTMSessionFetcher/Core (~> 1.1)
-  - FirebaseCore (6.10.3):
-    - FirebaseCoreDiagnostics (~> 1.6)
-    - GoogleUtilities/Environment (~> 6.7)
-    - GoogleUtilities/Logger (~> 6.7)
-  - FirebaseCoreDiagnostics (1.7.0):
-    - GoogleDataTransport (~> 7.4)
-    - GoogleUtilities/Environment (~> 6.7)
-    - GoogleUtilities/Logger (~> 6.7)
-    - nanopb (~> 1.30906.0)
-  - FirebaseDynamicLinks (4.3.1):
-    - FirebaseCore (~> 6.10)
-  - FirebaseInstallations (1.7.0):
-    - FirebaseCore (~> 6.10)
-    - GoogleUtilities/Environment (~> 6.7)
-    - GoogleUtilities/UserDefaults (~> 6.7)
+  - FirebaseAuth (8.3.0):
+    - FirebaseCore (~> 8.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.4)
+    - GoogleUtilities/Environment (~> 7.4)
+    - GTMSessionFetcher/Core (~> 1.5)
+  - FirebaseCore (8.3.0):
+    - FirebaseCoreDiagnostics (~> 8.0)
+    - GoogleUtilities/Environment (~> 7.4)
+    - GoogleUtilities/Logger (~> 7.4)
+  - FirebaseCoreDiagnostics (8.3.0):
+    - GoogleDataTransport (~> 9.0)
+    - GoogleUtilities/Environment (~> 7.4)
+    - GoogleUtilities/Logger (~> 7.4)
+    - nanopb (~> 2.30908.0)
+  - FirebaseDynamicLinks (8.3.0):
+    - FirebaseCore (~> 8.0)
+  - FirebaseInstallations (8.3.0):
+    - FirebaseCore (~> 8.0)
+    - GoogleUtilities/Environment (~> 7.4)
+    - GoogleUtilities/UserDefaults (~> 7.4)
     - PromisesObjC (~> 1.2)
-  - FirebaseInstanceID (4.8.0):
-    - FirebaseCore (~> 6.10)
-    - FirebaseInstallations (~> 1.6)
-    - GoogleUtilities/Environment (~> 6.7)
-    - GoogleUtilities/UserDefaults (~> 6.7)
-  - FirebaseMessaging (4.7.1):
-    - FirebaseCore (~> 6.10)
-    - FirebaseInstanceID (~> 4.7)
-    - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
-    - GoogleUtilities/Environment (~> 6.7)
-    - GoogleUtilities/Reachability (~> 6.7)
-    - GoogleUtilities/UserDefaults (~> 6.7)
-    - Protobuf (>= 3.9.2, ~> 3.9)
+  - FirebaseMessaging (8.3.0):
+    - FirebaseCore (~> 8.0)
+    - FirebaseInstallations (~> 8.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.4)
+    - GoogleUtilities/Environment (~> 7.4)
+    - GoogleUtilities/Reachability (~> 7.4)
+    - GoogleUtilities/UserDefaults (~> 7.4)
   - Flutter (1.0.0)
-  - flutter_device_locale (0.0.1):
-    - Flutter
   - flutter_facebook_login (0.0.1):
     - FBSDKCoreKit (~> 5.5)
     - FBSDKLoginKit (~> 5.5)
@@ -99,72 +88,78 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
-  - Google-Mobile-Ads-SDK (7.67.0):
-    - GoogleAppMeasurement (~> 6.0)
+  - Google-Mobile-Ads-SDK (7.69.0):
+    - GoogleAppMeasurement (~> 7.0)
     - GoogleUserMessagingPlatform (~> 1.1)
   - google_sign_in (0.0.1):
     - Flutter
     - GoogleSignIn (~> 5.0)
-  - GoogleAppMeasurement (6.8.3):
-    - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
-    - GoogleUtilities/MethodSwizzler (~> 6.7)
-    - GoogleUtilities/Network (~> 6.7)
-    - "GoogleUtilities/NSData+zlib (~> 6.7)"
-    - nanopb (~> 1.30906.0)
-  - GoogleDataTransport (7.5.1):
-    - nanopb (~> 1.30906.0)
+  - GoogleAppMeasurement (7.11.0):
+    - GoogleAppMeasurement/AdIdSupport (= 7.11.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.0)
+    - GoogleUtilities/MethodSwizzler (~> 7.0)
+    - GoogleUtilities/Network (~> 7.0)
+    - "GoogleUtilities/NSData+zlib (~> 7.0)"
+    - nanopb (~> 2.30908.0)
+  - GoogleAppMeasurement/AdIdSupport (7.11.0):
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.0)
+    - GoogleUtilities/MethodSwizzler (~> 7.0)
+    - GoogleUtilities/Network (~> 7.0)
+    - "GoogleUtilities/NSData+zlib (~> 7.0)"
+    - nanopb (~> 2.30908.0)
+  - GoogleDataTransport (9.1.0):
+    - GoogleUtilities/Environment (~> 7.2)
+    - nanopb (~> 2.30908.0)
+    - PromisesObjC (< 3.0, >= 1.2)
   - GoogleSignIn (5.0.2):
     - AppAuth (~> 1.2)
     - GTMAppAuth (~> 1.0)
     - GTMSessionFetcher/Core (~> 1.1)
   - GoogleUserMessagingPlatform (1.4.0)
-  - GoogleUtilities/AppDelegateSwizzler (6.7.2):
+  - GoogleUtilities/AppDelegateSwizzler (7.5.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (6.7.2):
-    - PromisesObjC (~> 1.2)
-  - GoogleUtilities/Logger (6.7.2):
+  - GoogleUtilities/Environment (7.5.0):
+    - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleUtilities/Logger (7.5.0):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (6.7.2):
+  - GoogleUtilities/MethodSwizzler (7.5.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (6.7.2):
+  - GoogleUtilities/Network (7.5.0):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (6.7.2)"
-  - GoogleUtilities/Reachability (6.7.2):
+  - "GoogleUtilities/NSData+zlib (7.5.0)"
+  - GoogleUtilities/Reachability (7.5.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/UserDefaults (6.7.2):
+  - GoogleUtilities/UserDefaults (7.5.0):
     - GoogleUtilities/Logger
-  - GTMAppAuth (1.1.0):
+  - GTMAppAuth (1.2.2):
     - AppAuth/Core (~> 1.4)
-    - GTMSessionFetcher (~> 1.4)
-  - GTMSessionFetcher (1.5.0):
-    - GTMSessionFetcher/Full (= 1.5.0)
-  - GTMSessionFetcher/Core (1.5.0)
-  - GTMSessionFetcher/Full (1.5.0):
-    - GTMSessionFetcher/Core (= 1.5.0)
-  - nanopb (1.30906.0):
-    - nanopb/decode (= 1.30906.0)
-    - nanopb/encode (= 1.30906.0)
-  - nanopb/decode (1.30906.0)
-  - nanopb/encode (1.30906.0)
+    - GTMSessionFetcher/Core (~> 1.5)
+  - GTMSessionFetcher/Core (1.6.1)
+  - in_app_purchase_ios (0.0.1):
+    - Flutter
+  - nanopb (2.30908.0):
+    - nanopb/decode (= 2.30908.0)
+    - nanopb/encode (= 2.30908.0)
+  - nanopb/decode (2.30908.0)
+  - nanopb/encode (2.30908.0)
   - package_info (0.0.1):
     - Flutter
   - path_provider (0.0.1):
     - Flutter
-  - PromisesObjC (1.2.11)
-  - Protobuf (3.13.0)
+  - PromisesObjC (1.2.12)
   - share (0.0.1):
     - Flutter
   - shared_preferences (0.0.1):
     - Flutter
   - sign_in_with_apple (0.0.1):
     - Flutter
-  - sqflite (0.0.1):
+  - sqflite (0.0.2):
     - Flutter
-    - FMDB (~> 2.7.2)
+    - FMDB (>= 2.7.5)
   - Toast (4.0.0)
   - uni_links (0.0.1):
     - Flutter
@@ -186,11 +181,11 @@ DEPENDENCIES:
   - firebase_dynamic_links (from `.symlinks/plugins/firebase_dynamic_links/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
-  - flutter_device_locale (from `.symlinks/plugins/flutter_device_locale/ios`)
   - flutter_facebook_login (from `.symlinks/plugins/flutter_facebook_login/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
+  - in_app_purchase_ios (from `.symlinks/plugins/in_app_purchase_ios/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - share (from `.symlinks/plugins/share/ios`)
@@ -214,7 +209,6 @@ SPEC REPOS:
     - FirebaseCoreDiagnostics
     - FirebaseDynamicLinks
     - FirebaseInstallations
-    - FirebaseInstanceID
     - FirebaseMessaging
     - FMDB
     - Google-Mobile-Ads-SDK
@@ -227,7 +221,6 @@ SPEC REPOS:
     - GTMSessionFetcher
     - nanopb
     - PromisesObjC
-    - Protobuf
     - Toast
 
 EXTERNAL SOURCES:
@@ -247,8 +240,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: Flutter
-  flutter_device_locale:
-    :path: ".symlinks/plugins/flutter_device_locale/ios"
   flutter_facebook_login:
     :path: ".symlinks/plugins/flutter_facebook_login/ios"
   flutter_secure_storage:
@@ -257,6 +248,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/fluttertoast/ios"
   google_sign_in:
     :path: ".symlinks/plugins/google_sign_in/ios"
+  in_app_purchase_ios:
+    :path: ".symlinks/plugins/in_app_purchase_ios/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
   path_provider:
@@ -283,52 +276,50 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   admob_flutter: 370023e0bc3f49a44ba94f14009e0728bffe43e8
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
-  audioplayers: 84f968cea3f2deab00ec4f8ff53358b3c0b3992c
+  audioplayers: 455322b54050b30ea4b1af7cd9e9d105f74efa8c
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   FBSDKCoreKit: 1d5acf7c9d7a2f92bb1a242dc60cae5b7adb91df
   FBSDKLoginKit: f1ea8026a58b52d30c9f2e6a58ca7d813619fb83
-  Firebase: 8db6f2d1b2c5e2984efba4949a145875a8f65fe5
-  firebase_auth: d5159db3873478d1ac839af7b10d2f831516136a
-  firebase_core: 5d6a02f3d85acd5f8321c2d6d62877626a670659
-  firebase_dynamic_links: 65b0918ed77292e87534b4b668d2e293c58f35e0
-  firebase_messaging: 0aea2cd5885b65e19ede58ee3507f485c992cc75
-  FirebaseAuth: c92d49ada7948d1a23466e3db17bc4c2039dddc3
-  FirebaseCore: d889d9e12535b7f36ac8bfbf1713a0836a3012cd
-  FirebaseCoreDiagnostics: 770ac5958e1372ce67959ae4b4f31d8e127c3ac1
-  FirebaseDynamicLinks: 6eac37d86910382eafb6315d952cc44c9e176094
-  FirebaseInstallations: 466c7b4d1f58fe16707693091da253726a731ed2
-  FirebaseInstanceID: bd3ffc24367f901a43c063b36c640b345a4a5dd1
-  FirebaseMessaging: 5eca4ef173de76253352511aafef774caa1cba2a
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  flutter_device_locale: 94fbcacb38980dc1a9e31eb4ee8ae6d1c3a73042
+  Firebase: 817b9171d0d51dccc458b94a5e8edff6b1dd323d
+  firebase_auth: 3b08d67bda60758347d15584fd0a7a4cf5f6496f
+  firebase_core: 72374607c8c6f5a0adc0559e5c5bf57deda975e3
+  firebase_dynamic_links: 63d25b8afb1257210012a703b2029b425f0b62c7
+  firebase_messaging: 55c5b8184efd330b9d1f1765b55c4ae57e015c5e
+  FirebaseAuth: fd12c82de44e7ad3b821610c387b8251f03aa0f9
+  FirebaseCore: a6dba751680d7033b9d3831e1cfc95ead0605118
+  FirebaseCoreDiagnostics: 7e873baabcfaa9512f538554ae4fa0817aaafbdb
+  FirebaseDynamicLinks: 5ab1f7988e31b5b267a2e034659e43cef4fff613
+  FirebaseInstallations: b69db7680870dbac17bba7a51fc0b5c4b365baa7
+  FirebaseMessaging: 42252b79b860482021483748669ec32e22196462
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_facebook_login: cfb5659f686b1c575ef205c6b6fd20db9679d3c4
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  Google-Mobile-Ads-SDK: 8b58584890539de4527c47ef01e4da941a10bc8a
+  Google-Mobile-Ads-SDK: 2f288748a42920d1c744946a460896a95b0e9110
   google_sign_in: 6bd214b9c154f881422f5fe27b66aaa7bbd580cc
-  GoogleAppMeasurement: 966e88df9d19c15715137bb2ddaf52373f111436
-  GoogleDataTransport: f56af7caa4ed338dc8e138a5d7c5973e66440833
+  GoogleAppMeasurement: fd19169c3034975cb934e865e5667bfdce59df7f
+  GoogleDataTransport: 85fd18ff3019bb85d3f2c551d04c481dedf71fc9
   GoogleSignIn: 7137d297ddc022a7e0aa4619c86d72c909fa7213
   GoogleUserMessagingPlatform: b168e8c46cd8f92aa3e34b584c4ca78a411ce367
-  GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
-  GTMAppAuth: 197a8dabfea5d665224aa00d17f164fc2248dab9
-  GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
-  nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
+  GoogleUtilities: eea970f4a389963963bffe8d8fabe43540678b9c
+  GTMAppAuth: ad5c2b70b9a8689e1a04033c9369c4915bfcbe89
+  GTMSessionFetcher: 36689134877faeb055b27dfa4ccc9ceaa42e029e
+  in_app_purchase_ios: 18c65275991b8a28b2a47634a7797fb23d5d773e
+  nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
-  PromisesObjC: 8c196f5a328c2cba3e74624585467a557dcb482f
-  Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
+  PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sign_in_with_apple: 34f3f5456a45fd7ac5fb42905e2ad31dae061b4a
-  sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
+  sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
-  wakelock: bfc7955c418d0db797614075aabbc58a39ab5107
-  webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
+  wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
+  webview_flutter: 3603125dfd3bcbc9d8d418c3f80aeecf331c068b
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
