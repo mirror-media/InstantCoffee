@@ -1,67 +1,49 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:readr_app/helpers/fcm.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/fcmData.dart';
 import 'package:readr_app/models/notificationSetting.dart';
 import 'package:readr_app/models/notificationSettingList.dart';
 
 class FirebaseMessangingHelper {
-  bool _isInTheStoryPage;
-  FirebaseMessaging _firebaseMessaging;
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-  FirebaseMessangingHelper() {
-    _firebaseMessaging = FirebaseMessaging();
-    _isInTheStoryPage = false;
-  }
+  FirebaseMessangingHelper();
 
   configFirebaseMessaging(BuildContext context) async{
-    String token = await _firebaseMessaging.getToken();
-    print('FCM token: ' + token);
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-      },
-      onBackgroundMessage: Platform.isIOS ? null : Fcm.myBackgroundMessageHandler,
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-        if(!_isInTheStoryPage) {
-          _navigateToStoryPage(context, message);
-        }
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-        _isInTheStoryPage = false;
-        _navigateToStoryPage(context, message);
-      },
+    NotificationSettings settings = await _firebaseMessaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
     );
 
-    _firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(
-            sound: true, badge: true, alert: true, provisional: false));
-    _firebaseMessaging.onIosSettingsRegistered
-        .listen((IosNotificationSettings settings) {
-      print("Settings registered: $settings");
+    print('User granted permission: ${settings.authorizationStatus}');
+
+    RemoteMessage initialMessage = await _firebaseMessaging.getInitialMessage();
+    _navigateToStoryPage(context, initialMessage);
+
+    // Also handle any interaction when the app is in the background via a
+    // Stream listener
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      _navigateToStoryPage(context, message);
     });
   }
 
-  FcmData _getFcmData(Map<String, dynamic> message) {
-    final Map<dynamic, dynamic> data = message['data'] ?? message;
-    final FcmData fcmData = FcmData.fromJson(data);
-    return fcmData;
-  }
-
-  void _navigateToStoryPage(BuildContext context, Map<String, dynamic> message) {
-    FcmData fcmData = _getFcmData(message);
-    
-    if(fcmData != null && fcmData.slug != null) {
-      _isInTheStoryPage = true;
-      RouteGenerator.navigateToStory(context, fcmData.slug, isListeningWidget: fcmData.isListeningPage);
+  void _navigateToStoryPage(BuildContext context, RemoteMessage message) {
+    if(message != null ) {
+      FcmData fcmData = FcmData.fromJson(message.data);
+      
+      if(fcmData != null && fcmData.slug != null) {
+        RouteGenerator.navigateToStory(context, fcmData.slug, isListeningWidget: fcmData.isListeningPage);
+      }
     }
   }
 
