@@ -69,6 +69,7 @@ class _EditMemberContactInfoState extends State<EditMemberContactInfo> {
       titleSpacing: 0.0,
       title: Row(
         crossAxisAlignment: CrossAxisAlignment.baseline,
+        textBaseline: TextBaseline.alphabetic,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           FlatButton(

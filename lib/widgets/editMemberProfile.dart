@@ -80,6 +80,7 @@ class _EditMemberProfileState extends State<EditMemberProfile> {
       titleSpacing: 0.0,
       title: Row(
         crossAxisAlignment: CrossAxisAlignment.baseline,
+        textBaseline: TextBaseline.alphabetic,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           FlatButton(
