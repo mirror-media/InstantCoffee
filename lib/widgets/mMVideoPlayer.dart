@@ -50,13 +50,18 @@ class _MMVideoPlayerState extends State<MMVideoPlayer> with AutomaticKeepAliveCl
 
   Future<bool> _configVideoPlayer() async{
     _videoPlayerController = VideoPlayerController.network(widget.videourl);
-    await _videoPlayerController.initialize();
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      aspectRatio: _videoPlayerController.value.aspectRatio,
-      autoInitialize: true,
-      customControls: MaterialControls(),
-    );
+    try {
+      await _videoPlayerController.initialize();
+      _chewieController = ChewieController(
+        videoPlayerController: _videoPlayerController,
+        aspectRatio: _videoPlayerController.value.aspectRatio,
+        autoInitialize: true,
+        customControls: MaterialControls(),
+      );
+    } catch(e) {
+      // TODO: need to return error
+      return false;
+    }
 
     return true;
   }
@@ -85,8 +90,12 @@ class _MMVideoPlayerState extends State<MMVideoPlayer> with AutomaticKeepAliveCl
           );
         }
 
-        return Chewie(
-          controller: _chewieController,
+        return Container(
+          width: width,
+          height: width/_videoPlayerController.value.aspectRatio,
+          child: Chewie(
+            controller: _chewieController,
+          ),
         );
       }
     );
