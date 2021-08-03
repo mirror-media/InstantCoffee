@@ -40,8 +40,9 @@ class StoryService {
       jsonResponse = await _helper.getByCache(endpoint);
     } else {
       try {
+        Uri uri = Uri.parse(endpoint);
         final response = await http.get(
-          endpoint, 
+          uri, 
           headers: MemberService.getHeaders(token),
         );
         fileBytes = response.bodyBytes;

@@ -1,10 +1,8 @@
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
 
 // Custom Implementation of CacheManager
 // by extending the BaseCacheManager abstract class
-class MMCacheManager extends BaseCacheManager {
+class MMCacheManager extends CacheManager with ImageCacheManager {
   static const key = 'mirrorMediaCache';
 
   static MMCacheManager _instance;
@@ -18,16 +16,12 @@ class MMCacheManager extends BaseCacheManager {
   // pass the default setting values to the base class
   // link the custom handler to handle HTTP calls 
   // via the custom cache manager
-  MMCacheManager._()
-      : super(key,
-            maxAgeCacheObject: const Duration(hours: 12),
-            maxNrOfCacheObjects: 100);
-
-  @override
-  Future<String> getFilePath() async {
-    var directory = await getTemporaryDirectory();
-    return path.join(directory.path, key);
-  }
+  MMCacheManager._() : super(
+    Config(
+      key, 
+      maxNrOfCacheObjects: 100,
+    )
+  );
 
   Future<bool> isFileExistsAndNotExpired(String url) async {
     final cacheFile = await _instance.getFileFromCache(url);

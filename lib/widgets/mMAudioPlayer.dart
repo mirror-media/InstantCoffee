@@ -22,12 +22,11 @@ class MMAudioPlayer extends StatefulWidget {
 }
 
 class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveClientMixin {
-  Color _audioColor = Colors.orange[800];
+  Color _audioColor = Color(0xff014DB8);
   AudioPlayer _audioPlayer;
-  bool get _checkIsPlaying => !(_audioPlayer.state == null ||
-      _audioPlayer.state == AudioPlayerState.COMPLETED ||
-      _audioPlayer.state == AudioPlayerState.STOPPED ||
-      _audioPlayer.state == AudioPlayerState.PAUSED);
+  bool get _checkIsPlaying => !(_audioPlayer.state == PlayerState.COMPLETED ||
+      _audioPlayer.state == PlayerState.STOPPED ||
+      _audioPlayer.state == PlayerState.PAUSED);
   int _duration = 0;
 
   @override
@@ -45,7 +44,15 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveCl
   }
 
   _start() async {
-    _duration = await _audioPlayer.getDuration();
+    try {
+      _duration = await _audioPlayer.getDuration();
+      if(_duration < 0) {
+        _duration = 0;
+      }
+    } catch(e) {
+      _duration = 0;
+    }
+    
     await _audioPlayer.play(widget.audioUrl);
   }
 
@@ -58,26 +65,23 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveCl
   }
 
   _playAndPause() {
-    if (_audioPlayer.state == null ||
-        _audioPlayer.state == AudioPlayerState.COMPLETED ||
-        _audioPlayer.state == AudioPlayerState.STOPPED) {
+    if (_audioPlayer.state == PlayerState.COMPLETED ||
+        _audioPlayer.state == PlayerState.STOPPED) {
       _start();
-    } else if (_audioPlayer.state == AudioPlayerState.PLAYING) {
+    } else if (_audioPlayer.state == PlayerState.PLAYING) {
       _pause();
-    } else if (_audioPlayer.state == AudioPlayerState.PAUSED) {
+    } else if (_audioPlayer.state == PlayerState.PAUSED) {
       _play();
     }
   }
 
   @override
   void dispose() {
-    if (_audioPlayer.state != null) {
-      _audioPlayer.release();
-    }
+    _audioPlayer.release();
     super.dispose();
   }
 
-  @override
+@override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     
@@ -87,28 +91,28 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveCl
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(3),
-            child: Container(
-              width: width,
-              color: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0, top: 12, bottom: 12),
-                child: Text(
-                  widget.title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    // height: 1.8,
+          if(widget.title != null)
+            Padding(
+              padding: const EdgeInsets.all(3),
+              child: Container(
+                width: width,
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0, top: 12, bottom: 12),
+                  child: Text(
+                    widget.title,
+                    style: TextStyle(
+                      fontSize: 16,
+                      // height: 1.8,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          //SizedBox(height: 8,),
           Row(
             children: [
               SizedBox(width: 8),
-              StreamBuilder<AudioPlayerState>(
+              StreamBuilder<PlayerState>(
                   stream: _audioPlayer.onPlayerStateChanged,
                   builder: (context, snapshot) {
                     //print(snapshot.data);
@@ -189,3 +193,4 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveCl
     );
   }
 }
+

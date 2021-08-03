@@ -39,17 +39,16 @@ class ApiBaseHelper {
       Map<String,String> headers = const {'Cache-control': 'no-cache'},
     }
   ) async {
-    //print('Get cache, url $url');
     MMCacheManager mMCacheManager = MMCacheManager();
     final cacheFile = await mMCacheManager.getFileFromCache(url);
     if ( cacheFile == null ||
       cacheFile != null && cacheFile.validTill.isBefore(DateTime.now())
     ) {
-      //print('Call Api Get, url $url');
+      Uri uri = Uri.parse(url);
       var responseJson;
       try {
         final response =
-            await http.get(url, headers: headers);
+            await http.get(uri, headers: headers);
         responseJson = returnResponse(response);
         // save cache file
         mMCacheManager.putFile(url, response.bodyBytes, maxAge: maxAge, fileExtension: 'json');
@@ -85,11 +84,11 @@ class ApiBaseHelper {
       Map<String,String> headers = const {'Cache-control': 'no-cache'},
     }
   ) async {
-    //print('Call Api Get, url $url');
     var responseJson;
     try {
+      Uri uri = Uri.parse(url);
       final response =
-          await http.get(url, headers: headers);
+          await http.get(uri, headers: headers);
       responseJson = returnResponse(response);
     } on SocketException {
       print('No Internet connection');
@@ -104,10 +103,10 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> postByUrl(String url, dynamic body, {Map<String, String> headers}) async {
-    //print('Call Api Post, url $url');
     var responseJson;
     try {
-      final response = await http.post(url, headers: headers, body: body);
+      Uri uri = Uri.parse(url);
+      final response = await http.post(uri, headers: headers, body: body);
       responseJson = returnResponse(response);
     } on SocketException {
       print('No Internet connection');
@@ -122,10 +121,10 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> putByUrl(String url, dynamic body) async {
-    //print('Call Api Put, url $url');
     var responseJson;
     try {
-      final response = await http.put(url, body: body);
+      Uri uri = Uri.parse(url);
+      final response = await http.put(uri, body: body);
       responseJson = returnResponse(response);
     } on SocketException {
       print('No Internet connection');
@@ -140,10 +139,10 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> deleteByUrl(String url) async {
-    //print('Call Api delete, url $url');
     var apiResponse;
     try {
-      final response = await http.delete(url);
+      Uri uri = Uri.parse(url);
+      final response = await http.delete(uri);
       apiResponse = returnResponse(response);
     } on SocketException {
       print('No Internet connection');
