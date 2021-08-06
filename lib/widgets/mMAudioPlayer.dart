@@ -22,7 +22,7 @@ class MMAudioPlayer extends StatefulWidget {
 }
 
 class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveClientMixin {
-  Color _audioColor = Color(0xff014DB8);
+  Color _audioColor = Colors.orange[800];
   AudioPlayer _audioPlayer;
   bool get _checkIsPlaying => !(_audioPlayer.state == PlayerState.COMPLETED ||
       _audioPlayer.state == PlayerState.STOPPED ||
