@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/blocs/sectionBloc.dart';
 import 'package:readr_app/env.dart';
@@ -13,6 +14,7 @@ import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/onBoarding.dart';
 import 'package:readr_app/models/sectionList.dart';
 import 'package:readr_app/models/section.dart';
+import 'package:readr_app/pages/termsOfService/mMTermsOfServicePage.dart';
 import 'package:readr_app/widgets/listeningTabContent.dart';
 import 'package:readr_app/widgets/newsMarquee.dart';
 import 'package:readr_app/widgets/personalWidget.dart';
@@ -34,6 +36,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin, WidgetsBindingObserver {
+  final LocalStorage _storage = LocalStorage('setting');
   AppUpgradeHelper _appUpgradeHelper;
   AppLinkHelper _appLinkHelper;
   FirebaseMessangingHelper _firebaseMessangingHelper;
@@ -74,6 +77,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
     _tabs = List<Tab>();
     _tabWidgets = List<Widget>();
     _scrollControllerList = List<ScrollController>();
+    _showTermsOfService();
     super.initState();
   }
 
@@ -168,11 +172,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
     }
   }
 
+  _showTermsOfService() async{
+    if(await _storage.ready) {
+      bool isAcceptTerms = await _storage.getItem("isAcceptTerms");
+      if(isAcceptTerms == null || !isAcceptTerms) {
+        _storage.setItem("isAcceptTerms", false);
+        await Future.delayed(Duration(seconds: 1));
+        await Navigator.of(context).push(
+          PageRouteBuilder(
+            barrierDismissible: false,
+            pageBuilder: (BuildContext context, _, __) => MMTermsOfServicePage()
+          )
+        );
+      }
+    }
+  }
+
   @override
   void dispose() {
     _appLinkHelper.dispose();
     _firebaseMessangingHelper.dispose();
     _tabController?.dispose();
+    _tabColorController?.close();
 
     _scrollControllerList.forEach((scrollController) {
       scrollController.dispose();

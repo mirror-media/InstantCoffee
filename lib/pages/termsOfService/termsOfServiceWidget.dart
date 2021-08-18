@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/paragraphFormat.dart';
 import 'package:readr_app/models/paragraph.dart';
@@ -15,6 +16,7 @@ class TermsOfServiceWidget extends StatefulWidget {
 }
 
 class _TermsOfServiceWidgetState extends State<TermsOfServiceWidget> {
+  final LocalStorage _storage = LocalStorage('setting');
   bool _isAgreeTerms = false;
 
   @override
@@ -94,7 +96,13 @@ class _TermsOfServiceWidgetState extends State<TermsOfServiceWidget> {
             ),
           ),
           onPressed: _isAgreeTerms 
-          ? () => Navigator.of(context).pop()
+          ? () async{
+            if(await _storage.ready) {
+              _storage.setItem("isAcceptTerms", true);
+            }
+            
+            Navigator.of(context).pop();
+          }
           : null,
         ),
         SizedBox(height: 48),
