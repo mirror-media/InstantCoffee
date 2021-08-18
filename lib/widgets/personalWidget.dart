@@ -94,6 +94,9 @@ class _PersonalWidgetState extends State<PersonalWidget> {
       controller: scrollController,
       slivers: [
         SliverToBoxAdapter(
+          child: _buildMemberStatusBlock(),
+        ),
+        SliverToBoxAdapter(
           child: _buildCategoryList(context, categoryList, _personalPageBloc),
         ),
         SliverToBoxAdapter(
@@ -172,6 +175,50 @@ class _PersonalWidgetState extends State<PersonalWidget> {
           },
         ),
       ],
+    );
+  }
+
+  Widget _buildMemberStatusBlock() {
+    double width = MediaQuery.of(context).size.width/3.3;
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Card(
+        elevation: 10,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  '加入 Premium 會員\n享受零廣告閱讀體驗',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: appColor,
+                  padding: const EdgeInsets.only(top: 12, bottom: 12),
+                ),
+                child: Container(
+                  width: width,
+                  child: Center(
+                    child: Text(
+                      '加入會員',
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                onPressed: () {},
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
