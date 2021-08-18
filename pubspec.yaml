@@ -111,6 +111,9 @@ dependencies:
   # apple sign in
   sign_in_with_apple: ^2.5.4
 
+  # a storefront-independent API for purchases in Flutter apps.
+  in_app_purchase: ^1.0.6
+
   # generate app icons
   flutter_launcher_icons: ^0.9.0
 
