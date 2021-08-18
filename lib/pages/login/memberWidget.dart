@@ -8,6 +8,7 @@ import 'package:readr_app/helpers/memberResponse.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/member.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionDetail/memberSubscriptionDetailPage.dart';
 import 'package:readr_app/services/loginService.dart';
 
 class MemberWidget extends StatefulWidget {
@@ -163,7 +164,7 @@ class _MemberWidgetState extends State<MemberWidget> {
                 ),
                 _navigateButton(
                   '我的方案細節',
-                  () {}
+                  () => Navigator.push(context,MaterialPageRoute(builder: (context) => MemberSubscriptionDetailPage())),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
