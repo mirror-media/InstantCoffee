@@ -482,7 +482,7 @@ class _StoryWidget extends State<StoryWidget> {
 
   Widget _buildJoinMemberBlock(BuildContext context, double width) {
     return Padding(
-      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+      padding: const EdgeInsets.only(left: 24.0, right: 24.0),
       child: Card(
         elevation: 4,
         child: Padding(
@@ -490,59 +490,84 @@ class _StoryWidget extends State<StoryWidget> {
           child: Column(
             children: [
               Text(
-                '歡迎加入鏡會員，閱讀完整文章',
+                '歡迎加入鏡週刊 淨新聞',
                 style: TextStyle(
-                  color: Color(0xff054F77),
                   fontSize: 24,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w400,
+                  color: appColor,
+                ),
+              ),
+              Text(
+                '閱讀行列',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w400,
+                  color: appColor,
                 ),
               ),
               SizedBox(height: 24),
-              RaisedButton(
-                color: appColor,
-                child: Container(
-                  width: width,
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: Text(
-                        '成為會員',
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.white,
-                        ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: appColor),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  children: [
+                    Text(
+                      '每月只要 49 元，暢享零廣告閱讀',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
-                  ),
-                ),
-                onPressed: () => RouteGenerator.navigateToLogin(
-                  context,
-                  routeName: RouteGenerator.story,
-                  routeArguments: {
-                    'slug': widget.slugBloc.slug,
-                  },
+                    Text(
+                      '體驗、優質報導吃到飽',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    SizedBox(height: 12),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: appColor,
+                        padding: const EdgeInsets.only(top: 12, bottom: 12),
+                      ),
+                      child: Container(
+                        width: width,
+                        child: Center(
+                          child: Text(
+                            '加入 Premium 會員',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      onPressed: () => RouteGenerator.navigateToLogin(
+                        context,
+                        routeName: RouteGenerator.story,
+                        routeArguments: {
+                          'slug': widget.slugBloc.slug,
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    '已經是會員了？',
-                    style: TextStyle(
-                      color: Color(0xff9B9B9B),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
                   InkWell(
                     child: Text(
                       '立即登入',
                       style: TextStyle(
-                        color: Color(0xff9B9B9B),
-                        fontSize: 15,
+                        color: appColor,
+                        fontSize: 16,
                         fontWeight: FontWeight.w400,
-                        decoration: TextDecoration.underline,
                       ),
                     ),
                     onTap: () => RouteGenerator.navigateToLogin(
@@ -551,6 +576,15 @@ class _StoryWidget extends State<StoryWidget> {
                       routeArguments: {
                         'slug': widget.slugBloc.slug,
                       },
+                    ),
+                  ),
+                  SizedBox(width: 4),
+                  Text(
+                    '享專屬優惠',
+                    style: TextStyle(
+                      color: Colors.black45,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ],
