@@ -11,6 +11,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/pages/memberCenter/paymentRecord/memberPaymentRecordPage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionArticle/memberSubscriptionArticlePage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionDetail/memberSubscriptionDetailPage.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectPage.dart';
 import 'package:readr_app/services/loginService.dart';
 
 class MemberWidget extends StatefulWidget {
@@ -202,7 +203,7 @@ class _MemberWidgetState extends State<MemberWidget> {
                 ),
                 _navigateButton(
                   '升級 Premium 會員',
-                  () {}
+                  () => Navigator.push(context,MaterialPageRoute(builder: (context) => SubscriptionSelectPage())),
                 ),
               ],
             ),

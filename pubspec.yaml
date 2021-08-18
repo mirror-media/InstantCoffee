@@ -172,6 +172,9 @@ flutter:
     - assets/image/magazine/my_book.png
     - assets/image/magazine/pubu.png
     - assets/image/magazine/readmoo.png
+    # member subscription
+    - assets/image/badge.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
