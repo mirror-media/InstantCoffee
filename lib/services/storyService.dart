@@ -11,7 +11,11 @@ import 'package:readr_app/helpers/mMCacheManager.dart';
 import 'package:readr_app/models/storyRes.dart';
 import 'package:readr_app/services/memberService.dart';
 
-class StoryService {
+abstract class StoryRepos {
+  Future<StoryRes> fetchStory(String slug);
+}
+
+class StoryService implements StoryRepos{
   MMCacheManager _mMCacheManager;
   ApiBaseHelper _helper;
   FirebaseAuth _auth;
