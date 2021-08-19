@@ -1,6 +1,6 @@
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/listeningWidgetBloc.dart';
 import 'package:readr_app/blocs/slugBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
@@ -59,7 +59,7 @@ class _ListeningWidget extends State<ListeningWidget> {
                       ...[
                         MMAdBanner(
                           adUnitId: tabContentState.listening.storyAd.hDUnitId,
-                          adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                          adSize: AdSize.mediumRectangle,
                           isKeepAlive: true,
                         ),
                         SizedBox(height: 16),
@@ -73,7 +73,7 @@ class _ListeningWidget extends State<ListeningWidget> {
                       ...[
                         MMAdBanner(
                           adUnitId: tabContentState.listening.storyAd.aT1UnitId,
-                          adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                          adSize: AdSize.mediumRectangle,
                           isKeepAlive: true,
                         ),
                         SizedBox(height: 16),
@@ -86,7 +86,7 @@ class _ListeningWidget extends State<ListeningWidget> {
                       ...[
                         MMAdBanner(
                           adUnitId: tabContentState.listening.storyAd.fTUnitId,
-                          adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                          adSize: AdSize.mediumRectangle,
                           isKeepAlive: true,
                         ),
                         SizedBox(height: 16),
@@ -96,7 +96,7 @@ class _ListeningWidget extends State<ListeningWidget> {
                   if(isListeningWidgetAdsActivated)
                     MMAdBanner(
                       adUnitId: tabContentState.listening.storyAd.stUnitId,
-                      adSize: AdmobBannerSize.BANNER,
+                      adSize: AdSize.banner,
                       isKeepAlive: true,
                     ),
                 ],
