@@ -94,9 +94,11 @@ dependencies:
   # firebase messaging
   firebase_messaging: ^10.0.4
   # firebase ad mob
-  # firebase_admob: ^0.10.2
-  #flutter_native_admob: ^2.1.0+3
-  admob_flutter: ^1.0.1
+  google_mobile_ads:
+    git:
+      url: https://github.com/SuaMusica/googleads-mobile-flutter.git
+      path: packages/google_mobile_ads
+      ref: feature/suamusica
   # firebase dynamic links 
   firebase_dynamic_links: ^2.0.7
 
