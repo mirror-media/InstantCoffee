@@ -1,7 +1,7 @@
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/listeningTabContentBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
@@ -53,7 +53,7 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
           if(isListeningTabContentAdsActivated && _listeningTabContentBloc.sectionAd.stUnitId != '')
             MMAdBanner(
               adUnitId: _listeningTabContentBloc.sectionAd.stUnitId,
-              adSize: AdmobBannerSize.BANNER,
+              adSize: AdSize.banner,
             ),
         ],
       ),
@@ -114,18 +114,18 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
                   if(isListeningTabContentAdsActivated && index == noCarouselAT1AdIndex)
                     MMAdBanner(
                       adUnitId: _listeningTabContentBloc.sectionAd.aT1UnitId,
-                      adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                      adSize: AdSize.mediumRectangle,
                     ),
                   _buildListItem(context, recordList[index]),
                   if(isListeningTabContentAdsActivated && index == noCarouselAT2AdIndex)
                     MMAdBanner(
                       adUnitId: _listeningTabContentBloc.sectionAd.aT2UnitId,
-                      adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                      adSize: AdSize.mediumRectangle,
                     ),
                   if(isListeningTabContentAdsActivated && index == noCarouselAT3AdIndex)
                     MMAdBanner(
                       adUnitId: _listeningTabContentBloc.sectionAd.aT3UnitId,
-                      adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                      adSize: AdSize.mediumRectangle,
                     ),
                   if (index == recordList.length - 1 &&
                       status == Status.LOADINGMORE)

@@ -1,7 +1,7 @@
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'package:readr_app/blocs/tabContentBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
@@ -63,7 +63,7 @@ class _TabContentState extends State<TabContent> {
           if(isTabContentAdsActivated && _tabContentBloc.sectionAd.stUnitId != '')
             MMAdBanner(
               adUnitId: _tabContentBloc.sectionAd.stUnitId,
-              adSize: AdmobBannerSize.BANNER,
+              adSize: AdSize.banner,
             ),
         ],
       ),
@@ -136,7 +136,7 @@ class _TabContentState extends State<TabContent> {
                         Center(
                           child: MMAdBanner(
                             adUnitId: _tabContentBloc.sectionAd.aT1UnitId,
-                            adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                            adSize: AdSize.mediumRectangle,
                           ),
                         ),
                       ],
@@ -157,29 +157,29 @@ class _TabContentState extends State<TabContent> {
                   if(isTabContentAdsActivated && index == noCarouselAT1AdIndex && !widget.needCarousel)
                     MMAdBanner(
                       adUnitId: _tabContentBloc.sectionAd.aT1UnitId,
-                      adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                      adSize: AdSize.mediumRectangle,
                     ),
                   _buildListItem(context, recordList[index]),
                   if(isTabContentAdsActivated && index == carouselAT2AdIndex && widget.needCarousel) 
                     MMAdBanner(
                       adUnitId: _tabContentBloc.sectionAd.aT2UnitId,
-                      adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                      adSize: AdSize.mediumRectangle,
                     ),
                   if(isTabContentAdsActivated && index == noCarouselAT2AdIndex && !widget.needCarousel) 
                     MMAdBanner(
                       adUnitId: _tabContentBloc.sectionAd.aT2UnitId,
-                      adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                      adSize: AdSize.mediumRectangle,
                     ),
                     
                   if(isTabContentAdsActivated && index == carouselAT3AdIndex && widget.needCarousel) 
                     MMAdBanner(
                       adUnitId: _tabContentBloc.sectionAd.aT3UnitId,
-                      adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                      adSize: AdSize.mediumRectangle,
                     ),
                   if(isTabContentAdsActivated && index == noCarouselAT3AdIndex && !widget.needCarousel) 
                     MMAdBanner(
                       adUnitId: _tabContentBloc.sectionAd.aT3UnitId,
-                      adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                      adSize: AdSize.mediumRectangle,
                     ),
                   // if((((index + 1) % 5 == 0 && widget.needCarousel) || (index % 5 == 0 && !widget.needCarousel)) && index < 11) 
                   //   AdmobBanner(

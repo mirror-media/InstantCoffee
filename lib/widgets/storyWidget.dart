@@ -1,5 +1,5 @@
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/slugBloc.dart';
 import 'package:readr_app/blocs/storyBloc.dart';
 import 'package:readr_app/env.dart';
@@ -74,7 +74,7 @@ class _StoryWidget extends State<StoryWidget> {
                         SizedBox(height: 16),
                         MMAdBanner(
                           adUnitId: story.storyAd.hDUnitId,
-                          adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                          adSize: AdSize.mediumRectangle,
                           isKeepAlive: true,
                         ),
                         SizedBox(height: 16),
@@ -99,7 +99,7 @@ class _StoryWidget extends State<StoryWidget> {
                       if(isAdsActivated)
                         MMAdBanner(
                           adUnitId: story.storyAd.aT3UnitId,
-                          adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                          adSize: AdSize.mediumRectangle,
                           isKeepAlive: true,
                         ),
                       SizedBox(height: 16),
@@ -120,7 +120,7 @@ class _StoryWidget extends State<StoryWidget> {
                         SizedBox(height: 16),
                         MMAdBanner(
                           adUnitId: story.storyAd.e1UnitId,
-                          adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                          adSize: AdSize.mediumRectangle,
                           isKeepAlive: true,
                         ),
                         SizedBox(height: 16),
@@ -131,7 +131,7 @@ class _StoryWidget extends State<StoryWidget> {
                       ...[
                         MMAdBanner(
                           adUnitId: story.storyAd.fTUnitId,
-                          adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                          adSize: AdSize.mediumRectangle,
                           isKeepAlive: true,
                         ),
                         SizedBox(height: 16),
@@ -146,7 +146,7 @@ class _StoryWidget extends State<StoryWidget> {
                   if(isAdsActivated && !_isWineCategory(story.categories))
                     MMAdBanner(
                       adUnitId: story.storyAd.stUnitId,
-                      adSize: AdmobBannerSize.BANNER,
+                      adSize: AdSize.banner,
                       isKeepAlive: true,
                     ),
                 ],
@@ -458,7 +458,7 @@ class _StoryWidget extends State<StoryWidget> {
                       SizedBox(height: 16),
                       MMAdBanner(
                         adUnitId: story.storyAd.aT1UnitId,
-                        adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                        adSize: AdSize.mediumRectangle,
                         isKeepAlive: true,
                       ),
                     ],
@@ -467,7 +467,7 @@ class _StoryWidget extends State<StoryWidget> {
                       SizedBox(height: 16),
                       MMAdBanner(
                         adUnitId: story.storyAd.aT2UnitId,
-                        adSize: AdmobBannerSize.MEDIUM_RECTANGLE,
+                        adSize: AdSize.mediumRectangle,
                         isKeepAlive: true,
                       ),
                     ],

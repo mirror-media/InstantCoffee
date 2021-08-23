@@ -1,9 +1,9 @@
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -11,11 +11,8 @@ import 'package:readr_app/models/baseConfig.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   await Firebase.initializeApp();
-  // Initialize without device test ids.
-  Admob.initialize();
-  // Or add a list of test ids.
-  // Admob.initialize(testDeviceIds: ['YOUR DEVICE ID']);
   BuildEnvironment.init(
       flavor: BuildFlavor.development, baseConfig: BaseConfig(isDev: true));
   runApp(MyApp());
