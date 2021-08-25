@@ -76,7 +76,7 @@ class LoginServices implements LoginRepos{
           print('Error sign in with facebook $onError');
           return FirebaseLoginStatus(
             status: FirebaseStatus.Error,
-            message: onError.toString(),
+            message: onError,
           );
         }
         break;
