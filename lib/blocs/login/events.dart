@@ -306,7 +306,7 @@ class FetchSignInMethodsForEmail extends LoginEvents {
   );
   
   @override
-  String toString() => 'SignInWithApple';
+  String toString() => 'FetchSignInMethodsForEmail';
 
   @override
   Stream<LoginState> run(
@@ -319,7 +319,13 @@ class FetchSignInMethodsForEmail extends LoginEvents {
       yield FetchSignInMethodsForEmailLoading();
       List<String> signInMethodsStringList = await loginRepos.fetchSignInMethodsForEmail(email);
 
-      if (signInMethodsStringList.contains('password')) {
+      if(signInMethodsStringList.contains('google.com')) {
+        yield RegisteredByAnotherMethod(warningMessage: '由於您曾以 Google 帳號登入，請點擊上方「以 Google 帳號繼續」重試。');
+      } else if(signInMethodsStringList.contains('facebook.com')) {
+        yield RegisteredByAnotherMethod(warningMessage: '由於您曾以 Facebook 帳號登入，請點擊上方「以 Facebook 帳號繼續」重試。');
+      } else if(signInMethodsStringList.contains('apple.com')) {
+        yield RegisteredByAnotherMethod(warningMessage: '由於您曾以 Apple 帳號登入，請點擊上方「以 Apple 帳號繼續」重試。');
+      } else if (signInMethodsStringList.contains('password')) {
         await RouteGenerator.navigateToEmailLogin(context, email: email);
         yield* renderingUIAfterEmailLogin(
           context,
