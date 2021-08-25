@@ -36,6 +36,12 @@ class _MMTermsOfServiceWidgetState extends State<MMTermsOfServiceWidget> {
 
         if (state is StoryLoaded) {
           StoryRes storyRes = state.storyRes;
+          // change font size
+          for(int i=0; i<storyRes.story.apiDatas.length; i++) {
+            if(storyRes.story.apiDatas[i].type == 'header-two') {
+              storyRes.story.apiDatas[i].type  = 'unstyled';
+            }
+          }
 
           return Padding(
             padding: const EdgeInsets.only(left: 24, right: 24),
