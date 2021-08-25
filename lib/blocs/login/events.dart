@@ -16,6 +16,7 @@ abstract class LoginEvents{
     String routeName,
     Object routeArguments,
   );
+
   Stream<LoginState> handleFirebaseLogin(
     BuildContext context,
     String routeName,
@@ -32,6 +33,7 @@ abstract class LoginEvents{
       );
     } 
   }
+
   Stream<LoginState> handleCreateMember(
     BuildContext context,
     String routeName,
@@ -60,6 +62,7 @@ abstract class LoginEvents{
       );
     }
   }
+
   Stream<LoginState> renderingUIAfterEmailLogin(
     BuildContext context,
     String routeName,
@@ -78,6 +81,7 @@ abstract class LoginEvents{
       );
     }
   }
+
   Stream<LoginState> fetchMemberToLogin(
     FirebaseAuth auth,
     BuildContext context,
@@ -109,6 +113,7 @@ abstract class LoginEvents{
       );
     }
   }
+  
   navigateToRouteName(
     BuildContext context,
     String routeName,
