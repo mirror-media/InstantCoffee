@@ -149,6 +149,13 @@ class _LoginFormState extends State<LoginForm> {
             ),
           SliverToBoxAdapter(child: SizedBox(height: 16)),
         ],
+        if(widget.state is RegisteredByAnotherMethod)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+              child: _loginWarningText(widget.state),
+            ),
+          ),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
@@ -241,6 +248,16 @@ class _LoginFormState extends State<LoginForm> {
         borderRadius: BorderRadius.circular(5.0),
       ),
       child: SpinKitThreeBounce(color: Colors.grey, size: 35,),
+    );
+  }
+
+  Widget _loginWarningText(RegisteredByAnotherMethod state) {
+    return Text(
+      state.warningMessage,
+      style: TextStyle(
+        color: Colors.red,
+        fontSize: 16,
+      ),
     );
   }
 

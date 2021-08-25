@@ -16,7 +16,8 @@ abstract class LoginEvents{
     String routeName,
     Object routeArguments,
   );
-  Stream<LoginState> handleFirebaseLogin(
+
+  Stream<LoginState> handleFirebaseThirdPartyLogin(
     BuildContext context,
     String routeName,
     Object routeArguments,
@@ -27,11 +28,16 @@ abstract class LoginEvents{
     } else if(frebaseLoginStatus.status == FirebaseStatus.Success) {
       yield* handleCreateMember(context, routeName, routeArguments);
     } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
-      yield LoginFail(
-        error: UnknownException(frebaseLoginStatus.message),
-      );
+      if(frebaseLoginStatus.message.code == 'account-exists-with-different-credential') {
+        yield* checkThirdPartyLoginEmail(frebaseLoginStatus);
+      } else {
+        yield LoginFail(
+          error: UnknownException(frebaseLoginStatus.message),
+        );
+      }
     } 
   }
+
   Stream<LoginState> handleCreateMember(
     BuildContext context,
     String routeName,
@@ -60,6 +66,46 @@ abstract class LoginEvents{
       );
     }
   }
+
+  Stream<LoginState> checkThirdPartyLoginEmail(
+    FirebaseLoginStatus frebaseLoginStatus
+  ) async*{
+    try{
+      String email = frebaseLoginStatus.message.email;
+      List<String> signInMethodsStringList = await LoginServices().fetchSignInMethodsForEmail(email);
+
+      if(signInMethodsStringList.contains('google.com')) {
+        yield RegisteredByAnotherMethod(warningMessage: '由於您曾以Google帳號登入，請點擊上方「使用 Google 登入」重試。');
+      } else if(signInMethodsStringList.contains('facebook.com')) {
+        yield RegisteredByAnotherMethod(warningMessage: '由於您曾以Facebook帳號登入，請點擊上方「使用 Facebook 登入」重試。');
+      } else if(signInMethodsStringList.contains('apple.com')) {
+        yield RegisteredByAnotherMethod(warningMessage: '由於您曾以Apple帳號登入，請點擊上方「使用 Apple 登入」重試。');
+      } else if (signInMethodsStringList.contains('password')) {
+        yield RegisteredByAnotherMethod(warningMessage: '由於您曾以email帳號密碼登入，請輸入下方email重試。');
+      } else {
+        yield LoginFail(
+          error: UnknownException(frebaseLoginStatus.message),
+        );
+      }
+    } on SocketException {
+      yield LoginFail(
+        error: NoInternetException('No Internet'),
+      );
+    } on HttpException {
+      yield LoginFail(
+        error: NoServiceFoundException('No Service Found'),
+      );
+    } on FormatException {
+      yield LoginFail(
+        error: InvalidFormatException('Invalid Response format'),
+      );
+    } catch (e) {
+      yield LoginFail(
+        error: UnknownException(e.toString()),
+      );
+    }
+  }
+
   Stream<LoginState> renderingUIAfterEmailLogin(
     BuildContext context,
     String routeName,
@@ -78,6 +124,7 @@ abstract class LoginEvents{
       );
     }
   }
+
   Stream<LoginState> fetchMemberToLogin(
     FirebaseAuth auth,
     BuildContext context,
@@ -109,6 +156,7 @@ abstract class LoginEvents{
       );
     }
   }
+
   navigateToRouteName(
     BuildContext context,
     String routeName,
@@ -181,7 +229,7 @@ class SignInWithGoogle extends LoginEvents {
     try{
       yield GoogleLoading();
       FirebaseLoginStatus frebaseLoginStatus = await loginRepos.signInWithGoogle();
-      yield* handleFirebaseLogin(
+      yield* handleFirebaseThirdPartyLogin(
         context, 
         routeName, 
         routeArguments,
@@ -226,7 +274,7 @@ class SignInWithFacebook extends LoginEvents {
     try{
       yield FacebookLoading();
       FirebaseLoginStatus frebaseLoginStatus = await loginRepos.signInWithFacebook();
-      yield* handleFirebaseLogin(
+      yield* handleFirebaseThirdPartyLogin(
         context, 
         routeName, 
         routeArguments,
@@ -271,7 +319,7 @@ class SignInWithApple extends LoginEvents {
     try{
       yield AppleLoading();
       FirebaseLoginStatus frebaseLoginStatus = await loginRepos.signInWithApple();
-      yield* handleFirebaseLogin(
+      yield* handleFirebaseThirdPartyLogin(
         context, 
         routeName, 
         routeArguments,
@@ -306,7 +354,7 @@ class FetchSignInMethodsForEmail extends LoginEvents {
   );
   
   @override
-  String toString() => 'SignInWithApple';
+  String toString() => 'FetchSignInMethodsForEmail';
 
   @override
   Stream<LoginState> run(
@@ -319,7 +367,13 @@ class FetchSignInMethodsForEmail extends LoginEvents {
       yield FetchSignInMethodsForEmailLoading();
       List<String> signInMethodsStringList = await loginRepos.fetchSignInMethodsForEmail(email);
 
-      if (signInMethodsStringList.contains('password')) {
+      if(signInMethodsStringList.contains('google.com')) {
+        yield RegisteredByAnotherMethod(warningMessage: '由於您曾以 Google 帳號登入，請點擊上方「以 Google 帳號繼續」重試。');
+      } else if(signInMethodsStringList.contains('facebook.com')) {
+        yield RegisteredByAnotherMethod(warningMessage: '由於您曾以 Facebook 帳號登入，請點擊上方「以 Facebook 帳號繼續」重試。');
+      } else if(signInMethodsStringList.contains('apple.com')) {
+        yield RegisteredByAnotherMethod(warningMessage: '由於您曾以 Apple 帳號登入，請點擊上方「以 Apple 帳號繼續」重試。');
+      } else if (signInMethodsStringList.contains('password')) {
         await RouteGenerator.navigateToEmailLogin(context, email: email);
         yield* renderingUIAfterEmailLogin(
           context,

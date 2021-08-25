@@ -1,6 +1,6 @@
 class FirebaseLoginStatus {
   FirebaseStatus status;
-  String message;
+  dynamic message;
 
   FirebaseLoginStatus({
     this.status,

@@ -19,6 +19,11 @@ class AppleLoading extends LoginState {}
 
 class FetchSignInMethodsForEmailLoading extends LoginState {}
 
+class RegisteredByAnotherMethod extends LoginInitState {
+  final String warningMessage;
+  RegisteredByAnotherMethod({this.warningMessage});
+}
+
 class LoginFail extends LoginState {
   final error;
   LoginFail({this.error});
