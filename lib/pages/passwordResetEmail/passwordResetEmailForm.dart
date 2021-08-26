@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:readr_app/blocs/passwordResetEmail/bloc.dart';
+import 'package:readr_app/blocs/passwordResetEmail/events.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/blocs/passwordResetEmail/states.dart';
-import 'package:readr_app/pages/passwordResetEmail/sendPasswordResetEmailButton.dart';
+import 'package:readr_app/pages/shared/sendingEmailButton.dart';
 
 class PasswordResetEmailForm extends StatefulWidget {
   final String email;
@@ -40,7 +43,13 @@ class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
     RegExp regex = RegExp(pattern);
     return _emailEditingController.text != null && regex.hasMatch(_emailEditingController.text);
   }
-  
+
+  _sendPasswordResetEmail(String email) {
+    context.read<PasswordResetEmailBloc>().add(
+      SendPasswordResetEmail(email: email)
+    );
+  }
+
   @override
   void dispose() {
     _emailEditingController.dispose();
@@ -143,10 +152,10 @@ class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
         widget.state is PasswordResetEmailSendingSuccess)
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: SendPasswordResetEmailButton(
+            child: SendingEmailButton(
               emailIsValid: _emailIsValid,
-              email: _emailEditingController.text,
               isWaiting: widget.state is PasswordResetEmailSendingSuccess,
+              onTap: () => _sendPasswordResetEmail(_emailEditingController.text),
             ),
           ),
         SizedBox(height: 24),
