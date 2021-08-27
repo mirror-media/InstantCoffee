@@ -7,6 +7,7 @@ abstract class EmailSignInRepos {
   Future<FirebaseLoginStatus> createUserWithEmailAndPassword(String email, String password);
   Future<FirebaseLoginStatus> signInWithEmailAndPassword(String email, String password);
   Future<FirebaseLoginStatus> sendPasswordResetEmail(String email);
+  Future<FirebaseLoginStatus> sendEmailVerification(String email, String redirectUrl);
   Future<bool> confirmPasswordReset(String code, String newPassword);
   Future<bool> confirmOldPassword(String oldPassword);
   Future<bool> updatePassword(String newPassword);
@@ -82,6 +83,45 @@ class EmailSignInServices implements EmailSignInRepos{
         email: email, 
         actionCodeSettings: acs
       );
+    } catch(onError) {
+      print('Error sending password reset email $onError');
+      return FirebaseLoginStatus(
+        status: FirebaseStatus.Error,
+        message: onError.code,
+      );
+    }
+
+    return FirebaseLoginStatus(
+      status: FirebaseStatus.Success,
+      message: 'Send password reset email: with firebase success',
+    );
+  }
+  
+  /// If input email and auth current user email is different,
+  /// it will verify the input email before updating email.
+  /// Or it will only send auth current user email verification.
+  Future<FirebaseLoginStatus> sendEmailVerification(String email, String redirectUrl) async {
+    var acs = ActionCodeSettings(
+      // URL you want to redirect back to. The domain (www.example.com) for this
+      // URL must be whitelisted in the Firebase Console.
+      url: redirectUrl,
+      // This must be true
+      handleCodeInApp: true,
+      iOSBundleId: env.baseConfig.iOSBundleId,
+      androidPackageName: env.baseConfig.androidPackageName,
+      // installIfNotAvailable
+      androidInstallApp: false,
+      // minimumVersion
+      androidMinimumVersion: "12",
+      dynamicLinkDomain: env.baseConfig.dynamicLinkDomain,
+    );
+
+    try{
+      if(_auth.currentUser.email == null || _auth.currentUser.email != email) {
+        _auth.currentUser.verifyBeforeUpdateEmail(email, acs);
+      }
+      
+      await _auth.currentUser.sendEmailVerification(acs);
     } catch(onError) {
       print('Error sending password reset email $onError');
       return FirebaseLoginStatus(
