@@ -8,6 +8,7 @@ import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/member.dart';
 import 'package:readr_app/pages/emailLogin/emailLoginPage.dart';
 import 'package:readr_app/pages/emailRegistered/emailRegisteredPage.dart';
+import 'package:readr_app/pages/emailVerification/emailVerificationPage.dart';
 import 'package:readr_app/pages/login/loginPage.dart';
 import 'package:readr_app/pages/magazineBrowser.dart';
 import 'package:readr_app/pages/magazine/magazinePage.dart';
@@ -36,6 +37,7 @@ class RouteGenerator {
   static const String editMemberProfile = '/editMemberProfile';
   static const String editMemberContactInfo = '/editMemberContactInfo';
   static const String deleteMember = '/deleteMember';
+  static const String emailVerification = '/emailVerification';
   static const String notificationSettings = '/notificationSettings';
   static const String story = '/story';
   static const String magazine = '/magazine';
@@ -145,6 +147,12 @@ class RouteGenerator {
           builder: (context) => DeleteMemberWidget(
             member: args['member'],
           ),
+          fullscreenDialog: true,
+        );
+      case emailVerification:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => EmailVerificationPage(),
           fullscreenDialog: true,
         );
       case notificationSettings:
@@ -351,6 +359,10 @@ class RouteGenerator {
         'member': member,
       },
     );
+  }
+
+  static void navigateToEmailVerification(BuildContext context) {
+    Navigator.of(context).pushNamed(emailVerification,);
   }
 
   static void navigateToNotificationSettings(BuildContext context, OnBoardingBloc onBoardingBloc) {
