@@ -10,6 +10,11 @@ import 'package:readr_app/models/member.dart';
 import 'package:readr_app/services/loginService.dart';
 import 'package:readr_app/services/memberService.dart';
 
+final String registeredByGoogleMethodWarningMessage = '由於您曾以Google帳號登入，請點擊上方「使用 Google 登入」重試。';
+final String registeredByFacebookMethodWarningMessage = '由於您曾以Facebook帳號登入，請點擊上方「使用 Facebook 登入」重試。';
+final String registeredByAppleMethodWarningMessage = '由於您曾以Apple帳號登入，請點擊上方「使用 Apple 登入」重試。';
+final String registeredByPasswordMethodWarningMessage = '由於您曾以email帳號密碼登入，請輸入下方email重試。';
+
 abstract class LoginEvents{
   Stream<LoginState> run(
     LoginRepos loginRepos,
@@ -75,13 +80,13 @@ abstract class LoginEvents{
       List<String> signInMethodsStringList = await LoginServices().fetchSignInMethodsForEmail(email);
 
       if(signInMethodsStringList.contains('google.com')) {
-        yield RegisteredByAnotherMethod(warningMessage: '由於您曾以Google帳號登入，請點擊上方「使用 Google 登入」重試。');
+        yield RegisteredByAnotherMethod(warningMessage: registeredByGoogleMethodWarningMessage);
       } else if(signInMethodsStringList.contains('facebook.com')) {
-        yield RegisteredByAnotherMethod(warningMessage: '由於您曾以Facebook帳號登入，請點擊上方「使用 Facebook 登入」重試。');
+        yield RegisteredByAnotherMethod(warningMessage: registeredByFacebookMethodWarningMessage);
       } else if(signInMethodsStringList.contains('apple.com')) {
-        yield RegisteredByAnotherMethod(warningMessage: '由於您曾以Apple帳號登入，請點擊上方「使用 Apple 登入」重試。');
+        yield RegisteredByAnotherMethod(warningMessage: registeredByAppleMethodWarningMessage);
       } else if (signInMethodsStringList.contains('password')) {
-        yield RegisteredByAnotherMethod(warningMessage: '由於您曾以email帳號密碼登入，請輸入下方email重試。');
+        yield RegisteredByAnotherMethod(warningMessage: registeredByPasswordMethodWarningMessage);
       } else {
         yield LoginFail(
           error: UnknownException(frebaseLoginStatus.message),
@@ -368,11 +373,11 @@ class FetchSignInMethodsForEmail extends LoginEvents {
       List<String> signInMethodsStringList = await loginRepos.fetchSignInMethodsForEmail(email);
 
       if(signInMethodsStringList.length == 1 && signInMethodsStringList.contains('google.com')) {
-        yield RegisteredByAnotherMethod(warningMessage: '由於您曾以 Google 帳號登入，請點擊上方「以 Google 帳號繼續」重試。');
+        yield RegisteredByAnotherMethod(warningMessage: registeredByGoogleMethodWarningMessage);
       } else if(signInMethodsStringList.length == 1 && signInMethodsStringList.contains('facebook.com')) {
-        yield RegisteredByAnotherMethod(warningMessage: '由於您曾以 Facebook 帳號登入，請點擊上方「以 Facebook 帳號繼續」重試。');
+        yield RegisteredByAnotherMethod(warningMessage: registeredByFacebookMethodWarningMessage);
       } else if(signInMethodsStringList.length == 1 && signInMethodsStringList.contains('apple.com')) {
-        yield RegisteredByAnotherMethod(warningMessage: '由於您曾以 Apple 帳號登入，請點擊上方「以 Apple 帳號繼續」重試。');
+        yield RegisteredByAnotherMethod(warningMessage: registeredByAppleMethodWarningMessage);
       } else if (signInMethodsStringList.contains('password')) {
         await RouteGenerator.navigateToEmailLogin(context, email: email);
         yield* renderingUIAfterEmailLogin(
