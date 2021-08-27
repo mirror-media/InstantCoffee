@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/emailVerification/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/pages/emailVerification/emailVerificationWidget.dart';
+import 'package:readr_app/services/emailSignInService.dart';
 
 class EmailVerificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      body: EmailVerificationWidget(),
+      body: BlocProvider(
+        create: (context) => EmailVerificationBloc(emailSignInRepos: EmailSignInServices()),
+        child: EmailVerificationWidget(),
+      ),
     );
   }
 

@@ -43,6 +43,7 @@ class BaseConfig {
   String get androidPackageName => isDev ? dev.androidPackageName : prod.androidPackageName;
 
   String get recoverPasswordUrl => isDev ? dev.recoverPasswordUrl : prod.recoverPasswordUrl;
+  String get finishEmailVerificationUrl => isDev ? dev.finishEmailVerificationUrl : prod.finishEmailVerificationUrl;
   String get dynamicLinkDomain => isDev ? dev.dynamicLinkDomain : prod.dynamicLinkDomain;
 
   String get iOSSectionAdJsonLocation => isDev ? dev.iOSSectionAdJsonLocation : prod.iOSSectionAdJsonLocation;
