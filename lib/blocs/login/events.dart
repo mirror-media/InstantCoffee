@@ -33,7 +33,8 @@ abstract class LoginEvents{
     } else if(frebaseLoginStatus.status == FirebaseStatus.Success) {
       yield* handleCreateMember(context, routeName, routeArguments);
     } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
-      if(frebaseLoginStatus.message.code == 'account-exists-with-different-credential') {
+      if(frebaseLoginStatus.message is FirebaseAuthException &&
+        frebaseLoginStatus.message.code == 'account-exists-with-different-credential') {
         yield* checkThirdPartyLoginEmail(frebaseLoginStatus);
       } else {
         yield LoginFail(

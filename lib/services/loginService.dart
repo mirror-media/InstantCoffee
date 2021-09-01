@@ -43,7 +43,7 @@ class LoginServices implements LoginRepos{
       print('Error sign in with google $onError');
       return FirebaseLoginStatus(
         status: FirebaseStatus.Error,
-        message: onError.toString(),
+        message: onError,
       );
     }
 
@@ -72,6 +72,8 @@ class LoginServices implements LoginRepos{
         try {
           // Once signed in, get the UserCredential
           await _auth.signInWithCredential(credential);
+          // Need to log out to avoid facebook login error 304
+          await facebookSignIn.logOut();
         } catch(onError) {
           print('Error sign in with facebook $onError');
           return FirebaseLoginStatus(
@@ -133,7 +135,7 @@ class LoginServices implements LoginRepos{
       print('Error sign in with apple $onError');
       return FirebaseLoginStatus(
         status: FirebaseStatus.Error,
-        message: onError.toString(),
+        message: onError,
       );
     }
 
