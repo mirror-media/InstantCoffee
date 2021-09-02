@@ -1,32 +1,33 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:readr_app/blocs/passwordResetEmail/bloc.dart';
-import 'package:readr_app/blocs/passwordResetEmail/events.dart';
+import 'package:readr_app/blocs/emailVerification/bloc.dart';
+import 'package:readr_app/blocs/emailVerification/events.dart';
+import 'package:readr_app/blocs/emailVerification/states.dart';
+import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/blocs/passwordResetEmail/states.dart';
 import 'package:readr_app/pages/shared/sendingEmailButton.dart';
 
-class PasswordResetEmailForm extends StatefulWidget {
-  final String email;
-  final PasswordResetEmailState state;
-  PasswordResetEmailForm({
-    @required this.email,
-    @required this.state,
+class EmailVerificationForm extends StatefulWidget {
+  final EmailVerificationState state;
+  EmailVerificationForm({
+    @required this.state
   });
 
   @override
-  _PasswordResetEmailFormState createState() => _PasswordResetEmailFormState();
+  _EmailVerificationFormState createState() => _EmailVerificationFormState();
 }
 
-class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
+class _EmailVerificationFormState extends State<EmailVerificationForm> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final _emailEditingController = TextEditingController();
-  bool _emailIsValid = false;
+  TextEditingController _emailEditingController = TextEditingController();
+  bool _emailIsValid = false;  
 
   @override
   void initState() {
-    _emailEditingController.text = widget.email;
+    _emailEditingController.text = _auth.currentUser?.email;
     _emailIsValid = _isEmailValid();
     _emailEditingController.addListener(
       () {
@@ -44,9 +45,21 @@ class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
     return _emailEditingController.text != null && regex.hasMatch(_emailEditingController.text);
   }
 
-  _sendPasswordResetEmail(String email) {
-    context.read<PasswordResetEmailBloc>().add(
-      SendPasswordResetEmail(email: email)
+  bool _isEmailReadOnly() {
+    for(int i=0; i<_auth.currentUser.providerData.length; i++) {
+      if(_auth.currentUser.providerData[i].providerId == 'password') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  _sendEmailVerification(String email, String redirectUrl) {
+    context.read<EmailVerificationBloc>().add(
+      SendEmailVerification(
+        email: email,
+        redirectUrl: redirectUrl
+      )
     );
   }
 
@@ -63,13 +76,12 @@ class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
         SizedBox(height: 48),
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: Text(
-            '請輸入您註冊時使用的 Email 信箱。我們會發送一封 Email 到這個地址，裡面附有重設/設定密碼的連結。',
-            style: TextStyle(
-              fontSize: 17,
-              color: Colors.black
-            ),
-          ),
+          child: Text('您的帳號尚未完成 Email 驗證，請輸入可用來接收驗證信的 Email 信箱。'),
+        ),
+        SizedBox(height: 36),
+        Padding(
+          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+          child: Text('這個 Email 將會自動綁定您目前的帳號。'),
         ),
         SizedBox(height: 24),
         Padding(
@@ -77,7 +89,7 @@ class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
           child: _emailTextField(),
         ),
         SizedBox(height: 24),
-        if(widget.state is PasswordResetEmailSendingFail)
+       if(widget.state is SendingEmailVerificationFail || widget.state is EmailVerificationError )
         ...[
           Center(
             child: Text(
@@ -90,20 +102,7 @@ class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
           ),
           SizedBox(height: 12),
         ],
-        if(widget.state is EmailUserNotFound)
-        ...[
-          Center(
-            child: Text(
-              '這個 Email 尚未註冊',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.red
-              ),
-            ),
-          ),
-          SizedBox(height: 12),
-        ],
-        if(widget.state is PasswordResetEmailSending)
+        if(widget.state is SendingEmailVerification)
         ...[
           Center(
             child: Text(
@@ -116,7 +115,7 @@ class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
           ),
           SizedBox(height: 12),
         ],
-        if(widget.state is PasswordResetEmailSendingSuccess)
+        if(widget.state is SendingEmailVerificationSuccess)
         ...[
           Center(
             child: Text(
@@ -141,24 +140,28 @@ class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
           ),
           SizedBox(height: 12),
         ],
-        if(widget.state is PasswordResetEmailSending)
+
+        if(widget.state is SendingEmailVerification)
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: _sendPasswordResetEmailLoadingButton(),
+            child: _sendEmailLoadingButton(),
           ),
-        if(widget.state is PasswordResetEmailInitState || 
-        widget.state is PasswordResetEmailSendingFail ||
-        widget.state is EmailUserNotFound ||
-        widget.state is PasswordResetEmailSendingSuccess)
+        if(widget.state is EmailVerificationInitState || 
+        widget.state is SendingEmailVerificationFail ||
+        widget.state is SendingEmailVerificationSuccess ||
+        widget.state is EmailVerificationError)
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: SendingEmailButton(
               emailIsValid: _emailIsValid,
-              isWaiting: widget.state is PasswordResetEmailSendingSuccess,
-              onTap: () => _sendPasswordResetEmail(_emailEditingController.text),
+              isWaiting: widget.state is SendingEmailVerificationSuccess,
+              onTap: () => _sendEmailVerification(
+                _emailEditingController.text, 
+                env.baseConfig.finishEmailVerificationUrl
+              ),
             ),
           ),
-        SizedBox(height: 24),
+         SizedBox(height: 24),
       ],
     );
   }
@@ -173,11 +176,14 @@ class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
   }
 
   Widget _emailTextField() {
+    bool emailIsReadOnly = _isEmailReadOnly();
+
     return Form(
       key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: TextFormField(
         validator: _validateEmail,
+        readOnly: emailIsReadOnly,
         controller: _emailEditingController,
         style: TextStyle(
           color: Colors.black,
@@ -190,6 +196,7 @@ class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
             color: _emailIsValid? Colors.black : Colors.red ,
             fontSize: 16,
           ),
+          border: emailIsReadOnly ? InputBorder.none : null,
           errorStyle: TextStyle(
             fontSize: 16.0,
           ),
@@ -197,8 +204,8 @@ class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
       ),
     );
   }
-  
-  Widget _sendPasswordResetEmailLoadingButton() {
+
+  Widget _sendEmailLoadingButton() {
     return Container(
       height: 50.0,
       decoration: BoxDecoration(

@@ -1,28 +1,26 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/blocs/passwordResetEmail/bloc.dart';
-import 'package:readr_app/blocs/passwordResetEmail/events.dart';
 
-class SendPasswordResetEmailButton extends StatefulWidget {
+class SendingEmailButton extends StatefulWidget {
   final bool emailIsValid;
   final bool isWaiting;
-  final String email;
+  final GestureTapCallback onTap;
   final int waitingSeconds;
-  SendPasswordResetEmailButton({
+
+  SendingEmailButton({
     @required this.emailIsValid,
     @required this.isWaiting,
-    @required this.email,
+    @required this.onTap,
     this.waitingSeconds = 30,
   });
 
   @override
-  _SendPasswordResetEmailButtonState createState() => _SendPasswordResetEmailButtonState();
+  _SendingEmailButtonState createState() => _SendingEmailButtonState();
 }
 
-class _SendPasswordResetEmailButtonState extends State<SendPasswordResetEmailButton> {
+class _SendingEmailButtonState extends State<SendingEmailButton> {
   bool _isWaiting;
   Timer _timer;
 
@@ -46,12 +44,6 @@ class _SendPasswordResetEmailButtonState extends State<SendPasswordResetEmailBut
       }
     );
     super.initState();
-  }
-
-  _sendPasswordResetEmail(String email) {
-    context.read<PasswordResetEmailBloc>().add(
-      SendPasswordResetEmail(email: email)
-    );
   }
 
   @override
@@ -115,9 +107,7 @@ class _SendPasswordResetEmailButtonState extends State<SendPasswordResetEmailBut
       ),
       onTap: _isWaiting
       ? null
-      : () {
-          _sendPasswordResetEmail(widget.email);
-        },
+      : widget.onTap,
     );
   }
 }
