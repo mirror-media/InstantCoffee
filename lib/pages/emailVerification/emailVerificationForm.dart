@@ -23,7 +23,7 @@ class _EmailVerificationFormState extends State<EmailVerificationForm> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _emailEditingController = TextEditingController();
-  bool _emailIsValid = false;
+  bool _emailIsValid = false;  
 
   @override
   void initState() {
@@ -43,6 +43,15 @@ class _EmailVerificationFormState extends State<EmailVerificationForm> {
     Pattern pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
     RegExp regex = RegExp(pattern);
     return _emailEditingController.text != null && regex.hasMatch(_emailEditingController.text);
+  }
+
+  bool _isEmailReadOnly() {
+    for(int i=0; i<_auth.currentUser.providerData.length; i++) {
+      if(_auth.currentUser.providerData[i].providerId == 'password') {
+        return true;
+      }
+    }
+    return false;
   }
 
   _sendEmailVerification(String email, String redirectUrl) {
@@ -167,11 +176,14 @@ class _EmailVerificationFormState extends State<EmailVerificationForm> {
   }
 
   Widget _emailTextField() {
+    bool emailIsReadOnly = _isEmailReadOnly();
+
     return Form(
       key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: TextFormField(
         validator: _validateEmail,
+        readOnly: emailIsReadOnly,
         controller: _emailEditingController,
         style: TextStyle(
           color: Colors.black,
@@ -184,6 +196,7 @@ class _EmailVerificationFormState extends State<EmailVerificationForm> {
             color: _emailIsValid? Colors.black : Colors.red ,
             fontSize: 16,
           ),
+          border: emailIsReadOnly ? InputBorder.none : null,
           errorStyle: TextStyle(
             fontSize: 16.0,
           ),
