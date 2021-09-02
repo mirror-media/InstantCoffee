@@ -76,6 +76,8 @@ class LoginServices implements LoginRepos{
           await facebookSignIn.logOut();
         } catch(onError) {
           print('Error sign in with facebook $onError');
+          // Need to log out to avoid facebook login error 304
+          await facebookSignIn.logOut();
           return FirebaseLoginStatus(
             status: FirebaseStatus.Error,
             message: onError,
