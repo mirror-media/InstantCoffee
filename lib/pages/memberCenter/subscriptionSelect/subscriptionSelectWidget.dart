@@ -1,10 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:readr_app/blocs/subscriptionSelect/bloc.dart';
 import 'package:readr_app/blocs/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/subscriptionSelect/states.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 
 class SubscriptionSelectWidget extends StatefulWidget {
   @override
@@ -12,6 +15,7 @@ class SubscriptionSelectWidget extends StatefulWidget {
 }
 
 class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -142,7 +146,21 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                       ),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    if(_auth.currentUser.emailVerified) {
+                      Fluttertoast.showToast(
+                        msg: '執行購買～',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.green,
+                        textColor: Colors.white,
+                        fontSize: 16.0
+                      );
+                    } else {
+                      RouteGenerator.navigateToEmailVerification(context);
+                    }
+                  },
                 );
               }
             ),
