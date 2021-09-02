@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -24,18 +26,32 @@ class _MirrorAppState extends State<MirrorApp> {
   // It cant trigger on iOS, cuz AppsFlyer's code on AppDelegate.swift break this feature.
   // The iOS DynamicLinks method will implement in initialAppsFlyer function.
   Future<void> initDynamicLinks() async {
+    FirebaseAuth _auth = FirebaseAuth.instance;
     FirebaseDynamicLinks.instance.onLink(
       onSuccess: (PendingDynamicLinkData dynamicLink) async {
         final Uri deepLink = dynamicLink?.link;
 
         if (deepLink != null && 
-          deepLink.path == '/__/auth/action' && 
-          deepLink.queryParameters['mode'] == 'resetPassword') {
-          Navigator.of(context).popUntil((route) => route.isFirst);
-          RouteGenerator.navigateToPasswordReset(
-            context, 
-            code: deepLink.queryParameters['oobCode'],
-          );
+          deepLink.path == '/__/auth/action') {
+          if(deepLink.queryParameters['mode'] == 'resetPassword') {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+            RouteGenerator.navigateToPasswordReset(
+              context, 
+              code: deepLink.queryParameters['oobCode'],
+            );
+          } else if(deepLink.queryParameters['mode'] == 'verifyEmail') {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+            await _auth.currentUser.reload();
+            Fluttertoast.showToast(
+              msg: 'email驗證成功',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0
+            );
+          }
         }
       },
       onError: (OnLinkErrorException e) async {
@@ -48,12 +64,25 @@ class _MirrorAppState extends State<MirrorApp> {
     final Uri deepLink = data?.link;
 
     if (deepLink != null && 
-      deepLink.path == '/__/auth/action' && 
-      deepLink.queryParameters['mode'] == 'resetPassword') {
-      RouteGenerator.navigateToPasswordReset(
-        context, 
-        code: deepLink.queryParameters['oobCode'],
-      );
+      deepLink.path == '/__/auth/action') {
+      if(deepLink.queryParameters['mode'] == 'resetPassword') {
+        RouteGenerator.navigateToPasswordReset(
+          context, 
+          code: deepLink.queryParameters['oobCode'],
+        );
+      } else if(deepLink.queryParameters['mode'] == 'verifyEmail') {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+        await _auth.currentUser.reload();
+        Fluttertoast.showToast(
+          msg: 'email驗證成功',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0
+        );
+      }
     }
   }
 
