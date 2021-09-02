@@ -3,10 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/memberBloc.dart';
+import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/memberResponse.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/member.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:readr_app/pages/memberCenter/paymentRecord/memberPaymentRecordPage.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionArticle/memberSubscriptionArticlePage.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionDetail/memberSubscriptionDetailPage.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectPage.dart';
 import 'package:readr_app/services/loginService.dart';
 
 class MemberWidget extends StatefulWidget {
@@ -80,8 +85,9 @@ class _MemberWidgetState extends State<MemberWidget> {
       child: ListView(
         children: [
           Container(
-            color: const Color(0xFFEFEFEF),
+            color: Colors.white,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if(status != Status.SavingLoading &&
                   status != Status.SavingError &&
@@ -133,22 +139,72 @@ class _MemberWidgetState extends State<MemberWidget> {
                   ),
                   SizedBox(height: 10,),
                 ],
-
-                SizedBox(
-                  width: 90,
-                  height: 90,
-                  child: Image.asset('assets/icon/icon.jpg'),
-                ),
-                SizedBox(height: 16,),
-                Center(
+                Padding(
+                  padding: const EdgeInsets.only(left: 24.0, right: 24.0),
                   child: Text(
-                    '你好',
+                    '我的會員等級',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: appColor
+                    ),
+                  ),
+                ),
+                SizedBox(height: 4,),
+                Padding(
+                  padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                  child: Text(
+                    'Basic 會員',
                     style: TextStyle(
                       fontSize: 20,
                     ),
                   ),
                 ),
-                SizedBox(height: 32,),
+                SizedBox(height: 24,),
+                Container(
+                  color: Colors.grey,
+                  width: width,
+                  height: 1,
+                ),
+                _navigateButton(
+                  '我的方案細節',
+                  () => Navigator.push(context,MaterialPageRoute(builder: (context) => MemberSubscriptionDetailPage())),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                  child: Container(
+                    color: Colors.grey,
+                    width: width,
+                    height: 1,
+                  ),
+                ),
+                _navigateButton(
+                  '訂閱中的文章',
+                  () => Navigator.push(context,MaterialPageRoute(builder: (context) => MemberSubscriptionArticlePage())),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                  child: Container(
+                    color: Colors.grey,
+                    width: width,
+                    height: 1,
+                  ),
+                ),
+                _navigateButton(
+                  '付款紀錄',
+                  () => Navigator.push(context,MaterialPageRoute(builder: (context) => MemberPaymentRecordPage())),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                  child: Container(
+                    color: Colors.grey,
+                    width: width,
+                    height: 1,
+                  ),
+                ),
+                _navigateButton(
+                  '升級 Premium 會員',
+                  () => Navigator.push(context,MaterialPageRoute(builder: (context) => SubscriptionSelectPage())),
+                ),
               ],
             ),
           ),
@@ -168,20 +224,9 @@ class _MemberWidgetState extends State<MemberWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children:[
-                InkWell(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
-                    child: Container(
-                      width: width,
-                      child: Text(
-                        '個人資料',
-                        style: TextStyle(
-                          fontSize: 17,
-                        ),
-                      ),
-                    ),
-                  ),
-                  onTap: (){
+                _navigateButton(
+                  '個人資料',
+                  (){
                     RouteGenerator.navigateToEditMemberProfile(
                       context, 
                       member,
@@ -201,20 +246,9 @@ class _MemberWidgetState extends State<MemberWidget> {
 
                 if(LoginServices.checkIsEmailAndPasswordLogin())
                 ...[
-                  InkWell(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
-                      child: Container(
-                        width: width,
-                        child: Text(
-                          '修改密碼',
-                          style: TextStyle(
-                            fontSize: 17,
-                          ),
-                        ),
-                      ),
-                    ),
-                    onTap: () async{
+                  _navigateButton(
+                    '修改密碼',
+                    () async{
                       await RouteGenerator.navigateToPasswordUpdate(context, _memberBloc);
                       if(_memberBloc.passwordUpdateSuccess != null) {
                         if(_memberBloc.passwordUpdateSuccess) {
@@ -237,20 +271,9 @@ class _MemberWidgetState extends State<MemberWidget> {
                   ),
                 ],
 
-                InkWell(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
-                    child: Container(
-                      width: width,
-                      child: Text(
-                        '聯絡資訊',
-                        style: TextStyle(
-                          fontSize: 17,
-                        ),
-                      ),
-                    ),
-                  ),
-                  onTap: (){
+                _navigateButton(
+                  '聯絡資訊',
+                  (){
                     RouteGenerator.navigateToEditMemberContactInfo(
                       context, 
                       member,
@@ -341,6 +364,34 @@ class _MemberWidgetState extends State<MemberWidget> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _navigateButton(
+    String title,
+    GestureTapCallback onTap
+  ) {
+    return InkWell(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 17,
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.grey,
+              size: 17,
+            ),
+          ],
+        ),
+      ),
+      onTap: onTap
     );
   }
 }
