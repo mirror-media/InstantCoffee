@@ -126,7 +126,7 @@ class _TermsOfServiceWidgetState extends State<TermsOfServiceWidget> {
               paragraph.contents[0].data != '') {
             return Padding(
               padding: const EdgeInsets.only(top: 16.0),
-              child: paragraphFormat.parseTheParagraph(paragraph, context),
+              child: paragraphFormat.parseTheParagraph(paragraph, context, htmlFontSize: 13),
             );
           }
           return Container();

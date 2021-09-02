@@ -18,13 +18,13 @@ import 'package:readr_app/widgets/quoteByWidget.dart';
 import 'package:readr_app/widgets/youtubeWidget.dart';
 
 class ParagraphFormat {
-  Widget parseTheParagraph(Paragraph paragraph, BuildContext context) {
+  Widget parseTheParagraph(Paragraph paragraph, BuildContext context, {double htmlFontSize = 20}) {
     switch (paragraph.type) {
       case 'header-one':
         {
           if (paragraph.contents.length > 0) {
             return parseTheTextToHtmlWidget(
-                '<h1>' + paragraph.contents[0].data + '</h1>', null);
+                '<h1>' + paragraph.contents[0].data + '</h1>', null, fontSize: htmlFontSize);
           }
           return Container();
         }
@@ -32,7 +32,7 @@ class ParagraphFormat {
         {
           if (paragraph.contents.length > 0) {
             return parseTheTextToHtmlWidget(
-                '<h2>' + paragraph.contents[0].data + '</h2>', null);
+                '<h2>' + paragraph.contents[0].data + '</h2>', null, fontSize: htmlFontSize);
           }
           return Container();
         }
@@ -40,7 +40,7 @@ class ParagraphFormat {
       case 'unstyled':
         {
           if (paragraph.contents.length > 0) {
-            return parseTheTextToHtmlWidget(paragraph.contents[0].data, null);
+            return parseTheTextToHtmlWidget(paragraph.contents[0].data, null, fontSize: htmlFontSize);
           }
           return Container();
         }
@@ -61,7 +61,7 @@ class ParagraphFormat {
                 SizedBox(width: 8),
                 Expanded(
                     child: parseTheTextToHtmlWidget(
-                        paragraph.contents[0].data, null)),
+                        paragraph.contents[0].data, null, fontSize: htmlFontSize)),
                 SizedBox(width: 8),
                 Icon(
                   Icons.format_quote,
@@ -76,12 +76,12 @@ class ParagraphFormat {
         break;
       case 'ordered-list-item':
         {
-          return buildOrderListWidget(paragraph.contents);
+          return buildOrderListWidget(paragraph.contents, htmlFontSize: htmlFontSize);
         }
         break;
       case 'unordered-list-item':
         {
-          return buildUnorderListWidget(paragraph.contents);
+          return buildUnorderListWidget(paragraph.contents, htmlFontSize: htmlFontSize);
         }
         break;
       case 'image':
@@ -194,7 +194,7 @@ class ParagraphFormat {
     return resultList;
   }
 
-  Widget buildOrderListWidget(ContentList contentList) {
+  Widget buildOrderListWidget(ContentList contentList, {double htmlFontSize = 20}) {
     List<String> dataList = _convertStrangedataList(contentList);
 
     return ListView.builder(
@@ -208,18 +208,18 @@ class ParagraphFormat {
               Text(
                 (index + 1).toString() + '.',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: htmlFontSize,
                   height: 1.8,
                 ),
               ),
               SizedBox(width: 16),
-              Expanded(child: parseTheTextToHtmlWidget(dataList[index], null)),
+              Expanded(child: parseTheTextToHtmlWidget(dataList[index], null, fontSize: htmlFontSize)),
             ],
           );
         });
   }
 
-  Widget buildUnorderListWidget(ContentList contentList) {
+  Widget buildUnorderListWidget(ContentList contentList, {double htmlFontSize = 20}) {
     List<String> dataList = _convertStrangedataList(contentList);
 
     return ListView.builder(
@@ -231,7 +231,7 @@ class ParagraphFormat {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(0, 20, 0, 8),
+                padding: EdgeInsets.fromLTRB(0, htmlFontSize, 0, 8),
                 child: Container(
                   width: 8,
                   height: 8,
@@ -242,7 +242,7 @@ class ParagraphFormat {
                 ),
               ),
               SizedBox(width: 16),
-              Expanded(child: parseTheTextToHtmlWidget(dataList[index], null)),
+              Expanded(child: parseTheTextToHtmlWidget(dataList[index], null, fontSize: htmlFontSize)),
             ],
           );
         });
