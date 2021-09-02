@@ -139,6 +139,8 @@ PODS:
     - AppAuth/Core (~> 1.4)
     - GTMSessionFetcher/Core (~> 1.5)
   - GTMSessionFetcher/Core (1.6.1)
+  - in_app_purchase_ios (0.0.1):
+    - Flutter
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -183,6 +185,7 @@ DEPENDENCIES:
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - google_mobile_ads (from `.symlinks/plugins/google_mobile_ads/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
+  - in_app_purchase_ios (from `.symlinks/plugins/in_app_purchase_ios/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - share (from `.symlinks/plugins/share/ios`)
@@ -245,6 +248,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_mobile_ads/ios"
   google_sign_in:
     :path: ".symlinks/plugins/google_sign_in/ios"
+  in_app_purchase_ios:
+    :path: ".symlinks/plugins/in_app_purchase_ios/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
   path_provider:
@@ -300,6 +305,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: eea970f4a389963963bffe8d8fabe43540678b9c
   GTMAppAuth: ad5c2b70b9a8689e1a04033c9369c4915bfcbe89
   GTMSessionFetcher: 36689134877faeb055b27dfa4ccc9ceaa42e029e
+  in_app_purchase_ios: 18c65275991b8a28b2a47634a7797fb23d5d773e
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
