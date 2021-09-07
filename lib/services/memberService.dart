@@ -6,7 +6,15 @@ import 'package:readr_app/models/memberRes.dart';
 import 'package:readr_app/models/graphqlBody.dart';
 import 'package:readr_app/models/member.dart';
 
-class MemberService {
+abstract class MemberRepos {
+  Future<bool> createMember(String email, String firebaseId, String token, {String nickname});
+  Future<Member> fetchMemberData(String firebaseId, String token);
+  Future<bool> updateMemberProfile(String firebaseId, String token, String name, Gender gender, String birthday);
+  Future<bool> updateMemberContactInfo(String firebaseId, String token, String phoneNumber, String country, String city, String district, String address);
+  Future<bool> deleteMember(String firebaseId, String token);
+}
+
+class MemberService implements MemberRepos{
   ApiBaseHelper _helper = ApiBaseHelper();
 
   static Map<String,String> getHeaders(String token) {
