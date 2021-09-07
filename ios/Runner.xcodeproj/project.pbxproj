@@ -441,7 +441,6 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = S2KP925EFZ;
 				ENABLE_BITCODE = NO;
-				FLUTTER_TARGET = /Users/mac/Documents/GitHub/InstantCoffee/lib/main_dev.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -529,7 +528,6 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = S2KP925EFZ;
 				ENABLE_BITCODE = NO;
-				FLUTTER_TARGET = /Users/mac/Documents/GitHub/InstantCoffee/lib/main_dev.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -614,7 +612,6 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = S2KP925EFZ;
 				ENABLE_BITCODE = NO;
-				FLUTTER_TARGET = /Users/mac/Documents/GitHub/InstantCoffee/lib/main_dev.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -699,7 +696,6 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = S2KP925EFZ;
 				ENABLE_BITCODE = NO;
-				FLUTTER_TARGET = /Users/mac/Documents/GitHub/InstantCoffee/lib/main_prod.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -842,7 +838,6 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = S2KP925EFZ;
 				ENABLE_BITCODE = NO;
-				FLUTTER_TARGET = /Users/mac/Documents/GitHub/InstantCoffee/lib/main_prod.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -877,7 +872,6 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = S2KP925EFZ;
 				ENABLE_BITCODE = NO;
-				FLUTTER_TARGET = /Users/mac/Documents/GitHub/InstantCoffee/lib/main_prod.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
