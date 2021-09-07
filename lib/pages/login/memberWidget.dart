@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/memberBloc.dart';
+import 'package:readr_app/blocs/memberDetail/cubit/memberdetail_cubit.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/memberResponse.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -26,7 +27,7 @@ class MemberWidget extends StatefulWidget {
 
 class _MemberWidgetState extends State<MemberWidget> {
   MemberBloc _memberBloc;
-  
+
   @override
   void initState() {
     _memberBloc = MemberBloc();
@@ -34,9 +35,7 @@ class _MemberWidgetState extends State<MemberWidget> {
   }
 
   _signOut() async {
-    context.read<LoginBloc>().add(
-      SignOut()
-    );
+    context.read<LoginBloc>().add(SignOut());
   }
 
   @override
@@ -44,42 +43,37 @@ class _MemberWidgetState extends State<MemberWidget> {
     var width = MediaQuery.of(context).size.width;
 
     return StreamBuilder<MemberResponse<Member>>(
-      initialData: MemberResponse.completed(widget.member),
-      stream: _memberBloc.memberStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.Complete:
-              Member member = snapshot.data.data;
-              return _memberSection(width, member, snapshot.data.status);
-              break;
+        initialData: MemberResponse.completed(widget.member),
+        stream: _memberBloc.memberStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            switch (snapshot.data.status) {
+              case Status.Complete:
+                Member member = snapshot.data.data;
+                return _memberSection(width, member, snapshot.data.status);
+                break;
 
-            case Status.SavingLoading:
-              Member member = snapshot.data.data;
-              return _memberSection(width, member, snapshot.data.status);
-              break;
+              case Status.SavingLoading:
+                Member member = snapshot.data.data;
+                return _memberSection(width, member, snapshot.data.status);
+                break;
 
-            case Status.SavingSuccessfully:
-              Member member = snapshot.data.data;
-              return _memberSection(width, member, snapshot.data.status);
-              break;
+              case Status.SavingSuccessfully:
+                Member member = snapshot.data.data;
+                return _memberSection(width, member, snapshot.data.status);
+                break;
 
-            case Status.SavingError:
-              Member member = snapshot.data.data;
-              return _memberSection(width, member, snapshot.data.status);
-              break;
+              case Status.SavingError:
+                Member member = snapshot.data.data;
+                return _memberSection(width, member, snapshot.data.status);
+                break;
+            }
           }
-        }
-        return Container();
-      }
-    );
+          return Container();
+        });
   }
 
-  _memberSection(
-    double width, 
-    Member member,
-    Status status
-  ) {
+  _memberSection(double width, Member member, Status status) {
     return Container(
       color: Colors.grey[300],
       child: ListView(
@@ -89,17 +83,21 @@ class _MemberWidgetState extends State<MemberWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if(status != Status.SavingLoading &&
-                  status != Status.SavingError &&
-                  status != Status.SavingSuccessfully
-                )
-                  SizedBox(height: 48,),
-                if(status == Status.SavingLoading)
+                if (status != Status.SavingLoading &&
+                    status != Status.SavingError &&
+                    status != Status.SavingSuccessfully)
+                  SizedBox(
+                    height: 48,
+                  ),
+                if (status == Status.SavingLoading)
                   Padding(
                     padding: const EdgeInsets.all(6.0),
-                    child: SpinKitThreeBounce(color: Colors.grey[300], size: 36,),
+                    child: SpinKitThreeBounce(
+                      color: Colors.grey[300],
+                      size: 36,
+                    ),
                   ),
-                if(status == Status.SavingSuccessfully)...[
+                if (status == Status.SavingSuccessfully) ...[
                   Container(
                     height: 38,
                     width: width,
@@ -117,9 +115,11 @@ class _MemberWidgetState extends State<MemberWidget> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                 ],
-                if(status == Status.SavingError)...[
+                if (status == Status.SavingError) ...[
                   Container(
                     height: 38,
                     width: width,
@@ -137,19 +137,20 @@ class _MemberWidgetState extends State<MemberWidget> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                 ],
                 Padding(
                   padding: const EdgeInsets.only(left: 24.0, right: 24.0),
                   child: Text(
                     '我的會員等級',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: appColor
-                    ),
+                    style: TextStyle(fontSize: 15, color: appColor),
                   ),
                 ),
-                SizedBox(height: 4,),
+                SizedBox(
+                  height: 4,
+                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 24.0, right: 24.0),
                   child: Text(
@@ -159,7 +160,9 @@ class _MemberWidgetState extends State<MemberWidget> {
                     ),
                   ),
                 ),
-                SizedBox(height: 24,),
+                SizedBox(
+                  height: 24,
+                ),
                 Container(
                   color: Colors.grey,
                   width: width,
@@ -167,7 +170,21 @@ class _MemberWidgetState extends State<MemberWidget> {
                 ),
                 _navigateButton(
                   '我的方案細節',
-                  () => Navigator.push(context,MaterialPageRoute(builder: (context) => MemberSubscriptionDetailPage())),
+                  () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) {
+                    // Check user's member type
+                    bool isPremium = true;
+                    if (isPremium) {
+                      return BlocProvider(
+                          child: MemberSubscriptionDetailPage(),
+                          create: (BuildContext context) =>
+                              MemberdetailCubit());
+                    } else {
+                      return MemberSubscriptionDetailPage(
+                        isPremium: isPremium,
+                      );
+                    }
+                  })),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
@@ -179,7 +196,11 @@ class _MemberWidgetState extends State<MemberWidget> {
                 ),
                 _navigateButton(
                   '訂閱中的文章',
-                  () => Navigator.push(context,MaterialPageRoute(builder: (context) => MemberSubscriptionArticlePage())),
+                  () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              MemberSubscriptionArticlePage())),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
@@ -191,7 +212,10 @@ class _MemberWidgetState extends State<MemberWidget> {
                 ),
                 _navigateButton(
                   '付款紀錄',
-                  () => Navigator.push(context,MaterialPageRoute(builder: (context) => MemberPaymentRecordPage())),
+                  () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MemberPaymentRecordPage())),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
@@ -203,12 +227,17 @@ class _MemberWidgetState extends State<MemberWidget> {
                 ),
                 _navigateButton(
                   '升級 Premium 會員',
-                  () => Navigator.push(context,MaterialPageRoute(builder: (context) => SubscriptionSelectPage())),
+                  () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SubscriptionSelectPage())),
                 ),
               ],
             ),
           ),
-          SizedBox(height: 36,),
+          SizedBox(
+            height: 36,
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: Text(
@@ -218,23 +247,24 @@ class _MemberWidgetState extends State<MemberWidget> {
               ),
             ),
           ),
-          SizedBox(height: 12,),
+          SizedBox(
+            height: 12,
+          ),
           Container(
             color: Colors.white,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children:[
+              children: [
                 _navigateButton(
                   '個人資料',
-                  (){
+                  () {
                     RouteGenerator.navigateToEditMemberProfile(
-                      context, 
+                      context,
                       member,
                       _memberBloc,
                     );
                   },
                 ),
-
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
                   child: Container(
@@ -243,20 +273,21 @@ class _MemberWidgetState extends State<MemberWidget> {
                     height: 1,
                   ),
                 ),
-
-                if(LoginServices.checkIsEmailAndPasswordLogin())
-                ...[
+                if (LoginServices.checkIsEmailAndPasswordLogin()) ...[
                   _navigateButton(
                     '修改密碼',
-                    () async{
-                      await RouteGenerator.navigateToPasswordUpdate(context, _memberBloc);
-                      if(_memberBloc.passwordUpdateSuccess != null) {
-                        if(_memberBloc.passwordUpdateSuccess) {
+                    () async {
+                      await RouteGenerator.navigateToPasswordUpdate(
+                          context, _memberBloc);
+                      if (_memberBloc.passwordUpdateSuccess != null) {
+                        if (_memberBloc.passwordUpdateSuccess) {
                           _signOut();
                         } else {
-                          _memberBloc.sinkToAdd(MemberResponse.savingError(member, 'error'));
+                          _memberBloc.sinkToAdd(
+                              MemberResponse.savingError(member, 'error'));
                           await Future.delayed(Duration(seconds: 1));
-                          _memberBloc.sinkToAdd(MemberResponse.completed(member));
+                          _memberBloc
+                              .sinkToAdd(MemberResponse.completed(member));
                         }
                       }
                     },
@@ -270,12 +301,11 @@ class _MemberWidgetState extends State<MemberWidget> {
                     ),
                   ),
                 ],
-
                 _navigateButton(
                   '聯絡資訊',
-                  (){
+                  () {
                     RouteGenerator.navigateToEditMemberContactInfo(
-                      context, 
+                      context,
                       member,
                       _memberBloc,
                     );
@@ -284,12 +314,14 @@ class _MemberWidgetState extends State<MemberWidget> {
               ],
             ),
           ),
-          SizedBox(height: 48,),
+          SizedBox(
+            height: 48,
+          ),
           Container(
             color: Colors.white,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children:[
+              children: [
                 InkWell(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
@@ -316,19 +348,17 @@ class _MemberWidgetState extends State<MemberWidget> {
                               onPressed: () => Navigator.of(context).pop(),
                             ),
                             FlatButton(
-                              child: Text('確認'),
-                                onPressed: () async{
+                                child: Text('確認'),
+                                onPressed: () async {
                                   _signOut();
                                   Navigator.of(context).pop();
-                                }
-                            )
+                                })
                           ],
                         );
                       },
                     );
                   },
                 ),
-
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
                   child: Container(
@@ -337,7 +367,6 @@ class _MemberWidgetState extends State<MemberWidget> {
                     height: 1,
                   ),
                 ),
-
                 InkWell(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
@@ -352,9 +381,9 @@ class _MemberWidgetState extends State<MemberWidget> {
                       ),
                     ),
                   ),
-                  onTap: (){
+                  onTap: () {
                     RouteGenerator.navigateToDeleteMember(
-                      context, 
+                      context,
                       member,
                     );
                   },
@@ -367,31 +396,27 @@ class _MemberWidgetState extends State<MemberWidget> {
     );
   }
 
-  Widget _navigateButton(
-    String title,
-    GestureTapCallback onTap
-  ) {
+  Widget _navigateButton(String title, GestureTapCallback onTap) {
     return InkWell(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 17,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 17,
+                ),
               ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.grey,
-              size: 17,
-            ),
-          ],
+              Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.grey,
+                size: 17,
+              ),
+            ],
+          ),
         ),
-      ),
-      onTap: onTap
-    );
+        onTap: onTap);
   }
 }
