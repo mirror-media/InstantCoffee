@@ -65,3 +65,34 @@ class FetchMemberProfile extends EditMemberProfileEvents {
     }
   }
 }
+
+class UpdateMemberProfile extends EditMemberProfileEvents {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  final Member editMember;
+  UpdateMemberProfile({
+    this.editMember,
+  });
+
+  @override
+  String toString() => 'UpdateMemberProfile';
+
+  @override
+  Stream<EditMemberProfileState> run(MemberRepos memberRepos) async*{
+    print(this.toString());
+    yield SavingLoading(member: editMember);
+    String token = await _auth.currentUser.getIdToken();
+    bool updateSuccess = await memberRepos.updateMemberProfile(
+      _auth.currentUser.uid,
+      token,
+      editMember.name,
+      editMember.gender,
+      editMember.birthday
+    );
+
+    if(updateSuccess) {
+      yield SavingSuccess(member: editMember);
+    } else {
+      yield SavingError(member: editMember);
+    }
+  }
+}
