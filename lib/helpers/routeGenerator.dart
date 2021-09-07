@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/memberBloc.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
+import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
 import 'package:readr_app/mirrorApp.dart';
 import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/member.dart';
@@ -116,7 +117,7 @@ class RouteGenerator {
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => PasswordUpdatePage(
-            memberBloc: args['memberBloc'],
+            passwordUpdateBloc: args['passwordUpdateBloc'],
           ),
           fullscreenDialog: true,
         );
@@ -311,12 +312,12 @@ class RouteGenerator {
 
   static Future<void> navigateToPasswordUpdate(
     BuildContext context,
-    MemberBloc memberBloc,
+    PasswordUpdateBloc passwordUpdateBloc,
   ) async{
     await Navigator.of(context).pushNamed(
       passwordUpdate,
       arguments: {
-        'memberBloc': memberBloc,
+        'passwordUpdateBloc': passwordUpdateBloc,
       },
     );
   }
