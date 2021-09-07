@@ -21,7 +21,7 @@ import 'package:readr_app/pages/passwordUpdate/passwordUpdatePage.dart';
 import 'package:readr_app/pages/search/searchPage.dart';
 import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/widgets/deleteMemberWidget.dart';
-import 'package:readr_app/widgets/editMemberProfile.dart';
+import 'package:readr_app/pages/memberCenter/editMemberProfile/editMemberProfilePage.dart';
 import 'package:readr_app/widgets/editMemberContactInfo.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -122,13 +122,9 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case editMemberProfile:
-        Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => EditMemberProfile(
-            member: args['member'],
-            memberBloc: args['memberBloc'],
-          ),
+          builder: (context) => EditMemberProfilePage(),
           fullscreenDialog: true,
         );
       case editMemberContactInfo:
@@ -322,18 +318,8 @@ class RouteGenerator {
     );
   }
 
-  static void navigateToEditMemberProfile(
-    BuildContext context, 
-    Member member,
-    MemberBloc memberBloc,
-  ) {
-    Navigator.of(context).pushNamed(
-      editMemberProfile,
-      arguments: {
-        'member': member,
-        'memberBloc': memberBloc,
-      },
-    );
+  static void navigateToEditMemberProfile(BuildContext context) {
+    Navigator.of(context).pushNamed(editMemberProfile);
   }
 
   static void navigateToEditMemberContactInfo(
