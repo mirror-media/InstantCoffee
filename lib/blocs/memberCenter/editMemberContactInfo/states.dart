@@ -17,3 +17,22 @@ class MemberLoadedError extends EditMemberContactInfoState {
     this.error,
   });
 }
+
+class SavingLoading extends EditMemberContactInfoState {
+  final Member member;
+  SavingLoading({this.member});
+}
+
+class SavingSuccess extends EditMemberContactInfoState {
+  final Member member;
+  SavingSuccess({this.member});
+}
+
+class SavingError extends EditMemberContactInfoState {
+  final Member member;
+  final error;
+  SavingError({
+    this.member,
+    this.error,
+  });
+}

@@ -65,3 +65,51 @@ class FetchMemberContactInfo extends EditMemberContactInfoEvents {
     }
   }
 }
+
+class UpdateMemberContactInfo extends EditMemberContactInfoEvents {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  final Member editMember;
+  UpdateMemberContactInfo({
+    this.editMember,
+  });
+
+  @override
+  String toString() => 'UpdateMemberContactInfo';
+
+  @override
+  Stream<EditMemberContactInfoState> run(MemberRepos memberRepos) async*{
+    print(this.toString());
+    yield SavingLoading(member: editMember);
+    String token = await _auth.currentUser.getIdToken();
+    bool updateSuccess = await memberRepos.updateMemberContactInfo(
+      _auth.currentUser.uid, 
+      token, 
+      editMember.phoneNumber, 
+      editMember.contactAddress.country, 
+      editMember.contactAddress.city, 
+      editMember.contactAddress.district, 
+      editMember.contactAddress.address
+    );
+
+    if(updateSuccess) {
+      yield SavingSuccess(member: editMember);
+    } else {
+      yield SavingError(member: editMember);
+    }
+  }
+}
+
+class ChangeMember extends EditMemberContactInfoEvents {
+  final Member member;
+  ChangeMember({
+    this.member,
+  });
+  @override
+  String toString() => 'ChangeMember';
+
+  @override
+  Stream<EditMemberContactInfoState> run(MemberRepos memberRepos) async*{
+    print(this.toString());
+    yield MemberLoaded(member: member);
+  }
+}
