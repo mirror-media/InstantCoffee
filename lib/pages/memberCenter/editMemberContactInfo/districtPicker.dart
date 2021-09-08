@@ -1,13 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:readr_app/blocs/memberContactInfoBloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
+import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/events.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/models/cityList.dart';
+import 'package:readr_app/models/member.dart';
 
 class DistrictPicker extends StatefulWidget {
-  final MemberContactInfoBloc memberContactInfoBloc;
+  final CityList cityList;
+  final Member member;
   DistrictPicker({
-    @required this.memberContactInfoBloc,
+    @required this.cityList,
+    @required this.member,
   });
 
   @override
@@ -22,23 +28,29 @@ class _DistrictPickerState extends State<DistrictPicker> {
   @override
   void initState() {
     _isPickerActivated = false;
-    _district = widget.memberContactInfoBloc.editMember.contactAddress.district;
-    setDistrictListWidget();
+    _district = widget.member.contactAddress.district;
+    _setDistrictListWidget();
     super.initState();
   }
 
   @override
   void didUpdateWidget(DistrictPicker oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _district = widget.memberContactInfoBloc.editMember.contactAddress.district;
-    setDistrictListWidget();
+    _district = widget.member.contactAddress.district;
+    _setDistrictListWidget();
   }
 
-  setDistrictListWidget() {
-    _districtListWidget = List<Widget>();
-    widget.memberContactInfoBloc.cityList.forEach(
+  _changeMember(Member member) {
+    context.read<EditMemberContactInfoBloc>().add(
+      ChangeMember(member: member)
+    );
+  }
+
+  _setDistrictListWidget() {
+    _districtListWidget = [];
+    widget.cityList.forEach(
       (city) { 
-        if(city.name == widget.memberContactInfoBloc.editMember.contactAddress.city) {
+        if(city.name == widget.member.contactAddress.city) {
           city.districtList.forEach(
             (district) { 
               _districtListWidget.add(Text(district.name));
@@ -97,12 +109,12 @@ class _DistrictPickerState extends State<DistrictPicker> {
               ),
             ),
             onTap: () {
-              if(widget.memberContactInfoBloc.editMember.contactAddress.country != null && 
-              widget.memberContactInfoBloc.editMember.contactAddress.country == '臺灣' && 
-              widget.memberContactInfoBloc.editMember.contactAddress.city != null) {
+              if(widget.member.contactAddress.country != null && 
+              widget.member.contactAddress.country == '臺灣' && 
+              widget.member.contactAddress.city != null) {
                 setState(() {
                   _isPickerActivated = true;
-                  _showPicker(pickerHeight, widget.memberContactInfoBloc);
+                  _showPicker(pickerHeight, widget.cityList, widget.member);
                 });
               }
             },
@@ -112,14 +124,14 @@ class _DistrictPickerState extends State<DistrictPicker> {
     );
   }
 
-  _showPicker(double height, MemberContactInfoBloc memberContactInfoBloc) async{
-    int cityIndex = memberContactInfoBloc.cityList.findIndexByName(
-      memberContactInfoBloc.editMember.contactAddress.city
+  _showPicker(double height, CityList cityList, Member member) async{
+    int cityIndex = cityList.findIndexByName(
+      member.contactAddress.city
     );
 
     int targetIndex = _district == null || cityIndex == null
     ? 0
-    : memberContactInfoBloc.cityList[cityIndex].districtList.findIndexByName(_district);
+    : cityList[cityIndex].districtList.findIndexByName(_district);
 
     await showModalBottomSheet(
       context: context,
@@ -161,9 +173,9 @@ class _DistrictPickerState extends State<DistrictPicker> {
                         ),
                       ),
                       onTap: (){
-                        _district = memberContactInfoBloc.cityList[cityIndex].districtList[targetIndex].name;
-                        memberContactInfoBloc.editMember.contactAddress.district = _district;
-                        memberContactInfoBloc.sinkToAdd(ApiResponse.completed(memberContactInfoBloc.editMember));
+                        _district = cityList[cityIndex].districtList[targetIndex].name;
+                        member.contactAddress.district = _district;
+                        _changeMember(member);
                         Navigator.pop(context);
                       }
                     ),

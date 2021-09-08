@@ -1,13 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:readr_app/blocs/memberContactInfoBloc.dart';
-import 'package:readr_app/helpers/apiResponse.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
+import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/events.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/models/countryList.dart';
+import 'package:readr_app/models/member.dart';
 
 class CountryPicker extends StatefulWidget {
-  final MemberContactInfoBloc memberContactInfoBloc;
+  final CountryList countryList;
+  final Member member;
   CountryPicker({
-    @required this.memberContactInfoBloc,
+    @required this.countryList,
+    @required this.member,
   });
 
   @override
@@ -22,14 +27,20 @@ class _CountryPickerState extends State<CountryPicker> {
   @override
   void initState() {
     _isPickerActivated = false;
-    _country = widget.memberContactInfoBloc.editMember.contactAddress.country;
-    setCountryListWidget();
+    _country = widget.member.contactAddress.country;
+    _setCountryListWidget();
     super.initState();
   }
 
-  setCountryListWidget() {
-    _countryListWidget = List<Widget>();
-    widget.memberContactInfoBloc.countryList.forEach(
+  _changeMember(Member member) {
+    context.read<EditMemberContactInfoBloc>().add(
+      ChangeMember(member: member)
+    );
+  }
+
+  _setCountryListWidget() {
+    _countryListWidget = [];
+    widget.countryList.forEach(
       (country) { 
         _countryListWidget.add(Text(country.taiwanName));
       }
@@ -98,7 +109,7 @@ class _CountryPickerState extends State<CountryPicker> {
             onTap: () {
               setState(() {
                 _isPickerActivated = true;
-                _showPicker(pickerHeight, widget.memberContactInfoBloc);
+                _showPicker(pickerHeight, widget.countryList, widget.member);
               });
             },
           ),
@@ -107,10 +118,10 @@ class _CountryPickerState extends State<CountryPicker> {
     );
   }
 
-  _showPicker(double height, MemberContactInfoBloc memberContactInfoBloc) async{
+  _showPicker(double height, CountryList countryList, Member member) async{
     int targetIndex = _country == null
-    ? memberContactInfoBloc.countryList.findIndexByTaiwanName('臺灣')
-    : memberContactInfoBloc.countryList.findIndexByTaiwanName(_country);
+    ? countryList.findIndexByTaiwanName('臺灣')
+    : countryList.findIndexByTaiwanName(_country);
 
     await showModalBottomSheet(
       context: context,
@@ -153,13 +164,13 @@ class _CountryPickerState extends State<CountryPicker> {
                       ),
                       onTap: (){
                         setState(() {
-                          _country = memberContactInfoBloc.countryList[targetIndex].taiwanName;
-                          memberContactInfoBloc.editMember.contactAddress.country = _country;
+                          _country = countryList[targetIndex].taiwanName;
+                          member.contactAddress.country = _country;
                           if(_country != '臺灣') {
-                            memberContactInfoBloc.editMember.contactAddress.city = null;
-                            memberContactInfoBloc.editMember.contactAddress.district = null;
+                            member.contactAddress.city = null;
+                            member.contactAddress.district = null;
                           }
-                          memberContactInfoBloc.sinkToAdd(ApiResponse.completed(memberContactInfoBloc.editMember));
+                          _changeMember(member);
                           Navigator.pop(context);
                         });
                       }

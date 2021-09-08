@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/events.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/states.dart';
-import 'package:readr_app/blocs/memberContactInfoBloc.dart';
-import 'package:readr_app/helpers/apiResponse.dart';
+import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/models/cityList.dart';
+import 'package:readr_app/models/countryList.dart';
 import 'package:readr_app/models/member.dart';
 import 'package:readr_app/pages/memberCenter/editMemberContactInfo/cityPicker.dart';
 import 'package:readr_app/pages/memberCenter/editMemberContactInfo/countryPicker.dart';
@@ -16,60 +21,159 @@ class EditMemberContactInfoWidget extends StatefulWidget {
 }
 
 class _EditMemberContactInfoWidgetState extends State<EditMemberContactInfoWidget> {
-  MemberContactInfoBloc _memberContactInfoBloc;
+  CountryList _countryList;
+  CityList _cityList;
 
   @override
   void initState() {
-    _fetchMemberContactInfo();
+    fetchCountryListAndCityListFromJson();
     super.initState();
   }
 
+  Future<void> fetchCountryListAndCityListFromJson() async{
+    String jsonCountries = await rootBundle.loadString('packages/constants/countries.json');
+    final jsonCountryList = json.decode(jsonCountries);
+    _countryList = CountryList.fromJson(jsonCountryList);
+
+    String jsonCities = await rootBundle.loadString('packages/constants/taiwan-districts.json');
+    final jsonCityList = json.decode(jsonCities);
+    _cityList = CityList.fromJson(jsonCityList);
+
+    setState(() {});
+    _fetchMemberContactInfo();
+  }
+  
   _fetchMemberContactInfo() {
     context.read<EditMemberContactInfoBloc>().add(
       FetchMemberContactInfo()
     );
   }
 
+  _updateMemberContactInfo(Member member) {
+    context.read<EditMemberContactInfoBloc>().add(
+      UpdateMemberContactInfo(editMember: member)
+    );
+  }
+
+  void _delayNavigatorPop() async{
+    await Future.delayed(Duration());
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
+    if(_countryList == null || _cityList == null) {
+      return Scaffold(
+        appBar: _buildBar(context, null),
+        body: _loadingWidget(),
+      );
+    }
+
     return BlocBuilder<EditMemberContactInfoBloc, EditMemberContactInfoState>(
       builder: (BuildContext context, EditMemberContactInfoState state) {
         if (state is MemberLoadedError) {
           final error = state.error;
           print('StoryError: ${error.message}');
-          return Container();
+          return Scaffold(
+            appBar: _buildBar(context, null),
+            body: Container(),
+          );
         }
 
         if (state is MemberLoaded) {
           Member member = state.member;
-          _memberContactInfoBloc = MemberContactInfoBloc(member.copy());
-          return StreamBuilder<ApiResponse<Member>>(
-            stream: _memberContactInfoBloc.memberStream,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                switch (snapshot.data.status) {
-                  case Status.LOADING:
-                    return Center(child: CircularProgressIndicator());
-                    break;
+          return Scaffold(
+            appBar: _buildBar(context, member),
+            body: _contactInfoForm(member),
+          );
+        }
 
-                  case Status.LOADINGMORE:
-                  case Status.COMPLETED:
-                    return _buildBody(_memberContactInfoBloc);
-                    break;
+        if (state is SavingLoading) {
+          Member member = state.member;
 
-                  case Status.ERROR:
-                    return Container();
-                    break;
-                }
-              }
-              return Container();
-            },
+          return Scaffold(
+            appBar: _buildBar(context, member, isSaveLoading: true),
+            body: _contactInfoForm(member),
+          );
+        }
+
+        if (state is SavingSuccess) {
+          _delayNavigatorPop();
+          Member member = state.member;
+          
+          return Scaffold(
+            appBar: _buildBar(context, member),
+            body: _contactInfoForm(member),
+          );
+        }
+
+        if (state is SavingError) {
+          _delayNavigatorPop();
+          Member member = state.member;
+
+          return Scaffold(
+            appBar: _buildBar(context, member),
+            body: _contactInfoForm(member),
           );
         }
 
         // state is Init, Loading
-        return _loadingWidget();
+        return Scaffold(
+          appBar: _buildBar(context, null),
+          body: _loadingWidget(),
+        );
       }
+    );
+  }
+  
+  Widget _buildBar(
+    BuildContext context, 
+    Member member, 
+    { bool isSaveLoading = false }
+  ) {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      backgroundColor: appColor,
+      centerTitle: true,
+      titleSpacing: 0.0,
+      title: Row(
+        crossAxisAlignment: CrossAxisAlignment.baseline,
+        textBaseline: TextBaseline.alphabetic,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          TextButton(
+            child: Text(
+              '取消',
+              style: TextStyle(fontSize: 16, color: Colors.white),
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          Text('修改聯絡資訊'),
+          if(!isSaveLoading)
+            TextButton(
+              child: Text(
+                '儲存',
+                style: TextStyle(
+                  fontSize: 16, 
+                  color: member == null
+                  ? Colors.grey
+                  : Colors.white
+                ),
+              ),
+              onPressed: member == null
+              ? null
+              : () {
+                  _updateMemberContactInfo(member);
+                  print('save');
+                },
+            ),
+          if(isSaveLoading)
+            TextButton(
+              child: SpinKitRipple(color: Colors.white, size: 32,),
+              onPressed: null,
+            ),
+        ],
+      ),
     );
   }
 
@@ -77,22 +181,23 @@ class _EditMemberContactInfoWidgetState extends State<EditMemberContactInfoWidge
     return Center(child: CircularProgressIndicator(),);
   }
 
-  Widget _buildBody(MemberContactInfoBloc memberContactInfoBloc) {
+  Widget _contactInfoForm(Member member) {
     return ListView(
       children: [
         SizedBox(height: 24),
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: _phoneTextField(memberContactInfoBloc.editMember),
+          child: _phoneTextField(member),
         ),
         SizedBox(height: 24),
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
           child: CountryPicker(
-            memberContactInfoBloc: memberContactInfoBloc,
+            member: member,
+            countryList: _countryList,
           ),
         ),
-        if(memberContactInfoBloc.editMember.contactAddress.country == '臺灣')...[
+        if(member.contactAddress.country == '臺灣')...[
           SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
@@ -101,14 +206,16 @@ class _EditMemberContactInfoWidgetState extends State<EditMemberContactInfoWidge
                 Expanded(
                   flex: 3,
                   child: CityPicker(
-                    memberContactInfoBloc: memberContactInfoBloc,
+                    member: member,
+                    cityList: _cityList,
                   ),
                 ),
                 SizedBox(width: 12),
                 Expanded(
                   flex: 4,
                   child: DistrictPicker(
-                    memberContactInfoBloc: memberContactInfoBloc,
+                    member: member,
+                    cityList: _cityList,
                   ),
                 ),
               ],
@@ -118,7 +225,7 @@ class _EditMemberContactInfoWidgetState extends State<EditMemberContactInfoWidge
         SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: _addressTextField(memberContactInfoBloc.editMember),
+          child: _addressTextField(member),
         ),
       ],
     );
