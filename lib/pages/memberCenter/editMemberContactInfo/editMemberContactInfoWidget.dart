@@ -98,6 +98,7 @@ class _EditMemberContactInfoWidgetState extends State<EditMemberContactInfoWidge
         }
 
         if (state is SavingSuccess) {
+          context.read<EditMemberContactInfoBloc>().memberContactInfoUpdateSuccess = true;
           _delayNavigatorPop();
           Member member = state.member;
           
@@ -108,6 +109,7 @@ class _EditMemberContactInfoWidgetState extends State<EditMemberContactInfoWidge
         }
 
         if (state is SavingError) {
+          context.read<EditMemberContactInfoBloc>().memberContactInfoUpdateSuccess = false;
           _delayNavigatorPop();
           Member member = state.member;
 
