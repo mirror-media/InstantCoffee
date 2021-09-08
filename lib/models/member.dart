@@ -47,7 +47,7 @@ class Member {
         country: json['country'],
         city: json['city'],
         district: json['district'],
-        address: json['adress'],
+        address: json['address'],
       ),
     );
   }
