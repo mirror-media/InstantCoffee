@@ -8,6 +8,8 @@ class EditMemberProfileBloc extends Bloc<EditMemberProfileEvents, EditMemberProf
   
   EditMemberProfileBloc({this.memberRepos}) : super(EditMemberProfileInitState());
 
+  bool memberProfileUpdateSuccess;
+
   @override
   Stream<EditMemberProfileState> mapEventToState(EditMemberProfileEvents event) async* {
     yield* event.run(memberRepos);

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
+import 'package:readr_app/blocs/memberCenter/editMemberProfile/bloc.dart';
 import 'package:readr_app/blocs/memberDetail/cubit/memberdetail_cubit.dart';
 import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
@@ -14,6 +15,7 @@ import 'package:readr_app/pages/memberCenter/subscriptionDetail/memberSubscripti
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectPage.dart';
 import 'package:readr_app/services/emailSignInService.dart';
 import 'package:readr_app/services/loginService.dart';
+import 'package:readr_app/services/memberService.dart';
 
 class MemberWidget extends StatefulWidget {
   final Member member;
@@ -171,8 +173,37 @@ class _MemberWidgetState extends State<MemberWidget> {
               children: [
                 _navigateButton(
                   '個人資料',
-                  (){
-                    RouteGenerator.navigateToEditMemberProfile(context);
+                  () async{
+                    EditMemberProfileBloc editMemberProfileBloc = EditMemberProfileBloc(memberRepos: MemberService());
+                    await RouteGenerator.navigateToEditMemberProfile(
+                      context, 
+                      editMemberProfileBloc
+                    );
+
+                    bool updateSuccess = editMemberProfileBloc.memberProfileUpdateSuccess;
+                    if(updateSuccess!= null) {
+                      if(updateSuccess) {
+                        Fluttertoast.showToast(
+                          msg: '儲存成功',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0
+                        );
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: '儲存失敗，請再試一次',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0
+                        );
+                      }
+                    }
                   },
                 ),
                 Padding(

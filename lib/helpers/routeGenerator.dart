@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:readr_app/blocs/memberCenter/editMemberProfile/bloc.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
 import 'package:readr_app/mirrorApp.dart';
@@ -121,9 +122,12 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case editMemberProfile:
+        Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => EditMemberProfilePage(),
+          builder: (context) => EditMemberProfilePage(
+            editMemberProfileBloc: args['editMemberProfileBloc'],
+          ),
           fullscreenDialog: true,
         );
       case editMemberContactInfo:
@@ -313,8 +317,16 @@ class RouteGenerator {
     );
   }
 
-  static void navigateToEditMemberProfile(BuildContext context) {
-    Navigator.of(context).pushNamed(editMemberProfile);
+  static Future<void> navigateToEditMemberProfile(
+    BuildContext context,
+    EditMemberProfileBloc editMemberProfileBloc,
+  ) async{
+    await Navigator.of(context).pushNamed(
+      editMemberProfile,
+      arguments: {
+        'editMemberProfileBloc': editMemberProfileBloc,
+      },
+    );
   }
 
   static void navigateToEditMemberContactInfo(BuildContext context) {

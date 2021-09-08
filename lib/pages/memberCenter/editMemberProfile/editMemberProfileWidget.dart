@@ -70,6 +70,7 @@ class _EditMemberProfileWidgetState extends State<EditMemberProfileWidget> {
         }
 
         if (state is SavingSuccess) {
+          context.read<EditMemberProfileBloc>().memberProfileUpdateSuccess = true;
           _delayNavigatorPop();
           Member member = state.member;
           
@@ -80,6 +81,7 @@ class _EditMemberProfileWidgetState extends State<EditMemberProfileWidget> {
         }
 
         if (state is SavingError) {
+          context.read<EditMemberProfileBloc>().memberProfileUpdateSuccess = false;
           _delayNavigatorPop();
           Member member = state.member;
 
