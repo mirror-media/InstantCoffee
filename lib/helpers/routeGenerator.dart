@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:readr_app/blocs/memberBloc.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
+import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
 import 'package:readr_app/mirrorApp.dart';
 import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/member.dart';
@@ -20,8 +20,8 @@ import 'package:readr_app/pages/passwordUpdate/passwordUpdatePage.dart';
 import 'package:readr_app/pages/search/searchPage.dart';
 import 'package:readr_app/pages/storyPage.dart';
 import 'package:readr_app/widgets/deleteMemberWidget.dart';
-import 'package:readr_app/widgets/editMemberProfile.dart';
-import 'package:readr_app/widgets/editMemberContactInfo.dart';
+import 'package:readr_app/pages/memberCenter/editMemberProfile/editMemberProfilePage.dart';
+import 'package:readr_app/pages/memberCenter/editMemberContactInfo/editMemberContactInfoPage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RouteGenerator {
@@ -116,28 +116,20 @@ class RouteGenerator {
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => PasswordUpdatePage(
-            memberBloc: args['memberBloc'],
+            passwordUpdateBloc: args['passwordUpdateBloc'],
           ),
           fullscreenDialog: true,
         );
       case editMemberProfile:
-        Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => EditMemberProfile(
-            member: args['member'],
-            memberBloc: args['memberBloc'],
-          ),
+          builder: (context) => EditMemberProfilePage(),
           fullscreenDialog: true,
         );
       case editMemberContactInfo:
-        Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => EditMemberContactInfo(
-            member: args['member'],
-            memberBloc: args['memberBloc'],
-          ),
+          builder: (context) => EditMemberContactInfoPage(),
           fullscreenDialog: true,
         );
       case deleteMember:
@@ -311,42 +303,22 @@ class RouteGenerator {
 
   static Future<void> navigateToPasswordUpdate(
     BuildContext context,
-    MemberBloc memberBloc,
+    PasswordUpdateBloc passwordUpdateBloc,
   ) async{
     await Navigator.of(context).pushNamed(
       passwordUpdate,
       arguments: {
-        'memberBloc': memberBloc,
+        'passwordUpdateBloc': passwordUpdateBloc,
       },
     );
   }
 
-  static void navigateToEditMemberProfile(
-    BuildContext context, 
-    Member member,
-    MemberBloc memberBloc,
-  ) {
-    Navigator.of(context).pushNamed(
-      editMemberProfile,
-      arguments: {
-        'member': member,
-        'memberBloc': memberBloc,
-      },
-    );
+  static void navigateToEditMemberProfile(BuildContext context) {
+    Navigator.of(context).pushNamed(editMemberProfile);
   }
 
-  static void navigateToEditMemberContactInfo(
-    BuildContext context, 
-    Member member, 
-    MemberBloc memberBloc,
-  ) {
-    Navigator.of(context).pushNamed(
-      editMemberContactInfo,
-      arguments: {
-        'member': member,
-        'memberBloc': memberBloc,
-      },
-    );
+  static void navigateToEditMemberContactInfo(BuildContext context) {
+    Navigator.of(context).pushNamed(editMemberContactInfo);
   }
 
   static void navigateToDeleteMember(
