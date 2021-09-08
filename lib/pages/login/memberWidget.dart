@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
+import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberProfile/bloc.dart';
 import 'package:readr_app/blocs/memberDetail/cubit/memberdetail_cubit.dart';
 import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
@@ -253,8 +254,37 @@ class _MemberWidgetState extends State<MemberWidget> {
                 ],
                 _navigateButton(
                   '聯絡資訊',
-                  (){
-                    RouteGenerator.navigateToEditMemberContactInfo(context);
+                  () async{
+                    EditMemberContactInfoBloc editMemberContactInfoBloc = EditMemberContactInfoBloc(memberRepos: MemberService());
+                    await RouteGenerator.navigateToEditMemberContactInfo(
+                      context,
+                      editMemberContactInfoBloc
+                    );
+
+                    bool updateSuccess = editMemberContactInfoBloc.memberContactInfoUpdateSuccess;
+                    if(updateSuccess!= null) {
+                      if(updateSuccess) {
+                        Fluttertoast.showToast(
+                          msg: '儲存成功',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0
+                        );
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: '儲存失敗，請再試一次',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0
+                        );
+                      }
+                    }
                   },
                 ),
               ],

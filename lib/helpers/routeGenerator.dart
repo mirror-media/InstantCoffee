@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberProfile/bloc.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
@@ -131,9 +132,12 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case editMemberContactInfo:
+        Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => EditMemberContactInfoPage(),
+          builder: (context) => EditMemberContactInfoPage(
+            editMemberContactInfoBloc: args['editMemberContactInfoBloc'],
+          ),
           fullscreenDialog: true,
         );
       case deleteMember:
@@ -329,8 +333,16 @@ class RouteGenerator {
     );
   }
 
-  static void navigateToEditMemberContactInfo(BuildContext context) {
-    Navigator.of(context).pushNamed(editMemberContactInfo);
+  static Future<void> navigateToEditMemberContactInfo(
+    BuildContext context,
+    EditMemberContactInfoBloc editMemberContactInfoBloc,
+  ) async{
+    await Navigator.of(context).pushNamed(
+      editMemberContactInfo,
+      arguments: {
+        'editMemberContactInfoBloc': editMemberContactInfoBloc,
+      },
+    );
   }
 
   static void navigateToDeleteMember(
