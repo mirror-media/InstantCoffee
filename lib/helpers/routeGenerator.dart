@@ -7,13 +7,13 @@ import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
 import 'package:readr_app/mirrorApp.dart';
 import 'package:readr_app/models/magazine.dart';
-import 'package:readr_app/models/member.dart';
 import 'package:readr_app/pages/emailLogin/emailLoginPage.dart';
 import 'package:readr_app/pages/emailRegistered/emailRegisteredPage.dart';
 import 'package:readr_app/pages/emailVerification/emailVerificationPage.dart';
 import 'package:readr_app/pages/login/loginPage.dart';
 import 'package:readr_app/pages/magazineBrowser.dart';
 import 'package:readr_app/pages/magazine/magazinePage.dart';
+import 'package:readr_app/pages/memberCenter/deleteMember/deleteMemberPage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/pages/passwordReset/passwordResetPage.dart';
 import 'package:readr_app/pages/passwordResetEmail/passwordResetEmailPage.dart';
@@ -21,7 +21,7 @@ import 'package:readr_app/pages/passwordResetPrompt/passwordResetPromptPage.dart
 import 'package:readr_app/pages/passwordUpdate/passwordUpdatePage.dart';
 import 'package:readr_app/pages/search/searchPage.dart';
 import 'package:readr_app/pages/storyPage.dart';
-import 'package:readr_app/widgets/deleteMemberWidget.dart';
+
 import 'package:readr_app/pages/memberCenter/editMemberProfile/editMemberProfilePage.dart';
 import 'package:readr_app/pages/memberCenter/editMemberContactInfo/editMemberContactInfoPage.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -141,12 +141,9 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case deleteMember:
-        Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => DeleteMemberWidget(
-            member: args['member'],
-          ),
+          builder: (context) => DeleteMemberPage(),
           fullscreenDialog: true,
         );
       case emailVerification:
@@ -347,13 +344,9 @@ class RouteGenerator {
 
   static void navigateToDeleteMember(
     BuildContext context, 
-    Member member, 
   ) {
     Navigator.of(context).pushNamed(
-      deleteMember,
-      arguments: {
-        'member': member,
-      },
+      deleteMember
     );
   }
 
