@@ -9,7 +9,6 @@ import 'package:readr_app/blocs/memberDetail/cubit/memberdetail_cubit.dart';
 import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
-import 'package:readr_app/models/member.dart';
 import 'package:readr_app/pages/memberCenter/paymentRecord/memberPaymentRecordPage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionArticle/memberSubscriptionArticlePage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionDetail/memberSubscriptionDetailPage.dart';
@@ -19,10 +18,7 @@ import 'package:readr_app/services/loginService.dart';
 import 'package:readr_app/services/memberService.dart';
 
 class MemberWidget extends StatefulWidget {
-  final Member member;
-  MemberWidget({
-    @required this.member,
-  });
+  MemberWidget();
 
   @override
   _MemberWidgetState createState() => _MemberWidgetState();
@@ -36,13 +32,10 @@ class _MemberWidgetState extends State<MemberWidget> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    return _memberSection(width, widget.member);
+    return _memberSection(width);
   }
 
-  _memberSection(
-    double width, 
-    Member member,
-  ) {
+  _memberSection(double width) {
     final ButtonStyle flatButtonStyle = ButtonStyle(
       overlayColor: MaterialStateProperty.all(Colors.grey[350]),
       padding: MaterialStateProperty.all(const EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 4.0),),

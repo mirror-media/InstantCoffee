@@ -41,9 +41,7 @@ class _LoginWidgetState extends State<LoginWidget> {
         if (state is LoginSuccess) {
           Member member = state.member;
 
-          return MemberWidget(
-            member: member,
-          );
+          return MemberWidget();
         }
 
         // state is Init, Third Party Loading
