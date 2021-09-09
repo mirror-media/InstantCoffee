@@ -7,10 +7,10 @@ import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/models/memberDetail.dart';
 import 'package:readr_app/services/memberDetailService.dart';
 
-part 'memberdetail_state.dart';
+part 'memberDetailState.dart';
 
-class MemberdetailCubit extends Cubit<MemberdetailState> {
-  MemberdetailCubit() : super(MemberdetailInitial());
+class MemberDetailCubit extends Cubit<MemberDetailState> {
+  MemberDetailCubit() : super(MemberDetailInitial());
 
   void fetchMemberDetail() async {
     print('Get member details');

@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/memberBloc.dart';
-import 'package:readr_app/blocs/memberDetail/cubit/memberdetail_cubit.dart';
+import 'package:readr_app/blocs/memberDetail/memberDetailCubit.dart';
+import 'package:readr_app/blocs/subscribedArticles/subscribedarticles_cubit.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/memberResponse.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -178,7 +179,7 @@ class _MemberWidgetState extends State<MemberWidget> {
                       return BlocProvider(
                           child: MemberSubscriptionDetailPage(),
                           create: (BuildContext context) =>
-                              MemberdetailCubit());
+                              MemberDetailCubit());
                     } else {
                       return MemberSubscriptionDetailPage(
                         isPremium: isPremium,
