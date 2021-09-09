@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:readr_app/blocs/memberBloc.dart';
 import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
 import 'package:readr_app/blocs/passwordUpdate/states.dart';
 import 'package:readr_app/pages/passwordUpdate/oldPasswordConfirmForm.dart';
@@ -9,10 +8,7 @@ import 'package:readr_app/pages/passwordUpdate/passwordUpdateForm.dart';
 import 'package:readr_app/pages/passwordUpdate/passwordUpdateSuccessWidget.dart';
 
 class PasswordUpdateWidget extends StatefulWidget {
-  final MemberBloc memberBloc;
-  PasswordUpdateWidget({
-    @required this.memberBloc,
-  });
+  PasswordUpdateWidget();
 
   @override
   _PasswordUpdateWidgetState createState() => _PasswordUpdateWidgetState();
@@ -39,11 +35,11 @@ class _PasswordUpdateWidgetState extends State<PasswordUpdateWidget> {
           );
         }
         if (state is PasswordUpdateSuccess) {
-          widget.memberBloc.passwordUpdateSuccess = true;
+          context.read<PasswordUpdateBloc>().passwordUpdateSuccess = true;
           return PasswordUpdateSuccessWidget();
         }
         if (state is PasswordUpdateFail) {
-          widget.memberBloc.passwordUpdateSuccess = false;
+          context.read<PasswordUpdateBloc>().passwordUpdateSuccess = false;
           _delayNavigatorPop();
         }
 

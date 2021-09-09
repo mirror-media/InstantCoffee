@@ -1,50 +1,48 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:readr_app/blocs/memberContactInfoBloc.dart';
-import 'package:readr_app/helpers/apiResponse.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
+import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/events.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/models/countryList.dart';
+import 'package:readr_app/models/member.dart';
 
-class DistrictPicker extends StatefulWidget {
-  final MemberContactInfoBloc memberContactInfoBloc;
-  DistrictPicker({
-    @required this.memberContactInfoBloc,
+class CountryPicker extends StatefulWidget {
+  final CountryList countryList;
+  final Member member;
+  CountryPicker({
+    @required this.countryList,
+    @required this.member,
   });
 
   @override
-  _DistrictPickerState createState() => _DistrictPickerState();
+  _CountryPickerState createState() => _CountryPickerState();
 }
 
-class _DistrictPickerState extends State<DistrictPicker> {
+class _CountryPickerState extends State<CountryPicker> {
   bool _isPickerActivated;
-  String _district;
-  List<Widget> _districtListWidget;
+  String _country;
+  List<Widget> _countryListWidget;
 
   @override
   void initState() {
     _isPickerActivated = false;
-    _district = widget.memberContactInfoBloc.editMember.contactAddress.district;
-    setDistrictListWidget();
+    _country = widget.member.contactAddress.country;
+    _setCountryListWidget();
     super.initState();
   }
 
-  @override
-  void didUpdateWidget(DistrictPicker oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _district = widget.memberContactInfoBloc.editMember.contactAddress.district;
-    setDistrictListWidget();
+  _changeMember(Member member) {
+    context.read<EditMemberContactInfoBloc>().add(
+      ChangeMember(member: member)
+    );
   }
 
-  setDistrictListWidget() {
-    _districtListWidget = List<Widget>();
-    widget.memberContactInfoBloc.cityList.forEach(
-      (city) { 
-        if(city.name == widget.memberContactInfoBloc.editMember.contactAddress.city) {
-          city.districtList.forEach(
-            (district) { 
-              _districtListWidget.add(Text(district.name));
-            }
-          );
-        }
+  _setCountryListWidget() {
+    _countryListWidget = [];
+    widget.countryList.forEach(
+      (country) { 
+        _countryListWidget.add(Text(country.taiwanName));
       }
     );
   }
@@ -61,6 +59,18 @@ class _DistrictPickerState extends State<DistrictPicker> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0, left: 12.0),
+            child: Text(
+              '聯絡地址',
+              style: TextStyle(
+                fontSize: 13,
+                color: _isPickerActivated
+                ? appColor
+                : Colors.grey,
+              ),
+            ),
+          ),
           SizedBox(height: 4.0),
           InkWell(
             child: Container(
@@ -81,9 +91,9 @@ class _DistrictPickerState extends State<DistrictPicker> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      _district ?? '行政區',
+                      _country ?? '國家',
                       style: TextStyle(
-                        color: _district == null
+                        color: _country == null
                         ? Colors.grey
                         : Colors.black,
                         fontSize: 17,
@@ -97,14 +107,10 @@ class _DistrictPickerState extends State<DistrictPicker> {
               ),
             ),
             onTap: () {
-              if(widget.memberContactInfoBloc.editMember.contactAddress.country != null && 
-              widget.memberContactInfoBloc.editMember.contactAddress.country == '臺灣' && 
-              widget.memberContactInfoBloc.editMember.contactAddress.city != null) {
-                setState(() {
-                  _isPickerActivated = true;
-                  _showPicker(pickerHeight, widget.memberContactInfoBloc);
-                });
-              }
+              setState(() {
+                _isPickerActivated = true;
+                _showPicker(pickerHeight, widget.countryList, widget.member);
+              });
             },
           ),
         ],
@@ -112,14 +118,10 @@ class _DistrictPickerState extends State<DistrictPicker> {
     );
   }
 
-  _showPicker(double height, MemberContactInfoBloc memberContactInfoBloc) async{
-    int cityIndex = memberContactInfoBloc.cityList.findIndexByName(
-      memberContactInfoBloc.editMember.contactAddress.city
-    );
-
-    int targetIndex = _district == null || cityIndex == null
-    ? 0
-    : memberContactInfoBloc.cityList[cityIndex].districtList.findIndexByName(_district);
+  _showPicker(double height, CountryList countryList, Member member) async{
+    int targetIndex = _country == null
+    ? countryList.findIndexByTaiwanName('臺灣')
+    : countryList.findIndexByTaiwanName(_country);
 
     await showModalBottomSheet(
       context: context,
@@ -161,10 +163,16 @@ class _DistrictPickerState extends State<DistrictPicker> {
                         ),
                       ),
                       onTap: (){
-                        _district = memberContactInfoBloc.cityList[cityIndex].districtList[targetIndex].name;
-                        memberContactInfoBloc.editMember.contactAddress.district = _district;
-                        memberContactInfoBloc.sinkToAdd(ApiResponse.completed(memberContactInfoBloc.editMember));
-                        Navigator.pop(context);
+                        setState(() {
+                          _country = countryList[targetIndex].taiwanName;
+                          member.contactAddress.country = _country;
+                          if(_country != '臺灣') {
+                            member.contactAddress.city = null;
+                            member.contactAddress.district = null;
+                          }
+                          _changeMember(member);
+                          Navigator.pop(context);
+                        });
                       }
                     ),
                   ],
@@ -179,7 +187,7 @@ class _DistrictPickerState extends State<DistrictPicker> {
                     targetIndex = value;
                   },
                   itemExtent: 32.0,
-                  children: _districtListWidget,
+                  children: _countryListWidget,
                 ),
               ),
             ],

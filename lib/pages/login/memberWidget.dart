@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
-import 'package:readr_app/blocs/memberBloc.dart';
+import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
+import 'package:readr_app/blocs/memberCenter/editMemberProfile/bloc.dart';
 import 'package:readr_app/blocs/memberDetail/memberDetailCubit.dart';
-import 'package:readr_app/blocs/subscribedArticles/subscribedarticles_cubit.dart';
+import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/helpers/memberResponse.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/member.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/pages/memberCenter/paymentRecord/memberPaymentRecordPage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionArticle/memberSubscriptionArticlePage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionDetail/memberSubscriptionDetailPage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectPage.dart';
+import 'package:readr_app/services/emailSignInService.dart';
 import 'package:readr_app/services/loginService.dart';
+import 'package:readr_app/services/memberService.dart';
 
 class MemberWidget extends StatefulWidget {
   final Member member;
@@ -27,14 +29,6 @@ class MemberWidget extends StatefulWidget {
 }
 
 class _MemberWidgetState extends State<MemberWidget> {
-  MemberBloc _memberBloc;
-
-  @override
-  void initState() {
-    _memberBloc = MemberBloc();
-    super.initState();
-  }
-
   _signOut() async {
     context.read<LoginBloc>().add(SignOut());
   }
@@ -42,39 +36,18 @@ class _MemberWidgetState extends State<MemberWidget> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-
-    return StreamBuilder<MemberResponse<Member>>(
-        initialData: MemberResponse.completed(widget.member),
-        stream: _memberBloc.memberStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            switch (snapshot.data.status) {
-              case Status.Complete:
-                Member member = snapshot.data.data;
-                return _memberSection(width, member, snapshot.data.status);
-                break;
-
-              case Status.SavingLoading:
-                Member member = snapshot.data.data;
-                return _memberSection(width, member, snapshot.data.status);
-                break;
-
-              case Status.SavingSuccessfully:
-                Member member = snapshot.data.data;
-                return _memberSection(width, member, snapshot.data.status);
-                break;
-
-              case Status.SavingError:
-                Member member = snapshot.data.data;
-                return _memberSection(width, member, snapshot.data.status);
-                break;
-            }
-          }
-          return Container();
-        });
+    return _memberSection(width, widget.member);
   }
 
-  _memberSection(double width, Member member, Status status) {
+  _memberSection(
+    double width, 
+    Member member,
+  ) {
+    final ButtonStyle flatButtonStyle = ButtonStyle(
+      overlayColor: MaterialStateProperty.all(Colors.grey[350]),
+      padding: MaterialStateProperty.all(const EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 4.0),),
+    );
+
     return Container(
       color: Colors.grey[300],
       child: ListView(
@@ -84,64 +57,7 @@ class _MemberWidgetState extends State<MemberWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (status != Status.SavingLoading &&
-                    status != Status.SavingError &&
-                    status != Status.SavingSuccessfully)
-                  SizedBox(
-                    height: 48,
-                  ),
-                if (status == Status.SavingLoading)
-                  Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: SpinKitThreeBounce(
-                      color: Colors.grey[300],
-                      size: 36,
-                    ),
-                  ),
-                if (status == Status.SavingSuccessfully) ...[
-                  Container(
-                    height: 38,
-                    width: width,
-                    color: Color(0xFFF7FEFF),
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          '儲存成功',
-                          style: TextStyle(
-                            color: Color(0xFF1D9FB8),
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                ],
-                if (status == Status.SavingError) ...[
-                  Container(
-                    height: 38,
-                    width: width,
-                    color: Color(0xFFFFF8F9),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: Text(
-                          '儲存失敗，請再試一次',
-                          style: TextStyle(
-                            color: Color(0xFFDB1730),
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                ],
+                SizedBox(height: 48,),
                 Padding(
                   padding: const EdgeInsets.only(left: 24.0, right: 24.0),
                   child: Text(
@@ -258,12 +174,37 @@ class _MemberWidgetState extends State<MemberWidget> {
               children: [
                 _navigateButton(
                   '個人資料',
-                  () {
-                    RouteGenerator.navigateToEditMemberProfile(
-                      context,
-                      member,
-                      _memberBloc,
+                  () async{
+                    EditMemberProfileBloc editMemberProfileBloc = EditMemberProfileBloc(memberRepos: MemberService());
+                    await RouteGenerator.navigateToEditMemberProfile(
+                      context, 
+                      editMemberProfileBloc
                     );
+
+                    bool updateSuccess = editMemberProfileBloc.memberProfileUpdateSuccess;
+                    if(updateSuccess!= null) {
+                      if(updateSuccess) {
+                        Fluttertoast.showToast(
+                          msg: '儲存成功',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0
+                        );
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: '儲存失敗，請再試一次',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0
+                        );
+                      }
+                    }
                   },
                 ),
                 Padding(
@@ -277,18 +218,27 @@ class _MemberWidgetState extends State<MemberWidget> {
                 if (LoginServices.checkIsEmailAndPasswordLogin()) ...[
                   _navigateButton(
                     '修改密碼',
-                    () async {
+                    () async{
+                      PasswordUpdateBloc passwordUpdateBloc = PasswordUpdateBloc(emailSignInRepos: EmailSignInServices());
                       await RouteGenerator.navigateToPasswordUpdate(
-                          context, _memberBloc);
-                      if (_memberBloc.passwordUpdateSuccess != null) {
-                        if (_memberBloc.passwordUpdateSuccess) {
+                        context,
+                        passwordUpdateBloc,
+                      );
+
+                      bool updateSuccess = passwordUpdateBloc.passwordUpdateSuccess;
+                      if(updateSuccess!= null) {
+                        if(updateSuccess) {
                           _signOut();
                         } else {
-                          _memberBloc.sinkToAdd(
-                              MemberResponse.savingError(member, 'error'));
-                          await Future.delayed(Duration(seconds: 1));
-                          _memberBloc
-                              .sinkToAdd(MemberResponse.completed(member));
+                          Fluttertoast.showToast(
+                            msg: '更改密碼失敗',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0
+                          );
                         }
                       }
                     },
@@ -304,12 +254,37 @@ class _MemberWidgetState extends State<MemberWidget> {
                 ],
                 _navigateButton(
                   '聯絡資訊',
-                  () {
-                    RouteGenerator.navigateToEditMemberContactInfo(
+                  () async{
+                    EditMemberContactInfoBloc editMemberContactInfoBloc = EditMemberContactInfoBloc(memberRepos: MemberService());
+                    await RouteGenerator.navigateToEditMemberContactInfo(
                       context,
-                      member,
-                      _memberBloc,
+                      editMemberContactInfoBloc
                     );
+
+                    bool updateSuccess = editMemberContactInfoBloc.memberContactInfoUpdateSuccess;
+                    if(updateSuccess!= null) {
+                      if(updateSuccess) {
+                        Fluttertoast.showToast(
+                          msg: '儲存成功',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0
+                        );
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: '儲存失敗，請再試一次',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0
+                        );
+                      }
+                    }
                   },
                 ),
               ],
@@ -344,12 +319,20 @@ class _MemberWidgetState extends State<MemberWidget> {
                           title: Text('登出'),
                           content: Text('是否確定登出？'),
                           actions: <Widget>[
-                            FlatButton(
-                              child: Text('取消'),
+                            TextButton(
+                              style: flatButtonStyle,
+                              child: Text(
+                                '取消',
+                                style: TextStyle(color: Colors.black),
+                              ),
                               onPressed: () => Navigator.of(context).pop(),
                             ),
-                            FlatButton(
-                                child: Text('確認'),
+                            TextButton(
+                                style: flatButtonStyle,
+                                child: Text(
+                                  '確認',
+                                  style: TextStyle(color: Colors.black),
+                                ),
                                 onPressed: () async {
                                   _signOut();
                                   Navigator.of(context).pop();

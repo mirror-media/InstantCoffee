@@ -1,44 +1,62 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:readr_app/blocs/memberContactInfoBloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
+import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/events.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/models/cityList.dart';
+import 'package:readr_app/models/member.dart';
 
-class CityPicker extends StatefulWidget {
-  final MemberContactInfoBloc memberContactInfoBloc;
-  CityPicker({
-    @required this.memberContactInfoBloc,
+class DistrictPicker extends StatefulWidget {
+  final CityList cityList;
+  final Member member;
+  DistrictPicker({
+    @required this.cityList,
+    @required this.member,
   });
 
   @override
-  _CityPickerState createState() => _CityPickerState();
+  _DistrictPickerState createState() => _DistrictPickerState();
 }
 
-class _CityPickerState extends State<CityPicker> {
+class _DistrictPickerState extends State<DistrictPicker> {
   bool _isPickerActivated;
-  String _city;
-  List<Widget> _cityListWidget;
+  String _district;
+  List<Widget> _districtListWidget;
 
   @override
   void initState() {
     _isPickerActivated = false;
-    _city = widget.memberContactInfoBloc.editMember.contactAddress.city;
-    setCountryListWidget();
+    _district = widget.member.contactAddress.district;
+    _setDistrictListWidget();
     super.initState();
   }
 
   @override
-  void didUpdateWidget(CityPicker oldWidget) {
+  void didUpdateWidget(DistrictPicker oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _city = widget.memberContactInfoBloc.editMember.contactAddress.city;
-    //setCountryListWidget();
+    _district = widget.member.contactAddress.district;
+    _setDistrictListWidget();
   }
 
-  setCountryListWidget() {
-    _cityListWidget = List<Widget>();
-    widget.memberContactInfoBloc.cityList.forEach(
+  _changeMember(Member member) {
+    context.read<EditMemberContactInfoBloc>().add(
+      ChangeMember(member: member)
+    );
+  }
+
+  _setDistrictListWidget() {
+    _districtListWidget = [];
+    widget.cityList.forEach(
       (city) { 
-        _cityListWidget.add(Text(city.name));
+        if(city.name == widget.member.contactAddress.city) {
+          city.districtList.forEach(
+            (district) { 
+              _districtListWidget.add(Text(district.name));
+            }
+          );
+        }
       }
     );
   }
@@ -75,9 +93,9 @@ class _CityPickerState extends State<CityPicker> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      _city ?? '縣市',
+                      _district ?? '行政區',
                       style: TextStyle(
-                        color: _city == null
+                        color: _district == null
                         ? Colors.grey
                         : Colors.black,
                         fontSize: 17,
@@ -91,11 +109,12 @@ class _CityPickerState extends State<CityPicker> {
               ),
             ),
             onTap: () {
-              if(widget.memberContactInfoBloc.editMember.contactAddress.country != null && 
-              widget.memberContactInfoBloc.editMember.contactAddress.country == '臺灣') {
+              if(widget.member.contactAddress.country != null && 
+              widget.member.contactAddress.country == '臺灣' && 
+              widget.member.contactAddress.city != null) {
                 setState(() {
                   _isPickerActivated = true;
-                  _showPicker(pickerHeight, widget.memberContactInfoBloc);
+                  _showPicker(pickerHeight, widget.cityList, widget.member);
                 });
               }
             },
@@ -105,10 +124,14 @@ class _CityPickerState extends State<CityPicker> {
     );
   }
 
-  _showPicker(double height, MemberContactInfoBloc memberContactInfoBloc) async{
-    int targetIndex = _city == null
+  _showPicker(double height, CityList cityList, Member member) async{
+    int cityIndex = cityList.findIndexByName(
+      member.contactAddress.city
+    );
+
+    int targetIndex = _district == null || cityIndex == null
     ? 0
-    : memberContactInfoBloc.cityList.findIndexByName(_city);
+    : cityList[cityIndex].districtList.findIndexByName(_district);
 
     await showModalBottomSheet(
       context: context,
@@ -150,12 +173,9 @@ class _CityPickerState extends State<CityPicker> {
                         ),
                       ),
                       onTap: (){
-                        if(_city != memberContactInfoBloc.cityList[targetIndex].name) {
-                          memberContactInfoBloc.editMember.contactAddress.district = null;
-                        }
-                        _city = memberContactInfoBloc.cityList[targetIndex].name;
-                        memberContactInfoBloc.editMember.contactAddress.city = _city;
-                        memberContactInfoBloc.sinkToAdd(ApiResponse.completed(memberContactInfoBloc.editMember));
+                        _district = cityList[cityIndex].districtList[targetIndex].name;
+                        member.contactAddress.district = _district;
+                        _changeMember(member);
                         Navigator.pop(context);
                       }
                     ),
@@ -171,7 +191,7 @@ class _CityPickerState extends State<CityPicker> {
                     targetIndex = value;
                   },
                   itemExtent: 32.0,
-                  children: _cityListWidget,
+                  children: _districtListWidget,
                 ),
               ),
             ],
