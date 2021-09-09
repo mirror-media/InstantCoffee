@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:readr_app/blocs/memberDetail/cubit/memberdetail_cubit.dart';
+import 'package:readr_app/blocs/memberDetail/memberDetailCubit.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/models/memberDetail.dart';
@@ -24,7 +24,7 @@ class _MemberSubscriptionDetailPageState
   }
 
   _getMemberDetail() {
-    context.read<MemberdetailCubit>().fetchMemberDetail();
+    context.read<MemberDetailCubit>().fetchMemberDetail();
   }
 
   @override
@@ -49,7 +49,7 @@ class _MemberSubscriptionDetailPageState
   Widget _buildContent(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     if (isPremium) {
-      return BlocBuilder<MemberdetailCubit, MemberdetailState>(
+      return BlocBuilder<MemberDetailCubit, MemberDetailState>(
         builder: (context, state) {
           if (state is MemberDetailLoad) {
             MemberDetail memberDetail = state.memberDetail;
