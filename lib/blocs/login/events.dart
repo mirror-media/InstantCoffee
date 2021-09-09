@@ -6,7 +6,7 @@ import 'package:readr_app/blocs/login/states.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/firebaseLoginStatus.dart';
-import 'package:readr_app/models/member.dart';
+import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/services/loginService.dart';
 import 'package:readr_app/services/memberService.dart';
 
@@ -140,9 +140,9 @@ abstract class LoginEvents{
     try {
       String token = await auth.currentUser.getIdToken();
       MemberService memberService = MemberService();
-      Member member = await memberService.fetchMemberData(auth.currentUser.uid, token);
+      SubscritionType subscritionType = await memberService.checkSubscriptionType(auth.currentUser.uid, token);
       yield LoginSuccess(
-        member: member,
+        subscritionType: subscritionType
       );
       Scaffold.of(context).showSnackBar(
         SnackBar(
@@ -158,7 +158,7 @@ abstract class LoginEvents{
       // fetch member fail
       print(e.toString());
       yield LoginFail(
-        error: UnknownException('Fetch member fail'),
+        error: UnknownException('Fetch member subscrition type fail'),
       );
     }
   }
@@ -201,15 +201,15 @@ class CheckIsLoginOrNot extends LoginEvents {
       try {
         String token = await _auth.currentUser.getIdToken();
         MemberService memberService = MemberService();
-        Member member = await memberService.fetchMemberData(_auth.currentUser.uid, token);
+        SubscritionType subscritionType = await memberService.checkSubscriptionType(_auth.currentUser.uid, token);
         yield LoginSuccess(
-          member: member,
+          subscritionType: subscritionType
         );
       } catch(e) {
         // fetch member fail
         print(e.toString());
         yield LoginFail(
-          error: UnknownException('Fetch member fail'),
+          error: UnknownException('Fetch member subscrition type fail'),
         );
       }
     }
