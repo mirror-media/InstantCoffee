@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/blocs/personalPageBloc.dart';
+import 'package:readr_app/blocs/tabContent/personal/cubit.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -12,6 +14,7 @@ import 'package:readr_app/models/categoryList.dart';
 import 'package:readr_app/models/onBoarding.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/pages/tabContent/personal/memberSubscriptionTypeBlock.dart';
 import 'package:readr_app/widgets/unsubscriptionCategoryList.dart';
 
 class PersonalWidget extends StatefulWidget {
@@ -94,7 +97,10 @@ class _PersonalWidgetState extends State<PersonalWidget> {
       controller: scrollController,
       slivers: [
         SliverToBoxAdapter(
-          child: _buildMemberStatusBlock(),
+          child: BlocProvider(
+            create: (BuildContext context) => MemberSubscriptionTypeCubit(),
+            child: MemberSubscriptionTypeBlock(),
+          ),
         ),
         SliverToBoxAdapter(
           child: _buildCategoryList(context, categoryList, _personalPageBloc),
@@ -175,50 +181,6 @@ class _PersonalWidgetState extends State<PersonalWidget> {
           },
         ),
       ],
-    );
-  }
-
-  Widget _buildMemberStatusBlock() {
-    double width = MediaQuery.of(context).size.width/3.3;
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Card(
-        elevation: 10,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  '加入 Premium 會員\n享受零廣告閱讀體驗',
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              TextButton(
-                style: TextButton.styleFrom(
-                  backgroundColor: appColor,
-                  padding: const EdgeInsets.only(top: 12, bottom: 12),
-                ),
-                child: Container(
-                  width: width,
-                  child: Center(
-                    child: Text(
-                      '加入會員',
-                      style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                onPressed: () {},
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
