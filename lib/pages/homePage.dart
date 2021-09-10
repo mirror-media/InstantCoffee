@@ -15,10 +15,10 @@ import 'package:readr_app/models/onBoarding.dart';
 import 'package:readr_app/models/sectionList.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/termsOfService/mMTermsOfServicePage.dart';
-import 'package:readr_app/widgets/listeningTabContent.dart';
+import 'package:readr_app/pages/tabContent/listening/listeningTabContent.dart';
 import 'package:readr_app/widgets/newsMarquee.dart';
-import 'package:readr_app/widgets/personalWidget.dart';
-import 'package:readr_app/widgets/tabContent.dart';
+import 'package:readr_app/pages/tabContent/personal/personalWidget.dart';
+import 'package:readr_app/pages/tabContent/news/tabContent.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 
 class HomePage extends StatefulWidget {
