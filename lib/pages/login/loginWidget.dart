@@ -41,7 +41,7 @@ class _LoginWidgetState extends State<LoginWidget> {
         if (state is LoginSuccess) {
           SubscritionType subscritionType = state.subscritionType;
 
-          return MemberWidget();
+          return MemberWidget(subscritionType: subscritionType);
         }
 
         // state is Init, Third Party Loading
