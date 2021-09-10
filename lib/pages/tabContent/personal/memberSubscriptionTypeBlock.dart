@@ -5,6 +5,7 @@ import 'package:readr_app/blocs/tabContent/personal/cubit.dart';
 import 'package:readr_app/blocs/tabContent/personal/state.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
+import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
 
 class MemberSubscriptionTypeBlock extends StatefulWidget {
   @override
@@ -114,29 +115,10 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
           style: TextStyle(fontSize: 13, color: appColor),
         ),
         SizedBox(height: 4),
-        if(subscritionType == SubscritionType.none)
-          Text(
-            'Basic 會員',
-            style: TextStyle(
-              fontSize: 17,
-            ),
-          ),
-        if(subscritionType == SubscritionType.monthly_subscriber || 
-          subscritionType == SubscritionType.yearly_subscriber
-        )
-          Text(
-            'Premium 會員',
-            style: TextStyle(
-              fontSize: 17,
-            ),
-          ),
-        if(subscritionType == SubscritionType.marketing)
-          Text(
-            'VIP 會員',
-            style: TextStyle(
-              fontSize: 17,
-            ),
-          ),
+        MemberSubscriptionTypeTitleWiget(
+          subscritionType: subscritionType,
+          fontSize: 17,
+        ),
       ],
     );
   }

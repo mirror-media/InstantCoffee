@@ -14,6 +14,7 @@ import 'package:readr_app/pages/memberCenter/paymentRecord/memberPaymentRecordPa
 import 'package:readr_app/pages/memberCenter/subscriptionArticle/memberSubscriptionArticlePage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionDetail/memberSubscriptionDetailPage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectPage.dart';
+import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
 import 'package:readr_app/services/emailSignInService.dart';
 import 'package:readr_app/services/loginService.dart';
 import 'package:readr_app/services/memberService.dart';
@@ -160,38 +161,13 @@ class _MemberWidgetState extends State<MemberWidget> {
           ),
         ),
         SizedBox(height: 4),
-        if(subscritionType == SubscritionType.none)
-          Padding(
-            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: Text(
-              'Basic 會員',
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            ),
+        Padding(
+          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+          child: MemberSubscriptionTypeTitleWiget(
+            subscritionType: subscritionType,
+            fontSize: 20,
           ),
-        if(subscritionType == SubscritionType.monthly_subscriber || 
-          subscritionType == SubscritionType.yearly_subscriber
-        )
-          Padding(
-            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: Text(
-              'Premium 會員',
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            ),
-          ),
-        if(subscritionType == SubscritionType.marketing)
-          Padding(
-            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: Text(
-              'VIP 會員',
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            ),
-          ),
+        ),
       ]
     );
   }
