@@ -17,7 +17,7 @@ import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/termsOfService/mMTermsOfServicePage.dart';
 import 'package:readr_app/pages/tabContent/listening/listeningTabContent.dart';
 import 'package:readr_app/widgets/newsMarquee.dart';
-import 'package:readr_app/pages/tabContent/personal/personalWidget.dart';
+import 'package:readr_app/pages/tabContent/personal/personalTabContent.dart';
 import 'package:readr_app/pages/tabContent/news/tabContent.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 
@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
           scrollController: _scrollControllerList[i],
         ));
       } else if (section.key == env.baseConfig.personalSectionKey){
-        _tabWidgets.add(PersonalWidget(
+        _tabWidgets.add(PersonalTabContent(
           onBoardingBloc: widget.onBoardingBloc,
           scrollController: _scrollControllerList[i],
         ));
