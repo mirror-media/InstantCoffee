@@ -1,4 +1,4 @@
-import 'package:readr_app/models/member.dart';
+import 'package:readr_app/models/memberSubscriptionType.dart';
 
 abstract class LoginState {}
 
@@ -7,8 +7,8 @@ class LoadingUI extends LoginState {}
 class LoginInitState extends LoginState {}
 
 class LoginSuccess extends LoginState {
-  final Member member;
-  LoginSuccess({this.member});
+  final SubscritionType subscritionType;
+  LoginSuccess({this.subscritionType});
 }
 
 class GoogleLoading extends LoginState {}

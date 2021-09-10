@@ -5,8 +5,10 @@ import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/models/memberRes.dart';
 import 'package:readr_app/models/graphqlBody.dart';
 import 'package:readr_app/models/member.dart';
+import 'package:readr_app/models/memberSubscriptionType.dart';
 
 abstract class MemberRepos {
+  Future<SubscritionType> checkSubscriptionType(String firebaseId, String token);
   Future<bool> createMember(String email, String firebaseId, String token, {String nickname});
   Future<Member> fetchMemberData(String firebaseId, String token);
   Future<bool> updateMemberProfile(String firebaseId, String token, String name, Gender gender, String birthday);
@@ -26,6 +28,56 @@ class MemberService implements MemberRepos{
     }
 
     return headers;
+  }
+
+  @override
+  Future<SubscritionType> checkSubscriptionType(String firebaseId, String token) async{
+    String query = 
+    """
+    query checkSubscriptionType(\$firebaseId: String!) {
+      member(where: { firebaseId: \$firebaseId }) {
+        type
+        subscription(
+          where: { 
+            frequency_not: one_time,
+            isActive: true
+          }
+        ) {
+          frequency
+        }
+      }
+    }
+    """;
+
+    Map<String,String> variables = {
+      "firebaseId" : "$firebaseId"
+    };
+
+    GraphqlBody graphqlBody = GraphqlBody(
+      operationName: '',
+      query: query,
+      variables: variables,
+    );
+
+    final jsonResponse = await _helper.postByUrl(
+      env.baseConfig.israfel,
+      jsonEncode(graphqlBody.toJson()),
+      headers: getHeaders(token),
+    );
+
+    MemberSubscritionType memberSubscritionType = MemberSubscritionType.fromJson(jsonResponse['data']['member']);
+    
+    if(memberSubscritionType.subscriptionList != null) {
+      if(memberSubscritionType.subscriptionList.contains('marketing')) {
+        return SubscritionType.marketing; 
+      } else if(memberSubscritionType.subscriptionList.contains('yearly')) {
+        return SubscritionType.yearly_subscriber; 
+      } else if(memberSubscritionType.subscriptionList.contains('monthly')) {
+        return SubscritionType.monthly_subscriber; 
+      }
+    }
+
+    return SubscritionType.none;
   }
 
   Future<bool> createMember(String email, String firebaseId, String token, {String nickname}) async{

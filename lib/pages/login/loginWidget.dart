@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/login/states.dart';
-import 'package:readr_app/models/member.dart';
+import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/pages/login/loginErrorWidget.dart';
 import 'package:readr_app/pages/login/loginForm.dart';
 import 'package:readr_app/pages/login/memberWidget.dart';
@@ -39,11 +39,9 @@ class _LoginWidgetState extends State<LoginWidget> {
           return LoginErrorWidget();
         }
         if (state is LoginSuccess) {
-          Member member = state.member;
+          SubscritionType subscritionType = state.subscritionType;
 
-          return MemberWidget(
-            member: member,
-          );
+          return MemberWidget(subscritionType: subscritionType);
         }
 
         // state is Init, Third Party Loading
