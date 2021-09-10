@@ -5,7 +5,7 @@ import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberProfile/bloc.dart';
-import 'package:readr_app/blocs/memberDetail/cubit/memberdetail_cubit.dart';
+import 'package:readr_app/blocs/memberDetail/memberDetailCubit.dart';
 import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -215,7 +215,7 @@ class _MemberWidgetState extends State<MemberWidget> {
           return BlocProvider(
               child: MemberSubscriptionDetailPage(),
               create: (BuildContext context) =>
-                  MemberdetailCubit());
+                  MemberDetailCubit());
         } else {
           return MemberSubscriptionDetailPage(
             isPremium: isPremium,
