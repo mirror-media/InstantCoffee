@@ -120,7 +120,7 @@ class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerPro
                                 style: Theme
                                     .of(context)
                                     .textTheme
-                                    .subhead
+                                    .subtitle1
                                     .copyWith(color: titleColor),
                                 child: widget.title,
                             ),
@@ -146,7 +146,7 @@ class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerPro
         final ThemeData theme = Theme.of(context);
         _borderColor.end = theme.dividerColor;
         _headerColor
-            ..begin = theme.textTheme.subhead.color
+            ..begin = theme.textTheme.subtitle1.color
             ..end = theme.accentColor;
         _iconColor
             ..begin = theme.unselectedWidgetColor
