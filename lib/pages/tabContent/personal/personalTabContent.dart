@@ -17,19 +17,19 @@ import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/pages/tabContent/personal/memberSubscriptionTypeBlock.dart';
 import 'package:readr_app/widgets/unsubscriptionCategoryList.dart';
 
-class PersonalWidget extends StatefulWidget {
+class PersonalTabContent extends StatefulWidget {
   final OnBoardingBloc onBoardingBloc;
   final ScrollController scrollController;
-  PersonalWidget({
+  PersonalTabContent({
     @required this.onBoardingBloc,
     @required this.scrollController,
   });
 
   @override
-  _PersonalWidgetState createState() => _PersonalWidgetState();
+  _PersonalTabContentState createState() => _PersonalTabContentState();
 }
 
-class _PersonalWidgetState extends State<PersonalWidget> {
+class _PersonalTabContentState extends State<PersonalTabContent> {
   GlobalKey _categoryKey;
   PersonalPageBloc _personalPageBloc;
 
@@ -75,7 +75,7 @@ class _PersonalWidgetState extends State<PersonalWidget> {
                   widget.onBoardingBloc.status = OnBoardingStatus.ThirdPage;
                 }
               });
-              return _buildPersonalWidget(widget.scrollController, context, categoryList, _personalPageBloc);
+              return _buildPersonalTabContent(widget.scrollController, context, categoryList, _personalPageBloc);
               break;
 
             case Status.ERROR:
@@ -88,7 +88,7 @@ class _PersonalWidgetState extends State<PersonalWidget> {
     );
   }
 
-  Widget _buildPersonalWidget(
+  Widget _buildPersonalTabContent(
       ScrollController scrollController, 
       BuildContext context, 
       CategoryList categoryList, 
