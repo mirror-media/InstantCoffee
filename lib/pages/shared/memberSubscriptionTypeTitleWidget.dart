@@ -44,7 +44,7 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
 
     // subscritionType == SubscritionType.marketing
     return Text(
-      'VIP 會員',
+      'VIP',
       style: TextStyle(
         fontSize: fontSize,
       ),
