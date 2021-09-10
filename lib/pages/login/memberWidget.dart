@@ -186,16 +186,14 @@ class _MemberWidgetState extends State<MemberWidget> {
       '我的方案細節',
       () => Navigator.push(context,
           MaterialPageRoute(builder: (context) {
-        // Check user's member type
-        bool isPremium = true;
-        if (isPremium) {
+        if (widget.subscritionType != SubscritionType.none) {
           return BlocProvider(
               child: MemberSubscriptionDetailPage(),
               create: (BuildContext context) =>
                   MemberDetailCubit());
         } else {
           return MemberSubscriptionDetailPage(
-            isPremium: isPremium,
+            isPremium: false,
           );
         }
       })),
