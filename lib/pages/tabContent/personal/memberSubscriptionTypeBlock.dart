@@ -124,11 +124,21 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
         if(subscritionType == SubscritionType.monthly_subscriber || 
           subscritionType == SubscritionType.yearly_subscriber
         )
-          Text(
-            'Premium 會員',
-            style: TextStyle(
-              fontSize: 17,
-            ),
+          Row(
+            children: [
+              Text(
+                'Premium 會員',
+                style: TextStyle(
+                  fontSize: 17,
+                ),
+              ),
+              SizedBox(width: 4),
+              Image.asset(
+                subscriptionIconPng,
+                width: 17,
+                height:17,
+              ),
+            ],
           ),
         if(subscritionType == SubscritionType.marketing)
           Text(

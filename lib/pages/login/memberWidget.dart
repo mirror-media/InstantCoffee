@@ -175,11 +175,21 @@ class _MemberWidgetState extends State<MemberWidget> {
         )
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: Text(
-              'Premium 會員',
-              style: TextStyle(
-                fontSize: 20,
-              ),
+            child: Row(
+              children: [
+                Text(
+                  'Premium 會員',
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+                SizedBox(width: 4),
+                Image.asset(
+                  subscriptionIconPng,
+                  width: 20,
+                  height:20,
+                ),
+              ],
             ),
           ),
         if(subscritionType == SubscritionType.marketing)
