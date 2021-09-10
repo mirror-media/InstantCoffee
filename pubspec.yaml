@@ -176,6 +176,7 @@ flutter:
     - assets/image/magazine/readmoo.png
     # member subscription
     - assets/image/badge.png
+    - assets/image/subscription_icon.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
