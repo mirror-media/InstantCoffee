@@ -1,93 +1,68 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:readr_app/blocs/deleteMemberBloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/memberCenter/deleteMember/cubit.dart';
+import 'package:readr_app/blocs/memberCenter/deleteMember/state.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/helpers/deleteResponse.dart';
-import 'package:readr_app/models/member.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DeleteMemberWidget extends StatefulWidget {
-  final Member member;
-  DeleteMemberWidget({
-    @required this.member,
-  });
-
   @override
   _DeleteMemberWidgetState createState() => _DeleteMemberWidgetState();
 }
 
 class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
-  DeleteMemberBloc _deleteMemberBloc;
-  
-  @override
-  void initState() {
-    _deleteMemberBloc = DeleteMemberBloc();
-    super.initState();
-  }
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
-  @override
-  void dispose() {
-    _deleteMemberBloc.dispose();
-    super.dispose();
+  _deleteMember() {
+    context.read<DeleteMemberCubit>().deleteMember();
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<DeleteResponse<Member>>(
-      initialData: DeleteResponse.completed(widget.member),
-      stream: _deleteMemberBloc.deleteMemberStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.Complete:
-              Member member = snapshot.data.data;
-              return Scaffold(
-                appBar: _buildBar(context, Status.Complete),
-                body: _askingDeleteMemberWidget(
-                  context, 
-                  member,
-                  _deleteMemberBloc
-                ),
-              );
-              break;
-
-            case Status.DeletingLoading:
-              return Scaffold(
-                appBar: _buildBar(context, Status.DeletingLoading),
-                body: _loadingWidget()
-              );
-              break;
-
-            case Status.DeletingSuccessfully:
-              return Scaffold(
-                appBar: _buildBar(context, Status.DeletingSuccessfully),
-                body: _deletingMemberSuccessWidget(context)
-              );
-              break;
-
-            case Status.DeletingError:
-              return Scaffold(
-                appBar: _buildBar(context, Status.DeletingError),
-                body: _deletingMemberFailWidget(context)
-              );
-              break;
-          }
+    return BlocBuilder<DeleteMemberCubit, DeleteMemberState>(
+      builder: (context, state) {
+        if(state is DeleteMemberInitState) {
+          return Scaffold(
+            appBar: _buildBar(context),
+            body: _askingDeleteMemberWidget(context),
+          );
         }
-        return Container();
+
+        if(state is DeleteMemberSuccess) {
+          return Scaffold(
+            appBar: _buildBar(context, isDeletedSuccessfully: true),
+            body: _deletingMemberSuccessWidget(context),
+          );
+        }
+
+        if(state is DeleteMemberError) {
+          return Scaffold(
+            appBar: _buildBar(context),
+            body: _deletingMemberErrorWidget(context),
+          );
+        }
+
+        // state is DeleteMemberLoading
+        return Scaffold(
+          appBar: _buildBar(context),
+          body: _loadingWidget(),
+        );
       }
     );
   }
 
-  Widget _buildBar(BuildContext context, Status status) {
+  Widget _buildBar(BuildContext context, {bool isDeletedSuccessfully = false}) {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),
         onPressed: () {
-          if(status == Status.DeletingSuccessfully) {
+          if(isDeletedSuccessfully) {
             Navigator.of(context).popUntil((route) => route.isFirst);
           } else {
             Navigator.of(context).pop();
           }
-        }
+        } 
       ),
       centerTitle: true,
       title: Text('會員中心'),
@@ -95,7 +70,7 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
     );
   }
 
-  Widget _askingDeleteMemberWidget(BuildContext context, Member member, DeleteMemberBloc deleteMemberBloc) {
+  Widget _askingDeleteMemberWidget(BuildContext context) {
     return ListView(
       children: [
         SizedBox(height: 72),
@@ -115,7 +90,7 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
           child: Padding(
             padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
             child: Text(
-              '您的會員帳號為：${member.email}',
+              '您的會員帳號為：${_auth.currentUser.email}',
               style: TextStyle(
                 fontSize: 17,
               ),
@@ -153,10 +128,7 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
         SizedBox(height: 8),
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: _deleteMemberButton(
-            context,
-            deleteMemberBloc,
-          ),
+          child: _deleteMemberButton(context),
         ),
       ],
     );
@@ -214,7 +186,7 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
     );
   }
 
-  Widget _deletingMemberFailWidget(BuildContext context) {
+  Widget _deletingMemberErrorWidget(BuildContext context) {
     return ListView(
       children: [
         SizedBox(height: 72),
@@ -317,13 +289,11 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
           ),
         ),
       ),
-      onTap: () {
-        Navigator.of(context).popUntil((route) => route.isFirst);
-      },
+      onTap: () => Navigator.of(context).popUntil((route) => route.isFirst),
     );
   }
 
-  Widget _deleteMemberButton(BuildContext context, DeleteMemberBloc deleteMemberBloc) {
+  Widget _deleteMemberButton(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(5.0),
       child: Container(
@@ -342,9 +312,7 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
           ),
         ),
       ),
-      onTap: () {
-        deleteMemberBloc.deleteMember();
-      },
+      onTap: () => _deleteMember(),
     );
   }
 }

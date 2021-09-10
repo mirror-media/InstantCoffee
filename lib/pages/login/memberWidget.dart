@@ -365,12 +365,7 @@ class _MemberWidgetState extends State<MemberWidget> {
                       ),
                     ),
                   ),
-                  onTap: () {
-                    RouteGenerator.navigateToDeleteMember(
-                      context,
-                      member,
-                    );
-                  },
+                  onTap: () => RouteGenerator.navigateToDeleteMember(context)
                 ),
               ],
             ),
