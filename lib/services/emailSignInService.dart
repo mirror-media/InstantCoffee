@@ -8,6 +8,7 @@ abstract class EmailSignInRepos {
   Future<FirebaseLoginStatus> signInWithEmailAndPassword(String email, String password);
   Future<FirebaseLoginStatus> sendPasswordResetEmail(String email);
   Future<FirebaseLoginStatus> sendEmailVerification(String email, String redirectUrl);
+  Future<FirebaseLoginStatus> applyActionCode(String code);
   Future<bool> confirmPasswordReset(String code, String newPassword);
   Future<bool> confirmOldPassword(String oldPassword);
   Future<bool> updatePassword(String newPassword);
@@ -135,6 +136,27 @@ class EmailSignInServices implements EmailSignInRepos{
     return FirebaseLoginStatus(
       status: FirebaseStatus.Success,
       message: 'Send password reset email: with firebase success',
+    );
+  }
+
+  @override
+  Future<FirebaseLoginStatus> applyActionCode(String code) async{
+    try {
+      await _auth.applyActionCode(code);
+      if(_auth.currentUser != null) {
+        _auth.currentUser.reload();
+      }
+    } catch(onError) {
+      print('Apply actionCode success error $onError');
+      return FirebaseLoginStatus(
+        status: FirebaseStatus.Error,
+        message: onError.code,
+      );
+    }
+    
+    return FirebaseLoginStatus(
+      status: FirebaseStatus.Success,
+      message: 'Apply actionCode success',
     );
   }
 
