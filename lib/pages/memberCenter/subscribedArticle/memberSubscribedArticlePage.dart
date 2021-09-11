@@ -23,7 +23,7 @@ class _MemberSubscribedArticlePageState extends State<MemberSubscribedArticlePag
   }
 
   _loadSubscribedArticles(){
-    context.read<SubscribedarticlesCubit>().fetchSubscribedArticles();
+    context.read<SubscribedArticlesCubit>().fetchSubscribedArticles();
   }
 
   List<SubscribedArticle> subscribedArticles = [];
@@ -32,7 +32,7 @@ class _MemberSubscribedArticlePageState extends State<MemberSubscribedArticlePag
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      body: BlocBuilder<SubscribedarticlesCubit,SubscribedarticlesState>(
+      body: BlocBuilder<SubscribedArticlesCubit,SubscribedArticlesState>(
         builder: (context, state){
           if(state is SubscribedArticlesLoaded){
             subscribedArticles = state.subscribedArticles;
