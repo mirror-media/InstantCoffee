@@ -261,7 +261,7 @@ class MemberService implements MemberRepos{
   Future<bool> checkTokenState(String token) async{
     try {
       final jsonResponse = await _helper.getByUrl(
-        env.baseConfig.graphqlApi+"api/v1/tokenState",
+        env.baseConfig.tokenStateApi,
         headers: getHeaders(token),
       );
 
