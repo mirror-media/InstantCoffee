@@ -8,9 +8,9 @@ class BaseConfig {
   });
 
   String get apiBase => isDev ? dev.apiBase : prod.apiBase;
-  String get graphqlApi => isDev ? dev.graphqlApi : prod.graphqlApi;
-  String get memberApi => isDev ? dev.memberApi : prod.memberApi;
   String get storyPageApi => isDev ? dev.storyPageApi : prod.storyPageApi;
+  String get memberApi => isDev ? dev.memberApi : prod.memberApi;
+  String get tokenStateApi => isDev ? dev.tokenStateApi : prod.tokenStateApi;
 
   String get mirrorMediaNotImageUrl => isDev ? dev.mirrorMediaNotImageUrl : prod.mirrorMediaNotImageUrl;
   String get latestAPI => isDev ? dev.latestAPI : prod.latestAPI;
