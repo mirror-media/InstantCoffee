@@ -7,11 +7,12 @@ import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberProfile/bloc.dart';
 import 'package:readr_app/blocs/memberDetail/memberDetailCubit.dart';
 import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
+import 'package:readr_app/blocs/subscribedArticles/subscribedArticlesCubit.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/pages/memberCenter/paymentRecord/memberPaymentRecordPage.dart';
-import 'package:readr_app/pages/memberCenter/subscriptionArticle/memberSubscriptionArticlePage.dart';
+import 'package:readr_app/pages/memberCenter/subscribedArticle/memberSubscribedArticlePage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionDetail/memberSubscriptionDetailPage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectPage.dart';
 import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
@@ -81,7 +82,7 @@ class _MemberWidgetState extends State<MemberWidget> {
                   child: _horizontalDivider(width),
                 ),
                 if(widget.subscritionType == SubscritionType.none)...[
-                  _memberSubscriptionArticleButton(),
+                  _memberSubscribedArticleButton(),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
                     child: _horizontalDivider(width),
@@ -201,12 +202,17 @@ class _MemberWidgetState extends State<MemberWidget> {
     );
   }
 
-  Widget _memberSubscriptionArticleButton() {
+  Widget _memberSubscribedArticleButton() {
     return _navigateButton(
       '訂閱中的文章',
       () => Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => MemberSubscriptionArticlePage())
+        MaterialPageRoute(builder: (context){
+          return BlocProvider(
+            create: (BuildContext context) => SubscribedArticlesCubit(),
+            child: MemberSubscribedArticlePage(),
+            );
+        })
       ),
     );
   }
