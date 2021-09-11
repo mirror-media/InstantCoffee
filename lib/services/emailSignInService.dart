@@ -26,9 +26,10 @@ class EmailSignInServices implements EmailSignInRepos{
   }
 
   Future<FirebaseLoginStatus> createUserWithEmailAndPassword(String email, String password) async {
+    UserCredential userCredential;
     try {
       // Once signed in, get the UserCredential
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
     } catch(onError) {
       print('Error create user with email and password: $onError');
       return FirebaseLoginStatus(
@@ -39,14 +40,15 @@ class EmailSignInServices implements EmailSignInRepos{
 
     return FirebaseLoginStatus(
       status: FirebaseStatus.Success,
-      message: 'Create user with email and password: with firebase success',
+      message: userCredential,
     );
   }
 
   Future<FirebaseLoginStatus> signInWithEmailAndPassword(String email, String password) async {
+    UserCredential userCredential;
     try {
       // Once signed in, get the UserCredential
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
     } catch(onError) {
       print('Error sign in with email and password: $onError');
       return FirebaseLoginStatus(
@@ -57,7 +59,7 @@ class EmailSignInServices implements EmailSignInRepos{
 
     return FirebaseLoginStatus(
       status: FirebaseStatus.Success,
-      message: 'Sign in with email and password: with firebase success',
+      message: userCredential,
     );
   }
 
