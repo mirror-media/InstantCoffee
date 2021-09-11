@@ -31,7 +31,14 @@ abstract class LoginEvents{
     if(frebaseLoginStatus.status == FirebaseStatus.Cancel) {
       yield LoginInitState();
     } else if(frebaseLoginStatus.status == FirebaseStatus.Success) {
-      yield* handleCreateMember(context, routeName, routeArguments);
+      bool isNewUser = false;
+      if(frebaseLoginStatus.message is UserCredential) {
+        UserCredential userCredential = frebaseLoginStatus.message;
+        if(userCredential.additionalUserInfo != null) {
+          isNewUser = userCredential.additionalUserInfo.isNewUser;
+        }
+      }
+      yield* handleCreateMember(context, isNewUser, routeName, routeArguments);
     } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
       if(frebaseLoginStatus.message is FirebaseAuthException &&
         frebaseLoginStatus.message.code == 'account-exists-with-different-credential') {
@@ -46,18 +53,24 @@ abstract class LoginEvents{
 
   Stream<LoginState> handleCreateMember(
     BuildContext context,
+    bool isNewUser,
     String routeName,
     Object routeArguments,
   ) async*{
     FirebaseAuth auth = FirebaseAuth.instance;
-    MemberService memberService = MemberService();
     String token = await auth.currentUser.getIdToken();
-    bool createSuccess = await memberService.createMember(
-      auth.currentUser.email, 
-      auth.currentUser.uid, 
-      token
-    );
-    
+    bool createSuccess = true;
+
+    if(isNewUser) {
+      MemberService memberService = MemberService();
+      print('CreateMember');
+      createSuccess = await memberService.createMember(
+        auth.currentUser.email, 
+        auth.currentUser.uid, 
+        token
+      );
+    }
+
     if(createSuccess) {
       yield* fetchMemberToLogin(
         auth,

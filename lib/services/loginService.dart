@@ -36,9 +36,10 @@ class LoginServices implements LoginRepos{
       idToken: googleAuth.idToken,
     );
 
+    UserCredential userCredential;
     try {
       // Once signed in, get the UserCredential
-      await _auth.signInWithCredential(credential);
+      userCredential = await _auth.signInWithCredential(credential);
     } catch(onError) {
       print('Error sign in with google $onError');
       return FirebaseLoginStatus(
@@ -49,7 +50,7 @@ class LoginServices implements LoginRepos{
 
     return FirebaseLoginStatus(
       status: FirebaseStatus.Success,
-      message: 'Google sign in with firebase success',
+      message: userCredential,
     );
   }
 
@@ -58,6 +59,8 @@ class LoginServices implements LoginRepos{
     final FacebookLogin facebookSignIn = FacebookLogin();
     // Trigger the authentication flow
     FacebookLoginResult facebookUser = await facebookSignIn.logIn(['email']);
+
+    UserCredential userCredential;
 
     switch (facebookUser.status) {
       case FacebookLoginStatus.loggedIn:
@@ -71,7 +74,7 @@ class LoginServices implements LoginRepos{
 
         try {
           // Once signed in, get the UserCredential
-          await _auth.signInWithCredential(credential);
+          userCredential = await _auth.signInWithCredential(credential);
           // Need to log out to avoid facebook login error 304
           await facebookSignIn.logOut();
         } catch(onError) {
@@ -100,7 +103,7 @@ class LoginServices implements LoginRepos{
     
     return FirebaseLoginStatus(
       status: FirebaseStatus.Success,
-      message: 'Facebook sign in with firebase success',
+      message: userCredential,
     );
   }
 
@@ -130,9 +133,10 @@ class LoginServices implements LoginRepos{
       }
     }
 
+    UserCredential userCredential;
     try {
       // Once signed in, get the UserCredential
-      await _auth.signInWithCredential(oauthCredential);
+      userCredential = await _auth.signInWithCredential(oauthCredential);
     } catch(onError) {
       print('Error sign in with apple $onError');
       return FirebaseLoginStatus(
@@ -143,7 +147,7 @@ class LoginServices implements LoginRepos{
 
     return FirebaseLoginStatus(
       status: FirebaseStatus.Success,
-      message: 'Apple sign in with firebase success',
+      message: userCredential,
     );
   }
 
