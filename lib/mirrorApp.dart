@@ -1,14 +1,15 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
+import 'package:readr_app/models/firebaseLoginStatus.dart';
 import 'package:readr_app/models/onBoarding.dart';
 import 'package:readr_app/pages/homePage.dart';
+import 'package:readr_app/services/emailSignInService.dart';
 
 class MirrorApp extends StatefulWidget {
   @override
@@ -26,7 +27,6 @@ class _MirrorAppState extends State<MirrorApp> {
   // It cant trigger on iOS, cuz AppsFlyer's code on AppDelegate.swift break this feature.
   // The iOS DynamicLinks method will implement in initialAppsFlyer function.
   Future<void> initDynamicLinks() async {
-    FirebaseAuth _auth = FirebaseAuth.instance;
     FirebaseDynamicLinks.instance.onLink(
       onSuccess: (PendingDynamicLinkData dynamicLink) async {
         final Uri deepLink = dynamicLink?.link;
@@ -41,16 +41,31 @@ class _MirrorAppState extends State<MirrorApp> {
             );
           } else if(deepLink.queryParameters['mode'] == 'verifyEmail') {
             Navigator.of(context).popUntil((route) => route.isFirst);
-            await _auth.currentUser.reload();
-            Fluttertoast.showToast(
-              msg: 'email驗證成功',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16.0
-            );
+            String code = deepLink.queryParameters['oobCode'];
+            EmailSignInServices emailSignInServices = EmailSignInServices();
+            FirebaseLoginStatus firebaseLoginStatus = await emailSignInServices.applyActionCode(code);
+            
+            if(firebaseLoginStatus.status == FirebaseStatus.Success) {
+              Fluttertoast.showToast(
+                msg: 'email驗證成功',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 16.0
+              );
+            } else {
+              Fluttertoast.showToast(
+                msg: 'email驗證失敗',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0
+              );
+            }
           }
         }
       },
@@ -72,16 +87,31 @@ class _MirrorAppState extends State<MirrorApp> {
         );
       } else if(deepLink.queryParameters['mode'] == 'verifyEmail') {
         Navigator.of(context).popUntil((route) => route.isFirst);
-        await _auth.currentUser.reload();
-        Fluttertoast.showToast(
-          msg: 'email驗證成功',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0
-        );
+        String code = deepLink.queryParameters['oobCode'];
+        EmailSignInServices emailSignInServices = EmailSignInServices();
+        FirebaseLoginStatus firebaseLoginStatus = await emailSignInServices.applyActionCode(code);
+        
+        if(firebaseLoginStatus.status == FirebaseStatus.Success) {
+          Fluttertoast.showToast(
+            msg: 'email驗證成功',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0
+          );
+        } else {
+          Fluttertoast.showToast(
+            msg: 'email驗證失敗',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+          );
+        }
       }
     }
   }
