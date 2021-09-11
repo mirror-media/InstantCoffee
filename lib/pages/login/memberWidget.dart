@@ -82,7 +82,7 @@ class _MemberWidgetState extends State<MemberWidget> {
                   child: _horizontalDivider(width),
                 ),
                 if(widget.subscritionType == SubscritionType.none)...[
-                  _memberSubscriptionArticleButton(),
+                  _memberSubscribedArticleButton(),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
                     child: _horizontalDivider(width),
@@ -202,14 +202,14 @@ class _MemberWidgetState extends State<MemberWidget> {
     );
   }
 
-  Widget _memberSubscriptionArticleButton() {
+  Widget _memberSubscribedArticleButton() {
     return _navigateButton(
       '訂閱中的文章',
       () => Navigator.push(
         context,
         MaterialPageRoute(builder: (context){
           return BlocProvider(
-            create: (BuildContext context) => SubscribedarticlesCubit(),
+            create: (BuildContext context) => SubscribedArticlesCubit(),
             child: MemberSubscribedArticlePage(),
             );
         })

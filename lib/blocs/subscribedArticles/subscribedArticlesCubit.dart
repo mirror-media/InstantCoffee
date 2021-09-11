@@ -9,8 +9,8 @@ import 'package:readr_app/services/subscribedArticlesService.dart';
 
 part 'subscribedArticlesState.dart';
 
-class SubscribedarticlesCubit extends Cubit<SubscribedarticlesState> {
-  SubscribedarticlesCubit() : super(SubscribedarticlesInitial());
+class SubscribedArticlesCubit extends Cubit<SubscribedArticlesState> {
+  SubscribedArticlesCubit() : super(SubscribedArticlesInitial());
 
   void fetchSubscribedArticles() async {
     print('Get subscribed articles');

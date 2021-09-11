@@ -1,16 +1,16 @@
 part of 'subscribedArticlesCubit.dart';
 
 @immutable
-abstract class SubscribedarticlesState {}
+abstract class SubscribedArticlesState {}
 
-class SubscribedarticlesInitial extends SubscribedarticlesState {}
+class SubscribedArticlesInitial extends SubscribedArticlesState {}
 
-class SubscribedArticlesLoaded extends SubscribedarticlesState {
+class SubscribedArticlesLoaded extends SubscribedArticlesState {
   final List<SubscribedArticle> subscribedArticles;
   SubscribedArticlesLoaded({this.subscribedArticles});
 }
 
-class SubscribedArticlesError extends SubscribedarticlesState {
+class SubscribedArticlesError extends SubscribedArticlesState {
   final error;
   SubscribedArticlesError({this.error});
 }
