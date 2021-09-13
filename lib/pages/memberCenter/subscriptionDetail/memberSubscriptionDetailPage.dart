@@ -50,7 +50,7 @@ class _MemberSubscriptionDetailPageState
 
   Widget _buildContent(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    if (widget.subscritionType != SubscritionType.none) {
+    if (_subscritionType != SubscritionType.none) {
       return BlocBuilder<MemberDetailCubit, MemberDetailState>(
         builder: (context, state) {
           if (state is MemberDetailLoad) {
@@ -268,7 +268,7 @@ class _MemberSubscriptionDetailPageState
     ]);
   }
 
-  Widget _memberSubscriptionTypeWidget(SubscritionType _subscritionType){
+  Widget _memberSubscriptionTypeWidget(SubscritionType subscritionType){
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(
         '會員等級',
@@ -278,7 +278,7 @@ class _MemberSubscriptionDetailPageState
         height: 4,
       ),
       MemberSubscriptionTypeTitleWiget(
-        subscritionType: _subscritionType,
+        subscritionType: subscritionType,
         fontSize: 17,
         ),
     ]);
