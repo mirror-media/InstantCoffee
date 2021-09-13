@@ -4,10 +4,12 @@ import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/models/memberDetail.dart';
 import 'package:intl/intl.dart';
+import 'package:readr_app/models/memberSubscriptionType.dart';
+import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
 
 class MemberSubscriptionDetailPage extends StatefulWidget {
-  final bool isPremium;
-  MemberSubscriptionDetailPage({this.isPremium = true});
+  final SubscritionType subscritionType;
+  MemberSubscriptionDetailPage({this.subscritionType});
   @override
   _MemberSubscriptionDetailPageState createState() =>
       _MemberSubscriptionDetailPageState();
@@ -15,12 +17,12 @@ class MemberSubscriptionDetailPage extends StatefulWidget {
 
 class _MemberSubscriptionDetailPageState
     extends State<MemberSubscriptionDetailPage> {
-  bool isPremium;
+  SubscritionType _subscritionType;
   @override
   void initState() {
     super.initState();
-    isPremium = widget.isPremium;
-    if (isPremium) _getMemberDetail();
+    _subscritionType = widget.subscritionType;
+    if (widget.subscritionType != SubscritionType.none) _getMemberDetail();
   }
 
   _getMemberDetail() {
@@ -48,7 +50,7 @@ class _MemberSubscriptionDetailPageState
 
   Widget _buildContent(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    if (isPremium) {
+    if (widget.subscritionType != SubscritionType.none) {
       return BlocBuilder<MemberDetailCubit, MemberDetailState>(
         builder: (context, state) {
           if (state is MemberDetailLoad) {
@@ -77,7 +79,7 @@ class _MemberSubscriptionDetailPageState
                   child: Container(
                     color: Colors.white,
                     padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-                    child: _memberRowContent('會員等級', 'Premium 會員'),
+                    child: _memberSubscriptionTypeWidget(_subscritionType),
                   ),
                 ),
                 Material(
@@ -182,7 +184,7 @@ class _MemberSubscriptionDetailPageState
                 child: Container(
                   color: Colors.white,
                   padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-                  child: _memberRowContent('會員等級', 'Premium 會員'),
+                  child: _memberSubscriptionTypeWidget(_subscritionType),
                 ),
               ),
               Material(
@@ -208,7 +210,7 @@ class _MemberSubscriptionDetailPageState
           child: Container(
             color: Colors.white,
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: _memberRowContent('會員等級', 'Basic 會員'),
+            child: _memberSubscriptionTypeWidget(_subscritionType),
           ),
         ),
         Material(
@@ -263,6 +265,22 @@ class _MemberSubscriptionDetailPageState
           fontSize: 17,
         ),
       ),
+    ]);
+  }
+
+  Widget _memberSubscriptionTypeWidget(SubscritionType _subscritionType){
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(
+        '會員等級',
+        style: TextStyle(fontSize: 13, color: appColor),
+      ),
+      SizedBox(
+        height: 4,
+      ),
+      MemberSubscriptionTypeTitleWiget(
+        subscritionType: _subscritionType,
+        fontSize: 17,
+        ),
     ]);
   }
 }
