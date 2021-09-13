@@ -76,7 +76,7 @@ class _MemberWidgetState extends State<MemberWidget> {
                 _memberLevelBlock(widget.subscritionType),
                 SizedBox(height: 24),
                 _horizontalDivider(width),
-                _memberSubscriptionDetailButton(),
+                _memberSubscriptionDetailButton(widget.subscritionType),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
                   child: _horizontalDivider(width),
@@ -181,24 +181,18 @@ class _MemberWidgetState extends State<MemberWidget> {
     );
   }
 
-  Widget _memberSubscriptionDetailButton() {
+  Widget _memberSubscriptionDetailButton(SubscritionType subscritionType) {
     return _navigateButton(
       '我的方案細節',
       () => Navigator.push(context,
           MaterialPageRoute(builder: (context) {
-        // Check user's member type
-        bool isPremium = true;
-        if (isPremium) {
-          return BlocProvider(
-              child: MemberSubscriptionDetailPage(),
+            return BlocProvider(
+              child: MemberSubscriptionDetailPage(subscritionType: subscritionType,),
               create: (BuildContext context) =>
                   MemberDetailCubit());
-        } else {
-          return MemberSubscriptionDetailPage(
-            isPremium: isPremium,
-          );
-        }
-      })),
+                  }
+                )
+              ),
     );
   }
 
