@@ -67,7 +67,7 @@ class EmailSignInServices implements EmailSignInRepos{
     var acs = ActionCodeSettings(
       // URL you want to redirect back to. The domain (www.example.com) for this
       // URL must be whitelisted in the Firebase Console.
-      url: env.baseConfig.finishSignUpUrl,
+      url: env.baseConfig.recoverPasswordUrl,
       // This must be true
       handleCodeInApp: true,
       iOSBundleId: env.baseConfig.iOSBundleId,
