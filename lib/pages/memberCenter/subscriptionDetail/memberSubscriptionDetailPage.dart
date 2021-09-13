@@ -22,7 +22,7 @@ class _MemberSubscriptionDetailPageState
   void initState() {
     super.initState();
     _subscritionType = widget.subscritionType;
-    if (widget.subscritionType != SubscritionType.none) _getMemberDetail();
+    if (_subscritionType != SubscritionType.none) _getMemberDetail();
   }
 
   _getMemberDetail() {
