@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/slugBloc.dart';
-import 'package:readr_app/blocs/storyBloc.dart';
 import 'package:readr_app/env.dart';
-import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/helpers/paragraphFormat.dart';
@@ -17,12 +17,13 @@ import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/story.dart';
 import 'package:readr_app/models/storyRes.dart';
 import 'package:readr_app/models/tagList.dart';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:readr_app/widgets/downloadMagazineWidget.dart';
 import 'package:readr_app/widgets/fadingEffectPainter.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
+import 'package:readr_app/blocs/story/bloc.dart';
+import 'package:readr_app/blocs/story/events.dart';
+import 'package:readr_app/blocs/story/states.dart';
 
 class StoryWidget extends StatefulWidget {
   final SlugBloc slugBloc;
@@ -35,131 +36,154 @@ class StoryWidget extends StatefulWidget {
 }
 
 class _StoryWidget extends State<StoryWidget> {
-  StoryBloc _storyBloc;
-
   @override
   void initState() {
+    _fetchPublishedStoryBySlug(widget.slugBloc.slug);
     super.initState();
-    _storyBloc = StoryBloc(widget.slugBloc.slug);
+  }
+
+  _fetchPublishedStoryBySlug(String storySlug) {
+    context.read<StoryBloc>().add(
+      FetchPublishedStoryBySlug(storySlug)
+    );
+  }
+
+  Color _getSectionColor(Story story) {
+    String sectionName;
+    if (story != null) {
+      sectionName = story.getSectionName();
+    }
+
+    if (sectionColorMaps.containsKey(sectionName)) {
+      return Color(sectionColorMaps[sectionName]);
+    }
+
+    return appColor;
   }
 
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = width / 16 * 9;
-
-    return StreamBuilder<ApiResponse<StoryRes>>(
-      stream: _storyBloc.storyStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.LOADING:
-              return Center(child: CircularProgressIndicator());
-              break;
-
-            case Status.LOADINGMORE:
-            case Status.COMPLETED:
-              StoryRes storyRes = snapshot.data.data;
-              Story story = storyRes.story;
-              bool isMember = storyRes.isMember && story.categories.isMemberOnly();
-              bool isAdsActivated = isStoryWidgetAdsActivated && !isMember;
-              bool isCompletedArticle = storyRes.isMember || !story.categories.isMemberOnly();
-              Color sectionColor = _storyBloc.getSectionColor(story);
-
-              return Column(
-                children: [
-                  Expanded(
-                    child: ListView(children: [
-                      if(isAdsActivated)
-                      ...[
-                        SizedBox(height: 16),
-                        MMAdBanner(
-                          adUnitId: story.storyAd.hDUnitId,
-                          adSize: AdSize.mediumRectangle,
-                          isKeepAlive: true,
-                        ),
-                        SizedBox(height: 16),
-                      ],
-                      _buildHeroWidget(width, height, story),
-                      SizedBox(height: 32),
-                      _buildCategoryAndPublishedDate(context, story, sectionColor),
-                      SizedBox(height: 8),
-                      _buildStoryTitle(story.title),
-                      SizedBox(height: 8),
-                      _buildAuthors(context, story),
-                      SizedBox(height: 16),
-                      _buildBrief(story, sectionColor),
-                      _buildContent(story, isAdsActivated, !isCompletedArticle),
-                      //SizedBox(height: 32),
-                      SizedBox(height: 16),
-                      if(!isCompletedArticle)
-                      ...[
-                        _buildJoinMemberBlock(context, width),
-                        SizedBox(height: 16),
-                      ],
-                      if(isAdsActivated)
-                        MMAdBanner(
-                          adUnitId: story.storyAd.aT3UnitId,
-                          adSize: AdSize.mediumRectangle,
-                          isKeepAlive: true,
-                        ),
-                      SizedBox(height: 16),
-                      _buildUpdateDateWidget(story),
-                      _buildRelatedWidget(context, story.relatedStory),
-                      SizedBox(height: 16),
-                      _buildMoreContentWidget(),
-                      SizedBox(height: 24),
-                      if(isMember)
-                      ...[
-                        _buildQuoteWarningText(),
-                        SizedBox(height: 24),
-                      ],
-                      _downloadMagazinesWidget(),
-                      SizedBox(height: 24),
-                      if(isAdsActivated)
-                      ...[
-                        SizedBox(height: 16),
-                        MMAdBanner(
-                          adUnitId: story.storyAd.e1UnitId,
-                          adSize: AdSize.mediumRectangle,
-                          isKeepAlive: true,
-                        ),
-                        SizedBox(height: 16),
-                      ],
-                      SizedBox(height: 16),
-                      _buildTagWidget(context, story.tags),
-                      if(isAdsActivated)
-                      ...[
-                        MMAdBanner(
-                          adUnitId: story.storyAd.fTUnitId,
-                          adSize: AdSize.mediumRectangle,
-                          isKeepAlive: true,
-                        ),
-                        SizedBox(height: 16),
-                      ],
-                    ]),
-                  ),
-                  if(_isWineCategory(story.categories))
-                    Image.asset(
-                      "assets/image/wine_warning.png",
-                      height: 50.0,
-                    ),
-                  if(isAdsActivated && !_isWineCategory(story.categories))
-                    MMAdBanner(
-                      adUnitId: story.storyAd.stUnitId,
-                      adSize: AdSize.banner,
-                      isKeepAlive: true,
-                    ),
-                ],
-              );
-              break;
-
-            case Status.ERROR:
-              return Container();
-              break;
-          }
+return BlocBuilder<StoryBloc, StoryState>(
+      builder: (BuildContext context, StoryState state) {
+        if (state is StoryError) {
+          final error = state.error;
+          print('StoryError: ${error.message}');
+          return Container();
         }
-        return Container();
-      },
+
+        if (state is StoryLoaded) {
+          StoryRes storyRes = state.storyRes;
+
+          return _buildStoryWidget(storyRes, width, height);
+        }
+
+        // state is Init, Loading
+        return _loadingWidget();
+      }
+    );
+  }
+
+  Widget _loadingWidget() {
+    return Center(child: CircularProgressIndicator(),);
+  }
+
+  Widget _buildStoryWidget(
+    StoryRes storyRes,
+    double width, 
+    double height,
+  ) {
+    Story story = storyRes.story;
+    bool isMember = storyRes.isMember && story.categories.isMemberOnly();
+    bool isAdsActivated = isStoryWidgetAdsActivated && !isMember;
+    bool isCompletedArticle = storyRes.isMember || !story.categories.isMemberOnly();
+    Color sectionColor = _getSectionColor(story);
+
+    return Column(
+      children: [
+        Expanded(
+          child: ListView(children: [
+            if(isAdsActivated)
+            ...[
+              SizedBox(height: 16),
+              MMAdBanner(
+                adUnitId: story.storyAd.hDUnitId,
+                adSize: AdSize.mediumRectangle,
+                isKeepAlive: true,
+              ),
+              SizedBox(height: 16),
+            ],
+            _buildHeroWidget(width, height, story),
+            SizedBox(height: 32),
+            _buildCategoryAndPublishedDate(context, story, sectionColor),
+            SizedBox(height: 8),
+            _buildStoryTitle(story.title),
+            SizedBox(height: 8),
+            _buildAuthors(context, story),
+            SizedBox(height: 16),
+            _buildBrief(story, sectionColor),
+            _buildContent(story, isAdsActivated, !isCompletedArticle),
+            //SizedBox(height: 32),
+            SizedBox(height: 16),
+            if(!isCompletedArticle)
+            ...[
+              _buildJoinMemberBlock(context, width),
+              SizedBox(height: 16),
+            ],
+            if(isAdsActivated)
+              MMAdBanner(
+                adUnitId: story.storyAd.aT3UnitId,
+                adSize: AdSize.mediumRectangle,
+                isKeepAlive: true,
+              ),
+            SizedBox(height: 16),
+            _buildUpdateDateWidget(story),
+            _buildRelatedWidget(context, story.relatedStory),
+            SizedBox(height: 16),
+            _buildMoreContentWidget(),
+            SizedBox(height: 24),
+            if(isMember)
+            ...[
+              _buildQuoteWarningText(),
+              SizedBox(height: 24),
+            ],
+            _downloadMagazinesWidget(),
+            SizedBox(height: 24),
+            if(isAdsActivated)
+            ...[
+              SizedBox(height: 16),
+              MMAdBanner(
+                adUnitId: story.storyAd.e1UnitId,
+                adSize: AdSize.mediumRectangle,
+                isKeepAlive: true,
+              ),
+              SizedBox(height: 16),
+            ],
+            SizedBox(height: 16),
+            _buildTagWidget(context, story.tags),
+            if(isAdsActivated)
+            ...[
+              MMAdBanner(
+                adUnitId: story.storyAd.fTUnitId,
+                adSize: AdSize.mediumRectangle,
+                isKeepAlive: true,
+              ),
+              SizedBox(height: 16),
+            ],
+          ]),
+        ),
+        if(_isWineCategory(story.categories))
+          Image.asset(
+            "assets/image/wine_warning.png",
+            height: 50.0,
+          ),
+        if(isAdsActivated && !_isWineCategory(story.categories))
+          MMAdBanner(
+            adUnitId: story.storyAd.stUnitId,
+            adSize: AdSize.banner,
+            isKeepAlive: true,
+          ),
+      ],
     );
   }
 
@@ -785,7 +809,7 @@ class _StoryWidget extends State<StoryWidget> {
       ),
       onTap: () {
         widget.slugBloc.slug = relatedItem.slug;
-        _storyBloc.fetchStory(relatedItem.slug);
+        _fetchPublishedStoryBySlug(widget.slugBloc.slug);
       },
     );
   }
