@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/blocs/tabContent/personal/cubit.dart';
 import 'package:readr_app/blocs/tabContent/personal/state.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectPage.dart';
 import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
@@ -89,10 +90,16 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
                       ),
                     ),
                   ),
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SubscriptionSelectPage())
-                  ),
+                  onPressed: () {
+                    if(subscritionType == null) {
+                      RouteGenerator.navigateToLogin(context);
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SubscriptionSelectPage())
+                      );
+                    }
+                  }
                 ),
             ],
           ),
