@@ -5,6 +5,7 @@ import 'package:readr_app/blocs/tabContent/personal/cubit.dart';
 import 'package:readr_app/blocs/tabContent/personal/state.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectPage.dart';
 import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
 
 class MemberSubscriptionTypeBlock extends StatefulWidget {
@@ -88,7 +89,10 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
                       ),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SubscriptionSelectPage())
+                  ),
                 ),
             ],
           ),
