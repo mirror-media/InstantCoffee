@@ -45,7 +45,7 @@ class MemberDetailService {
     );
 
     final jsonResponse = await _helper.postByUrl(
-      env.baseConfig.israfel,
+      env.baseConfig.memberApi,
       jsonEncode(graphqlBody.toJson()),
       headers: getHeaders(token),
     );
