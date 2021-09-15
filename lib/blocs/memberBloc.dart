@@ -31,7 +31,7 @@ class MemberBloc {
     bool updateSuccess = false;
     if(isProfile) {
       updateSuccess = await memberService.updateMemberProfile(
-        auth.currentUser.uid, 
+        editMember.israfelId,
         token, 
         editMember.name, 
         editMember.gender, 

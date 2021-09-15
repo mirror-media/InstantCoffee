@@ -90,19 +90,39 @@ class MemberService {
     return member;
   }
 
-  Future<bool> updateMemberProfile(String firebaseId, String token, String name, Gender gender, String birthday) async{
+  Future<bool> updateMemberProfile(
+    String israfelId, 
+    String token, 
+    String name, 
+    Gender gender, 
+    String birthday
+  ) async{
     String mutation = 
     """
-    mutation (\$address: String, \$birthday: Date, \$city: String, \$country: String, \$district: String, \$firebaseId: String!, \$gender: Int, \$name: String, \$nickname: String, \$phone: String, \$profileImage: String){
-      updateMember(address: \$address, birthday: \$birthday, city: \$city, country: \$country, district: \$district, firebaseId: \$firebaseId, gender: \$gender, name: \$name, nickname: \$nickname, phone: \$phone, profileImage: \$profileImage) {
-        success
+    mutation (
+      \$id: ID!,
+      \$name: String,
+      \$gender: memberGenderType, 
+      \$birthday: String, 
+    ){
+      updatemember(
+        id: \$id
+        data: {
+          name: \$name
+          gender: \$gender
+          birthday: \$birthday
+        }
+      ) {
+        name,
+        gender,
+        birthday,
       }
     }
     """;
     Map<String,String> variables = {
-      "firebaseId" : "$firebaseId",
+      "id" : "$israfelId",
       "name" : name == null ? "" : "$name",
-      "gender" : gender == null ? "${Gender.NA.index}" : "${gender.index}",
+      "gender" : gender == null ? "${Gender.NA.toString().split('.')[1]}" : "${gender.toString().split('.')[1]}",
       "birthday" : birthday == null ? null : "$birthday",
     };
 
@@ -119,8 +139,7 @@ class MemberService {
         headers: getHeaders(token),
       );
 
-      MemberRes memberRes = MemberRes.fromJson(jsonResponse['data']['updateMember']);
-      return memberRes.success;
+      return !jsonResponse.containsKey('errors');
     } catch(e) {
       return false;
     }
