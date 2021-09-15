@@ -9,7 +9,7 @@ import 'package:readr_app/models/memberSubscriptionType.dart';
 
 abstract class MemberRepos {
   Future<SubscritionType> checkSubscriptionType(String firebaseId, String token);
-  Future<bool> createMember(String email, String firebaseId, String token, {String nickname});
+  Future<bool> createMember(String email, String token);
   Future<Member> fetchMemberData(String firebaseId, String token);
   Future<bool> updateMemberProfile(String firebaseId, String token, String name, Gender gender, String birthday);
   Future<bool> updateMemberContactInfo(String firebaseId, String token, String phoneNumber, String country, String city, String district, String address);
@@ -80,20 +80,19 @@ class MemberService implements MemberRepos{
     return SubscritionType.none;
   }
 
-  Future<bool> createMember(String email, String firebaseId, String token, {String nickname}) async{
+  Future<bool> createMember(String email, String token) async{
     String mutation = 
     """
-    mutation (\$email: String, \$firebaseId : String!){
-      createMember(email: \$email, firebaseId: \$firebaseId) {
-        success
-        msg
+    mutation (\$email: String!){
+      createmember(data: { email: \$email }) {
+        email
+        firebaseId
       }
     }
     """;
 
     Map<String,String> variables = {
-      "email" : email == null ? null : "$email", 
-      "firebaseId" : "$firebaseId"
+      "email" : "$email",
     };
 
     GraphqlBody graphqlBody = GraphqlBody(
@@ -109,8 +108,7 @@ class MemberService implements MemberRepos{
         headers: getHeaders(token),
       );
 
-      MemberRes memberRes = MemberRes.fromJson(jsonResponse['data']['createMember']);
-      return memberRes.success;
+      return !jsonResponse.containsKey('errors');
     } catch(e) {
       return false;
     }
