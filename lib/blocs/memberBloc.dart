@@ -39,7 +39,7 @@ class MemberBloc {
       );
     } else {
       updateSuccess = await memberService.updateMemberContactInfo(
-        auth.currentUser.uid, 
+        editMember.israfelId,
         token, 
         editMember.phoneNumber, 
         editMember.contactAddress.country, 

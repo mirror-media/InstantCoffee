@@ -145,18 +145,46 @@ class MemberService {
     }
   }
 
-  Future<bool> updateMemberContactInfo(String firebaseId, String token, String phoneNumber, String country, String city, String district, String address) async{
+  Future<bool> updateMemberContactInfo(
+    String israfelId, 
+    String token, 
+    String phone, 
+    String country, 
+    String city, 
+    String district, 
+    String address
+  ) async{
     String mutation = 
     """
-    mutation (\$address: String, \$birthday: Date, \$city: String, \$country: String, \$district: String, \$firebaseId: String!, \$gender: Int, \$name: String, \$nickname: String, \$phone: String, \$profileImage: String){
-      updateMember(address: \$address, birthday: \$birthday, city: \$city, country: \$country, district: \$district, firebaseId: \$firebaseId, gender: \$gender, name: \$name, nickname: \$nickname, phone: \$phone, profileImage: \$profileImage) {
-        success
+    mutation (
+      \$id: ID!,
+      \$phone: String,
+      \$country: String, 
+      \$city: String, 
+      \$district: String, 
+      \$address: String
+    ){
+      updatemember(
+        id: \$id
+        data: {
+          phone: \$phone
+          country: \$country
+          city: \$city
+          district: \$district
+          address: \$address
+        }
+      ) {
+        phone,
+        country,
+        city,
+        district,
+        address
       }
     }
     """;
     Map<String,String> variables = {
-      "firebaseId" : "$firebaseId",
-      "phone" : phoneNumber == null ? "" : "$phoneNumber",
+      "id" : "$israfelId",
+      "phone" : phone == null ? "" : "$phone",
       "country" : country == null ? "" : "$country",
       "city" : city == null ? "" : "$city",
       "district" : district == null ? "" : "$district",
@@ -176,8 +204,7 @@ class MemberService {
         headers: getHeaders(token),
       );
 
-      MemberRes memberRes = MemberRes.fromJson(jsonResponse['data']['updateMember']);
-      return memberRes.success;
+      return !jsonResponse.containsKey('errors');
     } catch(e) {
       return false;
     }
