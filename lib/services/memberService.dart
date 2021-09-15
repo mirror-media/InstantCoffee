@@ -57,8 +57,9 @@ class MemberService {
   Future<Member> fetchMemberData(String firebaseId, String token) async{
     String query = 
     """
-    query (\$firebaseId : String!){
-      member(firebaseId: \$firebaseId) {
+    query (\$firebaseId: String!) {
+      member(where: { firebaseId: \$firebaseId }) {
+        id
         email
         name
         gender
