@@ -2,6 +2,7 @@ import 'package:readr_app/helpers/EnumParser.dart';
 import 'package:readr_app/models/contactAddress.dart';
 
 class Member {
+  final String israfelId;
   String email;
   String name;
   Gender gender;
@@ -11,6 +12,7 @@ class Member {
   ContactAddress contactAddress;
 
   Member({
+    this.israfelId,
     this.email,
     this.name,
     this.gender,
@@ -24,6 +26,7 @@ class Member {
 
     String genderString = json['gender'];
     return Member(
+      israfelId: json['id'],
       email: json['email'],
       name: json['name'],
       gender: genderString.toEnum(Gender.values),
