@@ -20,19 +20,6 @@ class Member {
     this.contactAddress,
   });
 
-  // deep copy
-  Member copy() {
-    return Member(
-      email: this.email,
-      name: this.name,
-      gender: this.gender,
-      birthday: this.birthday,
-
-      phoneNumber: this.phoneNumber,
-      contactAddress: this.contactAddress.copy(),
-    );
-  }
-
   factory Member.fromJson(Map<String, dynamic> json) {
 
     String genderString = json['gender'];
