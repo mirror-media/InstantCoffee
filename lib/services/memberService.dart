@@ -117,8 +117,9 @@ class MemberService implements MemberRepos{
   Future<Member> fetchMemberData(String firebaseId, String token) async{
     String query = 
     """
-    query (\$firebaseId : String!){
-      member(firebaseId: \$firebaseId) {
+    query (\$firebaseId: String!) {
+      member(where: { firebaseId: \$firebaseId }) {
+        id
         email
         name
         gender
@@ -131,6 +132,7 @@ class MemberService implements MemberRepos{
       }
     }
     """;
+
     Map<String,String> variables = {"firebaseId" : "$firebaseId"};
 
     GraphqlBody graphqlBody = GraphqlBody(
