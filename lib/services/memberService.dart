@@ -102,7 +102,7 @@ class MemberService {
     Map<String,String> variables = {
       "firebaseId" : "$firebaseId",
       "name" : name == null ? "" : "$name",
-      "gender" : gender == null ? "${Gender.A_0.index}" : "${gender.index}",
+      "gender" : gender == null ? "${Gender.NA.index}" : "${gender.index}",
       "birthday" : birthday == null ? null : "$birthday",
     };
 
