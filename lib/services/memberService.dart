@@ -20,20 +20,19 @@ class MemberService {
     return headers;
   }
 
-  Future<bool> createMember(String email, String firebaseId, String token, {String nickname}) async{
+  Future<bool> createMember(String email, String token) async{
     String mutation = 
     """
-    mutation (\$email: String, \$firebaseId : String!){
-      createMember(email: \$email, firebaseId: \$firebaseId) {
-        success
-        msg
+    mutation (\$email: String!){
+      createmember(data: { email: \$email }) {
+        email
+        firebaseId
       }
     }
     """;
 
     Map<String,String> variables = {
-      "email" : email == null ? null : "$email", 
-      "firebaseId" : "$firebaseId"
+      "email" : "$email",
     };
 
     GraphqlBody graphqlBody = GraphqlBody(
@@ -49,8 +48,7 @@ class MemberService {
         headers: getHeaders(token),
       );
 
-      MemberRes memberRes = MemberRes.fromJson(jsonResponse['data']['createMember']);
-      return memberRes.success;
+      return !jsonResponse.containsKey('errors');
     } catch(e) {
       return false;
     }

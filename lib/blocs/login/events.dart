@@ -65,8 +65,7 @@ abstract class LoginEvents{
       MemberService memberService = MemberService();
       print('CreateMember');
       createSuccess = await memberService.createMember(
-        auth.currentUser.email, 
-        auth.currentUser.uid, 
+        auth.currentUser.email,
         token
       );
     }
