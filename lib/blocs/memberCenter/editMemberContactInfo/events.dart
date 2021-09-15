@@ -82,7 +82,7 @@ class UpdateMemberContactInfo extends EditMemberContactInfoEvents {
     yield SavingLoading(member: editMember);
     String token = await _auth.currentUser.getIdToken();
     bool updateSuccess = await memberRepos.updateMemberContactInfo(
-      _auth.currentUser.uid, 
+      editMember.israfelId,
       token, 
       editMember.phoneNumber, 
       editMember.contactAddress.country, 
