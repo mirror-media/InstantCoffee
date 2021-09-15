@@ -141,9 +141,12 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case deleteMember:
+        Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => DeleteMemberPage(),
+          builder: (context) => DeleteMemberPage(
+            israfelId: args['israfelId'],
+          ),
           fullscreenDialog: true,
         );
       case emailVerification:
@@ -344,9 +347,13 @@ class RouteGenerator {
 
   static void navigateToDeleteMember(
     BuildContext context, 
+    String israfelId,
   ) {
     Navigator.of(context).pushNamed(
-      deleteMember
+      deleteMember,
+      arguments: {
+        'israfelId': israfelId,
+      },
     );
   }
 

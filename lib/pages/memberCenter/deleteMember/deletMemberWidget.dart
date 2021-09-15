@@ -7,6 +7,11 @@ import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DeleteMemberWidget extends StatefulWidget {
+  final String israfelId;
+  DeleteMemberWidget({
+    @required this.israfelId,
+  });
+
   @override
   _DeleteMemberWidgetState createState() => _DeleteMemberWidgetState();
 }
@@ -15,7 +20,7 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   _deleteMember() {
-    context.read<DeleteMemberCubit>().deleteMember();
+    context.read<DeleteMemberCubit>().deleteMember(widget.israfelId);
   }
 
   @override

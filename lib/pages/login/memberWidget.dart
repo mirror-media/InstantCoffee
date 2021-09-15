@@ -393,7 +393,10 @@ class _MemberWidgetState extends State<MemberWidget> {
           ),
         ),
       ),
-      onTap: () => RouteGenerator.navigateToDeleteMember(context)
+      onTap: () => RouteGenerator.navigateToDeleteMember(
+        context,
+        widget.israfelId
+      )
     );
   }
 }
