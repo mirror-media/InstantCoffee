@@ -57,12 +57,10 @@ class Member {
 }
 
 enum Gender {
-  //Null,
-  A_0,
   //Male,
-  A_1,
+  M,
   //Female,
-  A_2,
+  F,
   //Unknown,
-  A_3,
+  NA,
 }
