@@ -25,11 +25,11 @@ class DeleteMemberBloc {
     }
   }
 
-  deleteMember() async{
+  deleteMember(String israfelId) async{
     loginSinkToAdd(DeleteResponse.deletingLoading());
     MemberService memberService = MemberService();
     String token = await auth.currentUser.getIdToken();
-    bool deleteSuccess = await memberService.deleteMember(auth.currentUser.uid, token);
+    bool deleteSuccess = await memberService.deleteMember(israfelId, token);
     if(deleteSuccess) {
       await auth.signOut();
       loginSinkToAdd(DeleteResponse.deletingSuccessfully());

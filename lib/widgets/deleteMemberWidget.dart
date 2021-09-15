@@ -343,7 +343,7 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
         ),
       ),
       onTap: () {
-        deleteMemberBloc.deleteMember();
+        deleteMemberBloc.deleteMember(widget.member.israfelId);
       },
     );
   }

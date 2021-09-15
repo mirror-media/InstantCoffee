@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
-import 'package:readr_app/models/memberRes.dart';
 import 'package:readr_app/models/graphqlBody.dart';
 import 'package:readr_app/models/member.dart';
 
@@ -210,17 +209,18 @@ class MemberService {
     }
   }
 
-  Future<bool> deleteMember(String firebaseId, String token) async{
+  Future<bool> deleteMember(String israfelId, String token) async{
     String mutation = 
     """
-    mutation (\$firebaseId: String!){
-        deleteMember(firebaseId: \$firebaseId) {
-            success
-        }
+    mutation (\$id: ID!) {
+      updatemember(id: \$id, data: { state: inactive }) {
+        email
+        state
+      }
     }
     """;
     Map<String,String> variables = {
-      "firebaseId" : "$firebaseId"
+      "id" : "$israfelId"
     };
 
     GraphqlBody graphqlBody = GraphqlBody(
@@ -236,8 +236,7 @@ class MemberService {
         headers: getHeaders(token),
       );
 
-      MemberRes memberRes = MemberRes.fromJson(jsonResponse['data']['deleteMember']);
-      return memberRes.success;
+      return !jsonResponse.containsKey('errors');
     } catch(e) {
       return false;
     }
