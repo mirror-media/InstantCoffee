@@ -8,7 +8,7 @@ import 'package:readr_app/models/member.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 
 abstract class MemberRepos {
-  Future<SubscritionType> checkSubscriptionType(String firebaseId, String token);
+  Future<MemberIdAndSubscritionType> checkSubscriptionType(String firebaseId, String token);
   Future<bool> createMember(String email, String token);
   Future<Member> fetchMemberData(String firebaseId, String token);
   Future<bool> updateMemberProfile(String israfelId, String token, String name, Gender gender, String birthday);
@@ -31,11 +31,12 @@ class MemberService implements MemberRepos{
   }
 
   @override
-  Future<SubscritionType> checkSubscriptionType(String firebaseId, String token) async{
+  Future<MemberIdAndSubscritionType> checkSubscriptionType(String firebaseId, String token) async{
     String query = 
     """
     query checkSubscriptionType(\$firebaseId: String!) {
       member(where: { firebaseId: \$firebaseId }) {
+        id
         type
         subscription(
           where: { 
@@ -69,15 +70,27 @@ class MemberService implements MemberRepos{
     
     if(memberSubscritionType.subscriptionList != null) {
       if(memberSubscritionType.subscriptionList.contains('marketing')) {
-        return SubscritionType.marketing; 
+        return MemberIdAndSubscritionType(
+          israfelId: memberSubscritionType.israfelId,
+          subscritionType: SubscritionType.marketing,
+        );
       } else if(memberSubscritionType.subscriptionList.contains('yearly')) {
-        return SubscritionType.yearly_subscriber; 
+        return MemberIdAndSubscritionType(
+          israfelId: memberSubscritionType.israfelId,
+          subscritionType: SubscritionType.yearly_subscriber,
+        );
       } else if(memberSubscritionType.subscriptionList.contains('monthly')) {
-        return SubscritionType.monthly_subscriber; 
+        return MemberIdAndSubscritionType(
+          israfelId: memberSubscritionType.israfelId,
+          subscritionType: SubscritionType.monthly_subscriber,
+        );
       }
     }
 
-    return SubscritionType.none;
+    return MemberIdAndSubscritionType(
+      israfelId: memberSubscritionType.israfelId,
+      subscritionType: SubscritionType.none,
+    );
   }
 
   Future<bool> createMember(String email, String token) async{

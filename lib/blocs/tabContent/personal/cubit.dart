@@ -17,7 +17,8 @@ class MemberSubscriptionTypeCubit extends Cubit<MemberSubscriptionTypeState> {
       try {
         String token = await auth.currentUser.getIdToken();
         MemberService memberService = MemberService();
-        subscritionType = await memberService.checkSubscriptionType(auth.currentUser.uid, token);
+        MemberIdAndSubscritionType memberIdAndSubscritionType = await memberService.checkSubscriptionType(auth.currentUser.uid, token);
+        subscritionType = memberIdAndSubscritionType.subscritionType;
         emit(MemberSubscriptionTypeLoadedState(subscritionType: subscritionType));
       } catch(e) {
         // fetch member subscription type fail

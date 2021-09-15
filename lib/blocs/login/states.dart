@@ -7,8 +7,12 @@ class LoadingUI extends LoginState {}
 class LoginInitState extends LoginState {}
 
 class LoginSuccess extends LoginState {
+  final String israfelId;
   final SubscritionType subscritionType;
-  LoginSuccess({this.subscritionType});
+  LoginSuccess({
+    this.israfelId,
+    this.subscritionType
+  });
 }
 
 class GoogleLoading extends LoginState {}
