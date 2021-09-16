@@ -23,14 +23,18 @@ class Member {
   });
 
   factory Member.fromJson(Map<String, dynamic> json) {
-
     String genderString = json['gender'];
+    String birthdayString;
+    if(json['birthday'] != null) {
+      birthdayString = json['birthday'].split('T')[0];
+    }
+
     return Member(
       israfelId: json['id'],
       email: json['email'],
       name: json['name'],
       gender: genderString.toEnum(Gender.values),
-      birthday: json['birthday'],
+      birthday: birthdayString,
 
       phoneNumber: json['phone'],
       contactAddress: ContactAddress(
