@@ -37,14 +37,6 @@ class MemberService implements MemberRepos{
       member(where: { firebaseId: \$firebaseId }) {
         id
         type
-        subscription(
-          where: { 
-            frequency_not: one_time,
-            isActive: true
-          }
-        ) {
-          frequency
-        }
       }
     }
     """;
@@ -65,31 +57,8 @@ class MemberService implements MemberRepos{
       headers: getHeaders(token),
     );
 
-    MemberSubscritionType memberSubscritionType = MemberSubscritionType.fromJson(jsonResponse['data']['member']);
-    
-    if(memberSubscritionType.subscriptionList != null) {
-      if(memberSubscritionType.subscriptionList.contains('marketing')) {
-        return MemberIdAndSubscritionType(
-          israfelId: memberSubscritionType.israfelId,
-          subscritionType: SubscritionType.marketing,
-        );
-      } else if(memberSubscritionType.subscriptionList.contains('yearly')) {
-        return MemberIdAndSubscritionType(
-          israfelId: memberSubscritionType.israfelId,
-          subscritionType: SubscritionType.yearly_subscriber,
-        );
-      } else if(memberSubscritionType.subscriptionList.contains('monthly')) {
-        return MemberIdAndSubscritionType(
-          israfelId: memberSubscritionType.israfelId,
-          subscritionType: SubscritionType.monthly_subscriber,
-        );
-      }
-    }
-
-    return MemberIdAndSubscritionType(
-      israfelId: memberSubscritionType.israfelId,
-      subscritionType: SubscritionType.none,
-    );
+    MemberIdAndSubscritionType memberIdAndSubscritionType = MemberIdAndSubscritionType.fromJson(jsonResponse['data']['member']);
+    return memberIdAndSubscritionType;
   }
 
   Future<bool> createMember(String email, String token) async{

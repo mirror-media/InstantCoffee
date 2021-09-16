@@ -83,7 +83,9 @@ class _MemberWidgetState extends State<MemberWidget> {
                   padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
                   child: _horizontalDivider(width),
                 ),
-                if(widget.subscritionType == SubscritionType.none)...[
+                if(widget.subscritionType == SubscritionType.none || 
+                  widget.subscritionType == SubscritionType.subscribe_one_time
+                )...[
                   _memberSubscribedArticleButton(),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
@@ -225,7 +227,7 @@ class _MemberWidgetState extends State<MemberWidget> {
  
   Widget _subscriptionSelectButton(SubscritionType subscritionType) {
     return _navigateButton(
-      subscritionType == SubscritionType.none
+      subscritionType == SubscritionType.none || subscritionType == SubscritionType.subscribe_one_time
       ? '升級 Premium 會員'
       : "變更方案",
       () => Navigator.push(
