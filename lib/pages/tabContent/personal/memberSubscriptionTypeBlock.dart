@@ -69,7 +69,8 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
                 child: _memberTypeTitle(subscritionType)
               ),
               if( subscritionType == null ||
-                subscritionType == SubscritionType.none
+                subscritionType == SubscritionType.none ||
+                subscritionType == SubscritionType.subscribe_one_time
               )
                 TextButton(
                   style: TextButton.styleFrom(

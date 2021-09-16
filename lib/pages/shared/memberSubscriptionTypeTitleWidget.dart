@@ -12,7 +12,9 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(subscritionType == SubscritionType.none) {
+    if(subscritionType == SubscritionType.none ||
+      subscritionType == SubscritionType.subscribe_one_time
+    ) {
       return Text(
         'Basic 會員',
         style: TextStyle(
@@ -21,8 +23,8 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
       );
     }
 
-    if(subscritionType == SubscritionType.monthly_subscriber || 
-      subscritionType == SubscritionType.yearly_subscriber
+    if(subscritionType == SubscritionType.subscribe_monthly || 
+      subscritionType == SubscritionType.subscribe_yearly
     ) {
       return Row(
         children: [
