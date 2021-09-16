@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:readr_app/blocs/paymentRecord/paymentRecordBloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/paymentRecord.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 
 class MemberPaymentRecordPage extends StatefulWidget {
   @override
@@ -8,69 +11,29 @@ class MemberPaymentRecordPage extends StatefulWidget {
 }
 
 class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
-  final List<PaymentRecord> paymentRecordList = [
-    PaymentRecord(
-      paymentId: 'M202107160001',
-      paymentType: '年方案',
-      paymentCurrency: '\$',
-      paymentAmount: 490,
-      paymentDate: '2021/7/29',
-      paymentMethod: 'Google Pay 續扣',
-      creditCardInfoLastFour: null,
-    ),
-    PaymentRecord(
-      paymentId: 'M202107160001',
-      paymentType: '月方案',
-      paymentCurrency: '\$',
-      paymentAmount: 49,
-      paymentDate: '2021/6/29',
-      paymentMethod: 'Apple Pay 續扣',
-      creditCardInfoLastFour: null,
-    ),
-    PaymentRecord(
-      paymentId: 'M202107160001',
-      paymentType: '月方案',
-      paymentCurrency: '\$',
-      paymentAmount: 49,
-      paymentDate: '2021/5/29',
-      paymentMethod: 'Apple Pay 續扣',
-      creditCardInfoLastFour: null,
-    ),
-    PaymentRecord(
-      paymentId: 'M202107160001',
-      paymentType: '單篇訂閱',
-      paymentCurrency: '\$',
-      paymentAmount: 1,
-      paymentDate: '2021/05/03',
-      paymentMethod: '信用卡付款',
-      creditCardInfoLastFour: '1092',
-    ),
-  ];
+  List<PaymentRecord> paymentRecordList = [];
+  bool _isLoading = false;
+  bool _isNoMore = false;
+
+  @override
+  void initState(){
+    super.initState();
+    _fetchPaymentRecords();
+  }
+
+  _fetchPaymentRecords() {
+    context.read<PaymentRecordBloc>().add(FetchPaymentRecord());
+  }
+
+  _fetchMorePaymentRecords() {
+    context.read<PaymentRecordBloc>().add(FetchMorePaymentRecord());
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      body: paymentRecordList.length == 0
-      ? _noRecordWidget()
-      : ListView.separated(
-          padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
-          separatorBuilder: (BuildContext context, int index) => Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-            child: Divider(
-              thickness: 1,
-              color: Colors.grey,
-            ),
-          ),
-          itemCount: paymentRecordList.length + 1,
-          itemBuilder: (context, index) {
-            if (index == paymentRecordList.length) {
-              return Container();
-            }
-
-            return _buildListItem(paymentRecordList[index]);
-          },
-        ),
+      body: SafeArea(child: _buildContent(),),
     );
   }
 
@@ -88,13 +51,90 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
     );
   }
 
+  Widget _buildContent(){
+    return BlocBuilder<PaymentRecordBloc, PaymentRecordState>(
+      builder: (context, state){
+        if(state is PaymentRecordLoaded){
+          if(state.paymentRecords == null || state.paymentRecords.length == 0){
+            return _noRecordWidget();
+          }
+          paymentRecordList = state.paymentRecords;
+        }
+        else if(state is PaymentRecordLoadMore){
+          if(state.paymentRecords.length > 0){
+            paymentRecordList.addAll(state.paymentRecords);
+          }
+          else{
+            _isNoMore = true;
+          }
+          if(state.paymentRecords.length < 12){
+          _isNoMore = true;
+          }
+          _isLoading = false;
+        }
+        else{
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return Column(
+          children: [
+            Expanded(
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollInfo){
+                  if (!_isLoading && scrollInfo.metrics.pixels ==
+                    scrollInfo.metrics.maxScrollExtent && !_isNoMore) {
+                    _fetchMorePaymentRecords();
+                    _isLoading = true;
+                    return true;
+                  }
+                  return false;
+                },
+                child: ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+                  separatorBuilder: (BuildContext context, int index){
+                    return Material(
+                      elevation: 1,
+                      color: Colors.white,
+                      child: Container(
+                        color: Colors.white,
+                        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+                        child: Divider(
+                          thickness: 1,
+                          color: Colors.grey[300],
+                        ),
+                      ),
+                    );
+                  },
+                  itemCount: paymentRecordList.length,
+                  itemBuilder: (context, index) {
+                    return Material(
+                      elevation: 1,
+                      color: Colors.white,
+                      child: _buildListItem(paymentRecordList[index]),
+                    );
+                  },
+                ),
+              ),
+            ),
+            Container(
+              height: _isLoading ? 50.0 : 0,
+              color: Colors.transparent,
+              child: Center(
+                child: new CircularProgressIndicator(),
+              ),
+            ),
+          ],
+        );
+      }
+    );
+  }
+
   Widget _noRecordWidget() {
-    double height = MediaQuery.of(context).size.height/3;
-    double width = MediaQuery.of(context).size.width/3*2;
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(height: height),
         Text(
           '找不到相關紀錄',
           style: TextStyle(
@@ -102,14 +142,14 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
             fontSize: 17,
           ),
         ),
-        SizedBox(height: 24),
-        RaisedButton(
-          color: appColor,
-          child: Container(
-            width: width,
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 12, bottom: 12),
+        Container(
+          margin: const EdgeInsets.only(top: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 80),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(primary: appColor),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Center(
                 child: Text(
                   '升級 Premium 會員',
                   style: TextStyle(
@@ -119,8 +159,8 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
                 ),
               ),
             ),
+            onPressed: () {},
           ),
-          onPressed: () {},
         ),
       ],
     );
@@ -143,13 +183,14 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
                   fontSize: 17,
                 ),
               ),
+              SizedBox(height: 2),
               Text(
                 paymentRecord.paymentType,
                 style: TextStyle(fontSize: 17),
               ),
               SizedBox(height: 4),
               Text(
-                paymentRecord.paymentId,
+                paymentRecord.paymentOrderNumber,
                 style: TextStyle(
                   color: Colors.black45,
                   fontSize: 13
@@ -165,7 +206,7 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
             ]
           ),
           Text(
-            '${paymentRecord.paymentCurrency}${paymentRecord.paymentAmount}',
+            '${paymentRecord.paymentCurrency}'+' \$'+'${paymentRecord.paymentAmount}',
             style: TextStyle(fontSize: 17),
           ),
         ],
