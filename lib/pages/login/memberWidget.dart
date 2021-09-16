@@ -7,6 +7,7 @@ import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberProfile/bloc.dart';
 import 'package:readr_app/blocs/memberDetail/memberDetailCubit.dart';
 import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
+import 'package:readr_app/blocs/paymentRecord/paymentRecordBloc.dart';
 import 'package:readr_app/blocs/subscribedArticles/subscribedArticlesCubit.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -220,7 +221,13 @@ class _MemberWidgetState extends State<MemberWidget> {
       '付款紀錄',
       () => Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => MemberPaymentRecordPage())
+        MaterialPageRoute(builder: (context){
+          return BlocProvider(
+            create: (BuildContext context) => PaymentRecordBloc(),
+            child: MemberPaymentRecordPage(),
+            );
+          }
+        )
       ),
     );
   }
