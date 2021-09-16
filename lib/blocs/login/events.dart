@@ -65,8 +65,7 @@ abstract class LoginEvents{
       MemberService memberService = MemberService();
       print('CreateMember');
       createSuccess = await memberService.createMember(
-        auth.currentUser.email, 
-        auth.currentUser.uid, 
+        auth.currentUser.email,
         token
       );
     }
@@ -153,9 +152,10 @@ abstract class LoginEvents{
     try {
       String token = await auth.currentUser.getIdToken();
       MemberService memberService = MemberService();
-      SubscritionType subscritionType = await memberService.checkSubscriptionType(auth.currentUser.uid, token);
+      MemberIdAndSubscritionType memberIdAndSubscritionType = await memberService.checkSubscriptionType(auth.currentUser.uid, token);
       yield LoginSuccess(
-        subscritionType: subscritionType
+        israfelId: memberIdAndSubscritionType.israfelId,
+        subscritionType: memberIdAndSubscritionType.subscritionType
       );
       Scaffold.of(context).showSnackBar(
         SnackBar(
@@ -214,12 +214,14 @@ class CheckIsLoginOrNot extends LoginEvents {
       try {
         String token = await _auth.currentUser.getIdToken();
         MemberService memberService = MemberService();
-        SubscritionType subscritionType = await memberService.checkSubscriptionType(_auth.currentUser.uid, token);
+        MemberIdAndSubscritionType memberIdAndSubscritionType = await memberService.checkSubscriptionType(_auth.currentUser.uid, token);
         yield LoginSuccess(
-          subscritionType: subscritionType
+          israfelId: memberIdAndSubscritionType.israfelId,
+          subscritionType: memberIdAndSubscritionType.subscritionType
         );
       } catch(e) {
-        // fetch member fail
+        // fetch member subscrition type fail
+        // _auth.signOut();
         print(e.toString());
         yield LoginFail(
           error: UnknownException('Fetch member subscrition type fail'),

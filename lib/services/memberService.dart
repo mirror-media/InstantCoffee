@@ -2,18 +2,17 @@ import 'dart:convert';
 
 import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
-import 'package:readr_app/models/memberRes.dart';
 import 'package:readr_app/models/graphqlBody.dart';
 import 'package:readr_app/models/member.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 
 abstract class MemberRepos {
-  Future<SubscritionType> checkSubscriptionType(String firebaseId, String token);
-  Future<bool> createMember(String email, String firebaseId, String token, {String nickname});
+  Future<MemberIdAndSubscritionType> checkSubscriptionType(String firebaseId, String token);
+  Future<bool> createMember(String email, String token);
   Future<Member> fetchMemberData(String firebaseId, String token);
-  Future<bool> updateMemberProfile(String firebaseId, String token, String name, Gender gender, String birthday);
-  Future<bool> updateMemberContactInfo(String firebaseId, String token, String phoneNumber, String country, String city, String district, String address);
-  Future<bool> deleteMember(String firebaseId, String token);
+  Future<bool> updateMemberProfile(String israfelId, String token, String name, Gender gender, String birthday);
+  Future<bool> updateMemberContactInfo(String israfelId, String token, String phoneNumber, String country, String city, String district, String address);
+  Future<bool> deleteMember(String israfelId, String token);
 }
 
 class MemberService implements MemberRepos{
@@ -31,11 +30,12 @@ class MemberService implements MemberRepos{
   }
 
   @override
-  Future<SubscritionType> checkSubscriptionType(String firebaseId, String token) async{
+  Future<MemberIdAndSubscritionType> checkSubscriptionType(String firebaseId, String token) async{
     String query = 
     """
     query checkSubscriptionType(\$firebaseId: String!) {
       member(where: { firebaseId: \$firebaseId }) {
+        id
         type
         subscription(
           where: { 
@@ -60,7 +60,7 @@ class MemberService implements MemberRepos{
     );
 
     final jsonResponse = await _helper.postByUrl(
-      env.baseConfig.israfel,
+      env.baseConfig.memberApi,
       jsonEncode(graphqlBody.toJson()),
       headers: getHeaders(token),
     );
@@ -69,31 +69,42 @@ class MemberService implements MemberRepos{
     
     if(memberSubscritionType.subscriptionList != null) {
       if(memberSubscritionType.subscriptionList.contains('marketing')) {
-        return SubscritionType.marketing; 
+        return MemberIdAndSubscritionType(
+          israfelId: memberSubscritionType.israfelId,
+          subscritionType: SubscritionType.marketing,
+        );
       } else if(memberSubscritionType.subscriptionList.contains('yearly')) {
-        return SubscritionType.yearly_subscriber; 
+        return MemberIdAndSubscritionType(
+          israfelId: memberSubscritionType.israfelId,
+          subscritionType: SubscritionType.yearly_subscriber,
+        );
       } else if(memberSubscritionType.subscriptionList.contains('monthly')) {
-        return SubscritionType.monthly_subscriber; 
+        return MemberIdAndSubscritionType(
+          israfelId: memberSubscritionType.israfelId,
+          subscritionType: SubscritionType.monthly_subscriber,
+        );
       }
     }
 
-    return SubscritionType.none;
+    return MemberIdAndSubscritionType(
+      israfelId: memberSubscritionType.israfelId,
+      subscritionType: SubscritionType.none,
+    );
   }
 
-  Future<bool> createMember(String email, String firebaseId, String token, {String nickname}) async{
+  Future<bool> createMember(String email, String token) async{
     String mutation = 
     """
-    mutation (\$email: String, \$firebaseId : String!){
-      createMember(email: \$email, firebaseId: \$firebaseId) {
-        success
-        msg
+    mutation (\$email: String!){
+      createmember(data: { email: \$email }) {
+        email
+        firebaseId
       }
     }
     """;
 
     Map<String,String> variables = {
-      "email" : email == null ? null : "$email", 
-      "firebaseId" : "$firebaseId"
+      "email" : "$email",
     };
 
     GraphqlBody graphqlBody = GraphqlBody(
@@ -109,8 +120,7 @@ class MemberService implements MemberRepos{
         headers: getHeaders(token),
       );
 
-      MemberRes memberRes = MemberRes.fromJson(jsonResponse['data']['createMember']);
-      return memberRes.success;
+      return !jsonResponse.containsKey('errors');
     } catch(e) {
       return false;
     }
@@ -119,8 +129,9 @@ class MemberService implements MemberRepos{
   Future<Member> fetchMemberData(String firebaseId, String token) async{
     String query = 
     """
-    query (\$firebaseId : String!){
-      member(firebaseId: \$firebaseId) {
+    query (\$firebaseId: String!) {
+      member(where: { firebaseId: \$firebaseId }) {
+        id
         email
         name
         gender
@@ -133,6 +144,7 @@ class MemberService implements MemberRepos{
       }
     }
     """;
+
     Map<String,String> variables = {"firebaseId" : "$firebaseId"};
 
     GraphqlBody graphqlBody = GraphqlBody(
@@ -151,19 +163,39 @@ class MemberService implements MemberRepos{
     return member;
   }
 
-  Future<bool> updateMemberProfile(String firebaseId, String token, String name, Gender gender, String birthday) async{
+  Future<bool> updateMemberProfile(
+    String israfelId, 
+    String token, 
+    String name, 
+    Gender gender, 
+    String birthday
+  ) async{
     String mutation = 
     """
-    mutation (\$address: String, \$birthday: Date, \$city: String, \$country: String, \$district: String, \$firebaseId: String!, \$gender: Int, \$name: String, \$nickname: String, \$phone: String, \$profileImage: String){
-      updateMember(address: \$address, birthday: \$birthday, city: \$city, country: \$country, district: \$district, firebaseId: \$firebaseId, gender: \$gender, name: \$name, nickname: \$nickname, phone: \$phone, profileImage: \$profileImage) {
-        success
+    mutation (
+      \$id: ID!,
+      \$name: String,
+      \$gender: memberGenderType, 
+      \$birthday: String, 
+    ){
+      updatemember(
+        id: \$id
+        data: {
+          name: \$name
+          gender: \$gender
+          birthday: \$birthday
+        }
+      ) {
+        name,
+        gender,
+        birthday,
       }
     }
     """;
     Map<String,String> variables = {
-      "firebaseId" : "$firebaseId",
+      "id" : "$israfelId",
       "name" : name == null ? "" : "$name",
-      "gender" : gender == null ? "${Gender.A_0.index}" : "${gender.index}",
+      "gender" : gender == null ? "${Gender.NA.toString().split('.')[1]}" : "${gender.toString().split('.')[1]}",
       "birthday" : birthday == null ? null : "$birthday",
     };
 
@@ -180,25 +212,52 @@ class MemberService implements MemberRepos{
         headers: getHeaders(token),
       );
 
-      MemberRes memberRes = MemberRes.fromJson(jsonResponse['data']['updateMember']);
-      return memberRes.success;
+      return !jsonResponse.containsKey('errors');
     } catch(e) {
       return false;
     }
   }
 
-  Future<bool> updateMemberContactInfo(String firebaseId, String token, String phoneNumber, String country, String city, String district, String address) async{
+  Future<bool> updateMemberContactInfo(
+    String israfelId, 
+    String token, 
+    String phone, 
+    String country, 
+    String city, 
+    String district, 
+    String address
+  ) async{
     String mutation = 
     """
-    mutation (\$address: String, \$birthday: Date, \$city: String, \$country: String, \$district: String, \$firebaseId: String!, \$gender: Int, \$name: String, \$nickname: String, \$phone: String, \$profileImage: String){
-      updateMember(address: \$address, birthday: \$birthday, city: \$city, country: \$country, district: \$district, firebaseId: \$firebaseId, gender: \$gender, name: \$name, nickname: \$nickname, phone: \$phone, profileImage: \$profileImage) {
-        success
+    mutation (
+      \$id: ID!,
+      \$phone: String,
+      \$country: String, 
+      \$city: String, 
+      \$district: String, 
+      \$address: String
+    ){
+      updatemember(
+        id: \$id
+        data: {
+          phone: \$phone
+          country: \$country
+          city: \$city
+          district: \$district
+          address: \$address
+        }
+      ) {
+        phone,
+        country,
+        city,
+        district,
+        address
       }
     }
     """;
     Map<String,String> variables = {
-      "firebaseId" : "$firebaseId",
-      "phone" : phoneNumber == null ? "" : "$phoneNumber",
+      "id" : "$israfelId",
+      "phone" : phone == null ? "" : "$phone",
       "country" : country == null ? "" : "$country",
       "city" : city == null ? "" : "$city",
       "district" : district == null ? "" : "$district",
@@ -218,24 +277,24 @@ class MemberService implements MemberRepos{
         headers: getHeaders(token),
       );
 
-      MemberRes memberRes = MemberRes.fromJson(jsonResponse['data']['updateMember']);
-      return memberRes.success;
+      return !jsonResponse.containsKey('errors');
     } catch(e) {
       return false;
     }
   }
 
-  Future<bool> deleteMember(String firebaseId, String token) async{
+  Future<bool> deleteMember(String israfelId, String token) async{
     String mutation = 
     """
-    mutation (\$firebaseId: String!){
-        deleteMember(firebaseId: \$firebaseId) {
-            success
-        }
+    mutation (\$id: ID!) {
+      updatemember(id: \$id, data: { state: inactive }) {
+        email
+        state
+      }
     }
     """;
     Map<String,String> variables = {
-      "firebaseId" : "$firebaseId"
+      "id" : "$israfelId"
     };
 
     GraphqlBody graphqlBody = GraphqlBody(
@@ -251,8 +310,7 @@ class MemberService implements MemberRepos{
         headers: getHeaders(token),
       );
 
-      MemberRes memberRes = MemberRes.fromJson(jsonResponse['data']['deleteMember']);
-      return memberRes.success;
+      return !jsonResponse.containsKey('errors');
     } catch(e) {
       return false;
     }

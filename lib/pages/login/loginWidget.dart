@@ -39,9 +39,13 @@ class _LoginWidgetState extends State<LoginWidget> {
           return LoginErrorWidget();
         }
         if (state is LoginSuccess) {
+          String israfelId = state.israfelId;
           SubscritionType subscritionType = state.subscritionType;
 
-          return MemberWidget(subscritionType: subscritionType);
+          return MemberWidget(
+            israfelId: israfelId,
+            subscritionType: subscritionType
+          );
         }
 
         // state is Init, Third Party Loading

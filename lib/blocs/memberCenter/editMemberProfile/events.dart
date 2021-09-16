@@ -82,7 +82,7 @@ class UpdateMemberProfile extends EditMemberProfileEvents {
     yield SavingLoading(member: editMember);
     String token = await _auth.currentUser.getIdToken();
     bool updateSuccess = await memberRepos.updateMemberProfile(
-      _auth.currentUser.uid,
+      editMember.israfelId,
       token,
       editMember.name,
       editMember.gender,

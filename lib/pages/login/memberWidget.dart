@@ -21,8 +21,10 @@ import 'package:readr_app/services/loginService.dart';
 import 'package:readr_app/services/memberService.dart';
 
 class MemberWidget extends StatefulWidget {
+  final String israfelId;
   final SubscritionType subscritionType;
   MemberWidget({
+    @required this.israfelId,
     @required this.subscritionType,
   });
 
@@ -391,7 +393,10 @@ class _MemberWidgetState extends State<MemberWidget> {
           ),
         ),
       ),
-      onTap: () => RouteGenerator.navigateToDeleteMember(context)
+      onTap: () => RouteGenerator.navigateToDeleteMember(
+        context,
+        widget.israfelId
+      )
     );
   }
 }

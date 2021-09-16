@@ -2,6 +2,7 @@ import 'package:readr_app/helpers/EnumParser.dart';
 import 'package:readr_app/models/contactAddress.dart';
 
 class Member {
+  final String israfelId;
   String email;
   String name;
   Gender gender;
@@ -11,6 +12,7 @@ class Member {
   ContactAddress contactAddress;
 
   Member({
+    this.israfelId,
     this.email,
     this.name,
     this.gender,
@@ -20,23 +22,11 @@ class Member {
     this.contactAddress,
   });
 
-  // deep copy
-  Member copy() {
-    return Member(
-      email: this.email,
-      name: this.name,
-      gender: this.gender,
-      birthday: this.birthday,
-
-      phoneNumber: this.phoneNumber,
-      contactAddress: this.contactAddress.copy(),
-    );
-  }
-
   factory Member.fromJson(Map<String, dynamic> json) {
 
     String genderString = json['gender'];
     return Member(
+      israfelId: json['id'],
       email: json['email'],
       name: json['name'],
       gender: genderString.toEnum(Gender.values),
@@ -67,12 +57,10 @@ class Member {
 }
 
 enum Gender {
-  //Null,
-  A_0,
   //Male,
-  A_1,
+  M,
   //Female,
-  A_2,
+  F,
   //Unknown,
-  A_3,
+  NA,
 }
