@@ -163,8 +163,8 @@ class MemberService implements MemberRepos{
     """;
     Map<String,String> variables = {
       "id" : "$israfelId",
-      "name" : name == null ? "" : "$name",
-      "gender" : gender == null ? "${Gender.NA.toString().split('.')[1]}" : "${gender.toString().split('.')[1]}",
+      "name" : name == null ? null : "$name",
+      "gender" : gender == null ? null : "${gender.toString().split('.')[1]}",
       "birthday" : birthday == null ? null : "$birthday",
     };
 
@@ -226,11 +226,11 @@ class MemberService implements MemberRepos{
     """;
     Map<String,String> variables = {
       "id" : "$israfelId",
-      "phone" : phone == null ? "" : "$phone",
-      "country" : country == null ? "" : "$country",
-      "city" : city == null ? "" : "$city",
-      "district" : district == null ? "" : "$district",
-      "address" : address == null ? "" : "$address",
+      "phone" : phone == null ? null : "$phone",
+      "country" : country == null ? null : "$country",
+      "city" : city == null ? null : "$city",
+      "district" : district == null ? null : "$district",
+      "address" : address == null ? null : "$address",
     };
 
     GraphqlBody graphqlBody = GraphqlBody(
