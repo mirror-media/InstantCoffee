@@ -78,7 +78,7 @@ abstract class LoginEvents{
         routeArguments,
       );
     } else {
-      await auth.signOut();
+      await auth.currentUser.delete();
       yield LoginFail(
         error: UnknownException('Create member fail'),
       );
