@@ -8,6 +8,7 @@ import 'package:readr_app/helpers/appUpgradeHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/firebaseLoginStatus.dart';
 import 'package:readr_app/models/onBoarding.dart';
+import 'package:readr_app/pages/emailVerification/emailVerificationSuccessPage.dart';
 import 'package:readr_app/pages/homePage.dart';
 import 'package:readr_app/services/emailSignInService.dart';
 
@@ -41,31 +42,17 @@ class _MirrorAppState extends State<MirrorApp> {
             );
           } else if(deepLink.queryParameters['mode'] == 'verifyEmail') {
             Navigator.of(context).popUntil((route) => route.isFirst);
-            String code = deepLink.queryParameters['oobCode'];
-            EmailSignInServices emailSignInServices = EmailSignInServices();
-            FirebaseLoginStatus firebaseLoginStatus = await emailSignInServices.applyActionCode(code);
+            String continueUrl = deepLink.queryParameters['continueUrl'];
+            String email = continueUrl.split('?email=')[1];
             
-            if(firebaseLoginStatus.status == FirebaseStatus.Success) {
-              Fluttertoast.showToast(
-                msg: 'email驗證成功',
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.green,
-                textColor: Colors.white,
-                fontSize: 16.0
-              );
-            } else {
-              Fluttertoast.showToast(
-                msg: 'email驗證失敗',
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 16.0
-              );
-            }
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EmailVerificationSuccessPage(
+                  email: email,
+                )
+              )
+            );
           }
         }
       },
@@ -87,31 +74,17 @@ class _MirrorAppState extends State<MirrorApp> {
         );
       } else if(deepLink.queryParameters['mode'] == 'verifyEmail') {
         Navigator.of(context).popUntil((route) => route.isFirst);
-        String code = deepLink.queryParameters['oobCode'];
-        EmailSignInServices emailSignInServices = EmailSignInServices();
-        FirebaseLoginStatus firebaseLoginStatus = await emailSignInServices.applyActionCode(code);
+        String continueUrl = deepLink.queryParameters['continueUrl'];
+        String email = continueUrl.split('?email=')[1];
         
-        if(firebaseLoginStatus.status == FirebaseStatus.Success) {
-          Fluttertoast.showToast(
-            msg: 'email驗證成功',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.green,
-            textColor: Colors.white,
-            fontSize: 16.0
-          );
-        } else {
-          Fluttertoast.showToast(
-            msg: 'email驗證失敗',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0
-          );
-        }
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EmailVerificationSuccessPage(
+              email: email,
+            )
+          )
+        );
       }
     }
   }
