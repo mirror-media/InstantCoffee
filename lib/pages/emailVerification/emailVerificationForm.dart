@@ -157,7 +157,7 @@ class _EmailVerificationFormState extends State<EmailVerificationForm> {
               isWaiting: widget.state is SendingEmailVerificationSuccess,
               onTap: () => _sendEmailVerification(
                 _emailEditingController.text, 
-                env.baseConfig.finishEmailVerificationUrl
+                env.baseConfig.finishEmailVerificationUrl + '?email=${_emailEditingController.text}'
               ),
             ),
           ),
