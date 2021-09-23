@@ -218,7 +218,20 @@ class CheckIsLoginOrNot extends LoginEvents {
           member: member,
         );
       } catch(e) {
-        // fetch member fail
+        // there is no member in israfel
+        if(e.toString() == "Invalid Request: $memberStateTypeIsNotFound") {
+          await _auth.currentUser.delete();
+        } 
+        // when member subscrition type is not active
+        else if(e.toString() == "Invalid Request: $memberStateTypeIsNotActive") {
+          await _auth.signOut();
+        } 
+        // when there is no member in israfel and firebase id is deleted
+        // reason: change Saleor to Isrefel and delete the third party firebase account
+        else if(e.toString().contains('no user exists with the uid')) {
+          await _auth.signOut();
+        }
+        
         print(e.toString());
         yield LoginFail(
           error: UnknownException('Fetch member fail'),

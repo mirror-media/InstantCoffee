@@ -2,8 +2,12 @@ import 'dart:convert';
 
 import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
+import 'package:readr_app/helpers/appException.dart';
 import 'package:readr_app/models/graphqlBody.dart';
 import 'package:readr_app/models/member.dart';
+
+const String memberStateTypeIsNotFound = 'Member state type is not found';
+const String memberStateTypeIsNotActive = 'Member state type is not active';
 
 class MemberService {
   ApiBaseHelper _helper = ApiBaseHelper();
@@ -59,6 +63,7 @@ class MemberService {
     query (\$firebaseId: String!) {
       member(where: { firebaseId: \$firebaseId }) {
         id
+        state
         email
         name
         gender
@@ -84,8 +89,18 @@ class MemberService {
       jsonEncode(graphqlBody.toJson()),
       headers: getHeaders(token),
     );
+    
+    if(jsonResponse.containsKey('errors') && 
+      jsonResponse['errors'][0]['message'] == 'You do not have access to this resource') {
+      throw BadRequestException(memberStateTypeIsNotFound);
+    }
 
     Member member = Member.fromJson(jsonResponse['data']['member']);
+    if(member.state != MemberStateType.active) {
+      throw BadRequestException(memberStateTypeIsNotActive);
+    }
+
+    
     return member;
   }
 

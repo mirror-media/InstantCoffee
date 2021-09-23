@@ -3,6 +3,7 @@ import 'package:readr_app/models/contactAddress.dart';
 
 class Member {
   final String israfelId;
+  final MemberStateType state;
   String email;
   String name;
   Gender gender;
@@ -13,6 +14,7 @@ class Member {
 
   Member({
     this.israfelId,
+    this.state,
     this.email,
     this.name,
     this.gender,
@@ -36,10 +38,13 @@ class Member {
   }
 
   factory Member.fromJson(Map<String, dynamic> json) {
+    String state = json['state'];
+    MemberStateType memberStateType = state.toEnum(MemberStateType.values);
 
     String genderString = json['gender'];
     return Member(
       israfelId: json['id'],
+      state: memberStateType,
       email: json['email'],
       name: json['name'],
       gender: genderString.toEnum(Gender.values),
@@ -67,6 +72,11 @@ class Member {
     contactAddress : ${contactAddress.toString()}, 
     """;
   }
+}
+
+enum MemberStateType { 
+  active, 
+  inactive
 }
 
 enum Gender {
