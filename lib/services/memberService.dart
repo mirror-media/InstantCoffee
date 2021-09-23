@@ -2,9 +2,13 @@ import 'dart:convert';
 
 import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
+import 'package:readr_app/helpers/appException.dart';
 import 'package:readr_app/models/graphqlBody.dart';
 import 'package:readr_app/models/member.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
+
+const String memberStateTypeIsNotFound = 'Member state type is not found';
+const String memberStateTypeIsNotActive = 'Member state type is not active';
 
 abstract class MemberRepos {
   Future<MemberIdAndSubscritionType> checkSubscriptionType(String firebaseId, String token);
@@ -36,6 +40,7 @@ class MemberService implements MemberRepos{
     query checkSubscriptionType(\$firebaseId: String!) {
       member(where: { firebaseId: \$firebaseId }) {
         id
+        state
         type
       }
     }
@@ -57,7 +62,15 @@ class MemberService implements MemberRepos{
       headers: getHeaders(token),
     );
 
+    if(jsonResponse.containsKey('errors') && 
+      jsonResponse['errors'][0]['message'] == 'You do not have access to this resource') {
+      throw BadRequestException(memberStateTypeIsNotFound);
+    }
+
     MemberIdAndSubscritionType memberIdAndSubscritionType = MemberIdAndSubscritionType.fromJson(jsonResponse['data']['member']);
+    if(memberIdAndSubscritionType.state != MemberStateType.active) {
+      throw BadRequestException(memberStateTypeIsNotActive);
+    }
     return memberIdAndSubscritionType;
   }
 

@@ -8,12 +8,19 @@ enum SubscritionType {
   subscribe_yearly 
 }
 
+enum MemberStateType { 
+  active, 
+  inactive
+}
+
 class MemberIdAndSubscritionType {
   final String israfelId;
+  final MemberStateType state;
   final SubscritionType subscritionType;
 
   MemberIdAndSubscritionType({
     this.israfelId,
+    this.state,
     this.subscritionType,
   });
 
@@ -21,6 +28,7 @@ class MemberIdAndSubscritionType {
     if(json == null) {
       return MemberIdAndSubscritionType(
         israfelId: null,
+        state: null,
         subscritionType: SubscritionType.none,
       );
     }
@@ -28,8 +36,12 @@ class MemberIdAndSubscritionType {
     String type = json['type'];
     SubscritionType subscritionType = type.toEnum(SubscritionType.values);
 
+    String state = json['state'];
+    MemberStateType memberStateType = state.toEnum(MemberStateType.values);
+
     return MemberIdAndSubscritionType(
       israfelId: json['id'],
+      state: memberStateType,
       subscritionType: subscritionType,
     );
   }
