@@ -146,7 +146,8 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                       ),
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async{
+                    await _auth.currentUser.reload();
                     if(_auth.currentUser.emailVerified) {
                       Fluttertoast.showToast(
                         msg: '執行購買～',
