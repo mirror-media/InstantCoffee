@@ -44,15 +44,30 @@ class _MirrorAppState extends State<MirrorApp> {
             Navigator.of(context).popUntil((route) => route.isFirst);
             String continueUrl = deepLink.queryParameters['continueUrl'];
             String email = continueUrl.split('?email=')[1];
+            String code = deepLink.queryParameters['oobCode'];
+            EmailSignInServices emailSignInServices = EmailSignInServices();
+            FirebaseLoginStatus firebaseLoginStatus = await emailSignInServices.applyActionCode(code);
             
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EmailVerificationSuccessPage(
-                  email: email,
+            if(firebaseLoginStatus.status == FirebaseStatus.Success){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EmailVerificationSuccessPage(
+                    email: email,
+                  )
                 )
-              )
-            );
+              );
+            }else {
+              Fluttertoast.showToast(
+                msg: 'email驗證失敗',
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0
+              );
+            }
           }
         }
       },
@@ -76,15 +91,30 @@ class _MirrorAppState extends State<MirrorApp> {
         Navigator.of(context).popUntil((route) => route.isFirst);
         String continueUrl = deepLink.queryParameters['continueUrl'];
         String email = continueUrl.split('?email=')[1];
+        String code = deepLink.queryParameters['oobCode'];
+        EmailSignInServices emailSignInServices = EmailSignInServices();
+        FirebaseLoginStatus firebaseLoginStatus = await emailSignInServices.applyActionCode(code);
         
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EmailVerificationSuccessPage(
-              email: email,
+        if(firebaseLoginStatus.status == FirebaseStatus.Success){
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EmailVerificationSuccessPage(
+                email: email,
+              )
             )
-          )
-        );
+          );
+        }else {
+          Fluttertoast.showToast(
+            msg: 'email驗證失敗',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+          );
+        }
       }
     }
   }
