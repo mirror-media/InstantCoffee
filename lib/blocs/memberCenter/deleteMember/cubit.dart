@@ -14,7 +14,7 @@ class DeleteMemberCubit extends Cubit<DeleteMemberState> {
     MemberService memberService = MemberService();
     bool deleteSuccess = await memberService.deleteMember(israfelId, token);
     if(deleteSuccess) {
-      await auth.signOut();
+      await auth.currentUser.delete();
       emit(DeleteMemberSuccess());
     } else {
       emit(DeleteMemberError());
