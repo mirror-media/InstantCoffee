@@ -31,7 +31,7 @@ class DeleteMemberBloc {
     String token = await auth.currentUser.getIdToken();
     bool deleteSuccess = await memberService.deleteMember(israfelId, token);
     if(deleteSuccess) {
-      await auth.currentUser.delete();
+      auth.currentUser.delete();
       loginSinkToAdd(DeleteResponse.deletingSuccessfully());
     } else {
       loginSinkToAdd(DeleteResponse.deletingError('Delete error'));
