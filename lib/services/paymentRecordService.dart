@@ -30,7 +30,8 @@ class PaymentRecordService {
       ) {
       member(where: { firebaseId: \$firebaseId }) {
         subscription(
-          orderBy: [{ periodEndDatetime: desc }],
+          orderBy: { createdAt: desc },
+          where: {status: paid},
           first: \$first,
           skip: \$skip,
           ) {
@@ -39,16 +40,16 @@ class PaymentRecordService {
           currency
           paymentMethod
           amount
-          newebpayPayment(orderBy: [{ paymentTime: desc }]) {
+          newebpayPayment(orderBy: { paymentTime: desc }) {
             amount
             paymentMethod
             paymentTime
             cardInfoLastFour
           }
-          androidpayPayment(orderBy: [{updatedAt: desc}]){
+          androidpayPayment(orderBy: {updatedAt: desc}){
             updatedAt
           }
-          applepayPayment(orderBy: [{updatedAt: desc}]){
+          applepayPayment(orderBy: {updatedAt: desc}){
             updatedAt
           }
         }
