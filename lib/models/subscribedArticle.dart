@@ -26,18 +26,12 @@ class SubscribedArticle {
       postId = json["postId"];
     }
     else{
-      postId = 'test';
+      postId = '';
     }
-    // test data
-    String title = postId;
-    String photoUrl = 'https://www.mirrormedia.com.tw/assets/images/20210317185015-013b905320686dea9abf085902f36118-mobile.png';
-    String slug = '20210128pol001';
+    
     return SubscribedArticle(
         oneTimeEndDatetime: oneTimeEndDatetime,
         postId: postId,
-        title: title,
-        photoUrl: photoUrl,
-        slug: slug
       );
   }
 }
