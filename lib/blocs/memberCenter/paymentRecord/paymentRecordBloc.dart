@@ -23,18 +23,11 @@ class PaymentRecordBloc extends Bloc<PaymentRecordEvent, PaymentRecordState> {
   ) async* {
     print(event.toString());
     try {
-      if(event is FetchPaymentRecord){
-        _auth = FirebaseAuth.instance;
-        _token = await _auth.currentUser.getIdToken();
-        List<PaymentRecord> paymentRecords = await paymentRecordService.fetchPaymentRecord(
-          _auth.currentUser.uid, _token);
-        yield PaymentRecordLoaded(paymentRecords: paymentRecords);
-      }
-      else{
-        List<PaymentRecord> paymentRecords = await paymentRecordService.fetchMorePaymentRecord(
-          _auth.currentUser.uid, _token);
-        yield PaymentRecordLoadMore(paymentRecords: paymentRecords);
-      }
+      _auth = FirebaseAuth.instance;
+      _token = await _auth.currentUser.getIdToken();
+      List<PaymentRecord> paymentRecords = await paymentRecordService.fetchPaymentRecord(
+        _auth.currentUser.uid, _token);
+      yield PaymentRecordLoaded(paymentRecords: paymentRecords);
     } on SocketException {
       yield PaymentRecordError(
         error: NoInternetException('No Internet'),

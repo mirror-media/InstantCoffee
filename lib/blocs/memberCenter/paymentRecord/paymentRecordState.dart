@@ -10,11 +10,6 @@ class PaymentRecordLoaded extends PaymentRecordState {
   PaymentRecordLoaded({this.paymentRecords});
 }
 
-class PaymentRecordLoadMore extends PaymentRecordState {
-  final List<PaymentRecord> paymentRecords;
-  PaymentRecordLoadMore({this.paymentRecords});
-}
-
 class PaymentRecordError extends PaymentRecordState {
   final error;
   PaymentRecordError({this.error});
