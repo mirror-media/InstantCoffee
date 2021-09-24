@@ -24,7 +24,7 @@ class SubscribedArticlesService {
     String query = """
     query fetchMemberSubscriptions(\$firebaseId: String!) {
       member(where: { firebaseId: \$firebaseId }) {
-        subscription(orderBy: { oneTimeEndDatetime: asc }) {
+        subscription(orderBy: { oneTimeEndDatetime: asc },where: {status: paid}) {
           oneTimeEndDatetime
           postId
         }
