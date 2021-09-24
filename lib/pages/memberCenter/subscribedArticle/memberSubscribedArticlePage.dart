@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:readr_app/blocs/subscribedArticles/subscribedArticlesCubit.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
-import 'package:readr_app/models/record.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/models/subscribedArticle.dart';
 

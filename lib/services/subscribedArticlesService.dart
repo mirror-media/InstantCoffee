@@ -24,7 +24,7 @@ class SubscribedArticlesService {
     String query = """
     query fetchMemberSubscriptions(\$firebaseId: String!) {
       member(where: { firebaseId: \$firebaseId }) {
-        subscription(orderBy: [{ oneTimeEndDatetime: asc }]) {
+        subscription(orderBy: { oneTimeEndDatetime: asc },where: {status: paid}) {
           oneTimeEndDatetime
           postId
         }
@@ -51,6 +51,27 @@ class SubscribedArticlesService {
       });
       subscribedArticles.removeWhere(
           (element) => element.oneTimeEndDatetime.isBefore(DateTime.now()));
+      
+      List<String> articleIds = [];
+      subscribedArticles.forEach((element) { articleIds.add('"${element.postId}"');});
+      String endpoint = env.baseConfig.apiBase + 'getposts?where={"_id":{"\$in":$articleIds}}';
+      final jsonPostResponse = await _helper.getByUrl(endpoint);
+      if(jsonPostResponse['_items'] != null){
+        jsonPostResponse['_items'].forEach((item){
+          String photoUrl = env.baseConfig.mirrorMediaNotImageUrl;
+          if (item.containsKey('heroImage') && item['heroImage'] != null && item['heroImage']['image'] != null) {
+            photoUrl = item['heroImage']['image']['resizedTargets']['mobile']['url'];
+          } else if (item.containsKey('snippet') && item['snippet'] != null) {
+            photoUrl = item['snippet']['thumbnails']['medium']['url'];
+          } else if (item.containsKey('photoUrl') && item['photoUrl'] != null) {
+            photoUrl = item['photoUrl'];
+          }
+          subscribedArticles.firstWhere((element) => element.postId == item['_id'])
+          ..slug = item['slug']
+          ..title = item['title']
+          ..photoUrl = photoUrl;
+        });
+      }
     }
     
     return subscribedArticles;
