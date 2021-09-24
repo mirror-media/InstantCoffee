@@ -7,6 +7,7 @@ import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
 import 'package:readr_app/mirrorApp.dart';
 import 'package:readr_app/models/magazine.dart';
+import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/pages/emailLogin/emailLoginPage.dart';
 import 'package:readr_app/pages/emailRegistered/emailRegisteredPage.dart';
 import 'package:readr_app/pages/emailVerification/emailVerificationPage.dart';
@@ -146,6 +147,7 @@ class RouteGenerator {
           settings: settings,
           builder: (context) => DeleteMemberPage(
             israfelId: args['israfelId'],
+            subscritionType: args['subscritionType'],
           ),
           fullscreenDialog: true,
         );
@@ -348,11 +350,13 @@ class RouteGenerator {
   static void navigateToDeleteMember(
     BuildContext context, 
     String israfelId,
+    SubscritionType subscritionType
   ) {
     Navigator.of(context).pushNamed(
       deleteMember,
       arguments: {
         'israfelId': israfelId,
+        'subscritionType': subscritionType,
       },
     );
   }

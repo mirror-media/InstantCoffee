@@ -81,7 +81,7 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
         SizedBox(height: 72),
         Center(
           child: Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: Text(
               '確定要刪除帳號？',
               style: TextStyle(
@@ -93,7 +93,7 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
         SizedBox(height: 24),
         Center(
           child: Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: Text(
               '您的會員帳號為：${_auth.currentUser.email}',
               style: TextStyle(
@@ -105,20 +105,9 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
         SizedBox(height: 24),
         Center(
           child: Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: Text(
-              '刪除後即無法復原',
-              style: TextStyle(
-                fontSize: 17,
-              ),
-            ),
-          ),
-        ),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
-            child: Text(
-              '將無法享有鏡週刊會員獨享服務',
+              '提醒您，刪除後即無法復原。若您有訂閱會員專區單篇文章，刪除帳號將導致無法繼續閱讀購買文章。',
               style: TextStyle(
                 fontSize: 17,
               ),
@@ -149,7 +138,7 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
         SizedBox(height: 72),
         Center(
           child: Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: Text(
               '已刪除帳號',
               style: TextStyle(
@@ -159,21 +148,19 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
           ),
         ),
         SizedBox(height: 24),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
-            child: Text(
-              '我們已經刪除你的會員帳號',
-              style: TextStyle(
-                fontSize: 17,
-              ),
+        Padding(
+          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+          child: Text(
+            '我們已經刪除你的會員帳號。',
+            style: TextStyle(
+              fontSize: 17,
             ),
           ),
         ),
         SizedBox(height: 24),
         Center(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(24.0, 4.0, 24.0, 4.0),
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: Text(
               '謝謝你使用鏡週刊的會員服務，很遺憾要刪除你的帳號，如果希望再次使用的話，歡迎再次註冊！',
               style: TextStyle(
@@ -197,7 +184,7 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
         SizedBox(height: 72),
         Center(
           child: Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: Text(
               '刪除失敗',
               style: TextStyle(
@@ -209,9 +196,9 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
         SizedBox(height: 24),
         Center(
           child: Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: Text(
-              '請重新登入，或是聯繫客服',
+              '請重新登入，或是聯繫客服信箱',
               style: TextStyle(
                 fontSize: 17,
               ),
@@ -221,9 +208,9 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
         InkWell(
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
               child: Text(
-                'E-MAIL: mm-onlineservice@mirrormedia.mg',
+                'mm-onlineservice@mirrormedia.mg',
                 style: TextStyle(
                   fontSize: 17,
                 ),
@@ -245,21 +232,9 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
         ),
         Center(
           child: Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: Text(
-              '(02)6633-3966',
-              style: TextStyle(
-                fontSize: 17,
-              ),
-            ),
-          ),
-        ),
-        SizedBox(height: 24),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
-            child: Text(
-              '我們將有專人為您服務',
+              '致電(02)6633-3966由專人為您服務',
               style: TextStyle(
                 fontSize: 17,
               ),
