@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:readr_app/blocs/subscribedArticles/subscribedArticlesCubit.dart';
+import 'package:readr_app/blocs/memberCenter/subscribedArticles/subscribedArticlesCubit.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

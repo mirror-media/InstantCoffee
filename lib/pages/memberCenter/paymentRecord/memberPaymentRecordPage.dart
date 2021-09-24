@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:readr_app/blocs/paymentRecord/paymentRecordBloc.dart';
+import 'package:readr_app/blocs/memberCenter/paymentRecord/paymentRecordBloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/paymentRecord.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
