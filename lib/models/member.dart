@@ -27,6 +27,7 @@ class Member {
   // deep copy
   Member copy() {
     return Member(
+      israfelId: this.israfelId,
       email: this.email,
       name: this.name,
       gender: this.gender,
