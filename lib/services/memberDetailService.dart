@@ -23,7 +23,10 @@ class MemberDetailService {
     String query = """
     query fetchMemberSubscriptions(\$firebaseId: String!) {
       member(where: { firebaseId: \$firebaseId }) {
-        subscription(orderBy: { createdAt: desc }, first: 1) {
+        subscription(
+          orderBy: { createdAt: desc },
+          where: {status: paid},
+          first: 1) {
           frequency
           periodFirstDatetime
           periodEndDatetime
