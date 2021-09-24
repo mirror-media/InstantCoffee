@@ -15,7 +15,7 @@ class DeleteMemberCubit extends Cubit<DeleteMemberState> {
     bool deleteSuccess = await memberService.deleteMember(israfelId, token);
     if(deleteSuccess) {
       try {
-        auth.currentUser.delete();
+        await auth.currentUser.delete();
         emit(DeleteMemberSuccess());
       } catch(e) {
         print('firebase account delete fail');
