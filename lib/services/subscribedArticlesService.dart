@@ -50,7 +50,16 @@ class SubscribedArticlesService {
         subscribedArticles.add(SubscribedArticle.fromJson(v));
       });
       subscribedArticles.removeWhere(
-          (element) => element.oneTimeEndDatetime.isBefore(DateTime.now()));
+        (element) {
+          if(element.oneTimeEndDatetime.isBefore(DateTime.now())){
+            return true;
+          }
+          else if(element.postId == ''){
+            return true;
+          }
+          return false;
+        }
+      );
       
       List<String> articleIds = [];
       subscribedArticles.forEach((element) { articleIds.add('"${element.postId}"');});
@@ -66,10 +75,17 @@ class SubscribedArticlesService {
           } else if (item.containsKey('photoUrl') && item['photoUrl'] != null) {
             photoUrl = item['photoUrl'];
           }
-          subscribedArticles.firstWhere((element) => element.postId == item['_id'])
-          ..slug = item['slug']
-          ..title = item['title']
-          ..photoUrl = photoUrl;
+          String slug = item['slug']??'';
+          String title = item['title']??'';
+          if(slug != '' && title != '') {
+            subscribedArticles.firstWhere((element) => element.postId == item['_id'])
+              ..slug = slug
+              ..title = title
+              ..photoUrl = photoUrl;
+          }
+          else{
+            subscribedArticles.removeWhere((element) => element.postId == item['_id']);
+          }
         });
       }
     }
