@@ -404,7 +404,8 @@ class _MemberWidgetState extends State<MemberWidget> {
       ),
       onTap: () => RouteGenerator.navigateToDeleteMember(
         context,
-        widget.israfelId
+        widget.israfelId,
+        widget.subscritionType
       )
     );
   }
