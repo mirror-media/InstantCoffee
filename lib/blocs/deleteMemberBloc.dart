@@ -31,8 +31,14 @@ class DeleteMemberBloc {
     String token = await auth.currentUser.getIdToken();
     bool deleteSuccess = await memberService.deleteMember(israfelId, token);
     if(deleteSuccess) {
-      auth.currentUser.delete();
-      loginSinkToAdd(DeleteResponse.deletingSuccessfully());
+      try {
+        auth.currentUser.delete();
+        loginSinkToAdd(DeleteResponse.deletingSuccessfully());
+      } catch(e) {
+        print('firebase account delete fail');
+        await auth.signOut();
+        loginSinkToAdd(DeleteResponse.deletingError('Delete error'));
+      }
     } else {
       loginSinkToAdd(DeleteResponse.deletingError('Delete error'));
     }
