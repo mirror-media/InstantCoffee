@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:readr_app/blocs/subscriptionSelect/states.dart';
+import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/services/subscriptionSelectService.dart';
 

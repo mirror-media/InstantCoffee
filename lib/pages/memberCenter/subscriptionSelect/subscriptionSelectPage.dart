@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:readr_app/blocs/subscriptionSelect/bloc.dart';
+import 'package:readr_app/blocs/memberCenter/subscriptionSelect/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectWidget.dart';
 import 'package:readr_app/services/subscriptionSelectService.dart';

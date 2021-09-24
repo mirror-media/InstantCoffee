@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:readr_app/blocs/memberDetail/memberDetailCubit.dart';
+import 'package:readr_app/blocs/memberCenter/memberDetail/memberDetailCubit.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/models/memberDetail.dart';

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:readr_app/blocs/subscriptionSelect/bloc.dart';
-import 'package:readr_app/blocs/subscriptionSelect/events.dart';
-import 'package:readr_app/blocs/subscriptionSelect/states.dart';
+import 'package:readr_app/blocs/memberCenter/subscriptionSelect/bloc.dart';
+import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
+import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 
