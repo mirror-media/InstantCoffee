@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:readr_app/blocs/memberCenter/paymentRecord/paymentRecordBloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/paymentRecord.dart';
@@ -12,8 +13,6 @@ class MemberPaymentRecordPage extends StatefulWidget {
 
 class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
   List<PaymentRecord> paymentRecordList = [];
-  bool _isLoading = false;
-  bool _isNoMore = false;
 
   @override
   void initState(){
@@ -23,10 +22,6 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
 
   _fetchPaymentRecords() {
     context.read<PaymentRecordBloc>().add(FetchPaymentRecord());
-  }
-
-  _fetchMorePaymentRecords() {
-    context.read<PaymentRecordBloc>().add(FetchMorePaymentRecord());
   }
 
   @override
@@ -60,71 +55,40 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
           }
           paymentRecordList = state.paymentRecords;
         }
-        else if(state is PaymentRecordLoadMore){
-          if(state.paymentRecords.length > 0){
-            paymentRecordList.addAll(state.paymentRecords);
-          }
-          else{
-            _isNoMore = true;
-          }
-          if(state.paymentRecords.length < 12){
-          _isNoMore = true;
-          }
-          _isLoading = false;
-        }
         else{
           return Center(
             child: CircularProgressIndicator(),
           );
         }
-        return Column(
-          children: [
-            Expanded(
-              child: NotificationListener<ScrollNotification>(
-                onNotification: (ScrollNotification scrollInfo){
-                  if (!_isLoading && scrollInfo.metrics.pixels ==
-                    scrollInfo.metrics.maxScrollExtent && !_isNoMore) {
-                    _fetchMorePaymentRecords();
-                    _isLoading = true;
-                    return true;
-                  }
-                  return false;
-                },
-                child: ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
-                  separatorBuilder: (BuildContext context, int index){
-                    return Material(
-                      elevation: 1,
-                      color: Colors.white,
-                      child: Container(
-                        color: Colors.white,
-                        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-                        child: Divider(
-                          thickness: 1,
-                          color: Colors.grey[300],
-                        ),
-                      ),
-                    );
-                  },
-                  itemCount: paymentRecordList.length,
-                  itemBuilder: (context, index) {
-                    return Material(
-                      elevation: 1,
-                      color: Colors.white,
-                      child: _buildListItem(paymentRecordList[index]),
-                    );
-                  },
-                ),
+        return ListView.separated(
+          padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+          separatorBuilder: (BuildContext context, int index){
+            return Container(
+              color: Colors.white,
+              child: Divider(
+                thickness: 1,
+                color: Colors.grey[300],
+                indent: 16,
+                endIndent: 16,
               ),
-            ),
-            Container(
-              height: _isLoading ? 50.0 : 0,
-              color: Colors.transparent,
-              child: Center(
-                child: new CircularProgressIndicator(),
-              ),
-            ),
-          ],
+            );
+          },
+          itemCount: paymentRecordList.length,
+          itemBuilder: (context, index) {
+            if(index == paymentRecordList.length - 1){
+              return Material(
+                elevation: 1,
+                color: Colors.white,
+                child: _buildListItem(paymentRecordList[index]),
+              );
+            }
+            else{
+              return Container(
+                color: Colors.white,
+                child: _buildListItem(paymentRecordList[index]),
+              );
+            }
+          },
         );
       }
     );
@@ -177,7 +141,7 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                paymentRecord.paymentDate,
+                DateFormat('yyyy/MM/dd').format(paymentRecord.paymentDate),
                 style: TextStyle(
                   color: appColor,
                   fontSize: 17,
