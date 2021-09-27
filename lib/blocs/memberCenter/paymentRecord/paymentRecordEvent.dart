@@ -9,10 +9,3 @@ class FetchPaymentRecord extends PaymentRecordEvent {
     return 'Fetch payment records';
   }
 }
-
-class FetchMorePaymentRecord extends PaymentRecordEvent {
-  @override
-  String toString() {
-    return 'Fetch more payment records';
-  }
-}

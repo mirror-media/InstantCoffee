@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:intl/intl.dart';
 import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/models/graphqlBody.dart';
@@ -8,7 +6,6 @@ import 'package:readr_app/models/paymentRecord.dart';
 
 class PaymentRecordService {
   ApiBaseHelper _helper = ApiBaseHelper();
-  int _first = 12, _skip = 0;
 
   static Map<String, String> getHeaders(String token) {
     Map<String, String> headers = {
@@ -24,16 +21,12 @@ class PaymentRecordService {
   Future<List<PaymentRecord>> fetchPaymentRecord(String firebaseId, String token) async {
     String query = """
     query fetchSubscriptionPayments(
-      \$firebaseId: String!,
-      \$first: Int,
-      \$skip: Int,
+      \$firebaseId: String!
       ) {
       member(where: { firebaseId: \$firebaseId }) {
         subscription(
           orderBy: { createdAt: desc },
-          where: {status: paid},
-          first: \$first,
-          skip: \$skip,
+          where: {status: paid}
           ) {
           orderNumber
           frequency
@@ -57,9 +50,7 @@ class PaymentRecordService {
     }
     """;
     Map<String, dynamic> variables = {
-      "firebaseId": "$firebaseId",
-      "first": _first,
-      "skip": _skip
+      "firebaseId": "$firebaseId"
     };
     GraphqlBody graphqlBody = GraphqlBody(
       operationName: '',
@@ -80,7 +71,7 @@ class PaymentRecordService {
         String paymentCurrency = subscription['currency'] == null ? 'TWD':subscription['currency'];
         String paymentOrderNumber = subscription['orderNumber'];
         int paymentAmount;
-        String paymentDate;
+        DateTime paymentDate = DateTime.utc(2021);
         String paymentMethod;
         String creditCardInfoLastFour;
         String paymentType;
@@ -99,12 +90,7 @@ class PaymentRecordService {
             creditCardInfoLastFour = newebpayPayment['cardInfoLastFour'];
             paymentMethod = newebpayPayment['paymentMethod'] + '($creditCardInfoLastFour)';
             if(newebpayPayment['paymentTime'] != null){
-              DateTime dateTime = DateTime.parse(newebpayPayment['paymentTime']);
-              paymentDate = DateFormat('yyyy/MM/dd').format(dateTime);
-            }
-            else{
-              DateTime dateTime = DateTime.utc(2021);
-              paymentDate = DateFormat('yyyy/MM/dd').format(dateTime);
+              paymentDate = DateTime.parse(newebpayPayment['paymentTime']);
             }
             paymentRecord = PaymentRecord(
               paymentOrderNumber: paymentOrderNumber,
@@ -123,12 +109,7 @@ class PaymentRecordService {
           if(subscription['applepayPayment'] != null){
             subscription['applepayPayment'].forEach((applepayPayment){
               if(applepayPayment['updatedAt'] != null){
-                DateTime dateTime = DateTime.parse(applepayPayment['updatedAt']);
-                paymentDate = DateFormat('yyyy/MM/dd').format(dateTime);
-              }
-              else{
-                DateTime dateTime = DateTime.utc(2021);
-                paymentDate = DateFormat('yyyy/MM/dd').format(dateTime);
+                paymentDate = DateTime.parse(applepayPayment['updatedAt']);
               }
               paymentRecord = PaymentRecord(
                 paymentOrderNumber: paymentOrderNumber,
@@ -148,12 +129,7 @@ class PaymentRecordService {
           if(subscription['androidpayPayment'] != null){
             subscription['androidpayPayment'].forEach((androidpayPayment){
               if(androidpayPayment['updatedAt'] != null){
-                DateTime dateTime = DateTime.parse(androidpayPayment['updatedAt']);
-                paymentDate = DateFormat('yyyy/MM/dd').format(dateTime);
-              }
-              else{
-                DateTime dateTime = DateTime.utc(2021);
-                paymentDate = DateFormat('yyyy/MM/dd').format(dateTime);
+                paymentDate = DateTime.parse(androidpayPayment['updatedAt']);
               }
               paymentRecord = PaymentRecord(
                 paymentOrderNumber: paymentOrderNumber,
@@ -169,11 +145,7 @@ class PaymentRecordService {
         }
       });
     }
+    paymentRecords.sort((a,b) => b.paymentDate.compareTo(a.paymentDate));
     return paymentRecords;
-  }
-
-  Future<List<PaymentRecord>> fetchMorePaymentRecord(String firebaseId, String token) async {
-    _skip = _skip + _first;
-    return fetchPaymentRecord(firebaseId,token);
   }
 }
