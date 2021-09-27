@@ -24,6 +24,11 @@ class _MMTermsOfServiceWidgetState extends State<MMTermsOfServiceWidget> {
     );
   }
 
+  _delayNavigatorPop() async{
+    await Future.delayed(Duration(milliseconds: 0));
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<StoryBloc, StoryState>(
@@ -31,11 +36,17 @@ class _MMTermsOfServiceWidgetState extends State<MMTermsOfServiceWidget> {
         if (state is StoryError) {
           final error = state.error;
           print('StoryError: ${error.message}');
+          _delayNavigatorPop();
           return Container();
         }
 
         if (state is StoryLoaded) {
           StoryRes storyRes = state.storyRes;
+
+          if(storyRes.story.apiDatas.length == 0) {
+            _delayNavigatorPop();
+          }
+          
           // change font size
           for(int i=0; i<storyRes.story.apiDatas.length; i++) {
             if(storyRes.story.apiDatas[i].type == 'header-two') {
