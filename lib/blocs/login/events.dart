@@ -78,7 +78,12 @@ abstract class LoginEvents{
         routeArguments,
       );
     } else {
-      await auth.currentUser.delete();
+      try {
+        await auth.currentUser.delete();
+      } catch (e) {
+        print(e);
+        await auth.signOut();
+      }
       yield LoginFail(
         error: UnknownException('Create member fail'),
       );
@@ -222,7 +227,12 @@ class CheckIsLoginOrNot extends LoginEvents {
       } catch(e) {
         // there is no member in israfel
         if(e.toString() == "Invalid Request: $memberStateTypeIsNotFound") {
-          await _auth.currentUser.delete();
+          try {
+            await _auth.currentUser.delete();
+          } catch (e) {
+            print(e);
+            await _auth.signOut();
+          }
         } 
         // when member subscrition type is not active
         else if(e.toString() == "Invalid Request: $memberStateTypeIsNotActive") {

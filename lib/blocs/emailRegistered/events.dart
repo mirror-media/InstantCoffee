@@ -41,7 +41,12 @@ class CreateUserWithEmailAndPassword extends EmailRegisteredEvents {
         if(createSuccess) {
           yield EmailRegisteredSuccess();
         } else {
-          await auth.currentUser.delete();
+          try {
+            await auth.currentUser.delete();
+          } catch (e) {
+            print(e);
+            await auth.signOut();
+          }
           yield EmailRegisteredFail(
             error: UnknownException('Create member fail'),
           );
