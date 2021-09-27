@@ -173,6 +173,9 @@ class _MemberSubscriptionDetailPageState
               ],
             );
           }
+          else if(state is MemberDetailLoading){
+            return Center(child:CircularProgressIndicator());
+          }
           return ListView(
             children: [
               Material(

@@ -14,20 +14,8 @@ class SubscribedArticle {
     });
 
   factory SubscribedArticle.fromJson(Map<String, dynamic> json) {
-    DateTime oneTimeEndDatetime = DateTime.now();
-    if(json["oneTimeEndDatetime"] != null){
-      oneTimeEndDatetime = DateTime.parse(json["oneTimeEndDatetime"]);
-    }
-    else{
-      oneTimeEndDatetime = DateTime.utc(2021,1,1);
-    }
-    String postId;
-    if(json["postId"] != null){
-      postId = json["postId"];
-    }
-    else{
-      postId = '';
-    }
+    DateTime oneTimeEndDatetime = DateTime.parse(json["oneTimeEndDatetime"])??DateTime.utc(2021,1,1);
+    String postId = json["postId"]??'';
     
     return SubscribedArticle(
         oneTimeEndDatetime: oneTimeEndDatetime,

@@ -15,6 +15,7 @@ class MemberDetailCubit extends Cubit<MemberDetailState> {
   void fetchMemberDetail() async {
     print('Get member details');
     try {
+      emit(MemberDetailLoading());
       FirebaseAuth auth = FirebaseAuth.instance;
       String token = await auth.currentUser.getIdToken();
       MemberDetailService memberDetailService = MemberDetailService();
