@@ -131,6 +131,23 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
   }
 
   Widget _buildListItem(PaymentRecord paymentRecord) {
+    Widget statusText;
+    if(paymentRecord.isSuccess){
+      statusText = Text('付款成功',
+        style:TextStyle(
+          color: Colors.black45,
+          fontSize: 13,
+        ),
+      );
+    }
+    else{
+      statusText = Text('付款失敗',
+        style:TextStyle(
+          color: Color.fromARGB(240, 219, 23, 48),
+          fontSize: 13,
+        ),
+      );
+    }
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
       child: Row(
@@ -167,6 +184,7 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
                   fontSize: 13
                 ),
               ),
+              statusText
             ]
           ),
           Text(

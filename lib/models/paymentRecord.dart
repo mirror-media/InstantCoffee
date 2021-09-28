@@ -6,6 +6,7 @@ class PaymentRecord {
   final int paymentAmount;
   final DateTime paymentDate;
   final String paymentMethod;
+  final bool isSuccess;
 
   PaymentRecord({
     this.paymentOrderNumber,
@@ -14,5 +15,6 @@ class PaymentRecord {
     this.paymentAmount,
     this.paymentDate,
     this.paymentMethod,
+    this.isSuccess
   });
 }
