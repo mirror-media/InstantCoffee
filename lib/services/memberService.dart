@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/helpers/appException.dart';
@@ -11,7 +12,7 @@ const String memberStateTypeIsNotFound = 'Member state type is not found';
 const String memberStateTypeIsNotActive = 'Member state type is not active';
 
 abstract class MemberRepos {
-  Future<MemberIdAndSubscritionType> checkSubscriptionType(String firebaseId, String token);
+  Future<MemberIdAndSubscritionType> checkSubscriptionType(User user, String token);
   Future<bool> createMember(String email, String token);
   Future<Member> fetchMemberData(String firebaseId, String token);
   Future<bool> updateMemberProfile(String israfelId, String token, String name, Gender gender, String birthday);
@@ -34,7 +35,7 @@ class MemberService implements MemberRepos{
   }
 
   @override
-  Future<MemberIdAndSubscritionType> checkSubscriptionType(String firebaseId, String token) async{
+  Future<MemberIdAndSubscritionType> checkSubscriptionType(User user, String token) async{
     String query = 
     """
     query checkSubscriptionType(\$firebaseId: String!) {
@@ -47,7 +48,7 @@ class MemberService implements MemberRepos{
     """;
 
     Map<String,String> variables = {
-      "firebaseId" : "$firebaseId"
+      "firebaseId" : "${user.uid}"
     };
 
     GraphqlBody graphqlBody = GraphqlBody(
@@ -70,6 +71,12 @@ class MemberService implements MemberRepos{
     MemberIdAndSubscritionType memberIdAndSubscritionType = MemberIdAndSubscritionType.fromJson(jsonResponse['data']['member']);
     if(memberIdAndSubscritionType.state != MemberStateType.active) {
       throw BadRequestException(memberStateTypeIsNotActive);
+    }
+    if(user.emailVerified){
+      String domain = user.email.split('@')[1];
+      if(domain == 'mnews.tw' || domain == 'mirrormedia.mg' || domain == 'mirrorfiction.com'){
+        memberIdAndSubscritionType.subscritionType = SubscritionType.staff;
+      }
     }
     return memberIdAndSubscritionType;
   }
