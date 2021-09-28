@@ -52,4 +52,6 @@ class BaseConfig {
 
   String get appsFlyerKey => isDev ? dev.appsFlyerKey : prod.appsFlyerKey;
   String get firebaseApiKey => isDev ? dev.firebaseApiKey : prod.firebaseApiKey;
+
+  String get appVersionApi => isDev ? dev.appVersionApi : prod.appVersionApi;
 }
