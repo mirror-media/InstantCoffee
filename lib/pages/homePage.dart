@@ -8,7 +8,6 @@ import 'package:readr_app/blocs/sectionBloc.dart';
 import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/appLinkHelper.dart';
-import 'package:readr_app/helpers/appUpgradeHelper.dart';
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/onBoarding.dart';
@@ -24,11 +23,9 @@ import 'package:readr_app/helpers/dataConstants.dart';
 class HomePage extends StatefulWidget {
   final GlobalKey settingKey;
   final OnBoardingBloc onBoardingBloc;
-  final bool isUpdateAvailable;
   HomePage({
     @required this.settingKey,
     @required this.onBoardingBloc,
-    this.isUpdateAvailable = false,
   });
 
   @override
@@ -37,7 +34,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin, WidgetsBindingObserver {
   final LocalStorage _storage = LocalStorage('setting');
-  AppUpgradeHelper _appUpgradeHelper;
   AppLinkHelper _appLinkHelper;
   FirebaseMessangingHelper _firebaseMessangingHelper;
 
@@ -55,7 +51,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
 
   @override
   void initState() {
-    _appUpgradeHelper = AppUpgradeHelper();
     _appLinkHelper = AppLinkHelper();
     _firebaseMessangingHelper = FirebaseMessangingHelper();
 
@@ -64,9 +59,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
       _appLinkHelper.configAppLink(context);
       _appLinkHelper.listenAppLink(context);
       _firebaseMessangingHelper.configFirebaseMessaging(context);
-      if(widget.isUpdateAvailable){
-        _appUpgradeHelper.renderUpgradeUI(context);
-      }
     });
 
     _sectionBloc = SectionBloc();

@@ -6,6 +6,7 @@ import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/onBoarding.dart';
+import 'package:readr_app/pages/appUpdatePage.dart';
 import 'package:readr_app/pages/homePage.dart';
 
 class MirrorApp extends StatefulWidget {
@@ -18,8 +19,6 @@ class _MirrorAppState extends State<MirrorApp> {
   AppUpgradeHelper _appUpgradeHelper;
   StreamController _configController;
   OnBoardingBloc _onBoardingBloc;
-
-  bool _isUpdateAvailable = false;
   
   // It cant trigger on iOS, cuz AppsFlyer's code on AppDelegate.swift break this feature.
   // The iOS DynamicLinks method will implement in initialAppsFlyer function.
@@ -68,8 +67,8 @@ class _MirrorAppState extends State<MirrorApp> {
   }
   
   _waiting() async{
-    _isUpdateAvailable = await _appUpgradeHelper.isUpdateAvailable();
-    print('in-app upgrade: $_isUpdateAvailable');
+    _appUpgradeHelper.needToUpdate = await _appUpgradeHelper.isUpdateAvailable();
+    print('in-app upgrade: ${_appUpgradeHelper.needToUpdate}');
 
     _onBoardingBloc.setOnBoardingHintList();
     await _onBoardingBloc.setOnBoardingFromStorage();
@@ -103,6 +102,10 @@ class _MirrorAppState extends State<MirrorApp> {
           ));
         }
 
+        if(_appUpgradeHelper.needToUpdate) {
+          return AppUpdatePage(appUpgradeHelper: _appUpgradeHelper);
+        }
+
         return StreamBuilder<OnBoarding>(
           initialData: OnBoarding(isOnBoarding: false),
           stream: _onBoardingBloc.onBoardingStream,
@@ -115,7 +118,6 @@ class _MirrorAppState extends State<MirrorApp> {
                   HomePage(
                     settingKey: _settingKey,
                     onBoardingBloc: _onBoardingBloc,
-                    isUpdateAvailable: _isUpdateAvailable,
                   ),
                   if(onBoarding.isOnBoarding && 
                   !onBoarding.isNeedInkWell)
