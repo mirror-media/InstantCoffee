@@ -44,6 +44,15 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
       );
     }
 
+    if(subscritionType == SubscritionType.staff){
+      return Text(
+        '鏡集團員工',
+        style: TextStyle(
+          fontSize: fontSize,
+        ),
+      );
+    }
+
     // subscritionType == SubscritionType.marketing
     return Text(
       'VIP',
