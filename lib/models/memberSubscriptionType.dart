@@ -5,7 +5,8 @@ enum SubscritionType {
   marketing, 
   subscribe_one_time, 
   subscribe_monthly, 
-  subscribe_yearly 
+  subscribe_yearly,
+  staff
 }
 
 enum MemberStateType { 
@@ -16,7 +17,7 @@ enum MemberStateType {
 class MemberIdAndSubscritionType {
   final String israfelId;
   final MemberStateType state;
-  final SubscritionType subscritionType;
+  SubscritionType subscritionType;
 
   MemberIdAndSubscritionType({
     this.israfelId,
