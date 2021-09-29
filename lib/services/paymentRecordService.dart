@@ -25,8 +25,7 @@ class PaymentRecordService {
       ) {
       member(where: { firebaseId: \$firebaseId }) {
         subscription(
-          orderBy: { createdAt: desc },
-          where: {status: paid}
+          orderBy: { createdAt: desc }
           ) {
           orderNumber
           frequency
@@ -34,6 +33,7 @@ class PaymentRecordService {
           paymentMethod
           amount
           newebpayPayment(orderBy: { paymentTime: desc }) {
+            status
             amount
             paymentMethod
             paymentTime
@@ -75,6 +75,7 @@ class PaymentRecordService {
         String paymentMethod;
         String creditCardInfoLastFour;
         String paymentType;
+        bool isSuccess;
         if(subscription['frequency'] == 'monthly'){
           paymentType = '月方案';
         }
@@ -92,6 +93,12 @@ class PaymentRecordService {
             if(newebpayPayment['paymentTime'] != null){
               paymentDate = DateTime.parse(newebpayPayment['paymentTime']);
             }
+            if(newebpayPayment['status'] == 'SUCCESS'){
+              isSuccess = true;
+            }
+            else{
+              isSuccess = false;
+            }
             paymentRecord = PaymentRecord(
               paymentOrderNumber: paymentOrderNumber,
               paymentType: paymentType,
@@ -99,6 +106,7 @@ class PaymentRecordService {
               paymentAmount: paymentAmount,
               paymentDate: paymentDate,
               paymentMethod: paymentMethod,
+              isSuccess: isSuccess
             );
             paymentRecords.add(paymentRecord);
           });
@@ -118,6 +126,7 @@ class PaymentRecordService {
                 paymentAmount: paymentAmount,
                 paymentDate: paymentDate,
                 paymentMethod: paymentMethod,
+                isSuccess: isSuccess
               );
               paymentRecords.add(paymentRecord);
             });
@@ -138,6 +147,7 @@ class PaymentRecordService {
                 paymentAmount: paymentAmount,
                 paymentDate: paymentDate,
                 paymentMethod: paymentMethod,
+                isSuccess: isSuccess
               );
               paymentRecords.add(paymentRecord);
             });
