@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/helpers/appException.dart';
+import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/graphqlBody.dart';
 import 'package:readr_app/models/member.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
@@ -74,7 +75,7 @@ class MemberService implements MemberRepos{
     }
     if(user.emailVerified){
       String domain = user.email.split('@')[1];
-      if(domain == 'mnews.tw' || domain == 'mirrormedia.mg' || domain == 'mirrorfiction.com'){
+      if(mirrormediaGroupDomain.contains(domain)){
         memberIdAndSubscritionType.subscritionType = SubscritionType.staff;
       }
     }
