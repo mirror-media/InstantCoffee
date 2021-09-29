@@ -92,7 +92,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                 android:scheme="https"
-                android:host="mirrormedia.page.link"
+                android:host="mirrorweekly.page.link"
                 android:pathPattern=".*" />
             </intent-filter>
             <!-- Scheme App Links -->

@@ -10,7 +10,7 @@
 	</array>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:mirrormedia.page.link</string>
+		<string>applinks:mirrorweekly.page.link</string>
 	</array>
 </dict>
 </plist>
