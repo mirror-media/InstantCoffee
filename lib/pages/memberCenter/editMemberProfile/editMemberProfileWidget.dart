@@ -156,11 +156,20 @@ class _EditMemberProfileWidgetState extends State<EditMemberProfileWidget> {
   }
 
   Widget _memberProfileForm(Member member) {
+    bool hideEmail = false;
+    if(member.email != null){
+      excludeEmail.forEach((element) {
+        if(member.email.contains(element)) hideEmail = true;
+      });
+    }
+    else{
+      hideEmail = true;
+    }
     return ListView(
       children: [
         SizedBox(height: 32),
         // privaterelay.appleid.com is a anonymous email provided by apple
-        if(member.email != null && !member.email.contains('privaterelay.appleid.com'))
+        if(!hideEmail)
         ...[
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),

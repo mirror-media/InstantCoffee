@@ -61,3 +61,4 @@ const int storyAT1AdIndex = 1;
 const int storyAT2AdIndex = 5;
 
 const mirrormediaGroupDomain = ['mnews.tw','mirrormedia.mg','mirrorfiction.com'];
+const excludeEmail = ['privaterelay.appleid.com','[0x0001] -'];
