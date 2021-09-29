@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -49,6 +50,7 @@ class _MirrorAppState extends State<MirrorApp> {
             FirebaseLoginStatus firebaseLoginStatus = await emailSignInServices.applyActionCode(code);
             
             if(firebaseLoginStatus.status == FirebaseStatus.Success){
+              await FirebaseAuth.instance.currentUser.reload();
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -96,6 +98,7 @@ class _MirrorAppState extends State<MirrorApp> {
         FirebaseLoginStatus firebaseLoginStatus = await emailSignInServices.applyActionCode(code);
         
         if(firebaseLoginStatus.status == FirebaseStatus.Success){
+          await FirebaseAuth.instance.currentUser.reload();
           Navigator.push(
             context,
             MaterialPageRoute(
