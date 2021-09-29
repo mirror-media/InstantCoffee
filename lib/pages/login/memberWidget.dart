@@ -78,31 +78,40 @@ class _MemberWidgetState extends State<MemberWidget> {
                 SizedBox(height: 48),
                 _memberLevelBlock(widget.subscritionType),
                 SizedBox(height: 24),
-                _horizontalDivider(width),
-                _memberSubscriptionDetailButton(widget.subscritionType),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                  child: _horizontalDivider(width),
-                ),
-                if(widget.subscritionType == SubscritionType.none || 
-                  widget.subscritionType == SubscritionType.subscribe_one_time
-                )...[
-                  _memberSubscribedArticleButton(),
+              ],
+            ),
+          ),
+          if(widget.subscritionType != SubscritionType.staff)
+            Container(
+              color: Colors.white,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _horizontalDivider(width),
+                  _memberSubscriptionDetailButton(widget.subscritionType),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
                     child: _horizontalDivider(width),
                   ),
+                  if(widget.subscritionType == SubscritionType.none || 
+                    widget.subscritionType == SubscritionType.subscribe_one_time
+                  )...[
+                    _memberSubscribedArticleButton(),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                      child: _horizontalDivider(width),
+                    ),
+                  ],
+                  _memberPaymentRecordButton(),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                    child: _horizontalDivider(width),
+                  ),
+                  if(widget.subscritionType != SubscritionType.marketing)
+                    _subscriptionSelectButton(widget.subscritionType),
                 ],
-                _memberPaymentRecordButton(),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                  child: _horizontalDivider(width),
-                ),
-                if(widget.subscritionType != SubscritionType.marketing)
-                  _subscriptionSelectButton(widget.subscritionType),
-              ],
+              ),
             ),
-          ),
           SizedBox(height: 36),
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),

@@ -157,7 +157,7 @@ abstract class LoginEvents{
     try {
       String token = await auth.currentUser.getIdToken();
       MemberService memberService = MemberService();
-      MemberIdAndSubscritionType memberIdAndSubscritionType = await memberService.checkSubscriptionType(auth.currentUser.uid, token);
+      MemberIdAndSubscritionType memberIdAndSubscritionType = await memberService.checkSubscriptionType(auth.currentUser, token);
       yield LoginSuccess(
         israfelId: memberIdAndSubscritionType.israfelId,
         subscritionType: memberIdAndSubscritionType.subscritionType
@@ -219,7 +219,7 @@ class CheckIsLoginOrNot extends LoginEvents {
       try {
         String token = await _auth.currentUser.getIdToken();
         MemberService memberService = MemberService();
-        MemberIdAndSubscritionType memberIdAndSubscritionType = await memberService.checkSubscriptionType(_auth.currentUser.uid, token);
+        MemberIdAndSubscritionType memberIdAndSubscritionType = await memberService.checkSubscriptionType(_auth.currentUser, token);
         yield LoginSuccess(
           israfelId: memberIdAndSubscritionType.israfelId,
           subscritionType: memberIdAndSubscritionType.subscritionType

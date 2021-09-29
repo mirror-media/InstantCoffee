@@ -59,3 +59,5 @@ const bool isListeningWidgetAdsActivated = true;
 // AT index in story
 const int storyAT1AdIndex = 1;
 const int storyAT2AdIndex = 5;
+
+const mirrormediaGroupDomain = ['mnews.tw','mirrormedia.mg','mirrorfiction.com'];

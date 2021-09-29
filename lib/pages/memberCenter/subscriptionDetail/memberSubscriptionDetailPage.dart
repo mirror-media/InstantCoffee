@@ -22,7 +22,8 @@ class _MemberSubscriptionDetailPageState
   void initState() {
     super.initState();
     _subscritionType = widget.subscritionType;
-    if (_subscritionType != SubscritionType.none && _subscritionType != SubscritionType.subscribe_one_time) _getMemberDetail();
+    if (_subscritionType == SubscritionType.subscribe_monthly || _subscritionType == SubscritionType.subscribe_yearly) 
+      _getMemberDetail();
   }
 
   _getMemberDetail() {
@@ -50,7 +51,7 @@ class _MemberSubscriptionDetailPageState
 
   Widget _buildContent(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    if (_subscritionType != SubscritionType.none) {
+    if (_subscritionType == SubscritionType.subscribe_monthly || _subscritionType == SubscritionType.subscribe_yearly) {
       return BlocBuilder<MemberDetailCubit, MemberDetailState>(
         builder: (context, state) {
           if (state is MemberDetailLoad) {
