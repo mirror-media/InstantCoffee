@@ -38,6 +38,19 @@ class _EditMemberProfileWidgetState extends State<EditMemberProfileWidget> {
     Navigator.of(context).pop();
   }
 
+  String _displayMemberEmail(String inputEmail) {
+    if(inputEmail == null || 
+      // privaterelay.appleid.com is a anonymous email provided by apple
+      inputEmail.contains('privaterelay.appleid.com') ||
+      // when firebase email is null, it will create [0x0001] - xxxx in db
+      inputEmail.contains('[0x0001] -')
+    ) {
+      return '';
+    }
+
+    return inputEmail;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EditMemberProfileBloc, EditMemberProfileState>(
@@ -159,15 +172,11 @@ class _EditMemberProfileWidgetState extends State<EditMemberProfileWidget> {
     return ListView(
       children: [
         SizedBox(height: 32),
-        // privaterelay.appleid.com is a anonymous email provided by apple
-        if(member.email != null && !member.email.contains('privaterelay.appleid.com'))
-        ...[
-          Padding(
-            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: _emailSection(member.email),
-          ),
-          SizedBox(height: 28),
-        ],
+        Padding(
+          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+          child: _emailSection(_displayMemberEmail(member.email)),
+        ),
+        SizedBox(height: 28),
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
           child: _nameTextField(member),
