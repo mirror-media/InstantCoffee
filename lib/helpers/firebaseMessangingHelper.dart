@@ -42,7 +42,11 @@ class FirebaseMessangingHelper {
       FcmData fcmData = FcmData.fromJson(message.data);
       
       if(fcmData != null && fcmData.slug != null) {
-        RouteGenerator.navigateToStory(context, fcmData.slug, isListeningWidget: fcmData.isListeningPage);
+        if(fcmData.isListeningPage) {
+          RouteGenerator.navigateToListeningStory(context, fcmData.slug);
+        } else {
+          RouteGenerator.navigateToStory(context, fcmData.slug);
+        }
       }
     }
   }

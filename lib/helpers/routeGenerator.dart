@@ -21,7 +21,8 @@ import 'package:readr_app/pages/passwordResetEmail/passwordResetEmailPage.dart';
 import 'package:readr_app/pages/passwordResetPrompt/passwordResetPromptPage.dart';
 import 'package:readr_app/pages/passwordUpdate/passwordUpdatePage.dart';
 import 'package:readr_app/pages/search/searchPage.dart';
-import 'package:readr_app/pages/storyPage.dart';
+import 'package:readr_app/pages/storyPage/listening/listeningStoryPage.dart';
+import 'package:readr_app/pages/storyPage/news/storyPage.dart';
 
 import 'package:readr_app/pages/memberCenter/editMemberProfile/editMemberProfilePage.dart';
 import 'package:readr_app/pages/memberCenter/editMemberContactInfo/editMemberContactInfoPage.dart';
@@ -43,6 +44,7 @@ class RouteGenerator {
   static const String emailVerification = '/emailVerification';
   static const String notificationSettings = '/notificationSettings';
   static const String story = '/story';
+  static const String listeningStory = '/listeningStory';
   static const String magazine = '/magazine';
   static const String magazineBrowser = '/magazineBrowser';
 
@@ -179,7 +181,19 @@ class RouteGenerator {
           return MaterialPageRoute(
             builder: (context) => StoryPage(
               slug: args['slug'],
-              isListeningWidget: args['isListeningWidget']??false,
+            )
+          );
+        }
+        // If args is not of the correct type, return an error page.
+        // You can also throw an exception while in development.
+        return _errorRoute(settings);
+      case listeningStory:
+        Map args = settings.arguments;
+        // Validation of correct data type
+        if (args['slug'] is String) {
+          return MaterialPageRoute(
+            builder: (context) => ListeningStroyPage(
+              slug: args['slug'],
             )
           );
         }
@@ -372,12 +386,20 @@ class RouteGenerator {
     );
   }
 
-  static void navigateToStory(BuildContext context, String slug, {bool isListeningWidget = false}) {
+  static void navigateToStory(BuildContext context, String slug) {
     Navigator.of(context).pushNamed(
       story,
       arguments: {
-        'slug': slug,
-        'isListeningWidget': isListeningWidget,
+        'slug': slug
+      },
+    );
+  }
+
+  static void navigateToListeningStory(BuildContext context, String slug) {
+    Navigator.of(context).pushNamed(
+      listeningStory,
+      arguments: {
+        'slug': slug
       },
     );
   }

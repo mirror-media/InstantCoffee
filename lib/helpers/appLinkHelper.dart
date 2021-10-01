@@ -56,7 +56,11 @@ class AppLinkHelper {
   _navigateToStoryPage(BuildContext context, String slug ,{isListeningPage = false}) {
     if(slug != null && slug != '') {
       Navigator.of(context).popUntil((route) => route.isFirst);
-      RouteGenerator.navigateToStory(context, slug, isListeningWidget: isListeningPage);
+      if(isListeningPage) {
+        RouteGenerator.navigateToListeningStory(context, slug);
+      } else {
+        RouteGenerator.navigateToStory(context, slug);
+      }
     }
   }
 
