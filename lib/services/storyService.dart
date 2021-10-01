@@ -12,7 +12,7 @@ import 'package:readr_app/models/storyRes.dart';
 import 'package:readr_app/services/memberService.dart';
 
 abstract class StoryRepos {
-  Future<StoryRes> fetchStory(String slug);
+  Future<StoryRes> fetchStory(String slug, bool isMemberCheck);
 }
 
 class StoryService implements StoryRepos{
@@ -25,6 +25,19 @@ class StoryService implements StoryRepos{
     _helper = ApiBaseHelper();
     _auth = FirebaseAuth.instance;
   }
+
+  String _getStoryApi(String slug, bool isMemberCheck) {
+    if(isMemberCheck) {
+      // this api will check member state before returning story data
+      return env.baseConfig.storyPageApi +
+          'getposts?where={"slug":"$slug","isAudioSiteOnly":false}&related=full';//&clean=content
+    }
+
+    // this api will return story data directly
+    // if story is member only, it will only return part of the story data 
+    return env.baseConfig.storyPageApi +
+        'story?where={"slug":"$slug","isAudioSiteOnly":false}&related=full';//&clean=content
+  }
   
   /// Check the file exists in cache first.
   /// If file exists, get the json file by cache,
@@ -32,10 +45,9 @@ class StoryService implements StoryRepos{
   /// and check the json file is member only or not.
   /// If the json file is not member only, 
   /// save the file in cache.
-  Future<StoryRes> fetchStory(String slug) async {
+  Future<StoryRes> fetchStory(String slug, bool isMemberCheck) async {
     String token = await _auth?.currentUser?.getIdToken();
-    String endpoint = env.baseConfig.storyPageApi +
-        'posts?where={"slug":"$slug","isAudioSiteOnly":false}&related=full';//&clean=content
+    String endpoint = _getStoryApi(slug, isMemberCheck);
 
     bool isCacheFileExists = await _mMCacheManager.isFileExistsAndNotExpired(endpoint);
     var jsonResponse;

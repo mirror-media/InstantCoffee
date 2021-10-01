@@ -9,8 +9,9 @@ import 'package:share/share.dart';
 
 class StoryPage extends StatelessWidget {
   final String slug;
+  final bool isMemberCheck;
   const StoryPage(
-      {Key key, @required this.slug})
+      {Key key, @required this.slug, @required this.isMemberCheck})
       : super(key: key);
 
   @override
@@ -38,7 +39,7 @@ class StoryPage extends StatelessWidget {
       ),
       body: BlocProvider(
         create: (context) => StoryBloc(storyRepos: StoryService()),
-        child: StoryWidget(slugBloc: _slugBloc),
+        child: StoryWidget(slugBloc: _slugBloc, isMemberCheck: isMemberCheck,),
       ),
     );
   }

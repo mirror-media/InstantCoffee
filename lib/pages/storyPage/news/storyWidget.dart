@@ -27,7 +27,10 @@ import 'package:readr_app/blocs/story/states.dart';
 
 class StoryWidget extends StatefulWidget {
   final SlugBloc slugBloc;
-  const StoryWidget({key, this.slugBloc}) : super(key: key);
+  final bool isMemberCheck;
+  const StoryWidget(
+      {key, @required this.slugBloc, @required this.isMemberCheck}) 
+      : super(key: key);
 
   @override
   _StoryWidget createState() {
@@ -38,13 +41,13 @@ class StoryWidget extends StatefulWidget {
 class _StoryWidget extends State<StoryWidget> {
   @override
   void initState() {
-    _fetchPublishedStoryBySlug(widget.slugBloc.slug);
+    _fetchPublishedStoryBySlug(widget.slugBloc.slug, widget.isMemberCheck);
     super.initState();
   }
 
-  _fetchPublishedStoryBySlug(String storySlug) {
+  _fetchPublishedStoryBySlug(String storySlug, bool isMemberCheck) {
     context.read<StoryBloc>().add(
-      FetchPublishedStoryBySlug(storySlug)
+      FetchPublishedStoryBySlug(storySlug, isMemberCheck)
     );
   }
 
@@ -809,7 +812,7 @@ return BlocBuilder<StoryBloc, StoryState>(
       ),
       onTap: () {
         widget.slugBloc.slug = relatedItem.slug;
-        _fetchPublishedStoryBySlug(widget.slugBloc.slug);
+        _fetchPublishedStoryBySlug(widget.slugBloc.slug, widget.isMemberCheck);
       },
     );
   }

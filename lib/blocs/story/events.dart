@@ -17,17 +17,21 @@ abstract class StoryEvents{
 
 class FetchPublishedStoryBySlug extends StoryEvents {
   final String slug;
-  FetchPublishedStoryBySlug(this.slug);
+  final bool isMemberCheck;
+  FetchPublishedStoryBySlug(
+    this.slug,
+    this.isMemberCheck
+  );
 
   @override
-  String toString() => 'FetchPublishedStoryBySlug { storySlug: $slug }';
+  String toString() => 'FetchPublishedStoryBySlug { storySlug: $slug, isMemberCheck: $isMemberCheck }';
 
   @override
   Stream<StoryState> run(StoryRepos storyRepos) async*{
     print(this.toString());
     try{
       yield StoryLoading();
-      StoryRes storyRes = await storyRepos.fetchStory(slug);
+      StoryRes storyRes = await storyRepos.fetchStory(slug, isMemberCheck);
       Story story = storyRes.story;
       
       String storyAdJsonFileLocation = Platform.isIOS

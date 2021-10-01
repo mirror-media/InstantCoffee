@@ -255,7 +255,7 @@ class _TabContentState extends State<TabContent> {
           ),
         ],
       ),
-      onTap: () => RouteGenerator.navigateToStory(context, record.slug),
+      onTap: () => RouteGenerator.navigateToStory(context, record.slug, isMemberCheck: record.isMemberCheck),
     );
   }
 
@@ -307,7 +307,7 @@ class _TabContentState extends State<TabContent> {
           ],
         ),
       ),
-      onTap: () => RouteGenerator.navigateToStory(context, record.slug),
+      onTap: () => RouteGenerator.navigateToStory(context, record.slug, isMemberCheck: record.isMemberCheck),
     );
   }
 }

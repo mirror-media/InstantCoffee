@@ -1,16 +1,20 @@
 import 'package:readr_app/env.dart';
+import 'package:readr_app/models/category.dart';
+import 'package:readr_app/models/categoryList.dart';
 
 class Record {
   String title;
   String slug;
   String publishedDate;
   String photoUrl;
+  bool isMemberCheck;
 
   Record({
     this.title,
     this.slug,
     this.publishedDate,
     this.photoUrl,
+    this.isMemberCheck,
   });
 
   factory Record.fromJson(Map<String, dynamic> json) {
@@ -48,12 +52,23 @@ class Record {
     } else if (json.containsKey('photoUrl') && json['photoUrl'] != null) {
       photoUrl = json['photoUrl'];
     }
+    
+    CategoryList categoryBuilder = CategoryList();
+    if (json["categories"] != null) {
+      for (int i = 0; i < json["categories"].length; i++) {
+        Category category = Category.fromJson(json["categories"][i]);
+        categoryBuilder.add(category);
+      }
+    }
 
     return Record(
       title: origTitle,
       slug: origSlug,
       publishedDate: origPublishedDate,
       photoUrl: photoUrl,
+      isMemberCheck: categoryBuilder.length == 0
+      ? true
+      : categoryBuilder.isMemberOnly(),
     );
   }
 
