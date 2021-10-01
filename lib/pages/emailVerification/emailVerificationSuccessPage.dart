@@ -110,7 +110,7 @@ class EmailVerificationSuccessPage extends StatelessWidget {
         }
         else if(email == _auth.currentUser.email) {
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => SubscriptionSelectPage(),),);
+            MaterialPageRoute(builder: (context) => SubscriptionSelectPage('升級 Premium 會員'),),);
         }
         else{
           await _auth.signOut();

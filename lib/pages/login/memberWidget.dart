@@ -242,13 +242,14 @@ class _MemberWidgetState extends State<MemberWidget> {
   }
  
   Widget _subscriptionSelectButton(SubscritionType subscritionType) {
-    return _navigateButton(
-      subscritionType == SubscritionType.none || subscritionType == SubscritionType.subscribe_one_time
+    String buttonText = subscritionType == SubscritionType.none || subscritionType == SubscritionType.subscribe_one_time
       ? '升級 Premium 會員'
-      : "變更方案",
+      : "變更方案";
+    return _navigateButton(
+      buttonText,
       () => Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SubscriptionSelectPage())
+        MaterialPageRoute(builder: (context) => SubscriptionSelectPage(buttonText))
       ),
     );
   }
