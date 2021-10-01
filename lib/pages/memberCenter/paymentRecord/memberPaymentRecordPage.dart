@@ -2,22 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:readr_app/blocs/memberCenter/paymentRecord/paymentRecordBloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/models/paymentRecord.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionSelect/hintToWebsitePage.dart';
 
 
 class MemberPaymentRecordPage extends StatefulWidget {
+  final SubscritionType subscritionType;
+  MemberPaymentRecordPage(this.subscritionType);
   @override
   _MemberPaymentRecordPageState createState() => _MemberPaymentRecordPageState();
 }
 
 class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
   List<PaymentRecord> paymentRecordList = [];
-
+  SubscritionType _subscritionType;
   @override
   void initState(){
     super.initState();
     _fetchPaymentRecords();
+    _subscritionType = widget.subscritionType;
   }
 
   _fetchPaymentRecords() {
@@ -106,7 +111,8 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
             fontSize: 17,
           ),
         ),
-        Container(
+        _subscritionType == SubscritionType.none 
+          || _subscritionType == SubscritionType.subscribe_one_time ? Container(
           margin: const EdgeInsets.only(top: 24),
           padding: const EdgeInsets.symmetric(horizontal: 80),
           child: ElevatedButton(
@@ -123,9 +129,14 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
                 ),
               ),
             ),
-            onPressed: () {},
+            onPressed: () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HintToWebsitePage('升級 Premium 會員'))
+              // Hide until in-app purchase ready
+              // MaterialPageRoute(builder: (context) => SubscriptionSelectPage(buttonText))
+            ),
           ),
-        ),
+        ) : Container(),
       ],
     );
   }

@@ -34,6 +34,7 @@ class PaymentRecordService {
           amount
           newebpayPayment(orderBy: { paymentTime: desc }) {
             status
+            frequency
             amount
             paymentMethod
             paymentTime
@@ -76,15 +77,6 @@ class PaymentRecordService {
         String creditCardInfoLastFour;
         String paymentType;
         bool isSuccess;
-        if(subscription['frequency'] == 'monthly'){
-          paymentType = '月方案';
-        }
-        else if(subscription['frequency'] == 'yearly'){
-          paymentType = '年方案';
-        }
-        else{
-          paymentType = '單篇訂閱';
-        }
         if(subscription['paymentMethod'] == 'newebpay' && subscription['newebpayPayment'] != null){
           subscription['newebpayPayment'].forEach((newebpayPayment){
             paymentAmount = newebpayPayment['amount'];
@@ -98,6 +90,15 @@ class PaymentRecordService {
             }
             else{
               isSuccess = false;
+            }
+            if(newebpayPayment['frequency'] == 'monthly'){
+              paymentType = '月方案';
+            }
+            else if(newebpayPayment['frequency'] == 'yearly'){
+              paymentType = '年方案';
+            }
+            else{
+              paymentType = '單篇訂閱';
             }
             paymentRecord = PaymentRecord(
               paymentOrderNumber: paymentOrderNumber,
