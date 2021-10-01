@@ -15,6 +15,7 @@ import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/pages/memberCenter/paymentRecord/memberPaymentRecordPage.dart';
 import 'package:readr_app/pages/memberCenter/subscribedArticle/memberSubscribedArticlePage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionDetail/memberSubscriptionDetailPage.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionSelect/hintToWebsitePage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectPage.dart';
 import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
 import 'package:readr_app/services/emailSignInService.dart';
@@ -249,7 +250,9 @@ class _MemberWidgetState extends State<MemberWidget> {
       buttonText,
       () => Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SubscriptionSelectPage(buttonText))
+        MaterialPageRoute(builder: (context) => HintToWebsitePage(buttonText))
+        // Hide until in-app purchase ready
+        // MaterialPageRoute(builder: (context) => SubscriptionSelectPage(buttonText))
       ),
     );
   }
