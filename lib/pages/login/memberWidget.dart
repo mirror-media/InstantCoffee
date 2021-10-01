@@ -15,6 +15,7 @@ import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/pages/memberCenter/paymentRecord/memberPaymentRecordPage.dart';
 import 'package:readr_app/pages/memberCenter/subscribedArticle/memberSubscribedArticlePage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionDetail/memberSubscriptionDetailPage.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionSelect/hintToWebsitePage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectPage.dart';
 import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
 import 'package:readr_app/services/emailSignInService.dart';
@@ -242,13 +243,16 @@ class _MemberWidgetState extends State<MemberWidget> {
   }
  
   Widget _subscriptionSelectButton(SubscritionType subscritionType) {
-    return _navigateButton(
-      subscritionType == SubscritionType.none || subscritionType == SubscritionType.subscribe_one_time
+    String buttonText = subscritionType == SubscritionType.none || subscritionType == SubscritionType.subscribe_one_time
       ? '升級 Premium 會員'
-      : "變更方案",
+      : "變更方案";
+    return _navigateButton(
+      buttonText,
       () => Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SubscriptionSelectPage())
+        MaterialPageRoute(builder: (context) => HintToWebsitePage(buttonText))
+        // Hide until in-app purchase ready
+        // MaterialPageRoute(builder: (context) => SubscriptionSelectPage(buttonText))
       ),
     );
   }

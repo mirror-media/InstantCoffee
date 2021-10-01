@@ -6,6 +6,8 @@ import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSele
 import 'package:readr_app/services/subscriptionSelectService.dart';
 
 class SubscriptionSelectPage extends StatelessWidget {
+  final String titleText;
+  SubscriptionSelectPage(this.titleText);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +27,7 @@ class SubscriptionSelectPage extends StatelessWidget {
       ),
       centerTitle: true,
       title: Text(
-        '升級會員',
+        titleText,
       ),
       backgroundColor: appColor,
     );

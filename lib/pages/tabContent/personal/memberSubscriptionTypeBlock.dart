@@ -97,7 +97,7 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
                     } else {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SubscriptionSelectPage())
+                        MaterialPageRoute(builder: (context) => SubscriptionSelectPage('升級 Premium 會員'))
                       );
                     }
                   }
