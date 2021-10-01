@@ -35,6 +35,7 @@ class CreateUserWithEmailAndPassword extends EmailRegisteredEvents {
         String token = await auth.currentUser.getIdToken();
         bool createSuccess = await memberService.createMember(
           auth.currentUser.email,
+          auth.currentUser.uid,
           token
         );
         

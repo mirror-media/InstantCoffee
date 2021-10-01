@@ -14,7 +14,7 @@ const String memberStateTypeIsNotActive = 'Member state type is not active';
 
 abstract class MemberRepos {
   Future<MemberIdAndSubscritionType> checkSubscriptionType(User user, String token);
-  Future<bool> createMember(String email, String token);
+  Future<bool> createMember(String email, String firebaseId, String token);
   Future<Member> fetchMemberData(String firebaseId, String token);
   Future<bool> updateMemberProfile(String israfelId, String token, String name, Gender gender, String birthday);
   Future<bool> updateMemberContactInfo(String israfelId, String token, String phoneNumber, String country, String city, String district, String address);
@@ -82,7 +82,11 @@ class MemberService implements MemberRepos{
     return memberIdAndSubscritionType;
   }
 
-  Future<bool> createMember(String email, String token) async{
+  Future<bool> createMember(
+    String email, 
+    String firebaseId,
+    String token
+  ) async{
     String mutation = 
     """
     mutation (\$email: String!){
@@ -93,8 +97,14 @@ class MemberService implements MemberRepos{
     }
     """;
 
+    // if facebook authUser has no email,then feed email field with prompt
+    String feededEmail = email;
+    if (feededEmail == null) {
+      feededEmail = '[0x0001] - firebaseId:$firebaseId';
+    }
+
     Map<String,String> variables = {
-      "email" : "$email",
+      "email" : "$feededEmail",
     };
 
     GraphqlBody graphqlBody = GraphqlBody(
