@@ -103,7 +103,7 @@ class _MemberWidgetState extends State<MemberWidget> {
                       child: _horizontalDivider(width),
                     ),
                   ],
-                  _memberPaymentRecordButton(),
+                  _memberPaymentRecordButton(widget.subscritionType),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
                     child: _horizontalDivider(width),
@@ -226,7 +226,7 @@ class _MemberWidgetState extends State<MemberWidget> {
     );
   }
 
-  Widget _memberPaymentRecordButton() {
+  Widget _memberPaymentRecordButton(SubscritionType subscritionType) {
     return _navigateButton(
       '付款紀錄',
       () => Navigator.push(
@@ -234,7 +234,7 @@ class _MemberWidgetState extends State<MemberWidget> {
         MaterialPageRoute(builder: (context){
           return BlocProvider(
             create: (BuildContext context) => PaymentRecordBloc(),
-            child: MemberPaymentRecordPage(),
+            child: MemberPaymentRecordPage(subscritionType),
             );
           }
         )
