@@ -416,7 +416,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
             ),
           ),
           onTap: () async{
-            RouteGenerator.navigateToStory(context, 'privacy');
+            RouteGenerator.navigateToStory(context, 'privacy', isMemberCheck: false);
           }
         ),
         InkWell(
@@ -431,7 +431,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
             ),
           ),
           onTap: () {
-            RouteGenerator.navigateToStory(context, 'service-rule');
+            RouteGenerator.navigateToStory(context, 'service-rule', isMemberCheck: false);
           }
         ),
         SizedBox(height: 16),

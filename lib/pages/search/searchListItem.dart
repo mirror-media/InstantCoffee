@@ -58,7 +58,7 @@ class SearchListItem extends StatelessWidget {
           ],
         ),
       ),
-      onTap: () => RouteGenerator.navigateToStory(context, record.slug),
+      onTap: () => RouteGenerator.navigateToStory(context, record.slug, isMemberCheck: record.isMemberCheck),
     );
   }
 }
