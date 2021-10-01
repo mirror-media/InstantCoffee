@@ -4,15 +4,13 @@ import 'package:readr_app/blocs/slugBloc.dart';
 import 'package:readr_app/blocs/story/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/services/storyService.dart';
-import 'package:readr_app/widgets/listeningWidget.dart';
-import 'package:readr_app/widgets/storyWidget.dart';
+import 'package:readr_app/pages/storyPage/news/storyWidget.dart';
 import 'package:share/share.dart';
 
 class StoryPage extends StatelessWidget {
   final String slug;
-  final bool isListeningWidget;
   const StoryPage(
-      {Key key, @required this.slug, this.isListeningWidget = false})
+      {Key key, @required this.slug})
       : super(key: key);
 
   @override
@@ -32,18 +30,16 @@ class StoryPage extends StatelessWidget {
             icon: Icon(Icons.share),
             tooltip: 'share',
             onPressed: () {
-              String url = _slugBloc.getShareUrlFromSlug(isListeningWidget);
+              String url = _slugBloc.getShareUrlFromSlug(false);
               Share.share(url);
             },
           )
         ],
       ),
-      body: isListeningWidget
-          ? ListeningWidget(slugBloc: _slugBloc)
-          : BlocProvider(
-              create: (context) => StoryBloc(storyRepos: StoryService()),
-              child: StoryWidget(slugBloc: _slugBloc),
-            )
+      body: BlocProvider(
+        create: (context) => StoryBloc(storyRepos: StoryService()),
+        child: StoryWidget(slugBloc: _slugBloc),
+      ),
     );
   }
 }
