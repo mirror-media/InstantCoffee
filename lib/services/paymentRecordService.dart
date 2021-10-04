@@ -72,7 +72,7 @@ class PaymentRecordService {
         String paymentCurrency = subscription['currency'] == null ? 'TWD':subscription['currency'];
         String paymentOrderNumber = subscription['orderNumber'];
         int paymentAmount;
-        DateTime paymentDate = DateTime.utc(2021);
+        DateTime paymentDate = DateTime(2021);
         String paymentMethod;
         String creditCardInfoLastFour;
         String paymentType;
@@ -83,7 +83,7 @@ class PaymentRecordService {
             creditCardInfoLastFour = newebpayPayment['cardInfoLastFour'];
             paymentMethod = newebpayPayment['paymentMethod'] + '($creditCardInfoLastFour)';
             if(newebpayPayment['paymentTime'] != null){
-              paymentDate = DateTime.parse(newebpayPayment['paymentTime']);
+              paymentDate = DateTime.parse(newebpayPayment['paymentTime']).toLocal();
             }
             if(newebpayPayment['status'] == 'SUCCESS'){
               isSuccess = true;
@@ -118,7 +118,7 @@ class PaymentRecordService {
           if(subscription['applepayPayment'] != null){
             subscription['applepayPayment'].forEach((applepayPayment){
               if(applepayPayment['updatedAt'] != null){
-                paymentDate = DateTime.parse(applepayPayment['updatedAt']);
+                paymentDate = DateTime.parse(applepayPayment['updatedAt']).toLocal();
               }
               paymentRecord = PaymentRecord(
                 paymentOrderNumber: paymentOrderNumber,
@@ -139,7 +139,7 @@ class PaymentRecordService {
           if(subscription['androidpayPayment'] != null){
             subscription['androidpayPayment'].forEach((androidpayPayment){
               if(androidpayPayment['updatedAt'] != null){
-                paymentDate = DateTime.parse(androidpayPayment['updatedAt']);
+                paymentDate = DateTime.parse(androidpayPayment['updatedAt']).toLocal();
               }
               paymentRecord = PaymentRecord(
                 paymentOrderNumber: paymentOrderNumber,
