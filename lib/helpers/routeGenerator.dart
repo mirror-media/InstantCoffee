@@ -15,6 +15,8 @@ import 'package:readr_app/pages/login/loginPage.dart';
 import 'package:readr_app/pages/magazineBrowser.dart';
 import 'package:readr_app/pages/magazine/magazinePage.dart';
 import 'package:readr_app/pages/memberCenter/deleteMember/deleteMemberPage.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionSelect/hintToWebsitePage.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectPage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/pages/passwordReset/passwordResetPage.dart';
 import 'package:readr_app/pages/passwordResetEmail/passwordResetEmailPage.dart';
@@ -47,6 +49,7 @@ class RouteGenerator {
   static const String listeningStory = '/listeningStory';
   static const String magazine = '/magazine';
   static const String magazineBrowser = '/magazineBrowser';
+  static const String subscriptionSelect = '/subscriptionSelect';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -213,6 +216,13 @@ class RouteGenerator {
           builder: (_) => MagazineBrowser(
             magazine: args['magazine'],
           )
+        );
+      case subscriptionSelect:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => HintToWebsitePage(args['subscritionType']),
+          // builder: (_) => SubscriptionSelectPage(args['subscritionType']),
         );
       default:
         // If there is no such named route in the switch statement, e.g. /third
@@ -434,6 +444,29 @@ class RouteGenerator {
         magazineBrowser,
         arguments: {
           'magazine': magazine,
+        },
+      );
+    }
+  }
+
+  static void navigateToSubscriptionSelect(
+    BuildContext context, 
+    SubscritionType subscritionType,
+    {bool usePushReplacement = false}
+  ) {
+    if(usePushReplacement){
+      Navigator.of(context).pushReplacementNamed(
+        subscriptionSelect,
+        arguments: {
+          'subscritionType': subscritionType
+        },
+      );
+    }
+    else{
+      Navigator.of(context).pushNamed(
+        subscriptionSelect,
+        arguments: {
+          'subscritionType': subscritionType
         },
       );
     }
