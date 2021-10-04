@@ -6,7 +6,7 @@ import 'package:readr_app/blocs/tabContent/personal/state.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
-import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectPage.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionSelect/hintToWebsitePage.dart';
 import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
 
 class MemberSubscriptionTypeBlock extends StatefulWidget {
@@ -97,7 +97,9 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
                     } else {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SubscriptionSelectPage('升級 Premium 會員'))
+                        MaterialPageRoute(builder: (context) => HintToWebsitePage('升級 Premium 會員'))
+                        // Hide until in-app purchase ready
+                        // MaterialPageRoute(builder: (context) => SubscriptionSelectPage(buttonText))
                       );
                     }
                   }
