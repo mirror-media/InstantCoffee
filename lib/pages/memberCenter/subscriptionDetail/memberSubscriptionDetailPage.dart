@@ -174,32 +174,10 @@ class _MemberSubscriptionDetailPageState
               ],
             );
           }
-          else if(state is MemberDetailLoading){
-            return Center(child:CircularProgressIndicator());
+          else if(state is MemberDetailError){
+            return _errorWidget();
           }
-          return ListView(
-            children: [
-              Material(
-                elevation: 1,
-                child: Container(height: 16, color: Colors.white),
-              ),
-              Material(
-                elevation: 1,
-                child: Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-                  child: _memberSubscriptionTypeWidget(_subscritionType),
-                ),
-              ),
-              Material(
-                elevation: 1,
-                child: Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 0.0),
-                ),
-              ),
-            ],
-          );
+          return Center(child:CircularProgressIndicator());
         },
       );
     }
@@ -222,6 +200,42 @@ class _MemberSubscriptionDetailPageState
           child: Container(
             color: Colors.white,
             padding: const EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 0.0),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _errorWidget(){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          '載入失敗',
+          style: TextStyle(
+            color: Colors.black26,
+            fontSize: 17,
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 80),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(primary: appColor),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Center(
+                child: Text(
+                  '重新載入',
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            onPressed: () => _getMemberDetail(),
           ),
         ),
       ],

@@ -54,48 +54,87 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
   Widget _buildContent(){
     return BlocBuilder<PaymentRecordBloc, PaymentRecordState>(
       builder: (context, state){
-        if(state is PaymentRecordLoaded){
+        if(state is PaymentRecordError){
+          return _errorWidget();
+        }
+        else if(state is PaymentRecordLoaded){
           if(state.paymentRecords == null || state.paymentRecords.length == 0){
             return _noRecordWidget();
           }
           paymentRecordList = state.paymentRecords;
+          return ListView.separated(
+            padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+            separatorBuilder: (BuildContext context, int index){
+              return Container(
+                color: Colors.white,
+                child: Divider(
+                  thickness: 1,
+                  color: Colors.grey[300],
+                  indent: 16,
+                  endIndent: 16,
+                ),
+              );
+            },
+            itemCount: paymentRecordList.length,
+            itemBuilder: (context, index) {
+              if(index == paymentRecordList.length - 1){
+                return Material(
+                  elevation: 1,
+                  color: Colors.white,
+                  child: _buildListItem(paymentRecordList[index]),
+                );
+              }
+              else{
+                return Container(
+                  color: Colors.white,
+                  child: _buildListItem(paymentRecordList[index]),
+                );
+              }
+            },
+          );
         }
         else{
           return Center(
             child: CircularProgressIndicator(),
           );
         }
-        return ListView.separated(
-          padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
-          separatorBuilder: (BuildContext context, int index){
-            return Container(
-              color: Colors.white,
-              child: Divider(
-                thickness: 1,
-                color: Colors.grey[300],
-                indent: 16,
-                endIndent: 16,
-              ),
-            );
-          },
-          itemCount: paymentRecordList.length,
-          itemBuilder: (context, index) {
-            if(index == paymentRecordList.length - 1){
-              return Material(
-                elevation: 1,
-                color: Colors.white,
-                child: _buildListItem(paymentRecordList[index]),
-              );
-            }
-            else{
-              return Container(
-                color: Colors.white,
-                child: _buildListItem(paymentRecordList[index]),
-              );
-            }
-          },
-        );
       }
+    );
+  }
+
+  Widget _errorWidget(){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          '載入失敗',
+          style: TextStyle(
+            color: Colors.black26,
+            fontSize: 17,
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 80),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(primary: appColor),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Center(
+                child: Text(
+                  '重新載入',
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            onPressed: () => _fetchPaymentRecords(),
+          ),
+        ),
+      ],
     );
   }
 
