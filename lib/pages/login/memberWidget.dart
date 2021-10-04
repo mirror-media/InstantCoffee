@@ -104,12 +104,13 @@ class _MemberWidgetState extends State<MemberWidget> {
                     ),
                   ],
                   _memberPaymentRecordButton(widget.subscritionType),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                    child: _horizontalDivider(width),
-                  ),
-                  if(widget.subscritionType != SubscritionType.marketing)
+                  if(widget.subscritionType != SubscritionType.marketing)...[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                      child: _horizontalDivider(width),
+                    ),
                     _subscriptionSelectButton(widget.subscritionType),
+                  ],
                 ],
               ),
             ),
