@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
+import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/pages/login/loginPage.dart';
-import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectPage.dart';
 
 class EmailVerificationSuccessPage extends StatelessWidget {
   final String email;
@@ -109,8 +110,7 @@ class EmailVerificationSuccessPage extends StatelessWidget {
           );
         }
         else if(email == _auth.currentUser.email) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => SubscriptionSelectPage('升級 Premium 會員'),),);
+          RouteGenerator.navigateToSubscriptionSelect(context, SubscritionType.none, usePushReplacement: true);
         }
         else{
           await _auth.signOut();
