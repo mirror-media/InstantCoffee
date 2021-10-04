@@ -24,7 +24,7 @@ class SubscribedArticlesService {
     String query = """
     query fetchMemberSubscriptions(\$firebaseId: String!) {
       member(where: { firebaseId: \$firebaseId }) {
-        subscription(orderBy: { oneTimeEndDatetime: asc },where: {status: paid}) {
+        subscription(orderBy: { oneTimeEndDatetime: asc },where: { frequency: one_time, isActive: true }) {
           oneTimeEndDatetime
           postId
         }
@@ -49,17 +49,6 @@ class SubscribedArticlesService {
       jsonResponse['data']['member']['subscription'].forEach((v) {
         subscribedArticles.add(SubscribedArticle.fromJson(v));
       });
-      subscribedArticles.removeWhere(
-        (element) {
-          if(element.oneTimeEndDatetime.isBefore(DateTime.now())){
-            return true;
-          }
-          else if(element.postId == ''){
-            return true;
-          }
-          return false;
-        }
-      );
       
       List<String> articleIds = [];
       subscribedArticles.forEach((element) { articleIds.add('"${element.postId}"');});
