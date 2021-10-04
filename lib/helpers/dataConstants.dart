@@ -60,4 +60,4 @@ const bool isListeningWidgetAdsActivated = true;
 const int storyAT1AdIndex = 1;
 const int storyAT2AdIndex = 5;
 
-const mirrormediaGroupDomain = ['mnews.tw','mirrormedia.mg','mirrorfiction.com'];
+const mirrormediaGroupDomain = ['mnews.com.tw','mnews.tw','mirrormedia.mg','mirrorfiction.com'];
