@@ -15,12 +15,13 @@ class HintToWebsitePage extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(height: 48),
-          Container(
-            alignment: Alignment.center,
-            child: Text(
-              hintText,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 17),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+            child: Center(
+              child: Text(
+                hintText,
+                style: TextStyle(fontSize: 17),
+              ),
             ),
           ),
         ],
