@@ -99,7 +99,7 @@ return BlocBuilder<StoryBloc, StoryState>(
     bool isMember = storyRes.isMember;
     Story story = storyRes.story;
     bool isTruncated = story.isTruncated;
-    bool isAdsActivated = isStoryWidgetAdsActivated && isTruncated;
+    bool isAdsActivated = isStoryWidgetAdsActivated && (isTruncated || !story.categories.isMemberOnly());
     Color sectionColor = _getSectionColor(story);
 
     return Column(
