@@ -5,6 +5,7 @@ import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/models/paymentRecord.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/pages/memberCenter/shared/stateErrorWidget.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/hintToWebsitePage.dart';
 
 
@@ -54,46 +55,47 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
   Widget _buildContent(){
     return BlocBuilder<PaymentRecordBloc, PaymentRecordState>(
       builder: (context, state){
-        if(state is PaymentRecordLoaded){
+        if(state is PaymentRecordError){
+          return StateErrorWidget(() => _fetchPaymentRecords());
+        }
+        else if(state is PaymentRecordLoaded){
           if(state.paymentRecords == null || state.paymentRecords.length == 0){
             return _noRecordWidget();
           }
           paymentRecordList = state.paymentRecords;
-        }
-        else{
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        return ListView.separated(
-          padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
-          separatorBuilder: (BuildContext context, int index){
-            return Container(
-              color: Colors.white,
-              child: Divider(
-                thickness: 1,
-                color: Colors.grey[300],
-                indent: 16,
-                endIndent: 16,
-              ),
-            );
-          },
-          itemCount: paymentRecordList.length,
-          itemBuilder: (context, index) {
-            if(index == paymentRecordList.length - 1){
-              return Material(
-                elevation: 1,
-                color: Colors.white,
-                child: _buildListItem(paymentRecordList[index]),
-              );
-            }
-            else{
+          return ListView.separated(
+            padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+            separatorBuilder: (BuildContext context, int index){
               return Container(
                 color: Colors.white,
-                child: _buildListItem(paymentRecordList[index]),
+                child: Divider(
+                  thickness: 1,
+                  color: Colors.grey[300],
+                  indent: 16,
+                  endIndent: 16,
+                ),
               );
-            }
-          },
+            },
+            itemCount: paymentRecordList.length,
+            itemBuilder: (context, index) {
+              if(index == paymentRecordList.length - 1){
+                return Material(
+                  elevation: 1,
+                  color: Colors.white,
+                  child: _buildListItem(paymentRecordList[index]),
+                );
+              }
+              else{
+                return Container(
+                  color: Colors.white,
+                  child: _buildListItem(paymentRecordList[index]),
+                );
+              }
+            },
+          );
+        }
+        return Center(
+          child: CircularProgressIndicator(),
         );
       }
     );

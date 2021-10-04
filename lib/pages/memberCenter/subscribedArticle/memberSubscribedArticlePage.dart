@@ -6,6 +6,7 @@ import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/models/subscribedArticle.dart';
+import 'package:readr_app/pages/memberCenter/shared/stateErrorWidget.dart';
 
 
 class MemberSubscribedArticlePage extends StatefulWidget {
@@ -61,6 +62,9 @@ class _MemberSubscribedArticlePageState extends State<MemberSubscribedArticlePag
                 },
               );
             }
+          }
+          else if(state is SubscribedArticlesError){
+            return StateErrorWidget(() => _loadSubscribedArticles());
           }
           return Center(child: CircularProgressIndicator());
         }

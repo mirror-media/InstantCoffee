@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/models/memberDetail.dart';
 import 'package:intl/intl.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
+import 'package:readr_app/pages/memberCenter/shared/stateErrorWidget.dart';
 import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
 
 class MemberSubscriptionDetailPage extends StatefulWidget {
@@ -174,32 +175,10 @@ class _MemberSubscriptionDetailPageState
               ],
             );
           }
-          else if(state is MemberDetailLoading){
-            return Center(child:CircularProgressIndicator());
+          else if(state is MemberDetailError){
+            return StateErrorWidget(() => _getMemberDetail());
           }
-          return ListView(
-            children: [
-              Material(
-                elevation: 1,
-                child: Container(height: 16, color: Colors.white),
-              ),
-              Material(
-                elevation: 1,
-                child: Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-                  child: _memberSubscriptionTypeWidget(_subscritionType),
-                ),
-              ),
-              Material(
-                elevation: 1,
-                child: Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 0.0),
-                ),
-              ),
-            ],
-          );
+          return Center(child:CircularProgressIndicator());
         },
       );
     }
