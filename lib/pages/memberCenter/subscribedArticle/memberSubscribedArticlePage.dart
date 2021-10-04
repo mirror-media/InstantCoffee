@@ -6,6 +6,7 @@ import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/models/subscribedArticle.dart';
+import 'package:readr_app/pages/memberCenter/shared/stateErrorWidget.dart';
 
 
 class MemberSubscribedArticlePage extends StatefulWidget {
@@ -63,7 +64,7 @@ class _MemberSubscribedArticlePageState extends State<MemberSubscribedArticlePag
             }
           }
           else if(state is SubscribedArticlesError){
-            return _errorWidget();
+            return StateErrorWidget(() => _loadSubscribedArticles());
           }
           return Center(child: CircularProgressIndicator());
         }
@@ -82,42 +83,6 @@ class _MemberSubscribedArticlePageState extends State<MemberSubscribedArticlePag
         '訂閱中的文章',
       ),
       backgroundColor: appColor,
-    );
-  }
-
-  Widget _errorWidget(){
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          '載入失敗',
-          style: TextStyle(
-            color: Colors.black26,
-            fontSize: 17,
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 24),
-          padding: const EdgeInsets.symmetric(horizontal: 80),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(primary: appColor),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Center(
-                child: Text(
-                  '重新載入',
-                  style: TextStyle(
-                    fontSize: 17,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-            onPressed: () => _loadSubscribedArticles(),
-          ),
-        ),
-      ],
     );
   }
 

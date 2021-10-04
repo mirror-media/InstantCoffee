@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/models/memberDetail.dart';
 import 'package:intl/intl.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
+import 'package:readr_app/pages/memberCenter/shared/stateErrorWidget.dart';
 import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
 
 class MemberSubscriptionDetailPage extends StatefulWidget {
@@ -175,7 +176,7 @@ class _MemberSubscriptionDetailPageState
             );
           }
           else if(state is MemberDetailError){
-            return _errorWidget();
+            return StateErrorWidget(() => _getMemberDetail());
           }
           return Center(child:CircularProgressIndicator());
         },
@@ -200,42 +201,6 @@ class _MemberSubscriptionDetailPageState
           child: Container(
             color: Colors.white,
             padding: const EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 0.0),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _errorWidget(){
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          '載入失敗',
-          style: TextStyle(
-            color: Colors.black26,
-            fontSize: 17,
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 24),
-          padding: const EdgeInsets.symmetric(horizontal: 80),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(primary: appColor),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Center(
-                child: Text(
-                  '重新載入',
-                  style: TextStyle(
-                    fontSize: 17,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-            onPressed: () => _getMemberDetail(),
           ),
         ),
       ],

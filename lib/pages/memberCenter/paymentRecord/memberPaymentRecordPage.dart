@@ -5,6 +5,7 @@ import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/models/paymentRecord.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/pages/memberCenter/shared/stateErrorWidget.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/hintToWebsitePage.dart';
 
 
@@ -55,7 +56,7 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
     return BlocBuilder<PaymentRecordBloc, PaymentRecordState>(
       builder: (context, state){
         if(state is PaymentRecordError){
-          return _errorWidget();
+          return StateErrorWidget(() => _fetchPaymentRecords());
         }
         else if(state is PaymentRecordLoaded){
           if(state.paymentRecords == null || state.paymentRecords.length == 0){
@@ -93,48 +94,10 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
             },
           );
         }
-        else{
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
       }
-    );
-  }
-
-  Widget _errorWidget(){
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          '載入失敗',
-          style: TextStyle(
-            color: Colors.black26,
-            fontSize: 17,
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 24),
-          padding: const EdgeInsets.symmetric(horizontal: 80),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(primary: appColor),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Center(
-                child: Text(
-                  '重新載入',
-                  style: TextStyle(
-                    fontSize: 17,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-            onPressed: () => _fetchPaymentRecords(),
-          ),
-        ),
-      ],
     );
   }
 
