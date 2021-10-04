@@ -8,8 +8,11 @@ import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
+import 'package:readr_app/models/memberSubscriptionType.dart';
 
 class SubscriptionSelectWidget extends StatefulWidget {
+  final SubscritionType subscritionType;
+  SubscriptionSelectWidget(this.subscritionType);
   @override
   _SubscriptionSelectWidgetState createState() => _SubscriptionSelectWidgetState();
 }
@@ -71,6 +74,13 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
 
   Widget _memberIntroBlock(List<ProductDetails> productDetailList) {
     double width = MediaQuery.of(context).size.width;
+    String boxTitle = 'Premium 會員';
+    if(widget.subscritionType == SubscritionType.subscribe_monthly){
+      boxTitle = '變更為年訂閱方案';
+    }
+    else if(widget.subscritionType == SubscritionType.subscribe_yearly){
+      boxTitle = '變更為月訂閱方案';
+    }
 
     return Card(
       elevation: 10,
@@ -82,7 +92,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Premium 會員',
+                  boxTitle,
                   style: TextStyle(
                     color: appColor,
                     fontSize: 20,
@@ -103,11 +113,13 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
             Divider(),
             _memberClause('專區好文不分頁流暢閱讀'),
             Divider(),
-            _memberClause('免費閱覽最新電子版週刊'),
+            _memberClause('免費下載最新電子版週刊'),
             Divider(),
             _memberClause('月方案定價\$99元，限時優惠\$49元'),
             Divider(),
             _memberClause('年方案定價\$1,188元，限時優\$499元'),
+            Divider(),
+            _memberClause('10月加入年訂閱，有機會獲得品牌腕錶與裴社長廚房手記新書', textColor: Color(0xFF054F77)),
             SizedBox(height: 24),
             ListView.separated(
               shrinkWrap: true,
@@ -171,7 +183,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
     );
   }
 
-  Widget _memberClause(String title) {
+  Widget _memberClause(String title, {Color textColor = Colors.black54}) {
     return Row(
       children: [
         Icon(
@@ -183,7 +195,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
           child: Text(
             title,
             style: TextStyle(
-              color: Colors.black54,
+              color: textColor,
               fontSize: 16,
             ),
           ),
@@ -204,7 +216,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
         ),
         SizedBox(height: 12),
         _orderClause(1, '月方案計算天數為 30 日，年方案計算天數為 365 日。'),
-        _orderClause(2, '月訂閱方案經會員授權扣款購買即為完成服務，所以月費會員無法退費，但可取消繼續訂閱。'),
+        _orderClause(2, '月訂閱方案經會員授權扣款購買即為完成服務，因此月費會員無法退費，但可取消繼續訂閱。'),
         _orderClause(3, '訂閱購買的同時會開啓自動續費(扣款)，在訂閱到期時將依據原訂閱方案自動扣款，並延續訂閱。'),
         _orderClause(4, '訂閱相關問題請 email 至會員專屬客服信箱 MM-onlineservice@mirrormedia.mg， 我們會盡快為您協助處理。'),
         _orderClause(5, '更多詳細內容，請至服務條款。'),
