@@ -96,6 +96,7 @@ return BlocBuilder<StoryBloc, StoryState>(
     double width, 
     double height,
   ) {
+    bool isMember = storyRes.isMember;
     Story story = storyRes.story;
     bool isTruncated = story.isTruncated;
     bool isAdsActivated = isStoryWidgetAdsActivated && isTruncated;
@@ -128,7 +129,7 @@ return BlocBuilder<StoryBloc, StoryState>(
             SizedBox(height: 16),
             if(isTruncated)
             ...[
-              _buildJoinMemberBlock(context, width),
+              _buildJoinMemberBlock(context, width, isMember),
               SizedBox(height: 16),
             ],
             if(isAdsActivated)
@@ -505,7 +506,7 @@ return BlocBuilder<StoryBloc, StoryState>(
     );
   }
 
-  Widget _buildJoinMemberBlock(BuildContext context, double width) {
+  Widget _buildJoinMemberBlock(BuildContext context, double width, bool isMember) {
     return Padding(
       padding: const EdgeInsets.only(left: 24.0, right: 24.0),
       child: Card(
@@ -515,7 +516,7 @@ return BlocBuilder<StoryBloc, StoryState>(
           child: Column(
             children: [
               Text(
-                '歡迎加入鏡週刊 淨新聞',
+                '歡迎加入鏡週刊',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w400,
@@ -523,7 +524,7 @@ return BlocBuilder<StoryBloc, StoryState>(
                 ),
               ),
               Text(
-                '閱讀行列',
+                '會員專區',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w400,
@@ -540,14 +541,14 @@ return BlocBuilder<StoryBloc, StoryState>(
                 child: Column(
                   children: [
                     Text(
-                      '每月只要 49 元，暢享零廣告閱讀',
+                      '限時優惠每月\$49元',
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                     Text(
-                      '體驗、優質報導吃到飽',
+                      '全站看到飽',
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w400,
@@ -582,38 +583,40 @@ return BlocBuilder<StoryBloc, StoryState>(
                   ],
                 ),
               ),
-              SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  InkWell(
-                    child: Text(
-                      '立即登入',
+              if(!isMember)...[
+                SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      child: Text(
+                        '立即登入',
+                        style: TextStyle(
+                          color: appColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      onTap: () => RouteGenerator.navigateToLogin(
+                        context,
+                        routeName: RouteGenerator.story,
+                        routeArguments: {
+                          'slug': widget.slugBloc.slug,
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 4),
+                    Text(
+                      '享專屬優惠',
                       style: TextStyle(
-                        color: appColor,
+                        color: Colors.black45,
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    onTap: () => RouteGenerator.navigateToLogin(
-                      context,
-                      routeName: RouteGenerator.story,
-                      routeArguments: {
-                        'slug': widget.slugBloc.slug,
-                      },
-                    ),
-                  ),
-                  SizedBox(width: 4),
-                  Text(
-                    '享專屬優惠',
-                    style: TextStyle(
-                      color: Colors.black45,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ]
           ),
         )
