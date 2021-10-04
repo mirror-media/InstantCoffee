@@ -25,9 +25,9 @@ class MemberDetail {
     }
     return MemberDetail(
         frequency: frequency,
-        periodFirstDatetime: DateTime.parse(json["periodFirstDatetime"]),
-        periodEndDatetime: DateTime.parse(json["periodEndDatetime"]),
-        periodNextPayDatetime: DateTime.parse(json["periodNextPayDatetime"]),
+        periodFirstDatetime: DateTime.parse(json["periodFirstDatetime"]).toLocal(),
+        periodEndDatetime: DateTime.parse(json["periodEndDatetime"]).toLocal(),
+        periodNextPayDatetime: DateTime.parse(json["periodNextPayDatetime"]).toLocal(),
         paymentMethod: json["paymentMethod"],
         cardInfoLastFour: json["newebpayPayment"][0]["cardInfoLastFour"],
         isCanceled: json["isCanceled"] == null ? false : json["isCanceled"]);
