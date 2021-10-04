@@ -97,9 +97,8 @@ return BlocBuilder<StoryBloc, StoryState>(
     double height,
   ) {
     Story story = storyRes.story;
-    bool isMember = storyRes.isMember && story.categories.isMemberOnly();
-    bool isAdsActivated = isStoryWidgetAdsActivated && !isMember;
-    bool isCompletedArticle = storyRes.isMember || !story.categories.isMemberOnly();
+    bool isTruncated = story.isTruncated;
+    bool isAdsActivated = isStoryWidgetAdsActivated && isTruncated;
     Color sectionColor = _getSectionColor(story);
 
     return Column(
@@ -125,10 +124,9 @@ return BlocBuilder<StoryBloc, StoryState>(
             _buildAuthors(context, story),
             SizedBox(height: 16),
             _buildBrief(story, sectionColor),
-            _buildContent(story, isAdsActivated, !isCompletedArticle),
-            //SizedBox(height: 32),
+            _buildContent(story, isAdsActivated, isTruncated),
             SizedBox(height: 16),
-            if(!isCompletedArticle)
+            if(isTruncated)
             ...[
               _buildJoinMemberBlock(context, width),
               SizedBox(height: 16),
@@ -145,7 +143,7 @@ return BlocBuilder<StoryBloc, StoryState>(
             SizedBox(height: 16),
             _buildMoreContentWidget(),
             SizedBox(height: 24),
-            if(isMember)
+            if(!isTruncated)
             ...[
               _buildQuoteWarningText(),
               SizedBox(height: 24),
