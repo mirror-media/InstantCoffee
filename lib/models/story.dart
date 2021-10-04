@@ -35,6 +35,7 @@ class Story {
   SectionList sections;
   bool isAdult;
   bool isAdvertised;
+  bool isTruncated;
   String state;
 
   StoryAd storyAd;
@@ -64,6 +65,7 @@ class Story {
     this.sections,
     this.isAdult,
     this.isAdvertised,
+    this.isTruncated,
     this.state,
 
     this.storyAd,
@@ -111,7 +113,7 @@ class Story {
     }
     if (json.containsKey('heroImage') &&
         json['heroImage'] != null &&
-        (json["heroImage"].runtimeType != 'String') &&
+        (!(json["heroImage"] is String)) &&
         json['heroImage'].containsKey('image') &&
         json['heroImage']['image'] != null &&
         json['heroImage']['image'].containsKey('resizedTargets')) {
@@ -148,6 +150,7 @@ class Story {
       tags: tagBuilder,
       state: json["state"],
       isAdult: json['isAdult'],
+      isTruncated: json['isTruncated'],
       isAdvertised: json['isAdvertised'] ?? false,
     );
   }
