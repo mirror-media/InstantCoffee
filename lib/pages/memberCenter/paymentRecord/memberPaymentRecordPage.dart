@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:readr_app/blocs/memberCenter/paymentRecord/paymentRecordBloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/models/paymentRecord.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/pages/memberCenter/shared/stateErrorWidget.dart';
-import 'package:readr_app/pages/memberCenter/subscriptionSelect/hintToWebsitePage.dart';
 
 
 class MemberPaymentRecordPage extends StatefulWidget {
@@ -131,12 +131,7 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
                 ),
               ),
             ),
-            onPressed: () => Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => HintToWebsitePage('升級 Premium 會員'))
-              // Hide until in-app purchase ready
-              // MaterialPageRoute(builder: (context) => SubscriptionSelectPage(buttonText))
-            ),
+            onPressed: () => RouteGenerator.navigateToSubscriptionSelect(context, _subscritionType),
           ),
         ) : Container(),
       ],
