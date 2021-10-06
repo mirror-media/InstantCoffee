@@ -7,7 +7,6 @@ import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/helpers/paragraphFormat.dart';
-import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/paragraph.dart';
 import 'package:readr_app/models/paragrpahList.dart';
@@ -17,6 +16,7 @@ import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/story.dart';
 import 'package:readr_app/models/storyRes.dart';
 import 'package:readr_app/models/tagList.dart';
+import 'package:readr_app/pages/storyPage/news/shared/joinMemberBlock.dart';
 import 'package:readr_app/widgets/downloadMagazineWidget.dart';
 import 'package:readr_app/widgets/fadingEffectPainter.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
@@ -129,7 +129,7 @@ return BlocBuilder<StoryBloc, StoryState>(
             SizedBox(height: 16),
             if(isTruncated)
             ...[
-              _buildJoinMemberBlock(context, width, isMember),
+              _joinMemberBlock(isMember),
               SizedBox(height: 16),
             ],
             if(isAdsActivated)
@@ -506,120 +506,12 @@ return BlocBuilder<StoryBloc, StoryState>(
     );
   }
 
-  Widget _buildJoinMemberBlock(BuildContext context, double width, bool isMember) {
+  Widget _joinMemberBlock(bool isMember) {
     return Padding(
       padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-      child: Card(
-        elevation: 4,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20.0, 24.0, 20.0, 24.0),
-          child: Column(
-            children: [
-              Text(
-                '歡迎加入鏡週刊',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w400,
-                  color: appColor,
-                ),
-              ),
-              Text(
-                '會員專區',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w400,
-                  color: appColor,
-                ),
-              ),
-              SizedBox(height: 24),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: appColor),
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  children: [
-                    Text(
-                      '限時優惠每月\$49元',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    Text(
-                      '全站看到飽',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    SizedBox(height: 12),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: appColor,
-                        padding: const EdgeInsets.only(top: 12, bottom: 12),
-                      ),
-                      child: Container(
-                        width: width,
-                        child: Center(
-                          child: Text(
-                            '加入 Premium 會員',
-                            style: TextStyle(
-                              fontSize: 17,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                      onPressed: () => RouteGenerator.navigateToLogin(
-                        context,
-                        routeName: RouteGenerator.story,
-                        routeArguments: {
-                          'slug': widget.slugBloc.slug,
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              if(!isMember)...[
-                SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      child: Text(
-                        '立即登入',
-                        style: TextStyle(
-                          color: appColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      onTap: () => RouteGenerator.navigateToLogin(
-                        context,
-                        routeName: RouteGenerator.story,
-                        routeArguments: {
-                          'slug': widget.slugBloc.slug,
-                        },
-                      ),
-                    ),
-                    SizedBox(width: 4),
-                    Text(
-                      '享專屬優惠',
-                      style: TextStyle(
-                        color: Colors.black45,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ]
-          ),
-        )
+      child: JoinMemberBlock(
+        isMember: isMember,
+        storySlug: widget.slugBloc.slug,
       ),
     );
   }
