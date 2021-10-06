@@ -33,7 +33,7 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
           return _buildMemberTypeBlock(subscritionType);
         }
         
-        // state is member subscription type loading
+        // state is member subscription type init or loading
         return _loadingWidget();
       }
     );
