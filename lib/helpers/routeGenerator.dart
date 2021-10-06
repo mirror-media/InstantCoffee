@@ -205,9 +205,12 @@ class RouteGenerator {
         // You can also throw an exception while in development.
         return _errorRoute(settings);
       case magazine:
+        Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => MagazinePage()
+          builder: (_) => MagazinePage(
+            subscritionType: args['subscritionType'],
+          )
         );
       case magazineBrowser:
         Map args = settings.arguments;
@@ -420,9 +423,15 @@ class RouteGenerator {
     );
   }
 
-  static void navigateToMagazine(BuildContext context) {
+  static void navigateToMagazine(
+    BuildContext context,
+    SubscritionType subscritionType,
+  ) {
     Navigator.of(context).pushNamed(
       magazine,
+      arguments: {
+        'subscritionType': subscritionType
+      },
     );
   }
 

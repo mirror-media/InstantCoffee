@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
 import 'package:readr_app/blocs/slugBloc.dart';
 import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
@@ -16,8 +17,8 @@ import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/story.dart';
 import 'package:readr_app/models/storyRes.dart';
 import 'package:readr_app/models/tagList.dart';
+import 'package:readr_app/pages/storyPage/news/shared/downloadMagazineWidget.dart';
 import 'package:readr_app/pages/storyPage/news/shared/joinMemberBlock.dart';
-import 'package:readr_app/widgets/downloadMagazineWidget.dart';
 import 'package:readr_app/widgets/fadingEffectPainter.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
@@ -711,9 +712,12 @@ return BlocBuilder<StoryBloc, StoryState>(
   }
 
   _downloadMagazinesWidget() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-      child: DownloadMagazineWidget(),
+    return BlocProvider(
+      create: (BuildContext context) => MemberSubscriptionTypeCubit(),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+        child: DownloadMagazineWidget(),
+      ),
     );
   }
 }

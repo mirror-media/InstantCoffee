@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/blocs/personalPageBloc.dart';
-import 'package:readr_app/blocs/tabContent/personal/cubit.dart';
+import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';

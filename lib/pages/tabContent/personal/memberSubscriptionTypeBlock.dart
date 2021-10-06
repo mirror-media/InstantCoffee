@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:readr_app/blocs/tabContent/personal/cubit.dart';
-import 'package:readr_app/blocs/tabContent/personal/state.dart';
+import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
+import 'package:readr_app/blocs/memberSubscriptionType/state.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
@@ -33,7 +33,7 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
           return _buildMemberTypeBlock(subscritionType);
         }
         
-        // state is member subscription type loading
+        // state is member subscription type init or loading
         return _loadingWidget();
       }
     );
