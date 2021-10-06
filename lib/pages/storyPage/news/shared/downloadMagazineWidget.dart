@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:readr_app/blocs/checkTokenStateBloc.dart';
-import 'package:readr_app/helpers/apiResponse.dart';
+import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
+import 'package:readr_app/blocs/memberSubscriptionType/state.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
+import 'package:readr_app/models/memberSubscriptionType.dart';
 
 class DownloadMagazineWidget extends StatefulWidget {
   @override
@@ -10,40 +13,42 @@ class DownloadMagazineWidget extends StatefulWidget {
 }
 
 class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
-  CheckTokenStateBloc _checkTokenStateBloc;
-  
-  @override
-  void initState() {
-    _checkTokenStateBloc = CheckTokenStateBloc();
-    super.initState();
+  _fetchMemberSubscriptionType() {
+    context.read<MemberSubscriptionTypeCubit>().fetchMemberSubscriptionType();
+  }
+
+  void _delayNavigator(SubscritionType subscritionType) async{
+    await Future.delayed(Duration());
+    if(subscritionType != null) {
+      RouteGenerator.navigateToMagazine(context, subscritionType);
+    } else {
+      RouteGenerator.navigateToLogin(
+        context, 
+        routeName: RouteGenerator.magazine,
+        routeArguments: {
+          'subscritionType': subscritionType,
+        },
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    
-    return StreamBuilder<ApiResponse<void>>(
-      initialData: ApiResponse.completed(false),
-      stream: _checkTokenStateBloc.checkTokenStateStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.LOADING:
-              return _downloadMagazineWidget(width, true);
-              break;
 
-            case Status.LOADINGMORE:
-            case Status.COMPLETED:
-              return _downloadMagazineWidget(width, false);
-              break;
-
-            case Status.ERROR:
-              return Container();
-              break;
-          }
+    return BlocBuilder<MemberSubscriptionTypeCubit, MemberSubscriptionTypeState>(
+      builder: (context, state) {
+        if(state is MemberSubscriptionTypeLoadingState) {
+          return _downloadMagazineWidget(width, true);
+        } else if(state is MemberSubscriptionTypeLoadedState) {
+          SubscritionType subscritionType = state.subscritionType;
+          _delayNavigator(subscritionType);
+          return _downloadMagazineWidget(width, false);
         }
-        return Container();
-      },
+        
+        // state is member subscription type init
+        return _downloadMagazineWidget(width, false);
+      }
     );
   }
 
@@ -86,7 +91,7 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
                 onPressed: isLoading
                 ? () {}
                 : () {
-                    _checkTokenStateBloc.checkTokenState(context);
+                    _fetchMemberSubscriptionType();
                   },
               ),
             ),
