@@ -1,6 +1,6 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:readr_app/models/firebaseLoginStatus.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -56,16 +56,15 @@ class LoginServices implements LoginRepos{
 
   @override
   Future<FirebaseLoginStatus> signInWithFacebook() async{
-    final FacebookLogin facebookSignIn = FacebookLogin();
     // Trigger the authentication flow
-    FacebookLoginResult facebookUser = await facebookSignIn.logIn(['email']);
+    final LoginResult facebookUser = await FacebookAuth.instance.login();
 
     UserCredential userCredential;
 
     switch (facebookUser.status) {
-      case FacebookLoginStatus.loggedIn:
+      case LoginStatus.success:
         // Obtain the auth details from the request
-        final FacebookAccessToken facebookAuth = facebookUser.accessToken;
+        final AccessToken facebookAuth = facebookUser.accessToken;
 
         // Create a new credential
         final FacebookAuthCredential credential = FacebookAuthProvider.credential(
@@ -76,27 +75,28 @@ class LoginServices implements LoginRepos{
           // Once signed in, get the UserCredential
           userCredential = await _auth.signInWithCredential(credential);
           // Need to log out to avoid facebook login error 304
-          await facebookSignIn.logOut();
+          await FacebookAuth.instance.logOut();
         } catch(onError) {
           print('Error sign in with facebook $onError');
           // Need to log out to avoid facebook login error 304
-          await facebookSignIn.logOut();
+          await FacebookAuth.instance.logOut();
           return FirebaseLoginStatus(
             status: FirebaseStatus.Error,
             message: onError,
           );
         }
         break;
-      case FacebookLoginStatus.cancelledByUser:
+      case LoginStatus.cancelled:
         return FirebaseLoginStatus(
           status: FirebaseStatus.Cancel,
           message: 'Facebook sign in cancel',
         );
         break;
-      case FacebookLoginStatus.error:
+      case LoginStatus.failed:
+      case LoginStatus.operationInProgress:
         return FirebaseLoginStatus(
           status: FirebaseStatus.Error,
-          message: facebookUser.errorMessage,
+          message: facebookUser.message,
         );
         break;
     }

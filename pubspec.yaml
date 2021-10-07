@@ -107,7 +107,7 @@ dependencies:
   # google sign in
   google_sign_in: ^4.5.6
   # facebook sign in
-  flutter_facebook_login: ^3.0.0
+  flutter_facebook_auth: ^3.5.2
   # apple sign in
   sign_in_with_apple: ^2.5.4
 
