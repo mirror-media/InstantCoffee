@@ -42,7 +42,7 @@ dependencies:
   # toast Library for Flutter
   fluttertoast: ^7.1.8
   # webview
-  webview_flutter: ^2.0.10
+  webview_flutter: ^2.1.1
   # local storage
   localstorage: ^4.0.0+1
   # A Flutter plugin to store data in secure storage
@@ -92,7 +92,7 @@ dependencies:
   # firebase
   firebase_core: ^1.4.0
   # firebase messaging
-  firebase_messaging: ^10.0.4
+  firebase_messaging: ^10.0.8
   # firebase ad mob
   google_mobile_ads:
     git:
@@ -105,11 +105,11 @@ dependencies:
   # firebase auth
   firebase_auth: ^3.0.1
   # google sign in
-  google_sign_in: ^4.5.6
+  google_sign_in: ^5.1.1
   # facebook sign in
   flutter_facebook_auth: ^3.5.2
   # apple sign in
-  sign_in_with_apple: ^2.5.4
+  sign_in_with_apple: ^3.2.0
 
   # a storefront-independent API for purchases in Flutter apps.
   in_app_purchase: ^1.0.6
