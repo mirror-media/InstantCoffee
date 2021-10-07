@@ -30,11 +30,18 @@ class Content {
           description: json['title'] + ';' + json['description'],
         );
       } else if (json['embeddedCode'] != null) {
+        double aspectRatio;
+
+        if(json['width'] != null && 
+          json['height'] != null && 
+          json['width'] is String && 
+          json['height'] is String) {
+          aspectRatio = double.parse(json['width'])/double.parse(json['height']);
+        }
+
         return Content(
           data: json['embeddedCode'],
-          aspectRatio: (json['width'] == null || json['height'] == null)
-            ? null
-            : double.parse(json['width'])/double.parse(json['height']),
+          aspectRatio: aspectRatio,
           description: json['caption'],
         );
       } else if (json['draftRawObj'] != null) {
