@@ -7,10 +7,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class EmbeddedCodeWidget extends StatefulWidget {
-  final String embeddedCoede;
+  final String embeddedCode;
   final double aspectRatio;
   EmbeddedCodeWidget({
-    @required this.embeddedCoede,
+    @required this.embeddedCode,
     this.aspectRatio,
   });
 
@@ -38,8 +38,8 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
     super.initState();
   }
 
-  _loadHtmlFromAssets(String embeddedCoede, double width) {
-    String html = _getHtml(embeddedCoede, width);
+  _loadHtmlFromAssets(String embeddedCode, double width) {
+    String html = _getHtml(embeddedCode, width);
 
     _webViewController.loadUrl(
       Uri.dataFromString(
@@ -50,14 +50,14 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
     );
   }
 
-  String _getHtml(String embeddedCoede, double width) {
+  String _getHtml(String embeddedCode, double width) {
     double scale = 1.0001;
-    if(widget.embeddedCoede.contains('www.facebook.com/plugins')) {
+    if(widget.embeddedCode.contains('www.facebook.com/plugins')) {
       RegExp widthRegExp = new RegExp(
         r'width="(.[0-9]*)"',
         caseSensitive: false,
       );
-      double facebookIframeWidth = double.parse(widthRegExp.firstMatch(widget.embeddedCoede).group(1));
+      double facebookIframeWidth = double.parse(widthRegExp.firstMatch(widget.embeddedCode).group(1));
       scale = width/facebookIframeWidth;
     }
 
@@ -86,7 +86,7 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
   <body>
     <center>
       <div class="iframe-width">
-        $embeddedCoede
+        $embeddedCode
       </div>
     </center>
   </body>
@@ -125,8 +125,8 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
     super.build(context);
     // rendering a special iframe webview of facebook in android,
     // or it will be getting screen overflow.
-    if(widget.embeddedCoede.contains('www.facebook.com/plugins') && Platform.isAndroid){
-      return FbEmbeddedCodeWidget(embeddedCoede: widget.embeddedCoede,);
+    if(widget.embeddedCode.contains('www.facebook.com/plugins') && Platform.isAndroid){
+      return FbEmbeddedCodeWidget(embeddedCode: widget.embeddedCode,);
     }
 
     return Container(
@@ -151,12 +151,12 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
             child: WebView(
               onWebViewCreated: (WebViewController webViewController) {
                 _webViewController = webViewController;
-                _loadHtmlFromAssets(widget.embeddedCoede, width);
+                _loadHtmlFromAssets(widget.embeddedCode, width);
               },
               javascriptMode: JavascriptMode.unrestricted,
               gestureRecognizers: null,
               onPageFinished: (e) async{
-                if(widget.embeddedCoede.contains('instagram-media')) {
+                if(widget.embeddedCode.contains('instagram-media')) {
                   await _webViewController.evaluateJavascript('instgrm.Embeds.process();');
                   // waiting for iframe rendering(workaround)
                   await Future.delayed(Duration(seconds: 5));
@@ -168,7 +168,7 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
                     await _webViewController
                         .evaluateJavascript('document.querySelector(".instagram-media").getBoundingClientRect().height;'),
                   );
-                } else if(widget.embeddedCoede.contains('twitter-tweet')) {
+                } else if(widget.embeddedCode.contains('twitter-tweet')) {
                   // waiting for iframe rendering(workaround)
                   while (_webViewHeight == null || _webViewHeight == 0) {
                     await Future.delayed(Duration(seconds: 1));
@@ -181,8 +181,8 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
                     await _webViewController
                         .evaluateJavascript('document.querySelector(".twitter-tweet").getBoundingClientRect().width;'),
                   );
-                } else if(widget.embeddedCoede.contains('www.facebook.com/plugins')) {
-                  if(widget.embeddedCoede.contains('www.facebook.com/plugins/video.php')) {
+                } else if(widget.embeddedCode.contains('www.facebook.com/plugins')) {
+                  if(widget.embeddedCode.contains('www.facebook.com/plugins/video.php')) {
                     _webViewAspectRatio = 16/9;
                   }
                   _webViewBottomPadding = 0;
@@ -200,7 +200,7 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
                 }
                 // reset the webview size
                 if(mounted && !_screenIsReseted) {
-                  if(widget.embeddedCoede.contains('www.facebook.com/plugins')) {
+                  if(widget.embeddedCode.contains('www.facebook.com/plugins')) {
                     setState(() {
                       _screenIsReseted = true;
                     });
@@ -226,10 +226,10 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
             ),
           // cover a launching url widget over the iframe 
           // when the iframe is not google map.
-          if(!widget.embeddedCoede.contains('https://www.google.com/maps/embed'))
+          if(!widget.embeddedCode.contains('https://www.google.com/maps/embed'))
             InkWell(
               onTap: (){
-                _launchUrl(widget.embeddedCoede);
+                _launchUrl(widget.embeddedCode);
               },
               child: Container(
                 width: width,
@@ -267,27 +267,27 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
     );
   }
 
-  void _launchUrl(String embeddedCoede) async{
+  void _launchUrl(String embeddedCode) async{
     RegExp regExp;
-    if(embeddedCoede.contains('instagram-media')) {
+    if(embeddedCode.contains('instagram-media')) {
       // permalink="(https:\/\/www\.instagram\.com\/p\/\w+\/)
       regExp = new RegExp(
         r'permalink="(https:\/\/www\.instagram\.com\/p\/\w+\/)',
         caseSensitive: false,
       );
-    } else if(embeddedCoede.contains('twitter-tweet')){
+    } else if(embeddedCode.contains('twitter-tweet')){
       // (?>(https:\/\/twitter\.com\/\w{1,15}\/status\/\d+))
       regExp = new RegExp(
         r'(https?:\/\/twitter\.com\/\w{1,15}\/status\/\d+)',
         caseSensitive: false,
       );
-    } else if(embeddedCoede.contains('www.facebook.com/plugins')) {
+    } else if(embeddedCode.contains('www.facebook.com/plugins')) {
       // refer to https://www.facebook.com/help/105399436216001
       regExp = new RegExp(
         r'https:\/\/www\.facebook\.com\/plugins\/(?:post|video)\.php\?href=(https?(%3A|\:)(%2F|\\)(%2F|\\)www\.facebook\.com(%2F|\\)(?:[a-zA-Z0-9.]+)(%2F|\\)(?:posts|videos)(%2F|\\)[0-9]+)(%2F?|\\?)\&',
         caseSensitive: false,
       );
-    } else if(embeddedCoede.contains('https://embed.dcard.tw/v1/posts')) {
+    } else if(embeddedCode.contains('https://embed.dcard.tw/v1/posts')) {
       regExp = new RegExp(
         r'(https:\/\/embed.dcard.tw\/v1\/posts\/[0-9]+)',
         caseSensitive: false,
@@ -295,7 +295,7 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
     }
 
     if(regExp != null) {
-      var url = regExp.firstMatch(embeddedCoede).group(1);
+      var url = regExp.firstMatch(embeddedCode).group(1);
       url = Uri.decodeFull(url);
       print(url);
       if (await canLaunch(url)) {

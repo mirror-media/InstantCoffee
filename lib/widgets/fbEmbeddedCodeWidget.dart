@@ -5,9 +5,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class FbEmbeddedCodeWidget extends StatefulWidget {
-  final String embeddedCoede;
+  final String embeddedCode;
   FbEmbeddedCodeWidget({
-    @required this.embeddedCoede,
+    @required this.embeddedCode,
   });
 
   @override
@@ -32,7 +32,7 @@ class _FbEmbeddedCodeWidgetState extends State<FbEmbeddedCodeWidget> {
       r'src="https:\/\/www\.facebook\.com\/plugins\/(?:post|video)\.php\?(?:.*)href=(https?(?:%3A%2F%2F|\:\/\/)www\.facebook\.com(?:%2F|\/)(?:permalink\.php(?:%3F|\?)story_fbid|[a-zA-Z0-9.]+)(?:%2F|\/|=|%3D)(?:posts|videos|photos|[0-9]+)(?:%2F[a-z].[0-9]+|\/[a-z].[0-9]+|\&id|%26id)?(?:%2F|\/|=|%3D)[0-9]+)(?:%2F?|\\?)\&',
       caseSensitive: false,
     );
-    _regExpMatch = regExp.firstMatch(widget.embeddedCoede);
+    _regExpMatch = regExp.firstMatch(widget.embeddedCode);
 
     if(_regExpMatch != null) {
       String fbUrl = _regExpMatch.group(1);
@@ -46,8 +46,8 @@ class _FbEmbeddedCodeWidgetState extends State<FbEmbeddedCodeWidget> {
         r'height="(.[0-9]*)"',
         caseSensitive: false,
       );
-      double w = double.parse(widthRegExp.firstMatch(widget.embeddedCoede).group(1));
-      double h = double.parse(heightRegExp.firstMatch(widget.embeddedCoede).group(1));
+      double w = double.parse(widthRegExp.firstMatch(widget.embeddedCode).group(1));
+      double h = double.parse(heightRegExp.firstMatch(widget.embeddedCode).group(1));
       _ratio = w/h;
     }
     super.initState();
