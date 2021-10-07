@@ -287,6 +287,11 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
         r'https:\/\/www\.facebook\.com\/plugins\/(?:post|video)\.php\?href=(https?(%3A|\:)(%2F|\\)(%2F|\\)www\.facebook\.com(%2F|\\)(?:[a-zA-Z0-9.]+)(%2F|\\)(?:posts|videos)(%2F|\\)[0-9]+)(%2F?|\\?)\&',
         caseSensitive: false,
       );
+    } else if(embeddedCoede.contains('https://embed.dcard.tw/v1/posts')) {
+      regExp = new RegExp(
+        r'(https:\/\/embed.dcard.tw\/v1\/posts\/[0-9]+)',
+        caseSensitive: false,
+      );
     }
 
     if(regExp != null) {
