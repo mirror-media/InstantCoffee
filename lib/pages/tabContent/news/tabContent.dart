@@ -57,6 +57,10 @@ class _TabContentState extends State<TabContent> {
       },
       child: Column(
         children: [
+          if(widget.section.title == '會員專區') Container(
+          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 37.5),
+          child: Image.asset(subscribeBannerJpg),
+          ),
           Expanded(
             child: _buildTabContentBody(),
           ),
