@@ -10,7 +10,6 @@ class StoryRes {
   });
 
   factory StoryRes.fromJson(Map<String, dynamic> json) {
-    print(json);
     return StoryRes(
       isMember: json['tokenState'] == 'OK',
       story: Story.fromJson(json["data"]["_items"][0]),
