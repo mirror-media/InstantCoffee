@@ -177,6 +177,7 @@ flutter:
     # member subscription
     - assets/image/badge.png
     - assets/image/subscription_icon.png
+    - assets/image/subscribe_banner_mobile.jpg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
