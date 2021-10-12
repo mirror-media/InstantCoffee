@@ -34,6 +34,7 @@ const String myBookPng = 'assets/image/magazine/my_book.png';
 const String pubuPng = 'assets/image/magazine/pubu.png';
 const String readmooPng = 'assets/image/magazine/readmoo.png';
 const String subscriptionIconPng = 'assets/image/subscription_icon.png';
+const String subscribeBannerJpg = 'assets/image/subscribe_banner_mobile.jpg';
 
 // online magazine URL
 const String hamiMagazineURL = 'https://bookstore.emome.net/Searchs/finish/keyword:%E9%8F%A1%E9%80%B1%E5%88%8A';
