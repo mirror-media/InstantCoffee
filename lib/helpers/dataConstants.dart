@@ -9,7 +9,7 @@ const searchPageTitle = '搜尋';
 const personalPageTitle = '個人專屬頁面';
 const settingPageTitle = '設定';
 const settingPageDescription = '通知設定 - 啟用推播通知，搶先收到重要新聞以及你感興趣的內容更新';
-const moreContentHtml = '<p>更多內容，歡迎<a href="https://docs.google.com/forms/d/e/1FAIpQLSeqbPjhSZx63bDWFO298acE--otet1s4-BGOmTKyjG1E4t4yQ/viewform">訂閱鏡週刊</a>、了解<a href="https://www.mirrormedia.mg/story/webauthorize/">內容授權資訊</a>。</p>';
+const moreContentHtml = '<p>更多內容，歡迎訂閱<a href="https://docs.google.com/forms/d/e/1FAIpQLSeqbPjhSZx63bDWFO298acE--otet1s4-BGOmTKyjG1E4t4yQ/viewform">鏡週刊紙本雜誌</a>、<a href="https://www.mirrormedia.mg/subscribe">鏡週刊數位訂閱</a>、<a href="https://www.mirrormedia.mg/story/webauthorize/">了解內容授權資訊</a>。</p>';
 
 const Map<String, int> sectionColorMaps = {
   'news': 0xff30BAC8,
