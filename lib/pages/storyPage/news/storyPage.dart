@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/slugBloc.dart';
-import 'package:readr_app/blocs/story/bloc.dart';
+import 'package:readr_app/blocs/storyPage/news/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/services/storyService.dart';
 import 'package:readr_app/pages/storyPage/news/storyWidget.dart';
