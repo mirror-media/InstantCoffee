@@ -145,6 +145,8 @@ class _TabContentState extends State<TabContent> {
                         padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
                         child: _buildTagText(),
                       ),
+                      SizedBox(height: 8.0,),
+                      _buildListItem(context, recordList[index]),
                     ]
                   );
                 }
