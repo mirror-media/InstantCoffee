@@ -196,7 +196,7 @@ class RouteGenerator {
         // Validation of correct data type
         if (args['slug'] is String) {
           return MaterialPageRoute(
-            builder: (context) => ListeningStroyPage(
+            builder: (context) => ListeningStoryPage(
               slug: args['slug'],
             )
           );

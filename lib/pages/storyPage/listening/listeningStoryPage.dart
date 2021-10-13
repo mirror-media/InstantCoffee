@@ -6,9 +6,9 @@ import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/pages/storyPage/listening/listeningWidget.dart';
 import 'package:share/share.dart';
 
-class ListeningStroyPage extends StatelessWidget {
+class ListeningStoryPage extends StatelessWidget {
   final String slug;
-  const ListeningStroyPage(
+  const ListeningStoryPage(
       {Key key, @required this.slug})
       : super(key: key);
 
