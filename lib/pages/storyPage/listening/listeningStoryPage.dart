@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/slugBloc.dart';
+import 'package:readr_app/blocs/storyPage/listening/cubit.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/pages/storyPage/listening/listeningWidget.dart';
 import 'package:share/share.dart';
@@ -33,7 +35,10 @@ class ListeningStroyPage extends StatelessWidget {
           )
         ],
       ),
-      body: ListeningWidget(slugBloc: _slugBloc),
+      body: BlocProvider(
+        create: (context) => ListeningStoryCubit(),
+        child: ListeningWidget(slugBloc: _slugBloc),
+      ),
     );
   }
 }

@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:readr_app/blocs/listeningWidgetBloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/slugBloc.dart';
-import 'package:readr_app/helpers/apiResponse.dart';
+import 'package:readr_app/blocs/storyPage/listening/cubit.dart';
+import 'package:readr_app/blocs/storyPage/listening/states.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/models/listening.dart';
@@ -22,94 +23,107 @@ class ListeningWidget extends StatefulWidget {
 }
 
 class _ListeningWidget extends State<ListeningWidget> {
-  ListeningWidgetBloc _listeningWidgetBloc;
-
   @override
   void initState() {
-    _listeningWidgetBloc = ListeningWidgetBloc(widget.slugBloc.slug);
+    _fetchListeningStoryPageInfo(widget.slugBloc.slug);
     super.initState();
+  }
+
+  _fetchListeningStoryPageInfo(String storySlug) {
+    context.read<ListeningStoryCubit>().fetchListeningStoryPageInfo(storySlug);
   }
 
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    return StreamBuilder<ApiResponse<TabContentState>>(
-      stream: _listeningWidgetBloc.listeningWidgetStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.LOADING:
-              return Center(child: CircularProgressIndicator());
-              break;
-
-            case Status.LOADINGMORE:
-            case Status.COMPLETED:
-              TabContentState tabContentState = snapshot.data.data;
-
-              return Column(
-                children: [
-                  Expanded(
-                    child: ListView(children: [
-                      YoutubeWidget(
-                        width: width,
-                        youtubeId: tabContentState.listening.slug,
-                      ),
-                      SizedBox(height: 16.0),
-                      if(isListeningWidgetAdsActivated)
-                      ...[
-                        MMAdBanner(
-                          adUnitId: tabContentState.listening.storyAd.hDUnitId,
-                          adSize: AdSize.mediumRectangle,
-                          isKeepAlive: true,
-                        ),
-                        SizedBox(height: 16),
-                      ],
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-                        child: _buildTitleAndDescription(tabContentState.listening),
-                      ),
-                      SizedBox(height: 16.0),
-                      if(isListeningWidgetAdsActivated)
-                      ...[
-                        MMAdBanner(
-                          adUnitId: tabContentState.listening.storyAd.aT1UnitId,
-                          adSize: AdSize.mediumRectangle,
-                          isKeepAlive: true,
-                        ),
-                        SizedBox(height: 16),
-                      ],
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-                        child: _buildTheNewestVideos(width, tabContentState.recordList),
-                      ),
-                      if(isListeningWidgetAdsActivated)
-                      ...[
-                        MMAdBanner(
-                          adUnitId: tabContentState.listening.storyAd.fTUnitId,
-                          adSize: AdSize.mediumRectangle,
-                          isKeepAlive: true,
-                        ),
-                        SizedBox(height: 16),
-                      ],
-                    ]),
-                  ),
-                  if(isListeningWidgetAdsActivated)
-                    MMAdBanner(
-                      adUnitId: tabContentState.listening.storyAd.stUnitId,
-                      adSize: AdSize.banner,
-                      isKeepAlive: true,
-                    ),
-                ],
-              );
-              break;
-
-            case Status.ERROR:
-              return Container();
-              break;
-          }
+    return BlocBuilder<ListeningStoryCubit, ListeningStoryState>(
+      builder: (context, state) {
+        if (state is ListeningStoryError) {
+          final error = state.error;
+          print('StoryError: ${error.message}');
+          return Container();
         }
-        return Container();
-      },
+
+        if(state is ListeningStoryLoaded) {
+          Listening listening = state.listening;
+          RecordList recordList = state.recordList;
+
+          return _buildListeningStoryWidget(
+            width,
+            listening,
+            recordList,
+          );
+        }
+
+        // state is Init, Loading
+        return _loadingWidget();
+      }
+    );
+  }
+
+  Widget _loadingWidget() {
+    return Center(child: CircularProgressIndicator(),);
+  }
+
+  Widget _buildListeningStoryWidget(
+    double width,
+    Listening listening,
+    RecordList recordList,
+  ) {
+    return Column(
+      children: [
+        Expanded(
+          child: ListView(children: [
+            YoutubeWidget(
+              width: width,
+              youtubeId: listening.slug,
+            ),
+            SizedBox(height: 16.0),
+            if(isListeningWidgetAdsActivated)
+            ...[
+              MMAdBanner(
+                adUnitId: listening.storyAd.hDUnitId,
+                adSize: AdSize.mediumRectangle,
+                isKeepAlive: true,
+              ),
+              SizedBox(height: 16),
+            ],
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+              child: _buildTitleAndDescription(listening),
+            ),
+            SizedBox(height: 16.0),
+            if(isListeningWidgetAdsActivated)
+            ...[
+              MMAdBanner(
+                adUnitId: listening.storyAd.aT1UnitId,
+                adSize: AdSize.mediumRectangle,
+                isKeepAlive: true,
+              ),
+              SizedBox(height: 16),
+            ],
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+              child: _buildTheNewestVideos(width, recordList),
+            ),
+            if(isListeningWidgetAdsActivated)
+            ...[
+              MMAdBanner(
+                adUnitId: listening.storyAd.fTUnitId,
+                adSize: AdSize.mediumRectangle,
+                isKeepAlive: true,
+              ),
+              SizedBox(height: 16),
+            ],
+          ]),
+        ),
+        if(isListeningWidgetAdsActivated)
+          MMAdBanner(
+            adUnitId: listening.storyAd.stUnitId,
+            adSize: AdSize.banner,
+            isKeepAlive: true,
+          ),
+      ],
     );
   }
 
@@ -203,7 +217,7 @@ class _ListeningWidget extends State<ListeningWidget> {
                 ),
                 onTap: () {
                   widget.slugBloc.slug = recordList[index].slug;
-                  _listeningWidgetBloc.fetchListening(recordList[index].slug);
+                  _fetchListeningStoryPageInfo(widget.slugBloc.slug);
                 },
               );
             }),
