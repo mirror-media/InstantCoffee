@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:readr_app/blocs/story/states.dart';
+import 'package:readr_app/blocs/storyPage/news/states.dart';
 import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/appException.dart';
 import 'package:readr_app/helpers/exceptions.dart';

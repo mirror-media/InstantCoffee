@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:readr_app/blocs/story/bloc.dart';
-import 'package:readr_app/blocs/story/events.dart';
-import 'package:readr_app/blocs/story/states.dart';
+import 'package:readr_app/blocs/storyPage/news/bloc.dart';
+import 'package:readr_app/blocs/storyPage/news/events.dart';
+import 'package:readr_app/blocs/storyPage/news/states.dart';
 import 'package:readr_app/models/storyRes.dart';
 import 'package:readr_app/pages/termsOfService/termsOfServiceWidget.dart';
 
