@@ -10,7 +10,7 @@ class LoginErrorWidget extends StatelessWidget {
         SizedBox(height: 72),
         Center(
           child: Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: Text(
               '登入失敗',
               style: TextStyle(
@@ -22,7 +22,7 @@ class LoginErrorWidget extends StatelessWidget {
         SizedBox(height: 24),
         Center(
           child: Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: Text(
               '請重新登入，或是聯繫客服',
               style: TextStyle(
@@ -34,7 +34,7 @@ class LoginErrorWidget extends StatelessWidget {
         InkWell(
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
               child: Text(
                 'E-MAIL: mm-onlineservice@mirrormedia.mg',
                 style: TextStyle(
@@ -58,7 +58,7 @@ class LoginErrorWidget extends StatelessWidget {
         ),
         Center(
           child: Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: Text(
               '(02)6633-3966',
               style: TextStyle(
@@ -70,7 +70,7 @@ class LoginErrorWidget extends StatelessWidget {
         SizedBox(height: 24),
         Center(
           child: Padding(
-            padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: Text(
               '我們將有專人為您服務',
               style: TextStyle(
