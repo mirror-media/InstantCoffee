@@ -1,3 +1,5 @@
+import 'package:readr_app/env.dart';
+
 class SlugBloc {
   String slug;
 
@@ -7,7 +9,7 @@ class SlugBloc {
 
   String getShareUrlFromSlug(bool isListeningWidget) {
     return isListeningWidget
-      ? 'https://www.mirrormedia.mg/video/$slug/?utm_source=app&utm_medium=mmapp'
-      : 'https://www.mirrormedia.mg/story/$slug/?utm_source=app&utm_medium=mmapp';
+      ? '${env.baseConfig.mirrorMediaDomain}/video/$slug/?utm_source=app&utm_medium=mmapp'
+      : '${env.baseConfig.mirrorMediaDomain}/story/$slug/?utm_source=app&utm_medium=mmapp';
   }
 }
