@@ -3,7 +3,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
-import 'package:readr_app/blocs/slugBloc.dart';
 import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
@@ -27,10 +26,9 @@ import 'package:readr_app/blocs/storyPage/news/events.dart';
 import 'package:readr_app/blocs/storyPage/news/states.dart';
 
 class StoryWidget extends StatefulWidget {
-  final SlugBloc slugBloc;
   final bool isMemberCheck;
   const StoryWidget(
-      {key, @required this.slugBloc, @required this.isMemberCheck}) 
+      {key, @required this.isMemberCheck}) 
       : super(key: key);
 
   @override
@@ -40,14 +38,17 @@ class StoryWidget extends StatefulWidget {
 }
 
 class _StoryWidget extends State<StoryWidget> {
+  StoryBloc _storyBloc;
+
   @override
   void initState() {
-    _fetchPublishedStoryBySlug(widget.slugBloc.slug, widget.isMemberCheck);
+    _storyBloc = context.read<StoryBloc>();
+    _fetchPublishedStoryBySlug(_storyBloc.storySlug, widget.isMemberCheck);
     super.initState();
   }
 
   _fetchPublishedStoryBySlug(String storySlug, bool isMemberCheck) {
-    context.read<StoryBloc>().add(
+    _storyBloc.add(
       FetchPublishedStoryBySlug(storySlug, isMemberCheck)
     );
   }
@@ -511,7 +512,7 @@ return BlocBuilder<StoryBloc, StoryState>(
       padding: const EdgeInsets.only(left: 24.0, right: 24.0),
       child: JoinMemberBlock(
         isMember: isMember,
-        storySlug: widget.slugBloc.slug,
+        storySlug: _storyBloc.storySlug,
       ),
     );
   }
@@ -704,8 +705,7 @@ return BlocBuilder<StoryBloc, StoryState>(
         ),
       ),
       onTap: () {
-        widget.slugBloc.slug = relatedItem.slug;
-        _fetchPublishedStoryBySlug(widget.slugBloc.slug, widget.isMemberCheck);
+        _fetchPublishedStoryBySlug(relatedItem.slug, widget.isMemberCheck);
       },
     );
   }
