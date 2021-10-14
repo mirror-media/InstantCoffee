@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:readr_app/blocs/slugBloc.dart';
 import 'package:readr_app/blocs/storyPage/listening/cubit.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/pages/storyPage/listening/listeningWidget.dart';
@@ -14,7 +13,9 @@ class ListeningStoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SlugBloc _slugBloc = SlugBloc(slug);
+    ListeningStoryCubit _listeningStoryCubit= ListeningStoryCubit(
+      storySlug: slug
+    );
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -29,15 +30,15 @@ class ListeningStoryPage extends StatelessWidget {
             icon: Icon(Icons.share),
             tooltip: 'share',
             onPressed: () {
-              String url = _slugBloc.getShareUrlFromSlug(true);
+              String url = _listeningStoryCubit.getShareUrlFromSlug();
               Share.share(url);
             },
           )
         ],
       ),
       body: BlocProvider(
-        create: (context) => ListeningStoryCubit(),
-        child: ListeningWidget(slugBloc: _slugBloc),
+        create: (context) => _listeningStoryCubit,
+        child: ListeningWidget(),
       ),
     );
   }
