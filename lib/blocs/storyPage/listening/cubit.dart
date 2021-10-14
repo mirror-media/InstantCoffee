@@ -14,10 +14,14 @@ import 'package:readr_app/services/listeningTabContentService.dart';
 import 'package:readr_app/services/listeningWidgetService.dart';
 
 class ListeningStoryCubit extends Cubit<ListeningStoryState> {
-  ListeningStoryCubit() : super(ListeningStoryInitState());
+  String storySlug;
+  ListeningStoryCubit({
+    this.storySlug,
+  }) : super(ListeningStoryInitState());
 
   void fetchListeningStoryPageInfo(String slug) async {
     print('Fetch listening story page info { slug: $slug }');
+    storySlug = slug;
     emit(ListeningStoryLoading());
     try{
       ListeningWidgetService listeningWidgetService = ListeningWidgetService();
@@ -82,5 +86,9 @@ class ListeningStoryCubit extends Cubit<ListeningStoryState> {
         ListeningStoryError(error: UnknownException(e.toString()))
       );
     }
+  }
+
+  String getShareUrlFromSlug() {
+    return '${env.baseConfig.mirrorMediaDomain}/video/$storySlug/?utm_source=app&utm_medium=mmapp';
   }
 }

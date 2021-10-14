@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:readr_app/blocs/slugBloc.dart';
 import 'package:readr_app/blocs/storyPage/listening/cubit.dart';
 import 'package:readr_app/blocs/storyPage/listening/states.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
@@ -13,8 +12,7 @@ import 'package:readr_app/widgets/mMAdBanner.dart';
 import 'package:readr_app/widgets/youtubeWidget.dart';
 
 class ListeningWidget extends StatefulWidget {
-  final SlugBloc slugBloc;
-  const ListeningWidget({key, @required this.slugBloc}) : super(key: key);
+  const ListeningWidget({key}) : super(key: key);
 
   @override
   _ListeningWidget createState() {
@@ -25,7 +23,7 @@ class ListeningWidget extends StatefulWidget {
 class _ListeningWidget extends State<ListeningWidget> {
   @override
   void initState() {
-    _fetchListeningStoryPageInfo(widget.slugBloc.slug);
+    _fetchListeningStoryPageInfo(context.read<ListeningStoryCubit>().storySlug);
     super.initState();
   }
 
@@ -216,8 +214,7 @@ class _ListeningWidget extends State<ListeningWidget> {
                   ],
                 ),
                 onTap: () {
-                  widget.slugBloc.slug = recordList[index].slug;
-                  _fetchListeningStoryPageInfo(widget.slugBloc.slug);
+                  _fetchListeningStoryPageInfo(recordList[index].slug);
                 },
               );
             }),
