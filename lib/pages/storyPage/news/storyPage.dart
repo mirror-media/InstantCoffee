@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:readr_app/blocs/slugBloc.dart';
 import 'package:readr_app/blocs/storyPage/news/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/services/storyService.dart';
@@ -16,7 +15,10 @@ class StoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SlugBloc _slugBloc = SlugBloc(slug);
+    final StoryBloc _storyBloc = StoryBloc(
+      storySlug: slug,
+      storyRepos: StoryService()
+    );
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -31,15 +33,15 @@ class StoryPage extends StatelessWidget {
             icon: Icon(Icons.share),
             tooltip: 'share',
             onPressed: () {
-              String url = _slugBloc.getShareUrlFromSlug(false);
+              String url = _storyBloc.getShareUrlFromSlug();
               Share.share(url);
             },
           )
         ],
       ),
       body: BlocProvider(
-        create: (context) => StoryBloc(storyRepos: StoryService()),
-        child: StoryWidget(slugBloc: _slugBloc, isMemberCheck: isMemberCheck,),
+        create: (context) => _storyBloc,
+        child: StoryWidget(isMemberCheck: isMemberCheck,),
       ),
     );
   }

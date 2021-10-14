@@ -11,7 +11,10 @@ class MMTermsOfServicePage extends StatelessWidget {
     return Scaffold(
       appBar: _buildBar(context),
       body: BlocProvider(
-        create: (context) => StoryBloc(storyRepos: StoryService()),
+        create: (context) => StoryBloc(
+          storySlug: 'service-rule',
+          storyRepos: StoryService()
+        ),
         child: MMTermsOfServiceWidget(),
       ),
     );
