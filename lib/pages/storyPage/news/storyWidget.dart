@@ -3,7 +3,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
-import 'package:readr_app/env.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/helpers/paragraphFormat.dart';
@@ -257,8 +257,8 @@ return BlocBuilder<StoryBloc, StoryState>(
     }
 
     for(Category category in categories) {
-      if(category.id == env.baseConfig.wineSectionKey ||
-      category.id == env.baseConfig.wine1SectionKey) {
+      if(category.id == Environment().config.wineSectionKey ||
+      category.id == Environment().config.wine1SectionKey) {
         return true;
       }
     }

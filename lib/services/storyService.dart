@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
-import 'package:readr_app/env.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/helpers/appException.dart';
 import 'package:readr_app/helpers/cacheDurationCache.dart';
@@ -29,13 +29,13 @@ class StoryService implements StoryRepos{
   String _getStoryApi(String slug, bool isMemberCheck) {
     if(isMemberCheck) {
       // this api will check member state before returning story data
-      return env.baseConfig.storyPageApi +
+      return Environment().config.storyPageApi +
           'getposts?where={"slug":"$slug","isAudioSiteOnly":false}&related=full';//&clean=content
     }
 
     // this api will return story data directly
     // if story is member only, it will only return part of the story data 
-    return env.baseConfig.storyPageApi +
+    return Environment().config.storyPageApi +
         'story?where={"slug":"$slug","isAudioSiteOnly":false}&related=full';//&clean=content
   }
   

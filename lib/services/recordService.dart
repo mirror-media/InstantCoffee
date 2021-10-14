@@ -1,4 +1,4 @@
-import 'package:readr_app/env.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/helpers/cacheDurationCache.dart';
 import 'package:readr_app/models/recordList.dart';
@@ -22,7 +22,7 @@ class RecordService {
     
     if (jsonResponse.containsKey("_links") &&
         jsonResponse["_links"].containsKey("next")) {
-      this._nextPageUrl = env.baseConfig.apiBase + jsonResponse["_links"]["next"]["href"];
+      this._nextPageUrl = Environment().config.apiBase + jsonResponse["_links"]["next"]["href"];
     } else {
       this._nextPageUrl = '';
     }

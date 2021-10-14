@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:readr_app/env.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/models/graphqlBody.dart';
 import 'package:readr_app/models/subscribedArticle.dart';
@@ -39,7 +39,7 @@ class SubscribedArticlesService {
     );
 
     final jsonResponse = await _helper.postByUrl(
-      env.baseConfig.memberApi,
+      Environment().config.memberApi,
       jsonEncode(graphqlBody.toJson()),
       headers: getHeaders(token),
     );
@@ -52,11 +52,11 @@ class SubscribedArticlesService {
       
       List<String> articleIds = [];
       subscribedArticles.forEach((element) { articleIds.add('"${element.postId}"');});
-      String endpoint = env.baseConfig.apiBase + 'getposts?where={"_id":{"\$in":$articleIds}}';
+      String endpoint = Environment().config.apiBase + 'getposts?where={"_id":{"\$in":$articleIds}}';
       final jsonPostResponse = await _helper.getByUrl(endpoint);
       if(jsonPostResponse['_items'] != null){
         jsonPostResponse['_items'].forEach((item){
-          String photoUrl = env.baseConfig.mirrorMediaNotImageUrl;
+          String photoUrl = Environment().config.mirrorMediaNotImageUrl;
           if (item.containsKey('heroImage') && item['heroImage'] != null && item['heroImage']['image'] != null) {
             photoUrl = item['heroImage']['image']['resizedTargets']['mobile']['url'];
           } else if (item.containsKey('snippet') && item['snippet'] != null) {

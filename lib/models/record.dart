@@ -1,4 +1,4 @@
-import 'package:readr_app/env.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/categoryList.dart';
 
@@ -44,7 +44,7 @@ class Record {
       origPublishedDate = json['publishTime'];
     }
 
-    String photoUrl = env.baseConfig.mirrorMediaNotImageUrl;
+    String photoUrl = Environment().config.mirrorMediaNotImageUrl;
     if (json.containsKey('heroImage') && json['heroImage'] != null && json['heroImage']['image'] != null) {
       photoUrl = json['heroImage']['image']['resizedTargets']['mobile']['url'];
     } else if (json.containsKey('snippet') && json['snippet'] != null) {

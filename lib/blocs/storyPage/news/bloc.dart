@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/storyPage/news/events.dart';
 import 'package:readr_app/blocs/storyPage/news/states.dart';
-import 'package:readr_app/env.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/appException.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/models/story.dart';
@@ -38,8 +38,8 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> {
         Story story = storyRes.story;
         
         String storyAdJsonFileLocation = Platform.isIOS
-        ? env.baseConfig.iOSStoryAdJsonLocation
-        : env.baseConfig.androidStoryAdJsonLocation;
+        ? Environment().config.iOSStoryAdJsonLocation
+        : Environment().config.androidStoryAdJsonLocation;
         // String storyAdJsonFileLocation = Platform.isIOS
         // ? 'assets/data/iOSTestStoryAd.json'
         // : 'assets/data/androidTestStoryAd.json';
@@ -103,6 +103,6 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> {
   }
 
   String getShareUrlFromSlug() {
-    return '${env.baseConfig.mirrorMediaDomain}/story/$storySlug/?utm_source=app&utm_medium=mmapp';
+    return '${Environment().config.mirrorMediaDomain}/story/$storySlug/?utm_source=app&utm_medium=mmapp';
   }
 }

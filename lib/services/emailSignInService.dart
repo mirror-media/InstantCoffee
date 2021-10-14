@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:readr_app/env.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/firebaseLoginStatus.dart';
 
 abstract class EmailSignInRepos {
@@ -69,16 +69,16 @@ class EmailSignInServices implements EmailSignInRepos{
     var acs = ActionCodeSettings(
       // URL you want to redirect back to. The domain (www.example.com) for this
       // URL must be whitelisted in the Firebase Console.
-      url: env.baseConfig.recoverPasswordUrl,
+      url: Environment().config.recoverPasswordUrl,
       // This must be true
       handleCodeInApp: true,
-      iOSBundleId: env.baseConfig.iOSBundleId,
-      androidPackageName: env.baseConfig.androidPackageName,
+      iOSBundleId: Environment().config.iOSBundleId,
+      androidPackageName: Environment().config.androidPackageName,
       // installIfNotAvailable
       androidInstallApp: false,
       // minimumVersion
       androidMinimumVersion: "12",
-      dynamicLinkDomain: env.baseConfig.dynamicLinkDomain,
+      dynamicLinkDomain: Environment().config.dynamicLinkDomain,
     );
 
     try{
@@ -110,13 +110,13 @@ class EmailSignInServices implements EmailSignInRepos{
       url: redirectUrl,
       // This must be true
       handleCodeInApp: true,
-      iOSBundleId: env.baseConfig.iOSBundleId,
-      androidPackageName: env.baseConfig.androidPackageName,
+      iOSBundleId: Environment().config.iOSBundleId,
+      androidPackageName: Environment().config.androidPackageName,
       // installIfNotAvailable
       androidInstallApp: false,
       // minimumVersion
       androidMinimumVersion: "12",
-      dynamicLinkDomain: env.baseConfig.dynamicLinkDomain,
+      dynamicLinkDomain: Environment().config.dynamicLinkDomain,
     );
 
     try{

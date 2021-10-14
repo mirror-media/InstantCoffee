@@ -5,7 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/blocs/emailVerification/bloc.dart';
 import 'package:readr_app/blocs/emailVerification/events.dart';
 import 'package:readr_app/blocs/emailVerification/states.dart';
-import 'package:readr_app/env.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/pages/shared/sendingEmailButton.dart';
 
@@ -157,7 +157,7 @@ class _EmailVerificationFormState extends State<EmailVerificationForm> {
               isWaiting: widget.state is SendingEmailVerificationSuccess,
               onTap: () => _sendEmailVerification(
                 _emailEditingController.text, 
-                env.baseConfig.finishEmailVerificationUrl + '?email=${_emailEditingController.text}'
+                Environment().config.finishEmailVerificationUrl + '?email=${_emailEditingController.text}'
               ),
             ),
           ),

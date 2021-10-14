@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:readr_app/env.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/helpers/appException.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
@@ -59,7 +59,7 @@ class MemberService implements MemberRepos{
     );
 
     final jsonResponse = await _helper.postByUrl(
-      env.baseConfig.memberApi,
+      Environment().config.memberApi,
       jsonEncode(graphqlBody.toJson()),
       headers: getHeaders(token),
     );
@@ -115,7 +115,7 @@ class MemberService implements MemberRepos{
 
     try {
       final jsonResponse = await _helper.postByUrl(
-        env.baseConfig.memberApi,
+        Environment().config.memberApi,
         jsonEncode(graphqlBody.toJson()),
         headers: getHeaders(token),
       );
@@ -154,7 +154,7 @@ class MemberService implements MemberRepos{
     );
 
     final jsonResponse = await _helper.postByUrl(
-      env.baseConfig.memberApi,
+      Environment().config.memberApi,
       jsonEncode(graphqlBody.toJson()),
       headers: getHeaders(token),
     );
@@ -207,7 +207,7 @@ class MemberService implements MemberRepos{
 
     try {
       final jsonResponse = await _helper.postByUrl(
-        env.baseConfig.memberApi,
+        Environment().config.memberApi,
         jsonEncode(graphqlBody.toJson()),
         headers: getHeaders(token),
       );
@@ -272,7 +272,7 @@ class MemberService implements MemberRepos{
 
     try {
       final jsonResponse = await _helper.postByUrl(
-        env.baseConfig.memberApi,
+        Environment().config.memberApi,
         jsonEncode(graphqlBody.toJson()),
         headers: getHeaders(token),
       );
@@ -305,7 +305,7 @@ class MemberService implements MemberRepos{
 
     try {
       final jsonResponse = await _helper.postByUrl(
-        env.baseConfig.memberApi,
+        Environment().config.memberApi,
         jsonEncode(graphqlBody.toJson()),
         headers: getHeaders(token),
       );
@@ -319,7 +319,7 @@ class MemberService implements MemberRepos{
   Future<bool> checkTokenState(String token) async{
     try {
       final jsonResponse = await _helper.getByUrl(
-        env.baseConfig.tokenStateApi,
+        Environment().config.tokenStateApi,
         headers: getHeaders(token),
       );
 

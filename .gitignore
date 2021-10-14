@@ -20,10 +20,14 @@ doc/api/
 *.js.deps
 *.js.map
 
-# for internal constants
+# for internal constants (Deprecated)
 lib/helpers/constants.dart 
 lib/helpers/apiConstants.dart
 lib/helpers/devApiConstants.dart
+# for internal config
+lib/configs/devConfig.dart
+lib/configs/prodConfig.dart
+
 # firebase data
 android/app/src/dev/google-services.json
 android/app/src/prod/google-services.json

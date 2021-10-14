@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/storyPage/listening/states.dart';
-import 'package:readr_app/env.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/appException.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/models/listening.dart';
@@ -28,12 +28,12 @@ class ListeningStoryCubit extends Cubit<ListeningStoryState> {
       ListeningTabContentService listeningTabContentService = ListeningTabContentService();
       Listening listening = await listeningWidgetService.fetchListening(slug);
       RecordList recordList = await listeningTabContentService.fetchRecordList(
-          env.baseConfig.apiBase +
+          Environment().config.apiBase +
               'youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw');
 
       String storyAdJsonFileLocation = Platform.isIOS
-      ? env.baseConfig.iOSStoryAdJsonLocation
-      : env.baseConfig.androidStoryAdJsonLocation;
+      ? Environment().config.iOSStoryAdJsonLocation
+      : Environment().config.androidStoryAdJsonLocation;
       // String storyAdJsonFileLocation = Platform.isIOS
       // ? 'assets/data/iOSTestStoryAd.json'
       // : 'assets/data/androidTestStoryAd.json';
@@ -89,6 +89,6 @@ class ListeningStoryCubit extends Cubit<ListeningStoryState> {
   }
 
   String getShareUrlFromSlug() {
-    return '${env.baseConfig.mirrorMediaDomain}/video/$storySlug/?utm_source=app&utm_medium=mmapp';
+    return '${Environment().config.mirrorMediaDomain}/video/$storySlug/?utm_source=app&utm_medium=mmapp';
   }
 }

@@ -1,12 +1,12 @@
 import "dart:convert" show utf8;
 
-import 'package:readr_app/env.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:http/http.dart' as http;
 import 'package:readr_app/models/appVersion.dart';
 
 class AppVersionService {
   Future<List<AppVersion>> fetchMajorVersion() async {
-    Uri uri = Uri.parse(env.baseConfig.appVersionApi);
+    Uri uri = Uri.parse(Environment().config.appVersionApi);
     final jsonResponse = await http.get(
       uri, 
       headers: const {

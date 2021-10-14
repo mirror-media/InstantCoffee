@@ -6,10 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:readr_app/env.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
-import 'package:readr_app/models/baseConfig.dart';
 
 void main() async{
   // Inform the plugin that this app supports pending purchases on Android.
@@ -22,8 +21,8 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
   await Firebase.initializeApp();
-  BuildEnvironment.init(
-      flavor: BuildFlavor.production, baseConfig: BaseConfig());
+  Environment().initConfig(BuildFlavor.production);
+
   runApp(MyApp());
 }
 

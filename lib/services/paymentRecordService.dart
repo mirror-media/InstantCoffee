@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:readr_app/env.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/models/graphqlBody.dart';
 import 'package:readr_app/models/paymentRecord.dart';
@@ -60,7 +60,7 @@ class PaymentRecordService {
     );
 
     final jsonResponse = await _helper.postByUrl(
-      env.baseConfig.memberApi,
+      Environment().config.memberApi,
       jsonEncode(graphqlBody.toJson()),
       headers: getHeaders(token),
     );

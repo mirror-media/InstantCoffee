@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:readr_app/env.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/models/sectionAd.dart';
 import 'package:readr_app/services/listeningTabContentService.dart';
 import 'package:readr_app/models/recordList.dart';
 
 class ListeningTabContentBloc {
-  String _endpoint = env.baseConfig.listeningWidgetApi;
+  String _endpoint = Environment().config.listeningWidgetApi;
   bool _isLoading = false;
   bool _needLoadingMore = true;
 
@@ -70,7 +70,7 @@ class ListeningTabContentBloc {
   refreshTheList() {
     _records.clear();
     _listeningTabContentService.initialPage();
-    _endpoint = env.baseConfig.listeningWidgetApi;
+    _endpoint = Environment().config.listeningWidgetApi;
     fetchRecordList();
   }
 

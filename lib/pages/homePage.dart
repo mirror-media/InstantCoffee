@@ -5,7 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/blocs/sectionBloc.dart';
-import 'package:readr_app/env.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/appLinkHelper.dart';
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
@@ -98,12 +98,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
       );
 
       _scrollControllerList.add(ScrollController());
-      if (section.key == env.baseConfig.listeningSectionKey) {
+      if (section.key == Environment().config.listeningSectionKey) {
         _tabWidgets.add(ListeningTabContent(
           section: section,
           scrollController: _scrollControllerList[i],
         ));
-      } else if (section.key == env.baseConfig.personalSectionKey){
+      } else if (section.key == Environment().config.personalSectionKey){
         _tabWidgets.add(PersonalTabContent(
           onBoardingBloc: widget.onBoardingBloc,
           scrollController: _scrollControllerList[i],
