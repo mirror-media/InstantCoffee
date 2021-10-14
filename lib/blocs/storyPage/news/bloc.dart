@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/storyPage/news/events.dart';
@@ -14,14 +15,19 @@ import 'package:readr_app/models/storyRes.dart';
 import 'package:readr_app/services/storyService.dart';
 
 class StoryBloc extends Bloc<StoryEvents, StoryState> {
+  String storySlug;
   final StoryRepos storyRepos;
 
-  StoryBloc({this.storyRepos}) : super(StoryState.init());
+  StoryBloc({
+    @required this.storySlug,
+    @required this.storyRepos
+  }) : super(StoryState.init());
 
   @override
   Stream<StoryState> mapEventToState(StoryEvents event) async* {
     if(event is FetchPublishedStoryBySlug) {
       print(event.toString());
+      storySlug = event.slug;
       try{
         yield StoryState.loading();
 
@@ -94,5 +100,9 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> {
         );
       }
     }
+  }
+
+  String getShareUrlFromSlug() {
+    return '${env.baseConfig.mirrorMediaDomain}/story/$storySlug/?utm_source=app&utm_medium=mmapp';
   }
 }

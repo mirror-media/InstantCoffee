@@ -15,7 +15,7 @@ class _MMTermsOfServiceWidgetState extends State<MMTermsOfServiceWidget> {
   @override
   void initState() {
     super.initState();
-    _fetchPublishedStoryBySlug('service-rule', false);
+    _fetchPublishedStoryBySlug(context.read<StoryBloc>().storySlug, false);
   }
 
   _fetchPublishedStoryBySlug(String storySlug, bool isMemberCheck) {
