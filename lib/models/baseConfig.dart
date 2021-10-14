@@ -7,6 +7,8 @@ class BaseConfig {
     this.isDev = false,
   });
 
+  String get mirrorMediaDomain => isDev ? dev.mirrorMediaDomain : prod.mirrorMediaDomain;
+
   String get apiBase => isDev ? dev.apiBase : prod.apiBase;
   String get storyPageApi => isDev ? dev.storyPageApi : prod.storyPageApi;
   String get memberApi => isDev ? dev.memberApi : prod.memberApi;
