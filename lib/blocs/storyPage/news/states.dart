@@ -1,17 +1,50 @@
 import 'package:readr_app/models/storyRes.dart';
 
-abstract class StoryState {}
+enum StoryStatus { initial, loading, loaded, error }
 
-class StoryInitState extends StoryState {}
-
-class StoryLoading extends StoryState {}
-
-class StoryLoaded extends StoryState {
+class StoryState {
+  final StoryStatus status;
   final StoryRes storyRes;
-  StoryLoaded({this.storyRes});
-}
+  final errorMessages;
 
-class StoryError extends StoryState {
-  final error;
-  StoryError({this.error});
+  const StoryState({
+    this.status,
+    this.storyRes,
+    this.errorMessages,
+  });
+
+  factory StoryState.init() {
+    return StoryState(
+      status: StoryStatus.initial
+    );
+  }
+
+  factory StoryState.loading() {
+    return StoryState(
+      status: StoryStatus.loading
+    );
+  }
+
+  factory StoryState.loaded({
+    StoryRes storyRes,
+  }) {
+    return StoryState(
+      status: StoryStatus.loaded,
+      storyRes: storyRes,
+    );
+  }
+
+  factory StoryState.error({
+    errorMessages
+  }) {
+    return StoryState(
+      status: StoryStatus.error,
+      errorMessages: errorMessages,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'StoryState { status: $status }';
+  }
 }

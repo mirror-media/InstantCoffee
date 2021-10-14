@@ -70,20 +70,19 @@ class _StoryWidget extends State<StoryWidget> {
     var height = width / 16 * 9;
 return BlocBuilder<StoryBloc, StoryState>(
       builder: (BuildContext context, StoryState state) {
-        if (state is StoryError) {
-          final error = state.error;
-          print('StoryError: ${error.message}');
-          return Container();
+        switch (state.status) {
+          case StoryStatus.error:
+            final error = state.errorMessages;
+            print('StoryError: ${error.message}');
+            return Container();
+          case StoryStatus.loaded:
+            StoryRes storyRes = state.storyRes;
+
+            return _buildStoryWidget(storyRes, width, height);
+          default:
+            // state is Init, Loading
+            return _loadingWidget();
         }
-
-        if (state is StoryLoaded) {
-          StoryRes storyRes = state.storyRes;
-
-          return _buildStoryWidget(storyRes, width, height);
-        }
-
-        // state is Init, Loading
-        return _loadingWidget();
       }
     );
   }
