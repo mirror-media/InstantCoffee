@@ -49,6 +49,8 @@ dependencies:
   flutter_secure_storage: ^3.3.5
   # drag and drop object
   reorderables: ^0.3.2
+  # automatically resizes text to fit perfectly within its bounds.
+  auto_size_text: ^2.1.0
   # cached network image
   cached_network_image: ^3.0.0
   # share url

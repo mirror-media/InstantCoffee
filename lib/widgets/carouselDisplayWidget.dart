@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -84,19 +85,18 @@ class CarouselDisplayWidget extends StatelessWidget {
       color: Colors.black.withOpacity(0.6),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-        child: Center(
-          child: Container(
-            height: 56,
-            child: Center(
-              child: Text(
-                record.title.length > 35
-                    ? record.title.substring(0, 35) + ' ...'
-                    : record.title,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
+        child: Container(
+          height: 56,
+          child: Center(
+            child: AutoSizeText(
+              record.title,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              minFontSize: 20,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
