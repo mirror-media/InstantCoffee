@@ -41,13 +41,25 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
   _loadHtmlFromAssets(String embeddedCode, double width) {
     String html = _getHtml(embeddedCode, width);
 
-    _webViewController.loadUrl(
-      Uri.dataFromString(
-        html,
-        mimeType: 'text/html',
-        encoding: Encoding.getByName('utf-8'),
-      ).toString()
-    );
+    if(embeddedCode.contains('class="tiktok-embed"')) {
+      RegExp videoIdRegExp = new RegExp(
+        r'data-video-id="(.[0-9]*)"',
+        caseSensitive: false,
+      );
+      String videoId = videoIdRegExp.firstMatch(widget.embeddedCode).group(1);
+
+      _webViewController.loadUrl(
+        'https://www.tiktok.com/embed/v2/$videoId',
+      );
+    } else {
+      _webViewController.loadUrl(
+        Uri.dataFromString(
+          html,
+          mimeType: 'text/html',
+          encoding: Encoding.getByName('utf-8'),
+        ).toString()
+      );
+    }
   }
 
   String _getHtml(String embeddedCode, double width) {
@@ -292,7 +304,12 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
         r'(https:\/\/embed.dcard.tw\/v1\/posts\/[0-9]+)',
         caseSensitive: false,
       );
-    }
+    } else if(embeddedCode.contains('class="tiktok-embed"')) {
+      regExp = new RegExp(
+        r'cite="(https:\/\/www.tiktok.com\/.*)" data-video-id="',
+        caseSensitive: false,
+      );
+    } 
 
     if(regExp != null) {
       var url = regExp.firstMatch(embeddedCode).group(1);
