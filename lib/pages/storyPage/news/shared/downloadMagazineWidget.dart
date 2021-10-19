@@ -60,7 +60,7 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
         child: Column(
           children: [
             Text(
-              '下載鏡週刊電子雜誌',
+              '月費、年費會員免費下載電子雜誌',
               style: TextStyle(
                 fontSize: 20,
                 color: Colors.white,
