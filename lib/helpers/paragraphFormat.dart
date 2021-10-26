@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter_embedded_webview/flutter_embedded_webview.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/contentList.dart';
 import 'package:readr_app/models/paragraph.dart';
 import 'package:readr_app/widgets/annotationWidget.dart';
-import 'package:readr_app/widgets/embeddedCodeWidget.dart';
 import 'package:readr_app/widgets/imageAndDescriptionSlideShowWidget.dart';
 import 'package:readr_app/widgets/imageDescriptionWidget.dart';
 import 'package:readr_app/widgets/infoBoxWidget.dart';

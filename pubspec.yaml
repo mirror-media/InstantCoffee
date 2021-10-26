@@ -43,6 +43,12 @@ dependencies:
   fluttertoast: ^7.1.8
   # webview
   webview_flutter: ^2.1.1
+  # mirrormedia embedded code
+  flutter_embedded_webview: 
+    git:
+      url: git://github.com/mirror-media/flutter_embedded_webview.git
+      ref: master
+      version: ^0.0.1
   # local storage
   localstorage: ^4.0.0+1
   # A Flutter plugin to store data in secure storage
