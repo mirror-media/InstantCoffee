@@ -272,7 +272,9 @@ class SignInWithGoogle extends LoginEvents {
   ) async*{
     print(this.toString());
     try{
-      yield GoogleLoading();
+      yield LoginLoading(
+        loginType: LoginType.google
+      );
       FirebaseLoginStatus frebaseLoginStatus = await loginRepos.signInWithGoogle();
       yield* handleFirebaseThirdPartyLogin(
         context, 
@@ -317,7 +319,9 @@ class SignInWithFacebook extends LoginEvents {
   ) async*{
     print(this.toString());
     try{
-      yield FacebookLoading();
+      yield LoginLoading(
+        loginType: LoginType.facebook
+      );
       FirebaseLoginStatus frebaseLoginStatus = await loginRepos.signInWithFacebook();
       yield* handleFirebaseThirdPartyLogin(
         context, 
@@ -362,7 +366,9 @@ class SignInWithApple extends LoginEvents {
   ) async*{
     print(this.toString());
     try{
-      yield AppleLoading();
+      yield LoginLoading(
+        loginType: LoginType.apple
+      );
       FirebaseLoginStatus frebaseLoginStatus = await loginRepos.signInWithApple();
       yield* handleFirebaseThirdPartyLogin(
         context, 

@@ -83,72 +83,7 @@ class _LoginFormState extends State<LoginForm> {
           ),
         ),
         SliverToBoxAdapter(child: SizedBox(height: 16)),
-        if(!(widget.state is GoogleLoading))
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-              child: _thirdPartyLoginButton(
-                'assets/image/google_icon.png',
-                '使用 Google 登入',
-                state is LoginInitState
-                ? () => _signInWithGoogle()
-                : null,
-              ),
-            ),
-          ),
-        if(widget.state is GoogleLoading)
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-              child: _thirdPartyLoadingButton(),
-            ),
-          ),
-        SliverToBoxAdapter(child: SizedBox(height: 16)),
-        if(!(widget.state is FacebookLoading))
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-              child: _thirdPartyLoginButton(
-                'assets/image/facebook_icon.png',
-                '使用 Facebook 登入',
-                state is LoginInitState
-                ? () => _signInWithFacebook()
-                : null,
-              ),
-            ),
-          ),
-        if(widget.state is FacebookLoading)
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-              child: _thirdPartyLoadingButton(),
-            ),
-          ),
-        SliverToBoxAdapter(child: SizedBox(height: 16)),
-        if(Platform.isIOS)
-        ...[
-          if(!(widget.state is AppleLoading))
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-                child: _thirdPartyLoginButton(
-                  'assets/image/apple_icon.png', 
-                  '使用 Apple 登入', 
-                  state is LoginInitState
-                  ? () => _signInWithApple()
-                  : null,
-                ),
-              ),
-            ),
-          if(widget.state is AppleLoading)
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-                child: _thirdPartyLoadingButton(),
-              ),
-            ),
-          SliverToBoxAdapter(child: SizedBox(height: 16)),
-        ],
+        _thirdPartyLoginBlock(state),
         if(widget.state is RegisteredByAnotherMethod)
           SliverToBoxAdapter(
             child: Padding(
@@ -195,6 +130,70 @@ class _LoginFormState extends State<LoginForm> {
           ),
         ),
       ],
+    );
+  }
+
+
+  Widget _thirdPartyLoginBlock(LoginState state) {
+    bool isLoginInitState = state is LoginInitState;
+
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Padding(
+          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+          child: state is LoginLoading && state.loginType == LoginType.google
+          ? _thirdPartyLoadingButton()
+          : _googleLoginButton(isActive: isLoginInitState)
+        ),
+        SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+          child: state is LoginLoading && state.loginType == LoginType.facebook
+          ? _thirdPartyLoadingButton()
+          : _facebookLoginButton(isActive: isLoginInitState)
+        ),
+        SizedBox(height: 16),
+        if(Platform.isIOS)
+        ...[
+          Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+            child: state is LoginLoading && state.loginType == LoginType.apple
+            ? _thirdPartyLoadingButton()
+            : _appleLoginButton(isActive: isLoginInitState)
+          ),
+          SizedBox(height: 16),
+        ],
+      ]),
+    );
+  }
+
+  Widget _googleLoginButton({bool isActive = true}) {
+    return _thirdPartyLoginButton(
+      'assets/image/google_icon.png',
+      '使用 Google 登入',
+      isActive
+      ? () => _signInWithGoogle()
+      : null,
+    );
+  }
+
+  Widget _facebookLoginButton({bool isActive = true}) {
+    return _thirdPartyLoginButton(
+      'assets/image/facebook_icon.png',
+      '使用 Facebook 登入',
+      isActive
+      ? () => _signInWithFacebook()
+      : null,
+    );  
+  }
+
+  Widget _appleLoginButton({bool isActive = true}) {
+    return _thirdPartyLoginButton(
+      'assets/image/apple_icon.png', 
+      '使用 Apple 登入', 
+      isActive
+      ? () => _signInWithApple()
+      : null,
     );
   }
 

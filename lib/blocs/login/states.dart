@@ -15,11 +15,14 @@ class LoginSuccess extends LoginState {
   });
 }
 
-class GoogleLoading extends LoginState {}
+enum LoginType { google, facebook, apple }
 
-class FacebookLoading extends LoginState {}
-
-class AppleLoading extends LoginState {}
+class LoginLoading extends LoginState {
+  final LoginType loginType;
+  LoginLoading({
+    this.loginType,
+  });
+}
 
 class FetchSignInMethodsForEmailLoading extends LoginState {}
 
