@@ -13,12 +13,12 @@ import 'package:readr_app/pages/appUpdatePage.dart';
 import 'package:readr_app/pages/homePage.dart';
 import 'package:readr_app/services/emailSignInService.dart';
 
-class MirrorApp extends StatefulWidget {
+class InitialApp extends StatefulWidget {
   @override
-  _MirrorAppState createState() => _MirrorAppState();
+  _InitialAppState createState() => _InitialAppState();
 }
 
-class _MirrorAppState extends State<MirrorApp> {
+class _InitialAppState extends State<InitialApp> {
   GlobalKey _settingKey;
   AppUpgradeHelper _appUpgradeHelper;
   StreamController _configController;

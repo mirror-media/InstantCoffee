@@ -5,7 +5,7 @@ import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberProfile/bloc.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
-import 'package:readr_app/mirrorApp.dart';
+import 'package:readr_app/initialApp.dart';
 import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/pages/emailLogin/emailLoginPage.dart';
@@ -58,7 +58,7 @@ class RouteGenerator {
       case root:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => MirrorApp()
+          builder: (_) => InitialApp()
         );
       case search:
         return MaterialPageRoute(
