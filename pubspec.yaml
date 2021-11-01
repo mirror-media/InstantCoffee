@@ -48,7 +48,7 @@ dependencies:
     git:
       url: git://github.com/mirror-media/flutter_embedded_webview.git
       ref: master
-      version: ^0.0.1
+      version: ^0.1.1
   # local storage
   localstorage: ^4.0.0+1
   # A Flutter plugin to store data in secure storage
