@@ -25,32 +25,25 @@ class _LoginFormState extends State<LoginForm> {
 
   _signInWithGoogle() async {
     context.read<LoginBloc>().add(
-      SignInWithGoogle(
-        context,
-      )
+      SignInWithGoogle()
     );
   }
 
   _signInWithFacebook() async {
     context.read<LoginBloc>().add(
-      SignInWithFacebook(
-        context,
-      )
+      SignInWithFacebook()
     );
   }
 
   _signInWithApple() async {
     context.read<LoginBloc>().add(
-      SignInWithApple(
-        context,
-      )
+      SignInWithApple()
     );
   }
 
   _fetchSignInMethodsForEmail(String email) async {
     context.read<LoginBloc>().add(
       FetchSignInMethodsForEmail(
-        context,
         email
       )
     );

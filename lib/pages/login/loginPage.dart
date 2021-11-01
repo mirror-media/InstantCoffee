@@ -21,6 +21,7 @@ class LoginPage extends StatelessWidget {
       body: BlocProvider(
         create: (context) => LoginBloc(
           loginRepos: LoginServices(),
+          
           routeName: routeName,
           routeArguments: routeArguments,
         ),
