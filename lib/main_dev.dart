@@ -36,6 +36,7 @@ class MyApp extends StatelessWidget {
     ]);
     
     return MaterialApp(
+      navigatorKey: RouteGenerator.navigatorKey,
       debugShowCheckedModeBanner: false,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,

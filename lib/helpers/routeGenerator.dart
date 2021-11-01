@@ -31,6 +31,8 @@ import 'package:readr_app/pages/memberCenter/editMemberContactInfo/editMemberCon
 import 'package:url_launcher/url_launcher.dart';
 
 class RouteGenerator {
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();  
+
   static const String root = '/';
   static const String search = '/search';
   static const String login = '/login';
