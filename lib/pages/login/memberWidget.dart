@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
-import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
-import 'package:readr_app/blocs/memberCenter/editMemberProfile/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/memberDetail/memberDetailCubit.dart';
 import 'package:readr_app/blocs/memberCenter/paymentRecord/paymentRecordBloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscribedArticles/subscribedArticlesCubit.dart';
@@ -18,7 +16,6 @@ import 'package:readr_app/pages/memberCenter/subscriptionDetail/memberSubscripti
 import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
 import 'package:readr_app/services/emailSignInService.dart';
 import 'package:readr_app/services/loginService.dart';
-import 'package:readr_app/services/memberService.dart';
 
 class MemberWidget extends StatefulWidget {
   final String israfelId;
