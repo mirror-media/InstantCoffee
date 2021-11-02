@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # dev version
 # version: 4.1.1+28
 # prod version
-version: 4.1.1+352
+version: 4.1.1+353
 
 environment:
   sdk: ">=2.10.0 <3.0.0"
