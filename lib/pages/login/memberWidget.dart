@@ -259,15 +259,6 @@ class _MemberWidgetState extends State<MemberWidget> {
         await RouteGenerator.navigateToEditMemberProfile(
           editMemberProfileBloc
         );
-
-        bool updateSuccess = editMemberProfileBloc.memberProfileUpdateSuccess;
-        if(updateSuccess!= null) {
-          if(updateSuccess) {
-            _showSuccessToast('儲存成功');
-          } else {
-            _showErrorToast('儲存失敗，請再試一次');
-          }
-        }
       },
     );
   }
