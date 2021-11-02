@@ -287,15 +287,6 @@ class _MemberWidgetState extends State<MemberWidget> {
         await RouteGenerator.navigateToEditMemberContactInfo(
           editMemberContactInfoBloc
         );
-
-        bool updateSuccess = editMemberContactInfoBloc.memberContactInfoUpdateSuccess;
-        if(updateSuccess!= null) {
-          if(updateSuccess) {
-            _showSuccessToast('儲存成功');
-          } else {
-            _showSuccessToast('儲存失敗，請再試一次');
-          }
-        }
       },
     );
   }

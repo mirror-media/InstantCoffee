@@ -55,11 +55,6 @@ class _EditMemberContactInfoWidgetState extends State<EditMemberContactInfoWidge
     );
   }
 
-  void _delayNavigatorPop() async{
-    await Future.delayed(Duration());
-    Navigator.of(context).pop();
-  }
-
   @override
   Widget build(BuildContext context) {
     if(_countryList == null || _cityList == null) {
@@ -93,28 +88,6 @@ class _EditMemberContactInfoWidgetState extends State<EditMemberContactInfoWidge
 
           return Scaffold(
             appBar: _buildBar(context, member, isSaveLoading: true),
-            body: _contactInfoForm(member),
-          );
-        }
-
-        if (state is SavingSuccess) {
-          context.read<EditMemberContactInfoBloc>().memberContactInfoUpdateSuccess = true;
-          _delayNavigatorPop();
-          Member member = state.member;
-          
-          return Scaffold(
-            appBar: _buildBar(context, member),
-            body: _contactInfoForm(member),
-          );
-        }
-
-        if (state is SavingError) {
-          context.read<EditMemberContactInfoBloc>().memberContactInfoUpdateSuccess = false;
-          _delayNavigatorPop();
-          Member member = state.member;
-
-          return Scaffold(
-            appBar: _buildBar(context, member),
             body: _contactInfoForm(member),
           );
         }
