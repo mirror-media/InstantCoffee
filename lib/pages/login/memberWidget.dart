@@ -282,12 +282,7 @@ class _MemberWidgetState extends State<MemberWidget> {
   Widget _memberContactInfoButton() {
     return _navigateButton(
       '聯絡資訊',
-      () async{
-        EditMemberContactInfoBloc editMemberContactInfoBloc = EditMemberContactInfoBloc(memberRepos: MemberService());
-        await RouteGenerator.navigateToEditMemberContactInfo(
-          editMemberContactInfoBloc
-        );
-      },
+      () => RouteGenerator.navigateToEditMemberContactInfo(),
     );
   }
 

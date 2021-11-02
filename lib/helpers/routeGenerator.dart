@@ -137,12 +137,9 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case editMemberContactInfo:
-        Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => EditMemberContactInfoPage(
-            editMemberContactInfoBloc: args['editMemberContactInfoBloc'],
-          ),
+          builder: (context) => EditMemberContactInfoPage(),
           fullscreenDialog: true,
         );
       case deleteMember:
@@ -347,15 +344,8 @@ class RouteGenerator {
     navigatorKey.currentState.pushNamed(editMemberProfile);
   }
 
-  static Future<void> navigateToEditMemberContactInfo(
-    EditMemberContactInfoBloc editMemberContactInfoBloc,
-  ) async{
-    await navigatorKey.currentState.pushNamed(
-      editMemberContactInfo,
-      arguments: {
-        'editMemberContactInfoBloc': editMemberContactInfoBloc,
-      },
-    );
+  static void navigateToEditMemberContactInfo() {
+    navigatorKey.currentState.pushNamed(editMemberContactInfo);
   }
 
   static void navigateToDeleteMember(
