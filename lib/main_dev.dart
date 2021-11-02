@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -16,8 +19,12 @@ void main() async{
   }
 
   WidgetsFlutterBinding.ensureInitialized();
-  MobileAds.instance.initialize();
   await Firebase.initializeApp();
+  
+  if (Platform.isIOS) {
+    await AppTrackingTransparency.requestTrackingAuthorization();
+  }
+  MobileAds.instance.initialize();
   Environment().initConfig(BuildFlavor.development);
   
   runApp(MirrorMediaApp());
