@@ -254,12 +254,7 @@ class _MemberWidgetState extends State<MemberWidget> {
   Widget _memberProfileButton() {
     return _navigateButton(
       '個人資料',
-      () async{
-        EditMemberProfileBloc editMemberProfileBloc = EditMemberProfileBloc(memberRepos: MemberService());
-        await RouteGenerator.navigateToEditMemberProfile(
-          editMemberProfileBloc
-        );
-      },
+      () => RouteGenerator.navigateToEditMemberProfile(),
     );
   }
 

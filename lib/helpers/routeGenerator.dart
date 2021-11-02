@@ -131,12 +131,9 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case editMemberProfile:
-        Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => EditMemberProfilePage(
-            editMemberProfileBloc: args['editMemberProfileBloc'],
-          ),
+          builder: (context) => EditMemberProfilePage(),
           fullscreenDialog: true,
         );
       case editMemberContactInfo:
@@ -346,15 +343,8 @@ class RouteGenerator {
     );
   }
 
-  static Future<void> navigateToEditMemberProfile(
-    EditMemberProfileBloc editMemberProfileBloc,
-  ) async{
-    await navigatorKey.currentState.pushNamed(
-      editMemberProfile,
-      arguments: {
-        'editMemberProfileBloc': editMemberProfileBloc,
-      },
-    );
+  static void navigateToEditMemberProfile() {
+    navigatorKey.currentState.pushNamed(editMemberProfile);
   }
 
   static Future<void> navigateToEditMemberContactInfo(
