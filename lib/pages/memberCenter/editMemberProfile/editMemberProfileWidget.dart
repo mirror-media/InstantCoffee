@@ -33,11 +33,6 @@ class _EditMemberProfileWidgetState extends State<EditMemberProfileWidget> {
     );
   }
 
-  void _delayNavigatorPop() async{
-    await Future.delayed(Duration());
-    Navigator.of(context).pop();
-  }
-
   String _displayMemberEmail(String inputEmail) {
     if(inputEmail == null || 
       // privaterelay.appleid.com is a anonymous email provided by apple
@@ -78,28 +73,6 @@ class _EditMemberProfileWidgetState extends State<EditMemberProfileWidget> {
 
           return Scaffold(
             appBar: _buildBar(context, member, isSaveLoading: true),
-            body: _memberProfileForm(member),
-          );
-        }
-
-        if (state is SavingSuccess) {
-          context.read<EditMemberProfileBloc>().memberProfileUpdateSuccess = true;
-          _delayNavigatorPop();
-          Member member = state.member;
-          
-          return Scaffold(
-            appBar: _buildBar(context, member),
-            body: _memberProfileForm(member),
-          );
-        }
-
-        if (state is SavingError) {
-          context.read<EditMemberProfileBloc>().memberProfileUpdateSuccess = false;
-          _delayNavigatorPop();
-          Member member = state.member;
-
-          return Scaffold(
-            appBar: _buildBar(context, member),
             body: _memberProfileForm(member),
           );
         }

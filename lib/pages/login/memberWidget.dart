@@ -254,21 +254,7 @@ class _MemberWidgetState extends State<MemberWidget> {
   Widget _memberProfileButton() {
     return _navigateButton(
       '個人資料',
-      () async{
-        EditMemberProfileBloc editMemberProfileBloc = EditMemberProfileBloc(memberRepos: MemberService());
-        await RouteGenerator.navigateToEditMemberProfile(
-          editMemberProfileBloc
-        );
-
-        bool updateSuccess = editMemberProfileBloc.memberProfileUpdateSuccess;
-        if(updateSuccess!= null) {
-          if(updateSuccess) {
-            _showSuccessToast('儲存成功');
-          } else {
-            _showErrorToast('儲存失敗，請再試一次');
-          }
-        }
-      },
+      () => RouteGenerator.navigateToEditMemberProfile(),
     );
   }
 
@@ -296,21 +282,7 @@ class _MemberWidgetState extends State<MemberWidget> {
   Widget _memberContactInfoButton() {
     return _navigateButton(
       '聯絡資訊',
-      () async{
-        EditMemberContactInfoBloc editMemberContactInfoBloc = EditMemberContactInfoBloc(memberRepos: MemberService());
-        await RouteGenerator.navigateToEditMemberContactInfo(
-          editMemberContactInfoBloc
-        );
-
-        bool updateSuccess = editMemberContactInfoBloc.memberContactInfoUpdateSuccess;
-        if(updateSuccess!= null) {
-          if(updateSuccess) {
-            _showSuccessToast('儲存成功');
-          } else {
-            _showSuccessToast('儲存失敗，請再試一次');
-          }
-        }
-      },
+      () => RouteGenerator.navigateToEditMemberContactInfo(),
     );
   }
 

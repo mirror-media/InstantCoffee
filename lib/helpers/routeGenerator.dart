@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
-import 'package:readr_app/blocs/memberCenter/editMemberProfile/bloc.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
 import 'package:readr_app/initialApp.dart';
@@ -131,21 +129,15 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case editMemberProfile:
-        Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => EditMemberProfilePage(
-            editMemberProfileBloc: args['editMemberProfileBloc'],
-          ),
+          builder: (context) => EditMemberProfilePage(),
           fullscreenDialog: true,
         );
       case editMemberContactInfo:
-        Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => EditMemberContactInfoPage(
-            editMemberContactInfoBloc: args['editMemberContactInfoBloc'],
-          ),
+          builder: (context) => EditMemberContactInfoPage(),
           fullscreenDialog: true,
         );
       case deleteMember:
@@ -346,26 +338,12 @@ class RouteGenerator {
     );
   }
 
-  static Future<void> navigateToEditMemberProfile(
-    EditMemberProfileBloc editMemberProfileBloc,
-  ) async{
-    await navigatorKey.currentState.pushNamed(
-      editMemberProfile,
-      arguments: {
-        'editMemberProfileBloc': editMemberProfileBloc,
-      },
-    );
+  static void navigateToEditMemberProfile() {
+    navigatorKey.currentState.pushNamed(editMemberProfile);
   }
 
-  static Future<void> navigateToEditMemberContactInfo(
-    EditMemberContactInfoBloc editMemberContactInfoBloc,
-  ) async{
-    await navigatorKey.currentState.pushNamed(
-      editMemberContactInfo,
-      arguments: {
-        'editMemberContactInfoBloc': editMemberContactInfoBloc,
-      },
-    );
+  static void navigateToEditMemberContactInfo() {
+    navigatorKey.currentState.pushNamed(editMemberContactInfo);
   }
 
   static void navigateToDeleteMember(

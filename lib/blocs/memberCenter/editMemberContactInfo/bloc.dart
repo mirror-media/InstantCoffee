@@ -7,8 +7,6 @@ class EditMemberContactInfoBloc extends Bloc<EditMemberContactInfoEvents, EditMe
   final MemberRepos memberRepos;
   EditMemberContactInfoBloc({this.memberRepos}) : super(EditMemberContactInfoInitState());
 
-  bool memberContactInfoUpdateSuccess;
-
   @override
   Stream<EditMemberContactInfoState> mapEventToState(EditMemberContactInfoEvents event) async* {
     yield* event.run(memberRepos);
