@@ -134,7 +134,7 @@ class MagazineItemWidget extends StatelessWidget {
         fontSize: 16.0
       );
     } else {
-      RouteGenerator.navigateToMagazineBrowser(context, magazine);
+      RouteGenerator.navigateToMagazineBrowser(magazine);
     }
   }
 }

@@ -86,7 +86,6 @@ class _MagazinePageState extends State<MagazinePage> {
                   ),
                 ),
                 onPressed: () => RouteGenerator.navigateToSubscriptionSelect(
-                  context, 
                   widget.subscritionType
                 ),
               ),

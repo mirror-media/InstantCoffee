@@ -131,7 +131,7 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
                 ),
               ),
             ),
-            onPressed: () => RouteGenerator.navigateToSubscriptionSelect(context, _subscritionType),
+            onPressed: () => RouteGenerator.navigateToSubscriptionSelect(_subscritionType),
           ),
         ) : Container(),
       ],

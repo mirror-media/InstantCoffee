@@ -176,7 +176,7 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
           ),
         ],
       ),
-      onTap: () => RouteGenerator.navigateToListeningStory(context, record.slug),
+      onTap: () => RouteGenerator.navigateToListeningStory(record.slug),
     );
   }
 
@@ -228,7 +228,7 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
           ],
         ),
       ),
-      onTap: () => RouteGenerator.navigateToListeningStory(context, record.slug),
+      onTap: () => RouteGenerator.navigateToListeningStory(record.slug),
     );
   }
 }

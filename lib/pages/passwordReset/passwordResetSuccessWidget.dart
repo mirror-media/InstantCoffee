@@ -62,7 +62,7 @@ class PasswordResetSuccessWidget extends StatelessWidget {
       ),
       onTap: () {
         Navigator.of(context).popUntil((route) => route.isFirst);
-        RouteGenerator.navigateToLogin(context);
+        RouteGenerator.navigateToLogin();
       }
     );
   }

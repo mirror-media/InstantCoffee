@@ -43,9 +43,9 @@ class FirebaseMessangingHelper {
       
       if(fcmData != null && fcmData.slug != null) {
         if(fcmData.isListeningPage) {
-          RouteGenerator.navigateToListeningStory(context, fcmData.slug);
+          RouteGenerator.navigateToListeningStory(fcmData.slug);
         } else {
-          RouteGenerator.navigateToStory(context, fcmData.slug);
+          RouteGenerator.navigateToStory(fcmData.slug);
         }
       }
     }

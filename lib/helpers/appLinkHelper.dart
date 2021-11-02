@@ -57,9 +57,9 @@ class AppLinkHelper {
     if(slug != null && slug != '') {
       Navigator.of(context).popUntil((route) => route.isFirst);
       if(isListeningPage) {
-        RouteGenerator.navigateToListeningStory(context, slug);
+        RouteGenerator.navigateToListeningStory(slug);
       } else {
-        RouteGenerator.navigateToStory(context, slug);
+        RouteGenerator.navigateToStory(slug);
       }
     }
   }

@@ -234,7 +234,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
         key: widget.settingKey,
         icon: Icon(Icons.settings),
         onPressed: () => RouteGenerator.navigateToNotificationSettings(
-          context, 
           widget.onBoardingBloc
         ),
       ),
@@ -245,12 +244,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
         IconButton(
           icon: Icon(Icons.search),
           tooltip: 'Search',
-          onPressed: () => RouteGenerator.navigateToSearch(context),
+          onPressed: () => RouteGenerator.navigateToSearch(),
         ),
         IconButton(
           icon: Icon(Icons.person),
           tooltip: 'Member',
-          onPressed: () => RouteGenerator.navigateToLogin(context),
+          onPressed: () => RouteGenerator.navigateToLogin(),
         ),
       ],
     );

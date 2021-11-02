@@ -20,10 +20,9 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
   void _delayNavigator(SubscritionType subscritionType) async{
     await Future.delayed(Duration());
     if(subscritionType != null) {
-      RouteGenerator.navigateToMagazine(context, subscritionType);
+      RouteGenerator.navigateToMagazine(subscritionType);
     } else {
       RouteGenerator.navigateToLogin(
-        context, 
         routeName: RouteGenerator.magazine,
         routeArguments: {
           'subscritionType': subscritionType,

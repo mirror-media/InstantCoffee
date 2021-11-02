@@ -36,7 +36,7 @@ class CarouselDisplayWidget extends StatelessWidget {
         ],
       ),
       onTap: () {
-        RouteGenerator.navigateToStory(context, record.slug, isMemberCheck: record.isMemberCheck);
+        RouteGenerator.navigateToStory(record.slug, isMemberCheck: record.isMemberCheck);
       },
     );
   }

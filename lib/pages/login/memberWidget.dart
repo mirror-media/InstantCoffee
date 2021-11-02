@@ -247,7 +247,7 @@ class _MemberWidgetState extends State<MemberWidget> {
       : "變更方案";
     return _navigateButton(
       buttonText,
-      () => RouteGenerator.navigateToSubscriptionSelect(context, subscritionType),
+      () => RouteGenerator.navigateToSubscriptionSelect(subscritionType),
     );
   }
 
@@ -257,7 +257,6 @@ class _MemberWidgetState extends State<MemberWidget> {
       () async{
         EditMemberProfileBloc editMemberProfileBloc = EditMemberProfileBloc(memberRepos: MemberService());
         await RouteGenerator.navigateToEditMemberProfile(
-          context, 
           editMemberProfileBloc
         );
 
@@ -279,7 +278,6 @@ class _MemberWidgetState extends State<MemberWidget> {
       () async{
         PasswordUpdateBloc passwordUpdateBloc = PasswordUpdateBloc(emailSignInRepos: EmailSignInServices());
         await RouteGenerator.navigateToPasswordUpdate(
-          context,
           passwordUpdateBloc,
         );
 
@@ -301,7 +299,6 @@ class _MemberWidgetState extends State<MemberWidget> {
       () async{
         EditMemberContactInfoBloc editMemberContactInfoBloc = EditMemberContactInfoBloc(memberRepos: MemberService());
         await RouteGenerator.navigateToEditMemberContactInfo(
-          context,
           editMemberContactInfoBloc
         );
 
@@ -410,7 +407,6 @@ class _MemberWidgetState extends State<MemberWidget> {
         ),
       ),
       onTap: () => RouteGenerator.navigateToDeleteMember(
-        context,
         widget.israfelId,
         widget.subscritionType
       )

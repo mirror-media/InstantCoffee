@@ -140,7 +140,7 @@ class _MemberSubscribedArticlePageState extends State<MemberSubscribedArticlePag
             ],
           ),
         ),
-        onTap: () => RouteGenerator.navigateToStory(context, subscribedArticle.slug),
+        onTap: () => RouteGenerator.navigateToStory(subscribedArticle.slug),
       );
   }
 }

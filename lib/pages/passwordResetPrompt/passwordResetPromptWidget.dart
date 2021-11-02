@@ -63,7 +63,7 @@ class PasswordResetPromptWidget extends StatelessWidget {
         ),
       ),
       onTap: () {
-        RouteGenerator.navigateToPasswordResetEmail(context, email: email);
+        RouteGenerator.navigateToPasswordResetEmail(email: email);
       },
     );
   }

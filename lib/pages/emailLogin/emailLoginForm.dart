@@ -149,7 +149,6 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
         ),
       ),
       onTap: () => RouteGenerator.navigateToPasswordResetEmail(
-        context, 
         email: widget.email
       ),
     );

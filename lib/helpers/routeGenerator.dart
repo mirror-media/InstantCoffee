@@ -251,18 +251,17 @@ class RouteGenerator {
     );
   }
 
-  static void navigateToSearch(BuildContext context) {
-    Navigator.of(context).pushNamed(search);
+  static void navigateToSearch() {
+    navigatorKey.currentState.pushNamed(search);
   }
 
   static void navigateToLogin(
-    BuildContext context, 
     {
       String routeName = login,
       Object routeArguments,
     }
   ) {
-    Navigator.of(context).pushNamed(
+    navigatorKey.currentState.pushNamed(
       login,
       arguments: {
         'routeName': routeName,
@@ -272,12 +271,11 @@ class RouteGenerator {
   }
 
   static Future<void> navigateToEmailRegistered(
-    BuildContext context, 
     {
       String email,
     }
   ) async{
-    await Navigator.of(context).pushNamed(
+    await navigatorKey.currentState.pushNamed(
       emailRegistered,
       arguments: {
         'email': email,
@@ -286,12 +284,11 @@ class RouteGenerator {
   }
 
   static Future<void> navigateToEmailLogin(
-    BuildContext context, 
     {
       String email,
     }
   ) async{
-    await Navigator.of(context).pushNamed(
+    await navigatorKey.currentState.pushNamed(
       emailLogin,
       arguments: {
         'email': email,
@@ -300,12 +297,11 @@ class RouteGenerator {
   }
 
   static Future<void> navigateToPasswordResetPrompt(
-    BuildContext context,
     {
       String email,
     }
   ) async{
-    await Navigator.of(context).pushNamed(
+    await navigatorKey.currentState.pushNamed(
       passwordResetPrompt,
       arguments: {
         'email': email,
@@ -314,12 +310,11 @@ class RouteGenerator {
   }
 
   static Future<void> navigateToPasswordResetEmail(
-    BuildContext context,
     {
       String email,
     }
   ) async{
-    await Navigator.of(context).pushNamed(
+    await navigatorKey.currentState.pushNamed(
       passwordResetEmail,
       arguments: {
         'email': email,
@@ -328,12 +323,11 @@ class RouteGenerator {
   }
   
   static void navigateToPasswordReset(
-    BuildContext context, 
     {
       String code,
     }
   ) {
-    Navigator.of(context).pushNamed(
+    navigatorKey.currentState.pushNamed(
       passwordReset,
       arguments: {
         'code': code,
@@ -342,10 +336,9 @@ class RouteGenerator {
   }
 
   static Future<void> navigateToPasswordUpdate(
-    BuildContext context,
     PasswordUpdateBloc passwordUpdateBloc,
   ) async{
-    await Navigator.of(context).pushNamed(
+    await navigatorKey.currentState.pushNamed(
       passwordUpdate,
       arguments: {
         'passwordUpdateBloc': passwordUpdateBloc,
@@ -354,10 +347,9 @@ class RouteGenerator {
   }
 
   static Future<void> navigateToEditMemberProfile(
-    BuildContext context,
     EditMemberProfileBloc editMemberProfileBloc,
   ) async{
-    await Navigator.of(context).pushNamed(
+    await navigatorKey.currentState.pushNamed(
       editMemberProfile,
       arguments: {
         'editMemberProfileBloc': editMemberProfileBloc,
@@ -366,10 +358,9 @@ class RouteGenerator {
   }
 
   static Future<void> navigateToEditMemberContactInfo(
-    BuildContext context,
     EditMemberContactInfoBloc editMemberContactInfoBloc,
   ) async{
-    await Navigator.of(context).pushNamed(
+    await navigatorKey.currentState.pushNamed(
       editMemberContactInfo,
       arguments: {
         'editMemberContactInfoBloc': editMemberContactInfoBloc,
@@ -378,11 +369,10 @@ class RouteGenerator {
   }
 
   static void navigateToDeleteMember(
-    BuildContext context, 
     String israfelId,
     SubscritionType subscritionType
   ) {
-    Navigator.of(context).pushNamed(
+    navigatorKey.currentState.pushNamed(
       deleteMember,
       arguments: {
         'israfelId': israfelId,
@@ -391,23 +381,22 @@ class RouteGenerator {
     );
   }
 
-  static void navigateToEmailVerification(BuildContext context) {
-    Navigator.of(context).pushNamed(emailVerification,);
+  static void navigateToEmailVerification() {
+    navigatorKey.currentState.pushNamed(emailVerification,);
   }
 
-  static void navigateToNotificationSettings(BuildContext context, OnBoardingBloc onBoardingBloc) {
-    Navigator.of(context).pushNamed(
+  static void navigateToNotificationSettings(OnBoardingBloc onBoardingBloc) {
+    navigatorKey.currentState.pushNamed(
       notificationSettings,
       arguments: onBoardingBloc,
     );
   }
 
   static void navigateToStory(
-    BuildContext context, 
     String slug,
     {bool isMemberCheck = true}
   ) {
-    Navigator.of(context).pushNamed(
+    navigatorKey.currentState.pushNamed(
       story,
       arguments: {
         'slug': slug,
@@ -416,8 +405,8 @@ class RouteGenerator {
     );
   }
 
-  static void navigateToListeningStory(BuildContext context, String slug) {
-    Navigator.of(context).pushNamed(
+  static void navigateToListeningStory(String slug) {
+    navigatorKey.currentState.pushNamed(
       listeningStory,
       arguments: {
         'slug': slug
@@ -426,10 +415,9 @@ class RouteGenerator {
   }
 
   static void navigateToMagazine(
-    BuildContext context,
     SubscritionType subscritionType,
   ) {
-    Navigator.of(context).pushNamed(
+    navigatorKey.currentState.pushNamed(
       magazine,
       arguments: {
         'subscritionType': subscritionType
@@ -438,7 +426,6 @@ class RouteGenerator {
   }
 
   static void navigateToMagazineBrowser(
-    BuildContext context,
     Magazine magazine
   ) async{
     // https://github.com/flutter/flutter/issues/48245
@@ -451,7 +438,7 @@ class RouteGenerator {
         throw 'Could not launch $magazine.pdfUrl';
       }
     } else {
-      Navigator.of(context).pushNamed(
+      navigatorKey.currentState.pushNamed(
         magazineBrowser,
         arguments: {
           'magazine': magazine,
@@ -461,12 +448,11 @@ class RouteGenerator {
   }
 
   static void navigateToSubscriptionSelect(
-    BuildContext context, 
     SubscritionType subscritionType,
     {bool usePushReplacement = false}
   ) {
     if(usePushReplacement){
-      Navigator.of(context).pushReplacementNamed(
+      navigatorKey.currentState.pushReplacementNamed(
         subscriptionSelect,
         arguments: {
           'subscritionType': subscritionType
@@ -474,7 +460,7 @@ class RouteGenerator {
       );
     }
     else{
-      Navigator.of(context).pushNamed(
+      navigatorKey.currentState.pushNamed(
         subscriptionSelect,
         arguments: {
           'subscritionType': subscritionType
@@ -483,8 +469,8 @@ class RouteGenerator {
     }
   }
 
-  static void printRouteSettings(BuildContext context) {
-    var route = ModalRoute.of(context);
+  static void printRouteSettings() {
+    var route = ModalRoute.of(navigatorKey.currentContext);
     if(route!=null){
       print('route is current: ${route.isCurrent}');
       print('route name: ${route.settings.name}');

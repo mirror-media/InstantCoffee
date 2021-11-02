@@ -80,12 +80,10 @@ class JoinMemberBlock extends StatelessWidget {
                     onPressed: () {
                       if(isMember) {
                         RouteGenerator.navigateToSubscriptionSelect(
-                          context,
                           SubscritionType.none,
                         );
                       } else {
                         RouteGenerator.navigateToLogin(
-                          context,
                           routeName: RouteGenerator.story,
                           routeArguments: {
                             'slug': storySlug,
@@ -113,7 +111,6 @@ class JoinMemberBlock extends StatelessWidget {
                       ),
                     ),
                     onTap: () => RouteGenerator.navigateToLogin(
-                      context,
                       routeName: RouteGenerator.story,
                       routeArguments: {
                         'slug': storySlug,

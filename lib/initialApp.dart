@@ -36,7 +36,6 @@ class _InitialAppState extends State<InitialApp> {
           if(deepLink.queryParameters['mode'] == 'resetPassword') {
             Navigator.of(context).popUntil((route) => route.isFirst);
             RouteGenerator.navigateToPasswordReset(
-              context, 
               code: deepLink.queryParameters['oobCode'],
             );
           } else if(deepLink.queryParameters['mode'] == 'verifyEmail') {
@@ -83,7 +82,6 @@ class _InitialAppState extends State<InitialApp> {
       deepLink.path == '/__/auth/action') {
       if(deepLink.queryParameters['mode'] == 'resetPassword') {
         RouteGenerator.navigateToPasswordReset(
-          context, 
           code: deepLink.queryParameters['oobCode'],
         );
       } else if(deepLink.queryParameters['mode'] == 'verifyEmail') {
@@ -202,7 +200,6 @@ class _InitialAppState extends State<InitialApp> {
                           _onBoardingBloc.status = OnBoardingStatus.FourthPage;
                           onBoarding.function = () {
                             RouteGenerator.navigateToNotificationSettings(
-                              context, 
                               _onBoardingBloc
                             );
                           };
