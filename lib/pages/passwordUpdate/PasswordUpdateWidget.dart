@@ -15,10 +15,6 @@ class PasswordUpdateWidget extends StatefulWidget {
 }
 
 class _PasswordUpdateWidgetState extends State<PasswordUpdateWidget> {
-  void _delayNavigatorPop() async{
-    await Future.delayed(Duration(milliseconds: 0));
-    Navigator.of(context).pop();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +33,6 @@ class _PasswordUpdateWidgetState extends State<PasswordUpdateWidget> {
         if (state is PasswordUpdateSuccess) {
           context.read<PasswordUpdateBloc>().passwordUpdateSuccess = true;
           return PasswordUpdateSuccessWidget();
-        }
-        if (state is PasswordUpdateFail) {
-          context.read<PasswordUpdateBloc>().passwordUpdateSuccess = false;
-          _delayNavigatorPop();
         }
 
         // state is Password Update Init, Loading 

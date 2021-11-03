@@ -265,12 +265,8 @@ class _MemberWidgetState extends State<MemberWidget> {
         );
 
         bool updateSuccess = passwordUpdateBloc.passwordUpdateSuccess;
-        if(updateSuccess!= null) {
-          if(updateSuccess) {
-            _signOut();
-          } else {
-            _showErrorToast('更改密碼失敗');
-          }
+        if(updateSuccess!= null && updateSuccess) {
+          _signOut();
         }
       },
     );
