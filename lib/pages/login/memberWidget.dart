@@ -12,6 +12,7 @@ import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/pages/memberCenter/paymentRecord/memberPaymentRecordPage.dart';
 import 'package:readr_app/pages/memberCenter/subscribedArticle/memberSubscribedArticlePage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionDetail/memberSubscriptionDetailPage.dart';
+import 'package:readr_app/pages/passwordUpdate/passwordUpdatePage.dart';
 import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
 import 'package:readr_app/services/emailSignInService.dart';
 import 'package:readr_app/services/loginService.dart';
@@ -235,14 +236,16 @@ class _MemberWidgetState extends State<MemberWidget> {
       '修改密碼',
       () async{
         PasswordUpdateBloc passwordUpdateBloc = PasswordUpdateBloc(emailSignInRepos: EmailSignInServices());
-        await RouteGenerator.navigateToPasswordUpdate(
-          passwordUpdateBloc,
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => BlocProvider.value(
+              value: BlocProvider.of<LoginBloc>(context),
+              child: PasswordUpdatePage(
+                passwordUpdateBloc: passwordUpdateBloc,
+              ),
+            ),
+          ),
         );
-
-        bool updateSuccess = passwordUpdateBloc.passwordUpdateSuccess;
-        if(updateSuccess!= null && updateSuccess) {
-          _signOut();
-        }
       },
     );
   }
