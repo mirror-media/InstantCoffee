@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/memberCenter/memberDetail/memberDetailCubit.dart';
 import 'package:readr_app/blocs/memberCenter/paymentRecord/paymentRecordBloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscribedArticles/subscribedArticlesCubit.dart';
-import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/pages/memberCenter/paymentRecord/memberPaymentRecordPage.dart';
 import 'package:readr_app/pages/memberCenter/subscribedArticle/memberSubscribedArticlePage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionDetail/memberSubscriptionDetailPage.dart';
+import 'package:readr_app/pages/passwordUpdate/passwordUpdatePage.dart';
 import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
-import 'package:readr_app/services/emailSignInService.dart';
 import 'package:readr_app/services/loginService.dart';
 
 class MemberWidget extends StatefulWidget {
@@ -30,30 +28,6 @@ class MemberWidget extends StatefulWidget {
 }
 
 class _MemberWidgetState extends State<MemberWidget> {
-  _showSuccessToast(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.green,
-      textColor: Colors.white,
-      fontSize: 16.0
-    );
-  }
-
-  _showErrorToast(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-      fontSize: 16.0
-    );
-  }
-
   _signOut() async {
     context.read<LoginBloc>().add(SignOut());
   }
@@ -258,20 +232,15 @@ class _MemberWidgetState extends State<MemberWidget> {
   Widget _changePasswordButton() {
     return _navigateButton(
       '修改密碼',
-      () async{
-        PasswordUpdateBloc passwordUpdateBloc = PasswordUpdateBloc(emailSignInRepos: EmailSignInServices());
-        await RouteGenerator.navigateToPasswordUpdate(
-          passwordUpdateBloc,
+      () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => BlocProvider.value(
+              value: BlocProvider.of<LoginBloc>(context),
+              child: PasswordUpdatePage(),
+            ),
+          ),
         );
-
-        bool updateSuccess = passwordUpdateBloc.passwordUpdateSuccess;
-        if(updateSuccess!= null) {
-          if(updateSuccess) {
-            _signOut();
-          } else {
-            _showErrorToast('更改密碼失敗');
-          }
-        }
       },
     );
   }

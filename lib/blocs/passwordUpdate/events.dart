@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/passwordUpdate/states.dart';
 import 'package:readr_app/helpers/exceptions.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/services/emailSignInService.dart';
 
 abstract class PasswordUpdateEvents{
@@ -67,7 +70,17 @@ class UpdatePassword extends PasswordUpdateEvents {
       if(isSuccess) {
         yield PasswordUpdateSuccess();
       } else {
-        yield PasswordUpdateFail();
+        Fluttertoast.showToast(
+          msg: '更改密碼失敗',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
+        );
+        
+        RouteGenerator.navigatorKey.currentState.pop();
       }
     } on SocketException {
       yield PasswordUpdateError(

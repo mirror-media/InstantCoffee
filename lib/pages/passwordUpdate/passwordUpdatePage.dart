@@ -3,19 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/pages/passwordUpdate/PasswordUpdateWidget.dart';
+import 'package:readr_app/services/emailSignInService.dart';
 
 class PasswordUpdatePage extends StatelessWidget {
-  final PasswordUpdateBloc passwordUpdateBloc;
-  PasswordUpdatePage({
-    @required this.passwordUpdateBloc,
-  });
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
       body: BlocProvider(
-        create: (context) => passwordUpdateBloc,
+        create: (context) => PasswordUpdateBloc(emailSignInRepos: EmailSignInServices()),
         child: PasswordUpdateWidget(),
       ),
     );

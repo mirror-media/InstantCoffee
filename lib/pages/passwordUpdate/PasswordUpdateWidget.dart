@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/login/bloc.dart';
+import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
 import 'package:readr_app/blocs/passwordUpdate/states.dart';
 import 'package:readr_app/pages/passwordUpdate/oldPasswordConfirmForm.dart';
@@ -15,10 +17,6 @@ class PasswordUpdateWidget extends StatefulWidget {
 }
 
 class _PasswordUpdateWidgetState extends State<PasswordUpdateWidget> {
-  void _delayNavigatorPop() async{
-    await Future.delayed(Duration(milliseconds: 0));
-    Navigator.of(context).pop();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +33,8 @@ class _PasswordUpdateWidgetState extends State<PasswordUpdateWidget> {
           );
         }
         if (state is PasswordUpdateSuccess) {
-          context.read<PasswordUpdateBloc>().passwordUpdateSuccess = true;
+          context.read<LoginBloc>().add(SignOut());
           return PasswordUpdateSuccessWidget();
-        }
-        if (state is PasswordUpdateFail) {
-          context.read<PasswordUpdateBloc>().passwordUpdateSuccess = false;
-          _delayNavigatorPop();
         }
 
         // state is Password Update Init, Loading 

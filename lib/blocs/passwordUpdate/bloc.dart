@@ -7,8 +7,6 @@ class PasswordUpdateBloc extends Bloc<PasswordUpdateEvents, PasswordUpdateState>
   final EmailSignInRepos emailSignInRepos;
   PasswordUpdateBloc({this.emailSignInRepos}) : super(OldPasswordConfirmInitState());
 
-  bool passwordUpdateSuccess;
-
   @override
   Stream<PasswordUpdateState> mapEventToState(PasswordUpdateEvents event) async* {
     yield* event.run(emailSignInRepos);

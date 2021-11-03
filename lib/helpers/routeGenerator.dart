@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
-import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
 import 'package:readr_app/initialApp.dart';
 import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
@@ -14,7 +13,6 @@ import 'package:readr_app/pages/magazineBrowser.dart';
 import 'package:readr_app/pages/magazine/magazinePage.dart';
 import 'package:readr_app/pages/memberCenter/deleteMember/deleteMemberPage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/hintToWebsitePage.dart';
-import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectPage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/pages/passwordReset/passwordResetPage.dart';
 import 'package:readr_app/pages/passwordResetEmail/passwordResetEmailPage.dart';
@@ -120,12 +118,9 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case passwordUpdate:
-        Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => PasswordUpdatePage(
-            passwordUpdateBloc: args['passwordUpdateBloc'],
-          ),
+          builder: (_) => PasswordUpdatePage(),
           fullscreenDialog: true,
         );
       case editMemberProfile:
@@ -327,15 +322,8 @@ class RouteGenerator {
     );
   }
 
-  static Future<void> navigateToPasswordUpdate(
-    PasswordUpdateBloc passwordUpdateBloc,
-  ) async{
-    await navigatorKey.currentState.pushNamed(
-      passwordUpdate,
-      arguments: {
-        'passwordUpdateBloc': passwordUpdateBloc,
-      },
-    );
+  static void navigateToPasswordUpdate() {
+    navigatorKey.currentState.pushNamed(passwordUpdate);
   }
 
   static void navigateToEditMemberProfile() {
