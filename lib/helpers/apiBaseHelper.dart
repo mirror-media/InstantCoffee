@@ -172,7 +172,9 @@ dynamic returnResponse(http.Response response) {
         // properties responded by search api
         (responseJson.containsKey('hits') && responseJson['hits'].containsKey('hits')) ||
         // properties responded by member graphql
-        (responseJson.containsKey('data') || responseJson.containsKey('tokenState'));
+        (responseJson.containsKey('data') || responseJson.containsKey('tokenState')) ||
+        // error log
+        responseJson.containsKey('msg');
       if(!hasData) {
         throw BadRequestException(response.body.toString());
       }
