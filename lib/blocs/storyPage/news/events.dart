@@ -10,4 +10,10 @@ class FetchPublishedStoryBySlug extends StoryEvents {
 
   @override
   String toString() => 'FetchPublishedStoryBySlug { storySlug: $slug, isMemberCheck: $isMemberCheck }';
+
+  String eventName() => 'FetchPublishedStoryBySlug';
+  Map eventParameters() => { 
+    "storySlug": slug, 
+    "isMemberCheck": isMemberCheck 
+  };
 }

@@ -8,6 +8,7 @@ import 'package:readr_app/blocs/storyPage/news/events.dart';
 import 'package:readr_app/blocs/storyPage/news/states.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/appException.dart';
+import 'package:readr_app/helpers/errorLogHelper.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/models/story.dart';
 import 'package:readr_app/models/storyAd.dart';
@@ -25,6 +26,8 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> {
 
   @override
   Stream<StoryState> mapEventToState(StoryEvents event) async* {
+    ErrorLogHelper _errorLogHelper = ErrorLogHelper();
+    
     if(event is FetchPublishedStoryBySlug) {
       print(event.toString());
       storySlug = event.slug;
@@ -63,38 +66,83 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> {
           storyRes: storyRes,
         );
       } on SocketException {
+        _errorLogHelper.record(
+          event.eventName(),
+          event.eventParameters(),
+          'No Internet',
+        );
         yield StoryState.error(
           errorMessages: NoInternetException('No Internet'),
         );
       } on HttpException {
+        _errorLogHelper.record(
+          event.eventName(),
+          event.eventParameters(),
+          'No Service Found',
+        );
         yield StoryState.error(
           errorMessages: NoServiceFoundException('No Service Found'),
         );
       } on FormatException {
+        _errorLogHelper.record(
+          event.eventName(),
+          event.eventParameters(),
+          'Invalid Response format',
+        );
         yield StoryState.error(
           errorMessages: InvalidFormatException('Invalid Response format'),
         );
       } on FetchDataException {
+        _errorLogHelper.record(
+          event.eventName(),
+          event.eventParameters(),
+          'Error During Communication'
+        );
         yield StoryState.error(
           errorMessages: NoInternetException('Error During Communication'),
         );
       } on BadRequestException {
+        _errorLogHelper.record(
+          event.eventName(),
+          event.eventParameters(),
+          'Invalid Request',
+        );
         yield StoryState.error(
           errorMessages: Error400Exception('Invalid Request'),
         );
       } on UnauthorisedException {
+        _errorLogHelper.record(
+          event.eventName(),
+          event.eventParameters(),
+          'Unauthorised',
+        );
         yield StoryState.error(
           errorMessages: Error400Exception('Unauthorised'),
         );
       } on InvalidInputException {
+        _errorLogHelper.record(
+          event.eventName(),
+          event.eventParameters(),
+          'Invalid Input',
+        );
         yield StoryState.error(
           errorMessages: Error400Exception('Invalid Input'),
         );
       } on InternalServerErrorException {
+        _errorLogHelper.record(
+          event.eventName(),
+          event.eventParameters(),
+          'Internal Server Error',
+        );
         yield StoryState.error(
           errorMessages: NoServiceFoundException('Internal Server Error'),
         );
       } catch (e) {
+        _errorLogHelper.record(
+          event.eventName(),
+          event.eventParameters(),
+          e.toString(),
+        );
         yield StoryState.error(
           errorMessages: UnknownException(e.toString()),
         );
