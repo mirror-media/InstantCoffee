@@ -8,21 +8,29 @@ abstract class LoginEvents{}
 class CheckIsLoginOrNot extends LoginEvents {
   @override
   String toString() => 'CheckIsLoginOrNot';
+  String eventName() => 'CheckIsLoginOrNot';
+  Map eventParameters() => {};
 }
 
 class SignInWithGoogle extends LoginEvents {
   @override
   String toString() => 'SignInWithGoogle';
+  String eventName() => 'SignInWithGoogle';
+  Map eventParameters() => {};
 }
 
 class SignInWithFacebook extends LoginEvents {
   @override
   String toString() => 'SignInWithFacebook';
+  String eventName() => 'SignInWithFacebook';
+  Map eventParameters() => {};
 }
 
 class SignInWithApple extends LoginEvents {
   @override
   String toString() => 'SignInWithApple';
+  String eventName() => 'SignInWithApple';
+  Map eventParameters() => {};
 }
 
 class FetchSignInMethodsForEmail extends LoginEvents {
@@ -32,10 +40,16 @@ class FetchSignInMethodsForEmail extends LoginEvents {
   );
   
   @override
-  String toString() => 'FetchSignInMethodsForEmail';
+  String toString() => 'FetchSignInMethodsForEmail { "email": $email }';
+  String eventName() => 'FetchSignInMethodsForEmail';
+  Map eventParameters() => {
+    'email': email
+  };
 }
 
 class SignOut extends LoginEvents {
   @override
   String toString() => 'SignOut';
+  String eventName() => 'SignOut';
+  Map eventParameters() => {};
 }
