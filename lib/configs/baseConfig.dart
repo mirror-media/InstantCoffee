@@ -1,10 +1,12 @@
 abstract class BaseConfig {
   String get mirrorMediaDomain;
+  String get errorLogName;
 
   String get apiBase;
   String get storyPageApi;
   String get memberApi;
   String get tokenStateApi;
+  String get errorLogApi;
 
   String get mirrorMediaNotImageUrl;
   String get latestApi;
