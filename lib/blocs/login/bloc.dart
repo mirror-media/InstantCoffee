@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/login/states.dart';
+import 'package:readr_app/helpers/errorLogHelper.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/firebaseLoginStatus.dart';
@@ -35,6 +36,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   MemberService _memberService = MemberService();
+  ErrorLogHelper _errorLogHelper = ErrorLogHelper();
 
   Future<void> _handleFirebaseThirdPartyLogin(
     FirebaseLoginStatus frebaseLoginStatus,
@@ -52,6 +54,12 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
       }
       await _handleCreateMember(isNewUser, emit);
     } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
+      _errorLogHelper.record(
+        'HandleFirebaseThirdPartyLogin',
+        {}, 
+        frebaseLoginStatus.toString()
+      );
+      
       if(frebaseLoginStatus.message is FirebaseAuthException &&
         frebaseLoginStatus.message.code == 'account-exists-with-different-credential') {
         await _checkThirdPartyLoginEmail(frebaseLoginStatus, emit);
@@ -86,6 +94,13 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
         print(e);
         await _auth.signOut();
       }
+
+      _errorLogHelper.record(
+        'HandleCreateMember',
+        {'isNewUser': isNewUser}, 
+        'Create member fail'
+      );
+
       emit(
         LoginFail(
           error: UnknownException('Create member fail'),
@@ -180,6 +195,13 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
     } catch(e) {
       // fetch member subscrition type fail
       print(e.toString());
+      
+      _errorLogHelper.record(
+        'FetchMemberSubscritionTypeToLogin',
+        {}, 
+        e.toString()
+      );
+
       emit(
         LoginFail(error: UnknownException('Fetch member subscrition type fail'))
       );
@@ -242,6 +264,11 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
           await _auth.signOut();
         }
 
+        _errorLogHelper.record(
+          event.eventName(),
+          event.eventParameters(), 
+          e.toString()
+        );
         print(e.toString());
         emit(
           LoginFail(error: UnknownException('Fetch member subscrition type fail'))
@@ -277,6 +304,11 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
         LoginFail(error: InvalidFormatException('Invalid Response format')),
       );
     } catch (e) {
+      _errorLogHelper.record(
+        event.eventName(),
+        event.eventParameters(), 
+        e.toString()
+      );
       emit(
         LoginFail(error: UnknownException(e.toString())),
       );
@@ -310,6 +342,11 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
         LoginFail(error: InvalidFormatException('Invalid Response format')),
       );
     } catch (e) {
+      _errorLogHelper.record(
+        event.eventName(),
+        event.eventParameters(), 
+        e.toString()
+      );
       emit(
         LoginFail(error: UnknownException(e.toString())),
       );
@@ -343,6 +380,11 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
         LoginFail(error: InvalidFormatException('Invalid Response format')),
       );
     } catch (e) {
+      _errorLogHelper.record(
+        event.eventName(),
+        event.eventParameters(), 
+        e.toString()
+      );
       emit(
         LoginFail(error: UnknownException(e.toString())),
       );
@@ -411,6 +453,11 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
         LoginFail(error: InvalidFormatException('Invalid Response format')),
       );
     } catch (e) {
+      _errorLogHelper.record(
+        event.eventName(),
+        event.eventParameters(), 
+        e.toString()
+      );
       emit(
         LoginFail(error: UnknownException(e.toString())),
       );
@@ -439,6 +486,11 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
         LoginFail(error: InvalidFormatException('Invalid Response format')),
       );
     } catch (e) {
+      _errorLogHelper.record(
+        event.eventName(),
+        event.eventParameters(), 
+        e.toString()
+      );
       emit(
         LoginFail(error: UnknownException(e.toString())),
       );
