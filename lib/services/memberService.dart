@@ -40,7 +40,7 @@ class MemberService implements MemberRepos{
     String query = 
     """
     query checkSubscriptionType(\$firebaseId: String!) {
-      member(where: { firebaseId: \$firebaseId }) {
+      allMembers(where: { firebaseId: \$firebaseId }) {
         id
         state
         type
@@ -64,12 +64,16 @@ class MemberService implements MemberRepos{
       headers: getHeaders(token),
     );
 
-    if(jsonResponse.containsKey('errors') && 
-      jsonResponse['errors'][0]['message'] == 'You do not have access to this resource') {
+    if(jsonResponse['data']['allMembers'] != null && 
+    jsonResponse['data']['allMembers'].length == 0) {
       throw BadRequestException(memberStateTypeIsNotFound);
     }
 
-    MemberIdAndSubscritionType memberIdAndSubscritionType = MemberIdAndSubscritionType.fromJson(jsonResponse['data']['member']);
+    if(jsonResponse.containsKey('errors')) {
+      throw BadRequestException(jsonResponse['errors'][0]['message']);
+    }
+
+    MemberIdAndSubscritionType memberIdAndSubscritionType = MemberIdAndSubscritionType.fromJson(jsonResponse['data']['allMembers'][0]);
     if(memberIdAndSubscritionType.state != MemberStateType.active) {
       throw BadRequestException(memberStateTypeIsNotActive);
     }
