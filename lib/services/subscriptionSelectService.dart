@@ -10,6 +10,7 @@ const List<String> _kProductIds = <String>[
 
 abstract class SubscriptionSelectRepos {
   Future<List<ProductDetails>> fetchProductDetailList();
+  Future<bool> buySubscriptionProduct(PurchaseParam purchaseParam);
 }
 
 class SubscriptionSelectServices implements SubscriptionSelectRepos{
@@ -26,4 +27,10 @@ class SubscriptionSelectServices implements SubscriptionSelectRepos{
 
     throw FetchDataException('The payment platform is unavailable');
   }
+
+
+  @override
+  Future<bool> buySubscriptionProduct(PurchaseParam purchaseParam) async{
+    return await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+  }  
 }
