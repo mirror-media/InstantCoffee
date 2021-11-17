@@ -4,6 +4,8 @@ enum SubscriptionSelectStatus {
   initial, 
   loading, 
   loaded, 
+  buying,
+  buyingSuccess,
   error 
 }
 
@@ -30,6 +32,16 @@ class SubscriptionSelectState {
         status: SubscriptionSelectStatus.loaded,
         productDetailList: productDetailList,
       );
+
+  const SubscriptionSelectState.buying({
+    List<ProductDetails> productDetailList,
+  })  : this._(
+        status: SubscriptionSelectStatus.buying,
+        productDetailList: productDetailList,
+      );
+
+  const SubscriptionSelectState.buyingSuccess()
+      : this._(status: SubscriptionSelectStatus.buyingSuccess);
 
   const SubscriptionSelectState.error({
     dynamic errorMessages
