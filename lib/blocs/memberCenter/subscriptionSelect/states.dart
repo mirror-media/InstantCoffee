@@ -1,17 +1,40 @@
 import 'package:in_app_purchase/in_app_purchase.dart';
 
-abstract class SubscriptionSelectState {}
-
-class SubscriptionSelectInitState extends SubscriptionSelectState {}
-
-class SubscriptionProductsLoading extends SubscriptionSelectState {}
-
-class SubscriptionProductsLoaded extends SubscriptionSelectState {
-  final List<ProductDetails> productDetailList;
-  SubscriptionProductsLoaded({this.productDetailList});
+enum SubscriptionSelectStatus { 
+  initial, 
+  loading, 
+  loaded, 
+  error 
 }
 
-class SubscriptionProductsLoadedFail extends SubscriptionSelectState {
-  final error;
-  SubscriptionProductsLoadedFail({this.error});
+class SubscriptionSelectState {
+  final SubscriptionSelectStatus status;
+  final List<ProductDetails> productDetailList;
+  final dynamic errorMessages;
+
+  const SubscriptionSelectState._({
+    this.status,
+    this.productDetailList,
+    this.errorMessages,
+  });
+
+  const SubscriptionSelectState.init()
+      : this._(status: SubscriptionSelectStatus.initial);
+
+  const SubscriptionSelectState.loading()
+      : this._(status: SubscriptionSelectStatus.loading);
+
+  const SubscriptionSelectState.loaded({
+    List<ProductDetails> productDetailList,
+  })  : this._(
+        status: SubscriptionSelectStatus.loaded,
+        productDetailList: productDetailList,
+      );
+
+  const SubscriptionSelectState.error({
+    dynamic errorMessages
+  })  : this._(
+        status: SubscriptionSelectStatus.error,
+        errorMessages: errorMessages,
+      );
 }

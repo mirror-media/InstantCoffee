@@ -36,34 +36,33 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
   Widget build(BuildContext context) {
     return BlocBuilder<SubscriptionSelectBloc, SubscriptionSelectState>(
       builder: (BuildContext context, SubscriptionSelectState state) {
-        if (state is SubscriptionProductsLoadedFail) {
-          final error = state.error;
-          print('SubscriptionProductsLoadedFail: ${error.message}');
-          return Container();
-        }
+        switch (state.status) {
+          case SubscriptionSelectStatus.error:
+            final error = state.errorMessages;
+            print('SubscriptionProductsLoadedFail: ${error.message}');
+            return Container();
+          case SubscriptionSelectStatus.loaded:
+            List<ProductDetails> productDetailList = state.productDetailList;
 
-        if (state is SubscriptionProductsLoaded) {
-          List<ProductDetails> productDetailList = state.productDetailList;
-          
-          return ListView(
-            children: [
-              SizedBox(height: 24),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                child: _memberIntroBlock(productDetailList),
-              ),
-              SizedBox(height: 48),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                child: _memberAttention(),
-              ),
-              SizedBox(height: 48),
-            ],
-          );
+            return ListView(
+              children: [
+                SizedBox(height: 24),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                  child: _memberIntroBlock(productDetailList),
+                ),
+                SizedBox(height: 48),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                  child: _memberAttention(),
+                ),
+                SizedBox(height: 48),
+              ],
+            );
+          default:
+            // state is Init, Loading
+            return _loadingWidget();
         }
-
-        // state is Init, Loading
-        return _loadingWidget();
       }
     );
   }
@@ -171,7 +170,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                         fontSize: 16.0
                       );
                     } else {
-                      RouteGenerator.navigateToEmailVerification(context);
+                      RouteGenerator.navigateToEmailVerification();
                     }
                   },
                 );
