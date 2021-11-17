@@ -1,14 +1,18 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionSelect/buyingSuccessWidget.dart';
 
 class SubscriptionSelectWidget extends StatefulWidget {
   final SubscritionType subscritionType;
@@ -29,6 +33,12 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
   _fetchSubscriptionProducts() {
     context.read<SubscriptionSelectBloc>().add(
       FetchSubscriptionProducts()
+    );
+  }
+
+  _buySubscriptionProduct(PurchaseParam purchaseParam) {
+    context.read<SubscriptionSelectBloc>().add(
+      BuySubscriptionProduct(purchaseParam)
     );
   }
 
@@ -59,6 +69,26 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                 SizedBox(height: 48),
               ],
             );
+          case SubscriptionSelectStatus.buying:
+            List<ProductDetails> productDetailList = state.productDetailList;
+
+            return ListView(
+              children: [
+                SizedBox(height: 24),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                  child: _memberIntroBlock(productDetailList, isBuying: true),
+                ),
+                SizedBox(height: 48),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                  child: _memberAttention(),
+                ),
+                SizedBox(height: 48),
+              ],
+            );
+          case SubscriptionSelectStatus.buyingSuccess: 
+            return BuyingSuccessWidget();
           default:
             // state is Init, Loading
             return _loadingWidget();
@@ -71,7 +101,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
     return Center(child: CircularProgressIndicator(),);
   }
 
-  Widget _memberIntroBlock(List<ProductDetails> productDetailList) {
+  Widget _memberIntroBlock(List<ProductDetails> productDetailList, {bool isBuying = false}) {
     double width = MediaQuery.of(context).size.width;
     String boxTitle = 'Premium 會員';
     if(widget.subscritionType == SubscritionType.subscribe_monthly){
@@ -120,62 +150,78 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
             Divider(),
             _memberClause('10月加入年訂閱，有機會獲得品牌腕錶與裴社長廚房手記新書', textColor: Color(0xFF054F77)),
             SizedBox(height: 24),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              separatorBuilder: (BuildContext context, int index) => SizedBox(height: 12),
-              itemCount: productDetailList.length,
-              itemBuilder: (context, index) {
-                final ButtonStyle buttonStyle = TextButton.styleFrom(
-                  backgroundColor: index%2==0 ? appColor : Colors.white,
-                  padding: const EdgeInsets.only(top: 12, bottom: 12),
-                );
-
-                return OutlinedButton(
-                  style: buttonStyle,
-                  child: Container(
-                    width: width,
-                    child: Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            productDetailList[index].title,
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: index%2==0 ? Colors.white : Colors.black,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            '優惠 ${productDetailList[index].price} 元',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: index%2==0 ? Colors.white60 : Colors.black38,
-                            ),
-                          ),
-                        ],
-                      ),
+            isBuying
+            ? Column(
+                children: [
+                  Text(
+                    '購買中',
+                    style: TextStyle(
+                      fontSize: 18,
                     ),
                   ),
-                  onPressed: () async{
-                    await _auth.currentUser.reload();
-                    if(_auth.currentUser.emailVerified) {
-                      Fluttertoast.showToast(
-                        msg: '執行購買～',
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.green,
-                        textColor: Colors.white,
-                        fontSize: 16.0
-                      );
-                    } else {
-                      RouteGenerator.navigateToEmailVerification();
-                    }
-                  },
-                );
-              }
-            ),
+                  SizedBox(height: 4),
+                  SpinKitThreeBounce(color: appColor, size: 35,),
+                ],
+              )
+            : ListView.separated(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                separatorBuilder: (BuildContext context, int index) => SizedBox(height: 12),
+                itemCount: productDetailList.length,
+                itemBuilder: (context, index) {
+                  final ButtonStyle buttonStyle = TextButton.styleFrom(
+                    backgroundColor: index%2==0 ? appColor : Colors.white,
+                    padding: const EdgeInsets.only(top: 12, bottom: 12),
+                  );
+
+                  return OutlinedButton(
+                    style: buttonStyle,
+                    child: Container(
+                      width: width,
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Text(
+                              productDetailList[index].title,
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: index%2==0 ? Colors.white : Colors.black,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              '優惠 ${productDetailList[index].price} 元',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: index%2==0 ? Colors.white60 : Colors.black38,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    onPressed: () async{
+                      await _auth.currentUser.reload();
+                      if(_auth.currentUser.emailVerified) {
+                        PurchaseParam purchaseParam;
+                        if (Platform.isAndroid) {
+                          purchaseParam = GooglePlayPurchaseParam(
+                            productDetails: productDetailList[index],
+                          );
+                        } else {
+                          purchaseParam = PurchaseParam(
+                            productDetails: productDetailList[index],
+                          );
+                        }
+
+                        _buySubscriptionProduct(purchaseParam);
+                      } else {
+                        RouteGenerator.navigateToEmailVerification();
+                      }
+                    },
+                  );
+                }
+              ),
           ],
         ),
       )
