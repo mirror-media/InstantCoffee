@@ -1,8 +1,8 @@
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:readr_app/helpers/appException.dart';
 
-const String _kMonthSubscriptionId = 'subscription_month';
-const String _kYearSubscriptionId = 'subscription_year';
+const String _kMonthSubscriptionId = 'monthly';
+const String _kYearSubscriptionId = 'yearly';
 const List<String> _kProductIds = <String>[
   _kMonthSubscriptionId,
   _kYearSubscriptionId,
