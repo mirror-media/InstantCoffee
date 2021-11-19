@@ -1,11 +1,66 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 
-class MirrorMediaApp extends StatelessWidget {
+StreamSubscription<List<PurchaseDetails>> subscription;
+
+class MirrorMediaApp extends StatefulWidget {
+  @override
+  State<MirrorMediaApp> createState() => _MirrorMediaAppState();
+}
+
+class _MirrorMediaAppState extends State<MirrorMediaApp> {
+  InAppPurchase _inAppPurchase = InAppPurchase.instance;
+
+  @override
+  void initState() {
+    subscription = _inAppPurchase.purchaseStream.listen((purchaseDetailsList) {
+      _listenToPurchaseUpdated(purchaseDetailsList);
+    }, onDone: () {
+      subscription.cancel();
+    }, onError: (error) {
+      // handle error here.
+    });
+    super.initState();
+  }
+
+  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
+    purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
+      if (purchaseDetails.status == PurchaseStatus.purchased) {
+        bool valid = await _verifyPurchase(purchaseDetails);
+        if (valid) {
+          if(purchaseDetails.pendingCompletePurchase) {
+            try {
+              await _inAppPurchase.completePurchase(purchaseDetails);
+            } catch(e) {
+              print(e);
+            }
+          }
+          //deliverProduct(purchaseDetails);
+        } else {
+          //_handleInvalidPurchase(purchaseDetails);
+          return;
+        }
+      }
+    });
+  }
+
+  Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) async{
+    return true;
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // force portrait
