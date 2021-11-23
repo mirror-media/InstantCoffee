@@ -16,3 +16,13 @@ class BuySubscriptionProduct extends SubscriptionSelectEvents {
   @override
   String toString() => 'BuySubscriptionProduct { productId: ${purchaseParam.productDetails.id} }';
 }
+
+class BuyingPurchaseStatusChanged extends SubscriptionSelectEvents {
+  final PurchaseDetails purchaseDetails;
+  BuyingPurchaseStatusChanged(
+    this.purchaseDetails,
+  );
+
+  @override
+  String toString() => 'BuyingPurchaseStatusChanged { status: ${purchaseDetails.status} }';
+}

@@ -1,14 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 
 StreamSubscription<List<PurchaseDetails>> subscription;
+StreamController<PurchaseDetails> buyingPurchaseController = StreamController<PurchaseDetails>.broadcast();
 
 class MirrorMediaApp extends StatefulWidget {
   @override
@@ -32,6 +36,7 @@ class _MirrorMediaAppState extends State<MirrorMediaApp> {
 
   void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
     purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
+      buyingPurchaseController.sink.add(purchaseDetails);
       if (purchaseDetails.status == PurchaseStatus.purchased) {
         bool valid = await _verifyPurchase(purchaseDetails);
         if (valid) {
