@@ -159,7 +159,7 @@ PODS:
     - AppAuth/Core (~> 1.4)
     - GTMSessionFetcher/Core (~> 1.5)
   - GTMSessionFetcher/Core (1.7.0)
-  - in_app_purchase_ios (0.0.1):
+  - in_app_purchase_storekit (0.0.1):
     - Flutter
   - just_audio (0.0.1):
     - Flutter
@@ -209,7 +209,7 @@ DEPENDENCIES:
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - google_mobile_ads (from `.symlinks/plugins/google_mobile_ads/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
-  - in_app_purchase_ios (from `.symlinks/plugins/in_app_purchase_ios/ios`)
+  - in_app_purchase_storekit (from `.symlinks/plugins/in_app_purchase_storekit/ios`)
   - just_audio (from `.symlinks/plugins/just_audio/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
@@ -279,8 +279,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_mobile_ads/ios"
   google_sign_in:
     :path: ".symlinks/plugins/google_sign_in/ios"
-  in_app_purchase_ios:
-    :path: ".symlinks/plugins/in_app_purchase_ios/ios"
+  in_app_purchase_storekit:
+    :path: ".symlinks/plugins/in_app_purchase_storekit/ios"
   just_audio:
     :path: ".symlinks/plugins/just_audio/ios"
   package_info:
@@ -342,7 +342,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 8de2a97a17e15b6b98e38e8770e2d129a57c0040
   GTMAppAuth: ad5c2b70b9a8689e1a04033c9369c4915bfcbe89
   GTMSessionFetcher: 43748f93435c2aa068b1cbe39655aaf600652e91
-  in_app_purchase_ios: 04ed55fdd1012db54095d6801335b5f5de0a475f
+  in_app_purchase_storekit: 6dec89fe3b9698847ed4aaf65fde6c17491620ad
   just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
