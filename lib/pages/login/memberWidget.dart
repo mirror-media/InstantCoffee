@@ -59,21 +59,23 @@ class _MemberWidgetState extends State<MemberWidget> {
                 children: [
                   _horizontalDivider(width),
                   _memberSubscriptionDetailButton(widget.subscritionType),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                    child: _horizontalDivider(width),
-                  ),
                   if(widget.subscritionType == SubscritionType.none || 
                     widget.subscritionType == SubscritionType.subscribe_one_time
                   )...[
+                    Padding(
+                    padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                    child: _horizontalDivider(width),
+                  ),
                     _memberSubscribedArticleButton(),
+                  ],
+                  if(widget.subscritionType != SubscritionType.marketing && 
+                    widget.subscritionType != SubscritionType.subscribe_group
+                  )...[
                     Padding(
                       padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
                       child: _horizontalDivider(width),
                     ),
-                  ],
-                  _memberPaymentRecordButton(widget.subscritionType),
-                  if(widget.subscritionType != SubscritionType.marketing)...[
+                    _memberPaymentRecordButton(widget.subscritionType),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
                       child: _horizontalDivider(width),
