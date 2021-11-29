@@ -6,6 +6,7 @@ enum SubscritionType {
   subscribe_one_time, 
   subscribe_monthly, 
   subscribe_yearly,
+  subscribe_group,
   staff
 }
 
