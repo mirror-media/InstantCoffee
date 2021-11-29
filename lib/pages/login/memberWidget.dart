@@ -18,9 +18,11 @@ import 'package:readr_app/services/loginService.dart';
 class MemberWidget extends StatefulWidget {
   final String israfelId;
   final SubscritionType subscritionType;
+  final bool isNewebpay;
   MemberWidget({
     @required this.israfelId,
     @required this.subscritionType,
+    @required this.isNewebpay,
   });
 
   @override
@@ -220,7 +222,7 @@ class _MemberWidgetState extends State<MemberWidget> {
       : "變更方案";
     return _navigateButton(
       buttonText,
-      () => RouteGenerator.navigateToSubscriptionSelect(subscritionType),
+      () => RouteGenerator.navigateToSubscriptionSelect(subscritionType,isNewebpay: widget.isNewebpay),
     );
   }
 
