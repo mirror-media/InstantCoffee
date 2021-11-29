@@ -13,6 +13,7 @@ import 'package:readr_app/pages/magazineBrowser.dart';
 import 'package:readr_app/pages/magazine/magazinePage.dart';
 import 'package:readr_app/pages/memberCenter/deleteMember/deleteMemberPage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/hintToWebsitePage.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionSelect/newebpayChangePlanPage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/pages/passwordReset/passwordResetPage.dart';
 import 'package:readr_app/pages/passwordResetEmail/passwordResetEmailPage.dart';
@@ -48,6 +49,7 @@ class RouteGenerator {
   static const String magazine = '/magazine';
   static const String magazineBrowser = '/magazineBrowser';
   static const String subscriptionSelect = '/subscriptionSelect';
+  static const String newebpayChangePlan = '/newebpayChangePlan';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -215,6 +217,11 @@ class RouteGenerator {
           settings: settings,
           builder: (_) => HintToWebsitePage(args['subscritionType']),
           // builder: (_) => SubscriptionSelectPage(args['subscritionType']),
+        );
+      case newebpayChangePlan:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => NewebpayChangePlanPage(),
         );
       default:
         // If there is no such named route in the switch statement, e.g. /third
@@ -415,7 +422,10 @@ class RouteGenerator {
 
   static void navigateToSubscriptionSelect(
     SubscritionType subscritionType,
-    {bool usePushReplacement = false}
+    {
+    bool usePushReplacement = false, 
+    bool isNewebpay = false,
+    }
   ) {
     if(usePushReplacement){
       navigatorKey.currentState.pushReplacementNamed(
@@ -423,6 +433,10 @@ class RouteGenerator {
         arguments: {
           'subscritionType': subscritionType
         },
+      );
+    }else if(isNewebpay){
+      navigatorKey.currentState.pushNamed(
+        newebpayChangePlan,
       );
     }
     else{
