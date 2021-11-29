@@ -217,13 +217,21 @@ class _MemberWidgetState extends State<MemberWidget> {
   }
  
   Widget _subscriptionSelectButton(SubscritionType subscritionType) {
-    String buttonText = subscritionType == SubscritionType.none || subscritionType == SubscritionType.subscribe_one_time
-      ? '升級 Premium 會員'
-      : "變更方案";
-    return _navigateButton(
-      buttonText,
-      () => RouteGenerator.navigateToSubscriptionSelect(subscritionType,isNewebpay: widget.isNewebpay),
-    );
+    String buttonText;
+    if(subscritionType == SubscritionType.none || subscritionType == SubscritionType.subscribe_one_time){
+      buttonText = '升級 Premium 會員';
+      return _navigateButton(
+        buttonText,
+        () => RouteGenerator.navigateToSubscriptionSelect(subscritionType),
+      );
+    }
+    else{
+      buttonText = "變更方案";
+      return _navigateButton(
+        buttonText,
+        () => RouteGenerator.navigateToSubscriptionSelect(subscritionType,isNewebpay: widget.isNewebpay),
+      );
+    }
   }
 
   Widget _memberProfileButton() {
