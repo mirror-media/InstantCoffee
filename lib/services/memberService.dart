@@ -44,6 +44,22 @@ class MemberService implements MemberRepos{
         id
         state
         type
+        subscription(
+          orderBy: {updatedAt: desc},
+          first: 1,
+          where:{
+            isActive: true
+          },
+        ){
+        newebpayPayment(
+          first: 1,
+            where:{
+              status: "SUCCESS"
+            }
+          ){
+          tradeNumber
+          }
+        }
       }
     }
     """;
