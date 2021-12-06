@@ -18,9 +18,6 @@ class AppUpgradeHelper {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
       String version = packageInfo.version.toLowerCase();
-      if(version.contains('dev')) {
-        version = version.split(' ')[0];
-      }
 
       final installedVersion = Version.parse(version);
       final appMajorVersion = Version.parse(appVersion.majorVersion);

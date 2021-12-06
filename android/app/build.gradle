@@ -79,7 +79,6 @@ android {
         dev {
             dimension "flavors"
             applicationIdSuffix ".dev"
-            versionNameSuffix " Dev"
         }
         prod {
             dimension "flavors"
