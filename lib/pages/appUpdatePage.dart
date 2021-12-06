@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
@@ -38,10 +36,7 @@ class AppUpdatePage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(left: 24.0, right: 24.0),
               child: Text(
-                appUpgradeHelper.appVersionList.firstWhere(
-                  (appVersion) => 
-                      appVersion.platform.toLowerCase() == Platform.operatingSystem
-                ).updateMessage,
+                appUpgradeHelper.updateMessage,
                 style: TextStyle(
                   fontSize: 28,
                 ),
