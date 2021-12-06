@@ -1,26 +1,30 @@
 import 'dart:io';
 
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:readr_app/models/appVersion.dart';
-import 'package:readr_app/services/appVersionSerivce.dart';
 import 'package:upgrader/upgrader.dart';
 import 'package:version/version.dart';
 
 class AppUpgradeHelper {
+  RemoteConfig _remoteConfig = RemoteConfig.instance;
   bool needToUpdate = false;
-  List<AppVersion> appVersionList = List.empty(growable: true);
+  String updateMessage = '';
 
   Future<bool> isUpdateAvailable() async{
     try {
-      AppVersionService appVersionService = AppVersionService();
-      appVersionList = await appVersionService.fetchMajorVersion();
-      AppVersion appVersion = appVersionList.firstWhere((appVersion) => appVersion.platform.toLowerCase() == Platform.operatingSystem);
+      await _remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: Duration(seconds: 10),
+        minimumFetchInterval: Duration(seconds: 1),
+      ));
+      await _remoteConfig.fetchAndActivate();
+      String minAppVersion = _remoteConfig.getString('min_version_number');
+      updateMessage = _remoteConfig.getString('update_message');
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
       String version = packageInfo.version.toLowerCase();
 
       final installedVersion = Version.parse(version);
-      final appMajorVersion = Version.parse(appVersion.majorVersion);
+      final appMajorVersion = Version.parse(minAppVersion);
       
       return appMajorVersion > installedVersion;
     } catch(e) {
