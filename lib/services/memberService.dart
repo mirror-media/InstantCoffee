@@ -44,6 +44,16 @@ class MemberService implements MemberRepos{
         id
         state
         type
+        subscription(
+          orderBy: {updatedAt: desc},
+          first: 1,
+          where:{
+            paymentMethod: newebpay,
+            isActive: true
+          },
+        ){
+          id
+        }
       }
     }
     """;

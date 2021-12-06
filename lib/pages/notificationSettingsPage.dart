@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:readr_app/blocs/onBoardingBloc.dart';
 
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
@@ -32,13 +33,22 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   final LocalStorage _storage = LocalStorage('setting');
   FirebaseMessangingHelper _firebaseMessangingHelper = FirebaseMessangingHelper();
   NotificationSettingList _notificationSettingList = NotificationSettingList();
+  String _version = "";
+  String _buildNumber = "";
 
   @override
   void initState() {
     _notificationKeys = List<GlobalKey>();
     _expansionTileKeys = List<GlobalKey<AppExpansionTileState>>();
     _setNotificationSettingList();
+    _loadPackageInfo();
     super.initState();
+  }
+
+  _loadPackageInfo() async{
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    _version = packageInfo.version;
+    _buildNumber = packageInfo.buildNumber;
   }
 
   _setNotificationSettingList() async {
@@ -435,6 +445,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
           }
         ),
         SizedBox(height: 16),
+        Center(child: Text('v' + _version + ' ($_buildNumber)'),),
       ]
     );
   }

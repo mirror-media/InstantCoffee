@@ -44,7 +44,8 @@ class _LoginWidgetState extends State<LoginWidget> {
 
           return MemberWidget(
             israfelId: israfelId,
-            subscritionType: subscritionType
+            subscritionType: subscritionType,
+            isNewebpay: state.isNewebpay,
           );
         }
 

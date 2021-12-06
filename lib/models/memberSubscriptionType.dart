@@ -6,6 +6,7 @@ enum SubscritionType {
   subscribe_one_time, 
   subscribe_monthly, 
   subscribe_yearly,
+  subscribe_group,
   staff
 }
 
@@ -18,11 +19,13 @@ class MemberIdAndSubscritionType {
   final String israfelId;
   final MemberStateType state;
   SubscritionType subscritionType;
+  final bool isNewebpay;
 
   MemberIdAndSubscritionType({
     this.israfelId,
     this.state,
     this.subscritionType,
+    this.isNewebpay,
   });
 
   factory MemberIdAndSubscritionType.fromJson(Map<String, dynamic> json) {
@@ -31,6 +34,7 @@ class MemberIdAndSubscritionType {
         israfelId: null,
         state: null,
         subscritionType: SubscritionType.none,
+        isNewebpay: false,
       );
     }
 
@@ -40,10 +44,16 @@ class MemberIdAndSubscritionType {
     String state = json['state'];
     MemberStateType memberStateType = state.toEnum(MemberStateType.values);
 
+    bool isNewebpay = false;
+    if(json['subscription'] != null){
+      isNewebpay = true;
+    }
+
     return MemberIdAndSubscritionType(
       israfelId: json['id'],
       state: memberStateType,
       subscritionType: subscritionType,
+      isNewebpay: isNewebpay,
     );
   }
 }

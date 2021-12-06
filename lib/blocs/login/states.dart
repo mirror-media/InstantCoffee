@@ -9,9 +9,11 @@ class LoginInitState extends LoginState {}
 class LoginSuccess extends LoginState {
   final String israfelId;
   final SubscritionType subscritionType;
+  final bool isNewebpay;
   LoginSuccess({
     this.israfelId,
-    this.subscritionType
+    this.subscritionType,
+    this.isNewebpay,
   });
 }
 

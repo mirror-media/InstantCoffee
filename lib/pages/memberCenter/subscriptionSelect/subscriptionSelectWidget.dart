@@ -171,7 +171,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                         fontSize: 16.0
                       );
                     } else {
-                      RouteGenerator.navigateToEmailVerification(context);
+                      RouteGenerator.navigateToEmailVerification();
                     }
                   },
                 );
