@@ -45,7 +45,7 @@ class MemberIdAndSubscritionType {
     MemberStateType memberStateType = state.toEnum(MemberStateType.values);
 
     bool isNewebpay = false;
-    if(json['subscription'] != null && json['subscription'][0]['newebpayPayment']!=null){
+    if(json['subscription'] != null){
       isNewebpay = true;
     }
 

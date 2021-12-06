@@ -48,17 +48,11 @@ class MemberService implements MemberRepos{
           orderBy: {updatedAt: desc},
           first: 1,
           where:{
+            paymentMethod: newebpay,
             isActive: true
           },
         ){
-        newebpayPayment(
-          first: 1,
-            where:{
-              status: "SUCCESS"
-            }
-          ){
-          tradeNumber
-          }
+          id
         }
       }
     }
