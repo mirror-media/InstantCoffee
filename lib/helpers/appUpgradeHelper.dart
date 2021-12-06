@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:readr_app/models/appVersion.dart';
 import 'package:readr_app/services/appVersionSerivce.dart';
 import 'package:upgrader/upgrader.dart';
