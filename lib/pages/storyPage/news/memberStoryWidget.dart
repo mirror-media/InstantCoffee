@@ -7,11 +7,11 @@ import 'package:readr_app/blocs/storyPage/news/events.dart';
 import 'package:readr_app/blocs/storyPage/news/states.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/paragraphFormat.dart';
 import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/paragraph.dart';
 import 'package:readr_app/models/paragrpahList.dart';
-import 'package:readr_app/models/people.dart';
 import 'package:readr_app/models/peopleList.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/story.dart';
@@ -58,6 +58,23 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
           case StoryStatus.loaded:
             StoryRes storyRes = state.storyRes;
 
+            if(_isWineCategory(storyRes.story.categories)){
+              return Column(
+                children: [
+                  Expanded(
+                    child: _buildStoryWidget(storyRes),
+                  ),
+                  Container(
+                    color: Colors.black,
+                    height: 90,
+                    padding: const EdgeInsets.symmetric(horizontal: 31, vertical: 22),
+                    child: Image.asset(
+                    "assets/image/wine_warning.png",
+                  ),
+                  ),
+                ],
+              );
+            }
             return _buildStoryWidget(storyRes);
           default:
             // state is Init, Loading
@@ -605,5 +622,19 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
         _fetchPublishedStoryBySlug(relatedItem.slug, widget.isMemberCheck);
       },
     );
+  }
+
+  bool _isWineCategory(List<Category> categories) {
+    if(categories == null) {
+      return false;
+    }
+
+    for(Category category in categories) {
+      if(category.id == Environment().config.wineSectionKey ||
+      category.id == Environment().config.wine1SectionKey) {
+        return true;
+      }
+    }
+    return false;
   }
 }
