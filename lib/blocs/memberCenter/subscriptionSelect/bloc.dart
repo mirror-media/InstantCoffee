@@ -9,6 +9,7 @@ import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/mirrorMediaApp.dart';
+import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/services/subscriptionSelectService.dart';
 
 class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, SubscriptionSelectState> {
@@ -31,6 +32,10 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
     return super.close();
   }
 
+  bool _isMonthlyOrYearlySubscriber(SubscritionType subscritionType) {
+    return subscritionType == SubscritionType.subscribe_monthly || 
+    subscritionType == SubscritionType.subscribe_yearly;
+  }
 
   void _fetchSubscriptionProducts(
     FetchSubscriptionProducts event,
@@ -40,8 +45,13 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
     try{
       emit(SubscriptionSelectState.loading());
       List<ProductDetails>  productDetailList = await subscriptionSelectRepos.fetchProductDetailList();
+      PurchaseDetails previousPurchaseDetails;
+      if(_isMonthlyOrYearlySubscriber(event.subscritionType) && Platform.isAndroid) {
+        previousPurchaseDetails = await subscriptionSelectRepos.fetchAndroidSubscriptionDetail();
+      }
       emit(SubscriptionSelectState.loaded(
-        productDetailList: productDetailList
+        productDetailList: productDetailList,
+        previousPurchaseDetails: previousPurchaseDetails
       ));
     } on SocketException {
       emit(SubscriptionSelectState.error(
@@ -85,7 +95,8 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
         );
 
         emit(SubscriptionSelectState.loaded(
-          productDetailList: state.productDetailList
+          productDetailList: state.productDetailList,
+          previousPurchaseDetails: state.previousPurchaseDetails
         ));
       }
     } catch (e) {
@@ -100,7 +111,8 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
       );
 
       emit(SubscriptionSelectState.loaded(
-        productDetailList: state.productDetailList
+        productDetailList: state.productDetailList,
+        previousPurchaseDetails: state.previousPurchaseDetails
       ));
     }
   }
@@ -112,7 +124,8 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
     PurchaseDetails purchaseDetails = event.purchaseDetails;
     if(purchaseDetails.status == PurchaseStatus.canceled) {
       emit(SubscriptionSelectState.loaded(
-        productDetailList: state.productDetailList
+        productDetailList: state.productDetailList,
+        previousPurchaseDetails: state.previousPurchaseDetails
       ));
     } else if(purchaseDetails.status == PurchaseStatus.purchased) {
       Fluttertoast.showToast(
@@ -126,6 +139,8 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
       );
       emit(SubscriptionSelectState.buyingSuccess());
     } else if(purchaseDetails.status == PurchaseStatus.error) {
+      print("error code: ${purchaseDetails.error.code}");
+      print("error message: ${purchaseDetails.error.message}");
       Fluttertoast.showToast(
         msg: '購買失敗，請再試一次',
         toastLength: Toast.LENGTH_SHORT,
@@ -137,7 +152,8 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
       );
 
       emit(SubscriptionSelectState.loaded(
-        productDetailList: state.productDetailList
+        productDetailList: state.productDetailList,
+        previousPurchaseDetails: state.previousPurchaseDetails
       ));
     }
   }

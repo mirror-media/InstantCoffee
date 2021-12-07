@@ -12,11 +12,13 @@ enum SubscriptionSelectStatus {
 class SubscriptionSelectState {
   final SubscriptionSelectStatus status;
   final List<ProductDetails> productDetailList;
+  final PurchaseDetails previousPurchaseDetails;
   final dynamic errorMessages;
 
   const SubscriptionSelectState._({
     this.status,
     this.productDetailList,
+    this.previousPurchaseDetails,
     this.errorMessages,
   });
 
@@ -28,9 +30,11 @@ class SubscriptionSelectState {
 
   const SubscriptionSelectState.loaded({
     List<ProductDetails> productDetailList,
+    PurchaseDetails previousPurchaseDetails,
   })  : this._(
         status: SubscriptionSelectStatus.loaded,
         productDetailList: productDetailList,
+        previousPurchaseDetails: previousPurchaseDetails,
       );
 
   const SubscriptionSelectState.buying({
