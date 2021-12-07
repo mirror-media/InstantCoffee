@@ -261,7 +261,10 @@ class _TabContentState extends State<TabContent> {
           ),
         ],
       ),
-      onTap: () => RouteGenerator.navigateToStory(record.slug, isMemberCheck: record.isMemberCheck),
+      onTap: () => RouteGenerator.navigateToStory(
+        record.slug, 
+        isMemberCheck: record.isMemberCheck, 
+        isMemberContent: widget.section.title == '會員專區'),
     );
   }
 
@@ -313,7 +316,10 @@ class _TabContentState extends State<TabContent> {
           ],
         ),
       ),
-      onTap: () => RouteGenerator.navigateToStory(record.slug, isMemberCheck: record.isMemberCheck),
+      onTap: () => RouteGenerator.navigateToStory(
+        record.slug, 
+        isMemberCheck: record.isMemberCheck, 
+        isMemberContent: widget.section.title == '會員專區'),
     );
   }
 }
