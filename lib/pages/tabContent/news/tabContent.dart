@@ -6,6 +6,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/tabContentBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
@@ -264,7 +265,7 @@ class _TabContentState extends State<TabContent> {
       onTap: () => RouteGenerator.navigateToStory(
         record.slug, 
         isMemberCheck: record.isMemberCheck, 
-        isMemberContent: widget.section.title == '會員專區'),
+        isMemberContent: widget.section.key == Environment().config.memberSectionKey),
     );
   }
 
@@ -319,7 +320,7 @@ class _TabContentState extends State<TabContent> {
       onTap: () => RouteGenerator.navigateToStory(
         record.slug, 
         isMemberCheck: record.isMemberCheck, 
-        isMemberContent: widget.section.title == '會員專區'),
+        isMemberContent: widget.section.key == Environment().config.memberSectionKey),
     );
   }
 }
