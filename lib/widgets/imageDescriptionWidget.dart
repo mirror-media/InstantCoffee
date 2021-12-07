@@ -7,17 +7,66 @@ class ImageDescriptionWidget extends StatelessWidget {
   final double width;
   final double aspectRatio;
   final double textSize;
+  final bool isMemberContent;
   ImageDescriptionWidget({
     @required this.imageUrl,
     @required this.description,
     @required this.width,
     this.aspectRatio = 16 / 9,
     this.textSize = 16,
+    this.isMemberContent = false,
   });
 
   @override
   Widget build(BuildContext context) {
     double height = width / aspectRatio;
+
+    if(isMemberContent){
+      return ListView(
+        physics: const NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(vertical: 32),
+        shrinkWrap: true,
+        children: [
+          if (imageUrl != '')
+            CachedNetworkImage(
+              //height: imageHeight,
+              width: width,
+              imageUrl: imageUrl,
+              placeholder: (context, url) => Container(
+                height: height,
+                width: width,
+                color: Colors.grey,
+              ),
+              errorWidget: (context, url, error) => Container(
+                height: height,
+                width: width,
+                color: Colors.grey,
+                child: Icon(Icons.error),
+              ),
+              fit: BoxFit.cover,
+            ),
+          if (description != '')...[
+            const SizedBox(
+              height: 12,
+            ),
+            Divider(
+              color: Color.fromRGBO(0, 0, 0, 0.1),
+              thickness: 1,
+              height: 1,
+              indent: 20,
+              endIndent: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 12.0, right: 20, left: 20),
+              child: Text(
+                description,
+                style: TextStyle(fontSize: textSize, color: Colors.black54),
+              ),
+            ),
+          ],
+        ],
+      );
+    }
 
     return InkWell(
       child: Wrap(

@@ -1,19 +1,89 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/widgets/messageClipper.dart';
+import 'dart:math' as math;
 
 class QuoteByWidget extends StatelessWidget {
   final String quote;
   final String quoteBy;
+  final bool isMemberContent;
   QuoteByWidget({
     @required this.quote,
     this.quoteBy,
+    this.isMemberContent = false,
   });
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var messageRoofHeight = height / 18;
+    if(isMemberContent){
+      return Container(
+        padding: const EdgeInsets.fromLTRB(0, 50, 0, 48),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Divider(
+                    color: appColor,
+                    thickness: 2,
+                    height: 2,
+                  ),
+                ),
+                SizedBox(
+                  width: 24,
+                ),
+                Transform.rotate(
+                  angle: 180 * math.pi / 180,
+                  child: Icon(
+                    Icons.format_quote,
+                    size: 40,
+                    color: Color.fromRGBO(5, 79, 119, 1),
+                  ),
+                ),
+                SizedBox(
+                  width: 24,
+                ),
+                Expanded(
+                  child: Divider(
+                    color: appColor,
+                    thickness: 2,
+                    height: 2,
+                  ),
+                ),
+              ],
+            ),
+            Text(
+              quote,
+              style: TextStyle(
+                color: Color.fromRGBO(5, 79, 119, 1),
+                fontSize: 17,
+                height: 1.8,
+              ),
+            ),
+            if (quoteBy != null && quoteBy != '') ...[
+              const SizedBox(
+                height: 16,
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  '⎯ $quoteBy',
+                  textAlign: TextAlign.end,
+                  style: TextStyle(
+                    fontSize: 17,
+                    height: 1.8,
+                    color: Color.fromRGBO(5, 79, 119, 1),
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      );
+    }
 
     return InkWell(
       onTap: () {},

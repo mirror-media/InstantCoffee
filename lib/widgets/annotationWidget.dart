@@ -7,8 +7,10 @@ import 'package:readr_app/models/annotation.dart';
 
 class AnnotationWidget extends StatefulWidget {
   final String data;
+  final bool isMemberContent;
   AnnotationWidget({
     @required this.data,
+    this.isMemberContent = false,
   });
 
   @override
@@ -16,7 +18,7 @@ class AnnotationWidget extends StatefulWidget {
 }
 
 class _AnnotationWidgetState extends State<AnnotationWidget> {
-  List<String> displayStringList = List<String>();
+  List<String> displayStringList = [];
 
   @override
   void initState() {
@@ -44,7 +46,7 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
 
   List<Widget> _renderWidgets(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    List<Widget> displayWidgets = List<Widget>();
+    List<Widget> displayWidgets = [];
     RegExp annotationExp = RegExp(
       r'__ANNOTATION__=(.*)',
       caseSensitive: false,
@@ -67,7 +69,15 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
           );
           displayWidgets.add(
             InkWell(
-              child: Wrap(
+              child: widget.isMemberContent 
+              ? Container(
+                  child: Icon(
+                    Icons.arrow_drop_up,
+                    color: appColor,
+                    size: 40,
+                  ),
+                )
+              :Wrap(
                 children: [
                   SizedBox(width: 8),
                   Text(
@@ -109,8 +119,26 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
           );
           displayWidgets.add(
             Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: Container(
+              padding: EdgeInsets.only(top: widget.isMemberContent ? 8.0 : 16.0),
+              child: widget.isMemberContent
+              ? Container(
+                  width: width,
+                  decoration: BoxDecoration(
+                    color: const Color.fromRGBO(248, 248, 249, 1),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24),
+                  child: HtmlWidget(
+                    annotation.annotation,
+                    hyperlinkColor: Colors.blue[900],
+                    textStyle: TextStyle(
+                      fontSize: 15,
+                      height: 1.8,
+                    ),
+                  ),
+                ),
+              )
+              :Container(
                 width: width,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -158,7 +186,15 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
           );
           displayWidgets.add(
             InkWell(
-              child: Wrap(
+              child: widget.isMemberContent 
+              ? Container(
+                  child: Icon(
+                    Icons.arrow_drop_down,
+                    color: appColor,
+                    size: 40,
+                  ),
+              )
+              :Wrap(
                 children: [
                   SizedBox(width: 8),
                   Text(
