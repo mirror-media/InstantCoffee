@@ -6,10 +6,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
+import 'package:in_app_purchase_android/src/billing_client_wrappers/billing_client_wrapper.dart';
+import 'package:in_app_purchase_android/src/billing_client_wrappers/purchase_wrapper.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/buyingSuccessWidget.dart';
@@ -27,12 +30,12 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
   @override
   void initState() {
     super.initState();
-    _fetchSubscriptionProducts();
+    _fetchSubscriptionProducts(widget.subscritionType);
   }
 
-  _fetchSubscriptionProducts() {
+  _fetchSubscriptionProducts(SubscritionType subscritionType) {
     context.read<SubscriptionSelectBloc>().add(
-      FetchSubscriptionProducts()
+      FetchSubscriptionProducts(subscritionType)
     );
   }
 
@@ -40,6 +43,18 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
     context.read<SubscriptionSelectBloc>().add(
       BuySubscriptionProduct(purchaseParam)
     );
+  }
+
+  _removeSubscribedProduct(List<ProductDetails> productDetailList) {
+    productDetailList.removeWhere((element) {
+      String removeId;
+      if(widget.subscritionType == SubscritionType.subscribe_monthly) {
+        removeId = Environment().config.monthSubscriptionId;
+      } else if(widget.subscritionType == SubscritionType.subscribe_yearly) {
+        removeId = Environment().config.yearSubscriptionId;
+      }
+      return element.id == removeId;
+    });
   }
 
   @override
@@ -53,13 +68,15 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
             return Container();
           case SubscriptionSelectStatus.loaded:
             List<ProductDetails> productDetailList = state.productDetailList;
+            PurchaseDetails previousPurchaseDetails = state.previousPurchaseDetails;
+            _removeSubscribedProduct(productDetailList);
 
             return ListView(
               children: [
                 SizedBox(height: 24),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                  child: _memberIntroBlock(productDetailList),
+                  child: _memberIntroBlock(productDetailList, previousPurchaseDetails),
                 ),
                 SizedBox(height: 48),
                 Padding(
@@ -71,13 +88,15 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
             );
           case SubscriptionSelectStatus.buying:
             List<ProductDetails> productDetailList = state.productDetailList;
+            PurchaseDetails previousPurchaseDetails = state.previousPurchaseDetails;
+            _removeSubscribedProduct(productDetailList);
 
             return ListView(
               children: [
                 SizedBox(height: 24),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                  child: _memberIntroBlock(productDetailList, isBuying: true),
+                  child: _memberIntroBlock(productDetailList, previousPurchaseDetails, isBuying: true),
                 ),
                 SizedBox(height: 48),
                 Padding(
@@ -101,7 +120,11 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
     return Center(child: CircularProgressIndicator(),);
   }
 
-  Widget _memberIntroBlock(List<ProductDetails> productDetailList, {bool isBuying = false}) {
+  Widget _memberIntroBlock(
+    List<ProductDetails> productDetailList, 
+    PurchaseDetails previousPurchaseDetails, 
+    {bool isBuying = false}
+  ) {
     double width = MediaQuery.of(context).size.width;
     String boxTitle = 'Premium 會員';
     if(widget.subscritionType == SubscritionType.subscribe_monthly){
@@ -205,8 +228,38 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                       if(_auth.currentUser.emailVerified) {
                         PurchaseParam purchaseParam;
                         if (Platform.isAndroid) {
+                          ChangeSubscriptionParam changeSubscriptionParam;
+                          GooglePlayPurchaseDetails oldPurchaseDetails;
+                          if(previousPurchaseDetails != null) {
+                            oldPurchaseDetails = GooglePlayPurchaseDetails(
+                              productID: previousPurchaseDetails.productID,
+                              billingClientPurchase: PurchaseWrapper(
+                                sku: previousPurchaseDetails.productID,
+                                purchaseToken: previousPurchaseDetails.verificationData.serverVerificationData,
+                                purchaseState: PurchaseStateWrapper.purchased,
+                                packageName: Environment().config.androidPackageName,
+                                isAcknowledged: true,
+                              ),
+                              verificationData: previousPurchaseDetails.verificationData,
+                              status: previousPurchaseDetails.status,
+                              transactionDate: previousPurchaseDetails.transactionDate,
+                            );
+                          }
+                          if(widget.subscritionType == SubscritionType.subscribe_monthly) {
+                            changeSubscriptionParam = ChangeSubscriptionParam(
+                              oldPurchaseDetails: oldPurchaseDetails,
+                              prorationMode: ProrationMode.deferred,
+                            );
+                          } else if(widget.subscritionType == SubscritionType.subscribe_yearly) {
+                            changeSubscriptionParam = ChangeSubscriptionParam(
+                              oldPurchaseDetails: oldPurchaseDetails,
+                              prorationMode: ProrationMode.deferred,
+                            );
+                          }
+
                           purchaseParam = GooglePlayPurchaseParam(
                             productDetails: productDetailList[index],
+                            changeSubscriptionParam: changeSubscriptionParam
                           );
                         } else {
                           purchaseParam = PurchaseParam(
