@@ -8,6 +8,8 @@ import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 
 class DownloadMagazineWidget extends StatefulWidget {
+  final bool isMemberContent;
+  const DownloadMagazineWidget({this.isMemberContent = false});
   @override
   _DownloadMagazineWidgetState createState() => _DownloadMagazineWidgetState();
 }
@@ -52,6 +54,55 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
   }
 
   Widget _downloadMagazineWidget(double width, bool isLoading) {
+    if(widget.isMemberContent){
+      return Card(
+        elevation: 10,
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                '月費、年費會員可享免費下載電子雜誌',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Color.fromRGBO(0, 0, 0, 0.66),
+                ),
+              ),
+              SizedBox(height: 24),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: appColor,
+                ),
+                child: Container(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: isLoading
+                      ? SpinKitThreeBounce(color: appColor, size: 17,)
+                      : Text(
+                          '立即下載',
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: Colors.white,
+                          ),
+                        ),
+                    ),
+                  ),
+                ),
+                onPressed: isLoading
+                ? () {}
+                : () {
+                    _fetchMemberSubscriptionType();
+                  },
+              ),
+            ]
+          ),
+        ),
+      );
+    }
     return Container(
       color: appColor,
       child: Padding(

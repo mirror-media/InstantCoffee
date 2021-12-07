@@ -18,7 +18,14 @@ import 'package:readr_app/widgets/quoteByWidget.dart';
 import 'package:readr_app/widgets/youtubeWidget.dart';
 
 class ParagraphFormat {
-  Widget parseTheParagraph(Paragraph paragraph, BuildContext context, {double htmlFontSize = 20}) {
+  bool _isMemberContent = false;
+  Widget parseTheParagraph(
+    Paragraph paragraph, 
+    BuildContext context, 
+    {double htmlFontSize = 20, 
+    bool isMemberContent = false,
+    }) {
+    _isMemberContent = isMemberContent;
     switch (paragraph.type) {
       case 'header-one':
         {
@@ -47,7 +54,15 @@ class ParagraphFormat {
       case 'blockquote':
         {
           if (paragraph.contents.length > 0) {
-            return Row(
+            Widget blockquote;
+            if(_isMemberContent){
+              blockquote = QuoteByWidget(
+                quote: paragraph.contents[0].data,
+                isMemberContent: _isMemberContent,
+              );
+              return _addPaddingIfNeeded(blockquote);
+            }
+            blockquote = Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Transform.rotate(
@@ -70,40 +85,57 @@ class ParagraphFormat {
                 ),
               ],
             );
+            return _addPaddingIfNeeded(blockquote);
           }
           return Container();
         }
         break;
       case 'ordered-list-item':
         {
-          return buildOrderListWidget(paragraph.contents, htmlFontSize: htmlFontSize);
+          Widget orderedListItem = buildOrderListWidget(paragraph.contents, htmlFontSize: htmlFontSize);
+          return _addPaddingIfNeeded(orderedListItem);
         }
         break;
       case 'unordered-list-item':
         {
-          return buildUnorderListWidget(paragraph.contents, htmlFontSize: htmlFontSize);
+          Widget unOrderedListItem = buildUnorderListWidget(paragraph.contents, htmlFontSize: htmlFontSize);
+          return _addPaddingIfNeeded(unOrderedListItem);
         }
         break;
       case 'image':
         {
-          var width = MediaQuery.of(context).size.width - 32;
+          var width;
+          if(_isMemberContent){
+            width = MediaQuery.of(context).size.width;
+          }else{
+            width = MediaQuery.of(context).size.width - 32;
+          }
           return ImageDescriptionWidget(
             imageUrl: paragraph.contents[0].data,
             description: paragraph.contents[0].description,
             width: width,
             aspectRatio: paragraph.contents[0].aspectRatio,
+            isMemberContent: _isMemberContent,
+            textSize: _isMemberContent ? 14 : 16,
           );
         }
         break;
       case 'slideshow':
         {
           return ImageAndDescriptionSlideShowWidget(
-              contentList: paragraph.contents);
+            contentList: paragraph.contents,
+            isMemberContent: _isMemberContent,
+          );
         }
         break;
       case 'youtube':
         {
-          var width = MediaQuery.of(context).size.width - 32;
+          var width;
+          if(_isMemberContent){
+            width = MediaQuery.of(context).size.width;
+          }else{
+            width = MediaQuery.of(context).size.width - 40;
+          }
           return YoutubeWidget(
             width: width,
             youtubeId: paragraph.contents[0].data,
@@ -112,51 +144,61 @@ class ParagraphFormat {
         }
       case 'video':
         {
-          return MMVideoPlayer(
+          Widget video = MMVideoPlayer(
             videourl: paragraph.contents[0].data,
             aspectRatio: 16 / 9,
           );
+          return _addPaddingIfNeeded(video);
         }
         break;
       case 'audio':
         {
           List<String> titleAndDescription =
               paragraph.contents[0].description.split(';');
-          return MMAudioPlayer(
+          
+          Widget audio = MMAudioPlayer(
             audioUrl: paragraph.contents[0].data,
             title: titleAndDescription[0],
           );
+          return _addPaddingIfNeeded(audio);
         }
         break;
       case 'embeddedcode':
         {
-          return EmbeddedCodeWidget(
+          Widget embeddedcode = EmbeddedCodeWidget(
             embeddedCode: paragraph.contents[0].data,
             aspectRatio:  paragraph.contents[0].aspectRatio,
           );
+          return _addPaddingIfNeeded(embeddedcode);
         }
         break;
       case 'infobox':
         {
-          return InfoBoxWidget(
+          Widget infoBox = InfoBoxWidget(
             title: paragraph.contents[0].description,
             description: paragraph.contents[0].data,
+            isMemberContent: _isMemberContent,
           );
+          return _addPaddingIfNeeded(infoBox);
         }
         break;
       case 'annotation':
         {
-          return AnnotationWidget(
+          Widget annotation = AnnotationWidget(
             data: paragraph.contents[0].data,
+            isMemberContent: _isMemberContent,
           );
+          return _addPaddingIfNeeded(annotation);
         }
         break;
       case 'quoteby':
         {
-          return QuoteByWidget(
+          Widget quoteby = QuoteByWidget(
             quote: paragraph.contents[0].data,
             quoteBy: paragraph.contents[0].description,
+            isMemberContent: _isMemberContent,
           );
+          return _addPaddingIfNeeded(quoteby);
         }
         break;
       default:
@@ -168,6 +210,48 @@ class ParagraphFormat {
   }
 
   Widget parseTheTextToHtmlWidget(String data, Color color, {double fontSize = 20}) {
+    if(_isMemberContent){
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: HtmlWidget(
+          data,
+          hyperlinkColor: Colors.blue,
+          textStyle: TextStyle(
+            fontSize: fontSize,
+            height: 1.8,
+            color: color,
+          ),
+          customStylesBuilder: (element) {
+            if (element.localName == 'h1') {
+              return {
+                'line-height': '140%',
+                'font-weight': 'normal',
+                'font-size': '28px',
+              };
+            } else if (element.localName == 'h2') {
+              return {
+                'line-height': '140%',
+                'font-weight': '500',
+                'font-size': '24px',
+              };
+            } else if (element.localName == 'h3') {
+              return {
+                'line-height': '150%',
+                'font-weight': '500',
+                'font-size': '22px',
+              };
+            } else if (element.localName == 'h4') {
+              return {
+                'line-height': '150%',
+                'font-weight': 'normal',
+                'font-size': '20px',
+              };
+            }
+            return null;
+          },
+        ),
+      );
+    }
     return HtmlWidget(
       data,
       hyperlinkColor: Colors.blue,
@@ -177,6 +261,16 @@ class ParagraphFormat {
         color: color,
       ),
     );
+  }
+
+  Widget _addPaddingIfNeeded(Widget widget){
+    if(_isMemberContent){
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: widget,
+      );
+    }
+    return widget;
   }
 
   List<String> _convertStrangedataList(ContentList contentList) {
