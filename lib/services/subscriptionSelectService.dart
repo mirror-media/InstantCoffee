@@ -1,11 +1,10 @@
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:readr_app/helpers/appException.dart';
+import 'package:readr_app/helpers/environment.dart';
 
-const String _kMonthSubscriptionId = 'monthly';
-const String _kYearSubscriptionId = 'yearly';
-const List<String> _kProductIds = <String>[
-  _kMonthSubscriptionId,
-  _kYearSubscriptionId,
+List<String> _kProductIds = <String>[
+  Environment().config.monthSubscriptionId,
+  Environment().config.yearSubscriptionId,
 ];
 
 abstract class SubscriptionSelectRepos {

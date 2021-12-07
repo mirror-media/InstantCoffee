@@ -8,6 +8,9 @@ abstract class BaseConfig {
   String get tokenStateApi;
   String get errorLogApi;
 
+  String get monthSubscriptionId;
+  String get yearSubscriptionId;
+
   String get mirrorMediaNotImageUrl;
   String get latestApi;
   String get sectionApi;
