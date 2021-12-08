@@ -43,7 +43,7 @@ class _MirrorMediaAppState extends State<MirrorMediaApp> {
             await _inAppPurchase.completePurchase(purchaseDetails);
           }
         } else {
-          //_handleInvalidPurchase(purchaseDetails);
+          _handleInvalidPurchase(purchaseDetails);
           return;
         }
       }
@@ -58,6 +58,22 @@ class _MirrorMediaAppState extends State<MirrorMediaApp> {
   Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) async{
     SubscriptionSelectServices subscriptionSelectServices = SubscriptionSelectServices();
     return subscriptionSelectServices.verifyPurchase(purchaseDetails);
+  }
+
+  void _handleInvalidPurchase(PurchaseDetails purchaseDetails) async{
+    int retryAwaitSecond = 1;
+    int retryMaxAwaitSecond = 60;
+    bool valid = false;
+    while(!valid && retryAwaitSecond < retryMaxAwaitSecond) {
+      await Future.delayed(Duration(seconds: retryAwaitSecond));
+      valid = await _verifyPurchase(purchaseDetails);
+      if (valid) {
+        if(purchaseDetails.pendingCompletePurchase) {
+          await _inAppPurchase.completePurchase(purchaseDetails);
+        }
+      }
+      retryAwaitSecond = retryAwaitSecond*2;
+    }
   }
 
   @override
