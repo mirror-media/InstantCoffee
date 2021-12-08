@@ -126,6 +126,7 @@ dependencies:
     git:
       url: https://github.com/HiIamAlanOu/plugins.git
       path: packages/in_app_purchase/in_app_purchase
+      ref: feature/mm
 
   # generate app icons
   flutter_launcher_icons: ^0.9.0
