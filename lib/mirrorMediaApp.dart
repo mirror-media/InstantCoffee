@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
@@ -44,6 +45,11 @@ class _MirrorMediaAppState extends State<MirrorMediaApp> {
         } else {
           //_handleInvalidPurchase(purchaseDetails);
           return;
+        }
+      }
+      else if (purchaseDetails.status == PurchaseStatus.canceled) {
+        if(Platform.isIOS) {
+          await _inAppPurchase.completePurchase(purchaseDetails);
         }
       }
     });
