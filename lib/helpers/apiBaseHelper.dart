@@ -173,6 +173,7 @@ dynamic returnResponse(http.Response response) {
         (responseJson.containsKey('hits') && responseJson['hits'].containsKey('hits')) ||
         // properties responded by member graphql
         (responseJson.containsKey('data') || responseJson.containsKey('tokenState')) ||
+        responseJson.containsKey('status') ||
         // error log
         responseJson.containsKey('msg');
       if(!hasData) {

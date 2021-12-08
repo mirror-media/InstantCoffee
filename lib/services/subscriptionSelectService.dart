@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +17,7 @@ abstract class SubscriptionSelectRepos {
   Future<List<ProductDetails>> fetchProductDetailList();
   Future<PurchaseDetails> fetchAndroidSubscriptionDetail();
   Future<bool> buySubscriptionProduct(PurchaseParam purchaseParam);
+  Future<bool> verifyPurchase(PurchaseDetails purchaseDetails);
 }
 
 class SubscriptionSelectServices implements SubscriptionSelectRepos{
@@ -108,5 +110,61 @@ class SubscriptionSelectServices implements SubscriptionSelectRepos{
     }
     
     return buySuccess;
+  }
+
+  @override
+  Future<bool> verifyPurchase(PurchaseDetails purchaseDetails) async{
+    String token = await _auth.currentUser.getIdToken();
+
+    String mutation = 
+    """
+    mutation (
+      \$firebaseId: String!,
+      \$packageName: String!,
+      \$productId: String!, 
+      \$source: upsertSubscriptionAppSourceType!,
+      \$verificationData: String!
+    ){
+      upsertAppSubscription(
+        info: {
+          firebaseId: \$firebaseId
+          packageName: \$packageName
+          productId: \$productId
+          source: \$source
+          verificationData: \$verificationData
+        }
+      ) {
+        success
+      }
+    }
+    """;
+    Map<String,String> variables = {
+      "firebaseId" : _auth.currentUser.uid,
+      "packageName" : Platform.isAndroid
+          ? Environment().config.androidPackageName 
+          : Environment().config.iOSBundleId,
+      "productId" : purchaseDetails.productID,
+      "source" : purchaseDetails.verificationData.source,
+      "verificationData": purchaseDetails.verificationData.serverVerificationData,
+    };
+
+    GraphqlBody graphqlBody = GraphqlBody(
+      operationName: '',
+      query: mutation,
+      variables: variables,
+    );
+
+    try {
+      final jsonResponse = await _helper.postByUrl(
+        Environment().config.memberApi,
+        jsonEncode(graphqlBody.toJson()),
+        headers: getHeaders(token),
+      );
+
+      return !jsonResponse.containsKey('errors');
+    } catch(e) {
+      print(e);
+      return false;
+    }
   }
 }
