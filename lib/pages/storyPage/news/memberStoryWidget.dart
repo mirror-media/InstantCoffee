@@ -67,6 +67,7 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
                   Container(
                     color: Colors.black,
                     height: 90,
+                    width: double.infinity,
                     padding: const EdgeInsets.symmetric(horizontal: 31, vertical: 22),
                     child: Image.asset(
                     "assets/image/wine_warning.png",
