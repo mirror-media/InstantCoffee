@@ -101,6 +101,8 @@ dependencies:
   
   # firebase
   firebase_core: ^1.7.0
+  # firebase analytics API
+  firebase_analytics: ^9.0.3
   # firebase messaging
   firebase_messaging: ^10.0.8
   # firebase remote config
