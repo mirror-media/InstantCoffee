@@ -8,7 +8,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
 import 'package:readr_app/helpers/exceptions.dart';
-import 'package:readr_app/mirrorMediaApp.dart';
+import 'package:readr_app/helpers/iAPSubscriptionHelper.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/services/subscriptionSelectService.dart';
 
@@ -21,7 +21,8 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
     on<BuySubscriptionProduct>(_buySubscriptionProduct);
     on<BuyingPurchaseStatusChanged>(_buyingPurchaseStatusChanged);
 
-    _buyingPurchaseSubscription = buyingPurchaseController.stream.listen(
+    IAPSubscriptionHelper iapSubscriptionHelper = IAPSubscriptionHelper();
+    _buyingPurchaseSubscription = iapSubscriptionHelper.buyingPurchaseController.stream.listen(
       (purchaseDetails) => add(BuyingPurchaseStatusChanged(purchaseDetails)),
     );
   }
