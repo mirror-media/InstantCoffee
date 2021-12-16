@@ -40,11 +40,13 @@ class PaymentRecordService {
             paymentTime
             cardInfoLastFour
           }
-          androidpayPayment(orderBy: {updatedAt: desc}){
-            updatedAt
+          googlePlayPayment(orderBy: {transactionDatetime: desc}){
+            amount
+						transactionDatetime
           }
-          applepayPayment(orderBy: {updatedAt: desc}){
-            updatedAt
+          appStorePayment(orderBy: {purchaseDate: desc}){
+            amount
+						purchaseDate
           }
         }
       }
@@ -75,13 +77,19 @@ class PaymentRecordService {
         DateTime paymentDate = DateTime(2021);
         String paymentMethod;
         String creditCardInfoLastFour;
-        String paymentType;
+        String subscribeType = '單篇訂閱';
         bool isSuccess;
+        if(subscription['frequency'] == 'monthly'){
+          subscribeType = '月方案';
+        } else if(subscription['frequency'] == 'yearly'){
+          subscribeType = '年方案';
+        }
+
         if(subscription['paymentMethod'] == 'newebpay' && subscription['newebpayPayment'] != null){
           subscription['newebpayPayment'].forEach((newebpayPayment){
             paymentAmount = newebpayPayment['amount'];
             creditCardInfoLastFour = newebpayPayment['cardInfoLastFour'];
-            paymentMethod = newebpayPayment['paymentMethod'] + '($creditCardInfoLastFour)';
+            paymentMethod = '信用卡付款($creditCardInfoLastFour)';
             if(newebpayPayment['paymentTime'] != null){
               paymentDate = DateTime.parse(newebpayPayment['paymentTime']).toLocal();
             }
@@ -92,65 +100,78 @@ class PaymentRecordService {
               isSuccess = false;
             }
             if(newebpayPayment['frequency'] == 'monthly'){
-              paymentType = '月方案';
+              subscribeType = '月方案';
             }
             else if(newebpayPayment['frequency'] == 'yearly'){
-              paymentType = '年方案';
+              subscribeType = '年方案';
             }
             else{
-              paymentType = '單篇訂閱';
+              subscribeType = '單篇訂閱';
             }
             paymentRecord = PaymentRecord(
               paymentOrderNumber: paymentOrderNumber,
-              paymentType: paymentType,
+              subscribeType: subscribeType,
               paymentCurrency: paymentCurrency,
               paymentAmount: paymentAmount,
               paymentDate: paymentDate,
               paymentMethod: paymentMethod,
-              isSuccess: isSuccess
+              isSuccess: isSuccess,
+              paymentType: PaymentType.newebpay,
             );
             paymentRecords.add(paymentRecord);
           });
         }
-        else if(subscription['paymentMethod'] == 'applepay'){
+        else if(subscription['paymentMethod'] == 'app_store'){
           paymentAmount = subscription['amount'];
-          paymentMethod = 'Apple Pay 續扣';
-          if(subscription['applepayPayment'] != null){
-            subscription['applepayPayment'].forEach((applepayPayment){
-              if(applepayPayment['updatedAt'] != null){
-                paymentDate = DateTime.parse(applepayPayment['updatedAt']).toLocal();
+          paymentMethod = 'App Store 續扣';
+          if(subscription['appStorePayment'] != null){
+            subscription['appStorePayment'].forEach((appStorePayment){
+              if(appStorePayment['purchaseDate'] != null){
+                paymentDate = DateTime.parse(appStorePayment['purchaseDate']).toLocal();
+              }
+              if(appStorePayment['amount'] != null){
+                paymentAmount = appStorePayment['amount'].toInt();
               }
               paymentRecord = PaymentRecord(
                 paymentOrderNumber: paymentOrderNumber,
-                paymentType: paymentType,
+                paymentType: PaymentType.appStore,
                 paymentCurrency: paymentCurrency,
                 paymentAmount: paymentAmount,
                 paymentDate: paymentDate,
                 paymentMethod: paymentMethod,
-                isSuccess: isSuccess
+                isSuccess: isSuccess,
+                subscribeType: subscribeType,
               );
-              paymentRecords.add(paymentRecord);
+              if(paymentAmount != null){
+                paymentRecords.add(paymentRecord);
+              }
             });
           }
         }
         else{
           paymentAmount = subscription['amount'];
-          paymentMethod = 'Google Pay 續扣';
-          if(subscription['androidpayPayment'] != null){
-            subscription['androidpayPayment'].forEach((androidpayPayment){
-              if(androidpayPayment['updatedAt'] != null){
-                paymentDate = DateTime.parse(androidpayPayment['updatedAt']).toLocal();
+          paymentMethod = 'Google Play 續扣';
+          if(subscription['googlePlayPayment'] != null){
+            subscription['googlePlayPayment'].forEach((googlePlayPayment){
+              if(googlePlayPayment['transactionDatetime'] != null){
+                paymentDate = DateTime.parse(googlePlayPayment['transactionDatetime']).toLocal();
+              }
+              if(googlePlayPayment['amount'] != null){
+                paymentAmount = googlePlayPayment['amount'];
               }
               paymentRecord = PaymentRecord(
                 paymentOrderNumber: paymentOrderNumber,
-                paymentType: paymentType,
+                paymentType: PaymentType.googlePlay,
                 paymentCurrency: paymentCurrency,
                 paymentAmount: paymentAmount,
                 paymentDate: paymentDate,
                 paymentMethod: paymentMethod,
-                isSuccess: isSuccess
+                isSuccess: isSuccess,
+                subscribeType: subscribeType,
               );
-              paymentRecords.add(paymentRecord);
+              if(paymentAmount != null){
+                paymentRecords.add(paymentRecord);
+              }
             });
           }
         }
