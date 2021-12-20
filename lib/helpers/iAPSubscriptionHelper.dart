@@ -13,6 +13,7 @@ class IAPSubscriptionHelper {
 
   IAPSubscriptionHelper._internal();
 
+  bool verifyPurchaseInBloc = false;
   StreamController<PurchaseDetails> buyingPurchaseController = StreamController<PurchaseDetails>.broadcast();
   StreamSubscription<List<PurchaseDetails>> _subscription;
   InAppPurchase _inAppPurchase = InAppPurchase.instance;
@@ -29,21 +30,24 @@ class IAPSubscriptionHelper {
 
   void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
     purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
-      buyingPurchaseController.sink.add(purchaseDetails);
-      if (purchaseDetails.status == PurchaseStatus.purchased) {
-        bool valid = await _verifyPurchase(purchaseDetails);
-        if (valid) {
-          if(purchaseDetails.pendingCompletePurchase) {
+      if(verifyPurchaseInBloc) {
+        buyingPurchaseController.sink.add(purchaseDetails);
+      } else {
+        if (purchaseDetails.status == PurchaseStatus.purchased) {
+          bool valid = await _verifyPurchase(purchaseDetails);
+          if (valid) {
+            if(purchaseDetails.pendingCompletePurchase) {
+              await _inAppPurchase.completePurchase(purchaseDetails);
+            }
+          } else {
+            _handleInvalidPurchase(purchaseDetails);
+            return;
+          }
+        }
+        else if (purchaseDetails.status == PurchaseStatus.canceled) {
+          if(Platform.isIOS) {
             await _inAppPurchase.completePurchase(purchaseDetails);
           }
-        } else {
-          _handleInvalidPurchase(purchaseDetails);
-          return;
-        }
-      }
-      else if (purchaseDetails.status == PurchaseStatus.canceled) {
-        if(Platform.isIOS) {
-          await _inAppPurchase.completePurchase(purchaseDetails);
         }
       }
     });
@@ -54,7 +58,7 @@ class IAPSubscriptionHelper {
     return subscriptionSelectServices.verifyPurchase(purchaseDetails);
   }
 
-  void _handleInvalidPurchase(PurchaseDetails purchaseDetails) async{
+  Future<bool> _handleInvalidPurchase(PurchaseDetails purchaseDetails) async{
     int retryAwaitSecond = 1;
     int retryMaxAwaitSecond = 60;
     bool valid = false;
@@ -68,6 +72,21 @@ class IAPSubscriptionHelper {
       }
       retryAwaitSecond = retryAwaitSecond*2;
     }
+
+    return valid;
+  }
+
+  Future<bool> verifyEntirePurchase(PurchaseDetails purchaseDetails) async{
+    bool valid = await _verifyPurchase(purchaseDetails);
+    if (valid) {
+      if(purchaseDetails.pendingCompletePurchase) {
+        await _inAppPurchase.completePurchase(purchaseDetails);
+      }
+    } else {
+      valid = await _handleInvalidPurchase(purchaseDetails);
+    }
+    
+    return valid;
   }
 
   cancelSubscriptionStream() {

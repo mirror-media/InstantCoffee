@@ -9,26 +9,30 @@ import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/helpers/iAPSubscriptionHelper.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/services/subscriptionSelectService.dart';
 
 class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, SubscriptionSelectState> {
+  IAPSubscriptionHelper _iapSubscriptionHelper = IAPSubscriptionHelper();
   final SubscriptionSelectRepos subscriptionSelectRepos;
   StreamSubscription<PurchaseDetails>
       _buyingPurchaseSubscription;
   SubscriptionSelectBloc({this.subscriptionSelectRepos}) : super(SubscriptionSelectState.init()) {
+    _iapSubscriptionHelper.verifyPurchaseInBloc = true;
+
     on<FetchSubscriptionProducts>(_fetchSubscriptionProducts);
     on<BuySubscriptionProduct>(_buySubscriptionProduct);
     on<BuyingPurchaseStatusChanged>(_buyingPurchaseStatusChanged);
 
-    IAPSubscriptionHelper iapSubscriptionHelper = IAPSubscriptionHelper();
-    _buyingPurchaseSubscription = iapSubscriptionHelper.buyingPurchaseController.stream.listen(
+    _buyingPurchaseSubscription = _iapSubscriptionHelper.buyingPurchaseController.stream.listen(
       (purchaseDetails) => add(BuyingPurchaseStatusChanged(purchaseDetails)),
     );
   }
 
   @override
   Future<void> close() {
+    _iapSubscriptionHelper.verifyPurchaseInBloc = false;
     _buyingPurchaseSubscription.cancel();
     return super.close();
   }
@@ -121,7 +125,7 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
   void _buyingPurchaseStatusChanged(
     BuyingPurchaseStatusChanged event,
     Emitter<SubscriptionSelectState> emit,
-  ) {
+  ) async{
     PurchaseDetails purchaseDetails = event.purchaseDetails;
     if(purchaseDetails.status == PurchaseStatus.canceled) {
       emit(SubscriptionSelectState.loaded(
@@ -129,16 +133,32 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
         previousPurchaseDetails: state.previousPurchaseDetails
       ));
     } else if(purchaseDetails.status == PurchaseStatus.purchased) {
-      Fluttertoast.showToast(
-        msg: '變更方案成功',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        fontSize: 16.0
-      );
-      emit(SubscriptionSelectState.buyingSuccess());
+      bool isSuccess = await _iapSubscriptionHelper.verifyEntirePurchase(purchaseDetails);
+      if(isSuccess) {
+        Fluttertoast.showToast(
+          msg: '變更方案成功',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0
+        );
+
+        RouteGenerator.navigatorKey.currentState.popUntil((route) => route.isFirst);
+        RouteGenerator.navigateToLogin();
+      } else {
+        Fluttertoast.showToast(
+          msg: '變更方案成功',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0
+        );
+        emit(SubscriptionSelectState.buyingSuccess());
+      }
     } else if(purchaseDetails.status == PurchaseStatus.error) {
       print("error code: ${purchaseDetails.error.code}");
       print("error message: ${purchaseDetails.error.message}");
