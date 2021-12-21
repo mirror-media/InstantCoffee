@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter_embedded_webview/flutter_embedded_webview.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:readr_app/helpers/dataConstants.dart';
