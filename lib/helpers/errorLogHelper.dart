@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/helpers/environment.dart';
 
