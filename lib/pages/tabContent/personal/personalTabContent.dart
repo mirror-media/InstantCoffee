@@ -378,7 +378,10 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
           ],
         ),
       ),
-      onTap: () => RouteGenerator.navigateToStory(record.slug, isMemberCheck: record.isMemberCheck),
+      onTap: () => RouteGenerator.navigateToStory(record.slug, 
+        isMemberCheck: record.isMemberCheck, 
+        isMemberContent: record.isMemberContent,
+        ),
     );
   }
 }

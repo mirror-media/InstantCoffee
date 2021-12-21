@@ -265,7 +265,7 @@ class _TabContentState extends State<TabContent> {
       onTap: () => RouteGenerator.navigateToStory(
         record.slug, 
         isMemberCheck: record.isMemberCheck, 
-        isMemberContent: widget.section.key == Environment().config.memberSectionKey),
+        isMemberContent: record.isMemberContent),
     );
   }
 
@@ -320,7 +320,7 @@ class _TabContentState extends State<TabContent> {
       onTap: () => RouteGenerator.navigateToStory(
         record.slug, 
         isMemberCheck: record.isMemberCheck, 
-        isMemberContent: widget.section.key == Environment().config.memberSectionKey),
+        isMemberContent: record.isMemberContent),
     );
   }
 }
