@@ -3,8 +3,12 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/onBoarding/bloc.dart';
+import 'package:readr_app/blocs/onBoarding/events.dart';
+import 'package:readr_app/blocs/onBoarding/states.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:readr_app/blocs/onBoardingBloc.dart';
 
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -13,20 +17,15 @@ import 'package:readr_app/models/notificationSettingList.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/onBoarding.dart';
 import 'package:readr_app/widgets/appExpansionTile.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class NotificationSettingsPage extends StatefulWidget {
-  final OnBoardingBloc onBoardingBloc;
-  NotificationSettingsPage({
-    @required this.onBoardingBloc,
-  });
-
   @override
   _NotificationSettingsPageState createState() =>
       _NotificationSettingsPageState();
 }
 
 class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
+  OnBoardingBloc _onBoardingBloc;
   List<GlobalKey> _notificationKeys;
   List<GlobalKey<AppExpansionTileState>> _expansionTileKeys;
   final LocalStorage _storage = LocalStorage('setting');
@@ -35,6 +34,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
   @override
   void initState() {
+    _onBoardingBloc = context.read<OnBoardingBloc>();
     _notificationKeys = List<GlobalKey>();
     _expansionTileKeys = List<GlobalKey<AppExpansionTileState>>();
     _setNotificationSettingList();
@@ -64,14 +64,12 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       _expansionTileKeys.add(GlobalKey());
     }
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{  
-      if(widget.onBoardingBloc.isOnBoarding && 
-      widget.onBoardingBloc.status == OnBoardingStatus.FourthPage) {
+      if(_onBoardingBloc.state.status == OnBoardingStatus.fourthPage) {
         // await navigation completed, or onBoarding will get the wrong position
         await Future.delayed(Duration(milliseconds: 300));
-        OnBoarding onBoarding = await widget.onBoardingBloc.getSizeAndPosition(_notificationKeys[1]);
+        OnBoarding onBoarding = await _onBoardingBloc.getSizeAndPosition(_notificationKeys[1]);
         onBoarding.left = 0;
         onBoarding.height += 16;
-        onBoarding.isNeedInkWell = true;
         onBoarding.function = () {
           _notificationSettingList[1].value = true;
           _storage.setItem(
@@ -79,11 +77,20 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
           _firebaseMessangingHelper.subscribeTheNotification(_notificationSettingList[1]);
           _expansionTileKeys[1].currentState.expand();
-          widget.onBoardingBloc.closeOnBoarding();
+          _onBoardingBloc.setOnBoardingClose();
+          _onBoardingBloc.add(
+            GoToNextHint(
+              onBoardingStatus: null,
+              onBoarding: null,
+            )
+          );
         };
-
-        widget.onBoardingBloc.checkOnBoarding(onBoarding);
-        widget.onBoardingBloc.status = OnBoardingStatus.NULL;
+        _onBoardingBloc.add(
+          GoToNextHint(
+            onBoardingStatus: OnBoardingStatus.close,
+            onBoarding: onBoarding,
+          )
+        );
       }
     });
     setState(() {});
@@ -156,11 +163,10 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
 
-    return StreamBuilder<OnBoarding>(
-      initialData: OnBoarding(isOnBoarding: false),
-      stream: widget.onBoardingBloc.onBoardingStream,
-      builder: (context, snapshot) {
-        OnBoarding onBoarding = snapshot.data;
+    return BlocBuilder<OnBoardingBloc, OnBoardingState>(
+      builder: (BuildContext context, OnBoardingState state) {
+        OnBoarding onBoarding = state.onBoarding;
+
         return Material(
           type: MaterialType.transparency,
           child: Stack(
@@ -183,33 +189,25 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   ),
                 ),
               ),
-              if(onBoarding.isOnBoarding)
-                widget.onBoardingBloc.getClipPathOverlay(
-                  onBoarding.left,
-                  onBoarding.top,
-                  onBoarding.width,
-                  onBoarding.height,
-                ),
-                if(onBoarding.isOnBoarding && 
-                onBoarding.isNeedInkWell)
-                  GestureDetector(
-                    onTap: () async{
-                      onBoarding.function?.call();
-                    },
-                    child: widget.onBoardingBloc.getCustomPaintOverlay(
-                      context,
-                      onBoarding.left,
-                      onBoarding.top,
-                      onBoarding.width,
-                      onBoarding.height,
-                    ),
+              if(onBoarding != null)
+                GestureDetector(
+                  onTap: () async{
+                    onBoarding.function?.call();
+                  },
+                  child: _onBoardingBloc.getCustomPaintOverlay(
+                    context,
+                    onBoarding.left,
+                    onBoarding.top,
+                    onBoarding.width,
+                    onBoarding.height,
                   ),
-              if(onBoarding.isOnBoarding)
-                widget.onBoardingBloc.getHint(
+                ),
+              if(onBoarding != null)
+                _onBoardingBloc.getHint(
                   context,
                   onBoarding.left, 
                   onBoarding.top + onBoarding.height,
-                  widget.onBoardingBloc.onBoardingHintList[widget.onBoardingBloc.status.index-1],
+                  state.onBoardingHint
                 ),
             ],
           ),
@@ -299,7 +297,6 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                     "notification", _notificationSettingList.toJson());
 
                 _firebaseMessangingHelper.subscribeTheNotification(notificationSettingList[listViewIndex]);
-                widget.onBoardingBloc.closeOnBoarding();
               },
               children: _renderCheckBoxChildren(
                   context, notificationSettingList[listViewIndex]),

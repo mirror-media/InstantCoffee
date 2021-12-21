@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:readr_app/blocs/onBoardingBloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/onBoarding/bloc.dart';
+import 'package:readr_app/blocs/onBoarding/events.dart';
+import 'package:readr_app/blocs/onBoarding/states.dart';
 import 'package:readr_app/blocs/sectionBloc.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
@@ -22,10 +25,8 @@ import 'package:readr_app/helpers/dataConstants.dart';
 
 class HomePage extends StatefulWidget {
   final GlobalKey settingKey;
-  final OnBoardingBloc onBoardingBloc;
   HomePage({
     @required this.settingKey,
-    @required this.onBoardingBloc,
   });
 
   @override
@@ -37,6 +38,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
   AppLinkHelper _appLinkHelper;
   FirebaseMessangingHelper _firebaseMessangingHelper;
 
+  OnBoardingBloc _onBoardingBloc;
   SectionBloc _sectionBloc;
 
   /// tab controller
@@ -61,6 +63,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
       _firebaseMessangingHelper.configFirebaseMessaging(context);
     });
 
+    _onBoardingBloc = context.read<OnBoardingBloc>();
     _sectionBloc = SectionBloc();
 
     /// tab controller
@@ -105,7 +108,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
         ));
       } else if (section.key == Environment().config.personalSectionKey){
         _tabWidgets.add(PersonalTabContent(
-          onBoardingBloc: widget.onBoardingBloc,
+          //onBoardingBloc: widget.onBoardingBloc,
           scrollController: _scrollControllerList[i],
         ));
       } else {
@@ -135,22 +138,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
     });
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{  
-      if(widget.onBoardingBloc.isOnBoarding && 
-      widget.onBoardingBloc.status == OnBoardingStatus.FirstPage) {
+      if(_onBoardingBloc.state.status == OnBoardingStatus.firstPage) {
         // get personal tab size and position by personal tab key(_tabKeys[2])
-        OnBoarding onBoarding = await widget.onBoardingBloc.getSizeAndPosition(_tabKeys[2]);
+        OnBoarding onBoarding = await _onBoardingBloc.getSizeAndPosition(_tabKeys[2]);
         onBoarding.left -= 16;
         onBoarding.width += 32;
-        onBoarding.isNeedInkWell = true;
         onBoarding.function = () {
           _tabController.animateTo(2);
         };
 
-        widget.onBoardingBloc.closeFunction = () {
-          _tabController.animateTo(0);
-        };
-        widget.onBoardingBloc.checkOnBoarding(onBoarding);
-        widget.onBoardingBloc.status = OnBoardingStatus.SecondPage;
+        _onBoardingBloc.add(
+          GoToNextHint(
+            onBoardingStatus: OnBoardingStatus.secondPage,
+            onBoarding: onBoarding,
+          )
+        );
       }
     });
   }
@@ -234,7 +236,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
         key: widget.settingKey,
         icon: Icon(Icons.settings),
         onPressed: () => RouteGenerator.navigateToNotificationSettings(
-          widget.onBoardingBloc
+          _onBoardingBloc
         ),
       ),
       backgroundColor: appColor,

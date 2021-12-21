@@ -4,7 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:readr_app/blocs/onBoardingBloc.dart';
+import 'package:readr_app/blocs/onBoarding/bloc.dart';
+import 'package:readr_app/blocs/onBoarding/events.dart';
+import 'package:readr_app/blocs/onBoarding/states.dart';
 import 'package:readr_app/blocs/personalPageBloc.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
@@ -18,10 +20,8 @@ import 'package:readr_app/pages/tabContent/personal/memberSubscriptionTypeBlock.
 import 'package:readr_app/widgets/unsubscriptionCategoryList.dart';
 
 class PersonalTabContent extends StatefulWidget {
-  final OnBoardingBloc onBoardingBloc;
   final ScrollController scrollController;
   PersonalTabContent({
-    @required this.onBoardingBloc,
     @required this.scrollController,
   });
 
@@ -62,17 +62,18 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
             case Status.COMPLETED:
               CategoryList categoryList = snapshot.data.data;
               WidgetsBinding.instance.addPostFrameCallback((_) async{
-                //await Future.delayed(Duration(milliseconds: 500));
-                if(widget.onBoardingBloc.isOnBoarding && 
-                widget.onBoardingBloc.status == OnBoardingStatus.SecondPage) {
-                  OnBoarding onBoarding = await widget.onBoardingBloc.getSizeAndPosition(_categoryKey);
+                OnBoardingBloc onBoardingBloc = context.read<OnBoardingBloc>();
+                if(onBoardingBloc.state.status == OnBoardingStatus.secondPage) {
+                  OnBoarding onBoarding = await onBoardingBloc.getSizeAndPosition(_categoryKey);
                   onBoarding.left = 0;
                   onBoarding.height += 16;
-                  onBoarding.isNeedInkWell = true;
                   
-
-                  widget.onBoardingBloc.checkOnBoarding(onBoarding);
-                  widget.onBoardingBloc.status = OnBoardingStatus.ThirdPage;
+                  onBoardingBloc.add(
+                    GoToNextHint(
+                      onBoardingStatus: OnBoardingStatus.thirdPage,
+                      onBoarding: onBoarding,
+                    )
+                  );
                 }
               });
               return _buildPersonalTabContent(widget.scrollController, context, categoryList, _personalPageBloc);

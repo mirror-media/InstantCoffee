@@ -2,15 +2,16 @@ import 'dart:async';
 
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:readr_app/blocs/onBoardingBloc.dart';
+import 'package:readr_app/blocs/onBoarding/bloc.dart';
+import 'package:readr_app/blocs/onBoarding/states.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/firebaseLoginStatus.dart';
-import 'package:readr_app/models/onBoarding.dart';
 import 'package:readr_app/pages/emailVerification/emailVerificationSuccessPage.dart';
 import 'package:readr_app/pages/appUpdatePage.dart';
-import 'package:readr_app/pages/homePage.dart';
+import 'package:readr_app/pages/onBoardingPage.dart';
 import 'package:readr_app/services/emailSignInService.dart';
 
 class InitialApp extends StatefulWidget {
@@ -19,10 +20,9 @@ class InitialApp extends StatefulWidget {
 }
 
 class _InitialAppState extends State<InitialApp> {
-  GlobalKey _settingKey;
+  
   AppUpgradeHelper _appUpgradeHelper;
   StreamController _configController;
-  OnBoardingBloc _onBoardingBloc;
   
   // It cant trigger on iOS, cuz AppsFlyer's code on AppDelegate.swift break this feature.
   // The iOS DynamicLinks method will implement in initialAppsFlyer function.
@@ -118,10 +118,8 @@ class _InitialAppState extends State<InitialApp> {
 
   @override
   void initState() {
-    _settingKey = GlobalKey();
     _appUpgradeHelper = AppUpgradeHelper();
     _configController = StreamController<bool>();
-    _onBoardingBloc = OnBoardingBloc();
     _waiting();
     super.initState();
   }
@@ -130,8 +128,6 @@ class _InitialAppState extends State<InitialApp> {
     _appUpgradeHelper.needToUpdate = await _appUpgradeHelper.isUpdateAvailable();
     print('in-app upgrade: ${_appUpgradeHelper.needToUpdate}');
 
-    _onBoardingBloc.setOnBoardingHintList();
-    await _onBoardingBloc.setOnBoardingFromStorage();
     await initDynamicLinks();
     _configController.sink.add(true);
   }
@@ -139,7 +135,6 @@ class _InitialAppState extends State<InitialApp> {
   @override
   void dispose() {
     _configController.close();
-    _onBoardingBloc.dispose();
     super.dispose();
   }
 
@@ -166,66 +161,9 @@ class _InitialAppState extends State<InitialApp> {
           return AppUpdatePage(appUpgradeHelper: _appUpgradeHelper);
         }
 
-        return StreamBuilder<OnBoarding>(
-          initialData: OnBoarding(isOnBoarding: false),
-          stream: _onBoardingBloc.onBoardingStream,
-          builder: (context, snapshot) {
-            OnBoarding onBoarding = snapshot.data;
-            return Material(
-              type: MaterialType.transparency,
-              child: Stack(
-                children: [
-                  HomePage(
-                    settingKey: _settingKey,
-                    onBoardingBloc: _onBoardingBloc,
-                  ),
-                  if(onBoarding.isOnBoarding && 
-                  !onBoarding.isNeedInkWell)
-                    _onBoardingBloc.getClipPathOverlay(
-                      onBoarding.left,
-                      onBoarding.top,
-                      onBoarding.width,
-                      onBoarding.height,
-                    ),
-                  if(onBoarding.isOnBoarding && 
-                  onBoarding.isNeedInkWell)
-                    GestureDetector(
-                      onTap: () async{
-                        if(_onBoardingBloc.isOnBoarding && 
-                        _onBoardingBloc.status == OnBoardingStatus.ThirdPage) {
-                          OnBoarding onBoarding = await _onBoardingBloc.getSizeAndPosition(_settingKey);
-                          onBoarding.isNeedInkWell = true;
-
-                          _onBoardingBloc.checkOnBoarding(onBoarding);
-                          _onBoardingBloc.status = OnBoardingStatus.FourthPage;
-                          onBoarding.function = () {
-                            RouteGenerator.navigateToNotificationSettings(
-                              _onBoardingBloc
-                            );
-                          };
-                        } else {
-                          onBoarding.function?.call();
-                        }
-                      },
-                      child: _onBoardingBloc.getCustomPaintOverlay(
-                        context,
-                        onBoarding.left,
-                        onBoarding.top,
-                        onBoarding.width,
-                        onBoarding.height,
-                      ),
-                    ),
-                  if(onBoarding.isOnBoarding)
-                    _onBoardingBloc.getHint(
-                      context,
-                      onBoarding.left, 
-                      onBoarding.top + onBoarding.height,
-                      _onBoardingBloc.onBoardingHintList[_onBoardingBloc.status.index-1],
-                    ),
-                ],
-              ),
-            );
-          },
+        return BlocProvider(
+          create: (context) => OnBoardingBloc(status: OnBoardingStatus.firstPage),
+          child: OnBoardingPage(),
         );
       }
     );

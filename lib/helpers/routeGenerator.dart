@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:readr_app/blocs/onBoardingBloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/onBoarding/bloc.dart';
 import 'package:readr_app/initialApp.dart';
 import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
@@ -157,8 +158,9 @@ class RouteGenerator {
         if (args is OnBoardingBloc) {
           return MaterialPageRoute(
             settings: settings,
-            builder: (_) => NotificationSettingsPage(
-              onBoardingBloc: args,
+            builder: (_) => BlocProvider.value(
+              value: args,
+              child: NotificationSettingsPage(),
             ),
             fullscreenDialog: true,
           );
