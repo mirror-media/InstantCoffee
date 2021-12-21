@@ -13,7 +13,7 @@ import 'package:readr_app/pages/login/loginPage.dart';
 import 'package:readr_app/pages/magazineBrowser.dart';
 import 'package:readr_app/pages/magazine/magazinePage.dart';
 import 'package:readr_app/pages/memberCenter/deleteMember/deleteMemberPage.dart';
-import 'package:readr_app/pages/memberCenter/subscriptionSelect/hintToWebsitePage.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectPage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/pages/passwordReset/passwordResetPage.dart';
 import 'package:readr_app/pages/passwordResetEmail/passwordResetEmailPage.dart';
@@ -215,8 +215,7 @@ class RouteGenerator {
         Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => HintToWebsitePage(args['subscritionType']),
-          // builder: (_) => SubscriptionSelectPage(args['subscritionType']),
+          builder: (_) => SubscriptionSelectPage(args['subscritionType']),
         );
       default:
         // If there is no such named route in the switch statement, e.g. /third
