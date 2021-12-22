@@ -16,9 +16,14 @@ import 'package:readr_app/services/subscriptionSelectService.dart';
 class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, SubscriptionSelectState> {
   IAPSubscriptionHelper _iapSubscriptionHelper = IAPSubscriptionHelper();
   final SubscriptionSelectRepos subscriptionSelectRepos;
-  StreamSubscription<PurchaseDetails>
-      _buyingPurchaseSubscription;
-  SubscriptionSelectBloc({this.subscriptionSelectRepos}) : super(SubscriptionSelectState.init()) {
+  final String storySlug;
+
+  StreamSubscription<PurchaseDetails> _buyingPurchaseSubscription;
+
+  SubscriptionSelectBloc({
+    this.subscriptionSelectRepos,
+    this.storySlug
+  }) : super(SubscriptionSelectState.init()) {
     _iapSubscriptionHelper.verifyPurchaseInBloc = true;
 
     on<FetchSubscriptionProducts>(_fetchSubscriptionProducts);
@@ -146,7 +151,11 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
         );
 
         RouteGenerator.navigatorKey.currentState.popUntil((route) => route.isFirst);
-        RouteGenerator.navigateToLogin();
+        if(this.storySlug != null) {
+          RouteGenerator.navigateToStory(storySlug);
+        } else {
+          RouteGenerator.navigateToLogin();
+        }
       } else {
         Fluttertoast.showToast(
           msg: '變更方案成功',

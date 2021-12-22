@@ -81,6 +81,7 @@ class JoinMemberBlock extends StatelessWidget {
                       if(isMember) {
                         RouteGenerator.navigateToSubscriptionSelect(
                           SubscritionType.none,
+                          storySlug: storySlug,
                         );
                       } else {
                         RouteGenerator.navigateToLogin(

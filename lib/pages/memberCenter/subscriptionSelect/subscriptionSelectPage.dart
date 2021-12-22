@@ -8,14 +8,27 @@ import 'package:readr_app/services/subscriptionSelectService.dart';
 
 class SubscriptionSelectPage extends StatefulWidget {
   final SubscritionType subscritionType;
-  SubscriptionSelectPage(this.subscritionType);
+  final String storySlug;
+  SubscriptionSelectPage(
+    this.subscritionType, 
+    {this.storySlug}
+  );
 
   @override
   State<SubscriptionSelectPage> createState() => _SubscriptionSelectPageState();
 }
 
 class _SubscriptionSelectPageState extends State<SubscriptionSelectPage> {
-  SubscriptionSelectBloc _subscriptionSelectBloc = SubscriptionSelectBloc(subscriptionSelectRepos: SubscriptionSelectServices());
+  SubscriptionSelectBloc _subscriptionSelectBloc;
+
+  @override
+  void initState() {
+    _subscriptionSelectBloc = SubscriptionSelectBloc(
+      subscriptionSelectRepos: SubscriptionSelectServices(),
+      storySlug: widget.storySlug,
+    );
+    super.initState();
+  }
 
   @override
   void dispose() {

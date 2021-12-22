@@ -215,7 +215,10 @@ class RouteGenerator {
         Map args = settings.arguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => SubscriptionSelectPage(args['subscritionType']),
+          builder: (_) => SubscriptionSelectPage(
+            args['subscritionType'],
+            storySlug: args['storySlug'],
+          ),
         );
       default:
         // If there is no such named route in the switch statement, e.g. /third
@@ -416,13 +419,17 @@ class RouteGenerator {
 
   static void navigateToSubscriptionSelect(
     SubscritionType subscritionType,
-    {bool usePushReplacement = false}
+    {
+      bool usePushReplacement = false,
+      String storySlug,
+    }
   ) {
     if(usePushReplacement){
       navigatorKey.currentState.pushReplacementNamed(
         subscriptionSelect,
         arguments: {
-          'subscritionType': subscritionType
+          'subscritionType': subscritionType,
+          'storySlug': storySlug
         },
       );
     }
@@ -430,7 +437,8 @@ class RouteGenerator {
       navigatorKey.currentState.pushNamed(
         subscriptionSelect,
         arguments: {
-          'subscritionType': subscritionType
+          'subscritionType': subscritionType,
+          'storySlug': storySlug
         },
       );
     }
