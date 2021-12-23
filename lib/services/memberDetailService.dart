@@ -25,8 +25,11 @@ class MemberDetailService {
       member(where: { firebaseId: \$firebaseId }) {
         subscription(
           orderBy: { createdAt: desc },
-          where: {status: paid},
-          first: 1) {
+          where: {
+            isActive: true
+          },
+          first: 1
+        ) {
           frequency
           periodFirstDatetime
           periodEndDatetime
