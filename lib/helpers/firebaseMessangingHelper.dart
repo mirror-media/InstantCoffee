@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -15,17 +16,19 @@ class FirebaseMessangingHelper {
   FirebaseMessangingHelper();
 
   configFirebaseMessaging(BuildContext context) async{
-    NotificationSettings settings = await _firebaseMessaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
+    if(!Platform.isAndroid) {
+      NotificationSettings settings = await _firebaseMessaging.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true,
+      );
 
-    print('User granted permission: ${settings.authorizationStatus}');
+      print('User granted permission: ${settings.authorizationStatus}');
+    }
 
     RemoteMessage initialMessage = await _firebaseMessaging.getInitialMessage();
     _navigateToStoryPage(context, initialMessage);
