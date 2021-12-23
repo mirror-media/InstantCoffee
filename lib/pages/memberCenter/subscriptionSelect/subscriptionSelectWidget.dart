@@ -11,7 +11,6 @@ import 'package:readr_app/blocs/memberCenter/subscriptionSelect/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/models/paymentRecord.dart';
