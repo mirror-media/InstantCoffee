@@ -134,7 +134,7 @@ class PaymentRecordService {
               }
               paymentRecord = PaymentRecord(
                 paymentOrderNumber: paymentOrderNumber,
-                paymentType: PaymentType.appStore,
+                paymentType: PaymentType.app_store,
                 paymentCurrency: paymentCurrency,
                 paymentAmount: paymentAmount,
                 paymentDate: paymentDate,
@@ -161,7 +161,7 @@ class PaymentRecordService {
               }
               paymentRecord = PaymentRecord(
                 paymentOrderNumber: paymentOrderNumber,
-                paymentType: PaymentType.googlePlay,
+                paymentType: PaymentType.google_play,
                 paymentCurrency: paymentCurrency,
                 paymentAmount: paymentAmount,
                 paymentDate: paymentDate,

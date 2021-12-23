@@ -1,7 +1,7 @@
 enum PaymentType{
   newebpay,
-  appStore,
-  googlePlay,
+  app_store,
+  google_play,
 }
 class PaymentRecord {
   final String paymentOrderNumber;
