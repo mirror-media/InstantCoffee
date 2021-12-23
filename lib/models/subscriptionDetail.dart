@@ -23,36 +23,40 @@ class SubscriptionDetail {
     String subscritionTypeJson = json['member']['type'];
     SubscritionType subscritionType = subscritionTypeJson.toEnum(SubscritionType.values);
 
-    String paymentMethodJson = json['member']['subscription'][0]['paymentMethod'];
     PaymentType paymentType;
-    if(paymentMethodJson != null) {
-      paymentType = paymentMethodJson.toEnum(PaymentType.values);
-    }
-
-    bool isAutoRenewing = !json['member']['subscription'][0]['isCanceled'];
-
+    bool isAutoRenewing = false;
     GooglePlayPurchaseDetails googlePlayPurchaseDetails;
-    if(paymentType == PaymentType.google_play) {
-      googlePlayPurchaseDetails = GooglePlayPurchaseDetails(
-        productID: json['member']['subscription'][0]['frequency'],
-        purchaseID: '',
-        verificationData: PurchaseVerificationData(
-          localVerificationData: '',
-          serverVerificationData: json['member']['subscription'][0]['googlePlayPurchaseToken'],
-          source: '',
-        ),
-        transactionDate: '',
-        billingClientPurchase: PurchaseWrapper(
-          sku: json['member']['subscription'][0]['frequency'],
-          purchaseToken: json['member']['subscription'][0]['googlePlayPurchaseToken'],
-          purchaseState: PurchaseStateWrapper.purchased,
-          packageName: Environment().config.androidPackageName,
-          isAcknowledged: true,
-          isAutoRenewing: isAutoRenewing,
-        ),
-        status: PurchaseStatus.purchased,
-      );
+
+    if(json['member']['subscription'] != null) {
+      String paymentMethodJson = json['member']['subscription'][0]['paymentMethod'];
+      paymentType = paymentMethodJson.toEnum(PaymentType.values);
+
+      isAutoRenewing = !json['member']['subscription'][0]['isCanceled'];
+
+      
+      if(paymentType == PaymentType.google_play) {
+        googlePlayPurchaseDetails = GooglePlayPurchaseDetails(
+          productID: json['member']['subscription'][0]['frequency'],
+          purchaseID: '',
+          verificationData: PurchaseVerificationData(
+            localVerificationData: '',
+            serverVerificationData: json['member']['subscription'][0]['googlePlayPurchaseToken'],
+            source: '',
+          ),
+          transactionDate: '',
+          billingClientPurchase: PurchaseWrapper(
+            sku: json['member']['subscription'][0]['frequency'],
+            purchaseToken: json['member']['subscription'][0]['googlePlayPurchaseToken'],
+            purchaseState: PurchaseStateWrapper.purchased,
+            packageName: Environment().config.androidPackageName,
+            isAcknowledged: true,
+            isAutoRenewing: isAutoRenewing,
+          ),
+          status: PurchaseStatus.purchased,
+        );
+      }
     }
+
     
     return SubscriptionDetail(
       subscritionType: subscritionType,

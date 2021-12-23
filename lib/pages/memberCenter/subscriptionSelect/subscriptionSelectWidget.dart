@@ -35,6 +35,10 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
   }
 
   bool _checkIsTheSamePlatfrom(PaymentType paymentType) {
+    if(paymentType == null) {
+      return true;
+    }
+
     if(paymentType == PaymentType.google_play && Platform.isAndroid) {
       return true;
     } else if (paymentType == PaymentType.app_store && Platform.isIOS) {
