@@ -106,6 +106,7 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
     print(event.toString());
     try{
       emit(SubscriptionSelectState.buying(
+        subscriptionDetail: state.subscriptionDetail,
         productDetailList: state.productDetailList
       ));
       bool buySuccess = await subscriptionSelectRepos.buySubscriptionProduct(event.purchaseParam);

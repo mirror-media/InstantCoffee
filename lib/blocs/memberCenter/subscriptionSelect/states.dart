@@ -39,9 +39,11 @@ class SubscriptionSelectState {
       );
 
   const SubscriptionSelectState.buying({
+    SubscriptionDetail subscriptionDetail,
     List<ProductDetails> productDetailList,
   })  : this._(
         status: SubscriptionSelectStatus.buying,
+        subscriptionDetail: subscriptionDetail,
         productDetailList: productDetailList,
       );
 
