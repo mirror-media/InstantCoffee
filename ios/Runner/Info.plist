@@ -112,5 +112,7 @@
 		<false/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>This application needs to access your microphone</string>
 	</dict>
 </plist>

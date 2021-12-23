@@ -6,8 +6,10 @@ import 'package:readr_app/widgets/imageDescriptionWidget.dart';
 
 class ImageAndDescriptionSlideShowWidget extends StatefulWidget {
   final ContentList contentList;
+  final bool isMemberContent;
   ImageAndDescriptionSlideShowWidget({
     @required this.contentList,
+    this.isMemberContent = false,
   });
 
   @override
@@ -92,6 +94,9 @@ class _ImageAndDescriptionSlideShowWidgetState
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width - 32;
+    if(widget.isMemberContent){
+      width = MediaQuery.of(context).size.width;
+    }
 
     double textSize = 16;
     double textHeight = 1.4;
@@ -112,57 +117,61 @@ class _ImageAndDescriptionSlideShowWidgetState
               description: content.description,
               width: width,
               aspectRatio: content.aspectRatio,
+              isMemberContent: widget.isMemberContent,
             ))
         .toList();
 
-    return Stack(
-      children: [
-        CarouselSlider(
-          items: silders,
-          carouselController: carouselController,
-          options: options,
-        ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Container(
-            width: width * 0.1,
-            height: width / carouselRatio,
-            alignment: Alignment.center,
-            child: InkWell(
-              child: backActivated 
-                  ? backActivatedWidget(width * 0.1) 
-                  : backOrginalWidget(width * 0.1),
-              onTap: () {
-                carouselController.previousPage();
-                setState(() {
-                  backActivated = true;
-                  forwardActivated = false;
-                });
-              },
+    return Padding(
+      padding: EdgeInsets.only(bottom: widget.isMemberContent ? 32 : 0), 
+      child: Stack(
+        children: [
+          CarouselSlider(
+            items: silders,
+            carouselController: carouselController,
+            options: options,
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              width: width * 0.1,
+              height: width / carouselRatio,
+              alignment: Alignment.center,
+              child: InkWell(
+                child: backActivated 
+                    ? backActivatedWidget(width * 0.1) 
+                    : backOrginalWidget(width * 0.1),
+                onTap: () {
+                  carouselController.previousPage();
+                  setState(() {
+                    backActivated = true;
+                    forwardActivated = false;
+                  });
+                },
+              ),
             ),
           ),
-        ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: Container(
-            width: width * 0.1,
-            height: width / carouselRatio,
-            alignment: Alignment.center,
-            child: InkWell(
-              child: forwardActivated
-                  ? forwardActivatedWidget(width * 0.1)
-                  : forwardOrginalWidget(width * 0.1),
-              onTap: () {
-                carouselController.nextPage();
-                setState(() {
-                  backActivated = false;
-                  forwardActivated = true;
-                });
-              },
+          Align(
+            alignment: Alignment.centerRight,
+            child: Container(
+              width: width * 0.1,
+              height: width / carouselRatio,
+              alignment: Alignment.center,
+              child: InkWell(
+                child: forwardActivated
+                    ? forwardActivatedWidget(width * 0.1)
+                    : forwardOrginalWidget(width * 0.1),
+                onTap: () {
+                  carouselController.nextPage();
+                  setState(() {
+                    backActivated = false;
+                    forwardActivated = true;
+                  });
+                },
+              ),
             ),
           ),
-        ),
-      ],
+       ],
+      ),
     );
   }
 }

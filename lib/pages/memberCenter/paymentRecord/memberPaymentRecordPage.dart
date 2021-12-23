@@ -139,22 +139,24 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
   }
 
   Widget _buildListItem(PaymentRecord paymentRecord) {
-    Widget statusText;
-    if(paymentRecord.isSuccess){
-      statusText = Text('付款成功',
-        style:TextStyle(
-          color: Colors.black45,
-          fontSize: 13,
-        ),
-      );
-    }
-    else{
-      statusText = Text('付款失敗',
-        style:TextStyle(
-          color: Color.fromARGB(240, 219, 23, 48),
-          fontSize: 13,
-        ),
-      );
+    Widget statusText = Container();
+    if(paymentRecord.paymentType == PaymentType.newebpay){
+      if(paymentRecord.isSuccess){
+        statusText = Text('付款成功',
+          style:TextStyle(
+            color: Colors.black45,
+            fontSize: 13,
+          ),
+        );
+      }
+      else{
+        statusText = Text('付款失敗',
+          style:TextStyle(
+            color: Color.fromARGB(240, 219, 23, 48),
+            fontSize: 13,
+          ),
+        );
+      }
     }
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
@@ -174,7 +176,7 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
               ),
               SizedBox(height: 2),
               Text(
-                paymentRecord.paymentType,
+                paymentRecord.subscribeType,
                 style: TextStyle(fontSize: 17),
               ),
               SizedBox(height: 4),

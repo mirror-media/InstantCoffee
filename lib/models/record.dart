@@ -8,6 +8,7 @@ class Record {
   String publishedDate;
   String photoUrl;
   bool isMemberCheck;
+  bool isMemberContent;
 
   Record({
     this.title,
@@ -15,6 +16,7 @@ class Record {
     this.publishedDate,
     this.photoUrl,
     this.isMemberCheck,
+    this.isMemberContent,
   });
 
   factory Record.fromJson(Map<String, dynamic> json) {
@@ -61,6 +63,15 @@ class Record {
       }
     }
 
+    bool isMemberContent = false;
+    if(json["sections"] != null){
+      for (int i = 0; i < json["sections"].length; i++){
+        if(json["sections"][i]["name"] == 'member'){
+          isMemberContent = true;
+        }
+      }
+    }
+
     return Record(
       title: origTitle,
       slug: origSlug,
@@ -69,6 +80,7 @@ class Record {
       isMemberCheck: categoryBuilder.length == 0
       ? true
       : categoryBuilder.isMemberOnly(),
+      isMemberContent: isMemberContent,
     );
   }
 

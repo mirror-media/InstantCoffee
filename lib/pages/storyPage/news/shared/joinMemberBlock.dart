@@ -6,9 +6,11 @@ import 'package:readr_app/models/memberSubscriptionType.dart';
 class JoinMemberBlock extends StatelessWidget {
   final bool isMember;
   final String storySlug;
+  final bool isMemberContent;
   JoinMemberBlock({ 
     @required this.isMember,
     @required this.storySlug,
+    this.isMemberContent = false,
   });
 
   @override
@@ -89,6 +91,7 @@ class JoinMemberBlock extends StatelessWidget {
                           routeArguments: {
                             'slug': storySlug,
                             'isMemberCheck': true,
+                            'isMemberContent': isMemberContent,
                           },
                         );
                       }
@@ -116,6 +119,7 @@ class JoinMemberBlock extends StatelessWidget {
                       routeArguments: {
                         'slug': storySlug,
                         'isMemberCheck': true,
+                        'isMemberContent': isMemberContent,
                       },
                     ),
                   ),

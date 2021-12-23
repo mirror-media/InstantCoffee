@@ -18,9 +18,11 @@ import 'package:readr_app/services/loginService.dart';
 class MemberWidget extends StatefulWidget {
   final String israfelId;
   final SubscritionType subscritionType;
+  final bool isNewebpay;
   MemberWidget({
     @required this.israfelId,
     @required this.subscritionType,
+    @required this.isNewebpay,
   });
 
   @override
@@ -59,21 +61,23 @@ class _MemberWidgetState extends State<MemberWidget> {
                 children: [
                   _horizontalDivider(width),
                   _memberSubscriptionDetailButton(widget.subscritionType),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                    child: _horizontalDivider(width),
-                  ),
                   if(widget.subscritionType == SubscritionType.none || 
                     widget.subscritionType == SubscritionType.subscribe_one_time
                   )...[
+                    Padding(
+                    padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                    child: _horizontalDivider(width),
+                  ),
                     _memberSubscribedArticleButton(),
+                  ],
+                  if(widget.subscritionType != SubscritionType.marketing && 
+                    widget.subscritionType != SubscritionType.subscribe_group
+                  )...[
                     Padding(
                       padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
                       child: _horizontalDivider(width),
                     ),
-                  ],
-                  _memberPaymentRecordButton(widget.subscritionType),
-                  if(widget.subscritionType != SubscritionType.marketing)...[
+                    _memberPaymentRecordButton(widget.subscritionType),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
                       child: _horizontalDivider(width),
@@ -213,13 +217,21 @@ class _MemberWidgetState extends State<MemberWidget> {
   }
  
   Widget _subscriptionSelectButton(SubscritionType subscritionType) {
-    String buttonText = subscritionType == SubscritionType.none || subscritionType == SubscritionType.subscribe_one_time
-      ? '升級 Premium 會員'
-      : "變更方案";
-    return _navigateButton(
-      buttonText,
-      () => RouteGenerator.navigateToSubscriptionSelect(subscritionType),
-    );
+    String buttonText;
+    if(subscritionType == SubscritionType.none || subscritionType == SubscritionType.subscribe_one_time){
+      buttonText = '升級 Premium 會員';
+      return _navigateButton(
+        buttonText,
+        () => RouteGenerator.navigateToSubscriptionSelect(subscritionType),
+      );
+    }
+    else{
+      buttonText = "變更方案";
+      return _navigateButton(
+        buttonText,
+        () => RouteGenerator.navigateToSubscriptionSelect(subscritionType,isNewebpay: widget.isNewebpay),
+      );
+    }
   }
 
   Widget _memberProfileButton() {

@@ -53,6 +53,15 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
       );
     }
 
+    if(subscritionType == SubscritionType.subscribe_group){
+      return Text(
+        '團體訂閱',
+        style: TextStyle(
+          fontSize: fontSize,
+        ),
+      );
+    }
+
     // subscritionType == SubscritionType.marketing
     return Text(
       'VIP',

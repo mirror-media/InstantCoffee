@@ -13,6 +13,7 @@ import 'package:readr_app/pages/login/loginPage.dart';
 import 'package:readr_app/pages/magazineBrowser.dart';
 import 'package:readr_app/pages/magazine/magazinePage.dart';
 import 'package:readr_app/pages/memberCenter/deleteMember/deleteMemberPage.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionSelect/newebpayChangePlanPage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectPage.dart';
 import 'package:readr_app/pages/notificationSettingsPage.dart';
 import 'package:readr_app/pages/passwordReset/passwordResetPage.dart';
@@ -49,6 +50,7 @@ class RouteGenerator {
   static const String magazine = '/magazine';
   static const String magazineBrowser = '/magazineBrowser';
   static const String subscriptionSelect = '/subscriptionSelect';
+  static const String newebpayChangePlan = '/newebpayChangePlan';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -176,6 +178,7 @@ class RouteGenerator {
             builder: (context) => StoryPage(
               slug: args['slug'],
               isMemberCheck: args['isMemberCheck'],
+              isMemberContent: args['isMemberContent'] ?? false, 
             )
           );
         }
@@ -219,6 +222,11 @@ class RouteGenerator {
             args['subscritionType'],
             storySlug: args['storySlug'],
           ),
+        );
+      case newebpayChangePlan:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => NewebpayChangePlanPage(),
         );
       default:
         // If there is no such named route in the switch statement, e.g. /third
@@ -364,13 +372,16 @@ class RouteGenerator {
 
   static void navigateToStory(
     String slug,
-    {bool isMemberCheck = true}
+    {bool isMemberCheck = true,
+     bool isMemberContent = false,
+    }
   ) {
     navigatorKey.currentState.pushNamed(
       story,
       arguments: {
         'slug': slug,
-        'isMemberCheck': isMemberCheck
+        'isMemberCheck': isMemberCheck,
+        'isMemberContent': isMemberContent,
       },
     );
   }
@@ -421,6 +432,7 @@ class RouteGenerator {
     SubscritionType subscritionType,
     {
       bool usePushReplacement = false,
+      bool isNewebpay = false,
       String storySlug,
     }
   ) {
@@ -431,6 +443,10 @@ class RouteGenerator {
           'subscritionType': subscritionType,
           'storySlug': storySlug
         },
+      );
+    }else if(isNewebpay){
+      navigatorKey.currentState.pushNamed(
+        newebpayChangePlan,
       );
     }
     else{
