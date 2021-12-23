@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/models/memberDetail.dart';
 import 'package:intl/intl.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
+import 'package:readr_app/models/paymentRecord.dart';
 import 'package:readr_app/pages/memberCenter/shared/stateErrorWidget.dart';
 import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
 
@@ -60,9 +61,9 @@ class _MemberSubscriptionDetailPageState
             String period =
                 '${DateFormat('yyyy/MM/dd').format(memberDetail.periodFirstDatetime)}-${DateFormat('yyyy/MM/dd').format(memberDetail.periodEndDatetime)}';
             String paymentMethod = '信用卡自動續扣（${memberDetail.cardInfoLastFour}）';
-            if (memberDetail.paymentMethod == 'applepay') {
+            if (memberDetail.paymentType == PaymentType.app_store) {
               paymentMethod = 'Apple Pay 續扣';
-            } else if (memberDetail.paymentMethod == 'androidpay') {
+            } else if (memberDetail.paymentType == PaymentType.google_play) {
               paymentMethod = 'Google Pay 續扣';
             }
             if (memberDetail.isCanceled) paymentMethod = '-';

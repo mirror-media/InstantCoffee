@@ -1,9 +1,12 @@
+import 'package:readr_app/helpers/EnumParser.dart';
+import 'package:readr_app/models/paymentRecord.dart';
+
 class MemberDetail {
   String frequency;
   DateTime periodFirstDatetime;
   DateTime periodEndDatetime;
   DateTime periodNextPayDatetime;
-  String paymentMethod;
+  PaymentType paymentType;
   String cardInfoLastFour;
   bool isCanceled;
 
@@ -13,7 +16,7 @@ class MemberDetail {
       this.periodEndDatetime,
       this.periodNextPayDatetime,
       this.cardInfoLastFour,
-      this.paymentMethod,
+      this.paymentType,
       this.isCanceled});
 
   factory MemberDetail.fromJson(Map<String, dynamic> json) {
@@ -23,13 +26,25 @@ class MemberDetail {
     } else if (json["frequency"] == 'monthly') {
       frequency = '月訂閱';
     }
+    
+    String paymentMethodJson = json['paymentMethod'];
+    PaymentType paymentType;
+    if(paymentMethodJson != null) {
+      paymentType = paymentMethodJson.toEnum(PaymentType.values);
+    }
+
+    String cardInfoLastFour = '';
+    if(json["newebpayPayment"] != null) {
+      cardInfoLastFour = json["newebpayPayment"][0]["cardInfoLastFour"];
+    }
+
     return MemberDetail(
         frequency: frequency,
         periodFirstDatetime: DateTime.parse(json["periodFirstDatetime"]).toLocal(),
         periodEndDatetime: DateTime.parse(json["periodEndDatetime"]).toLocal(),
         periodNextPayDatetime: DateTime.parse(json["periodNextPayDatetime"]).toLocal(),
-        paymentMethod: json["paymentMethod"],
-        cardInfoLastFour: json["newebpayPayment"][0]["cardInfoLastFour"],
+        paymentType: paymentType,
+        cardInfoLastFour: cardInfoLastFour,
         isCanceled: json["isCanceled"] == null ? false : json["isCanceled"]);
   }
 }
