@@ -1,16 +1,12 @@
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:readr_app/models/memberSubscriptionType.dart';
 
 abstract class SubscriptionSelectEvents{}
 
 class FetchSubscriptionProducts extends SubscriptionSelectEvents {
-  final SubscritionType subscritionType;
-  FetchSubscriptionProducts(
-    this.subscritionType,
-  );
+  FetchSubscriptionProducts();
 
   @override
-  String toString() => 'FetchSubscriptionProducts { subscritionType: ${subscritionType.toString()} }';
+  String toString() => 'FetchSubscriptionProducts';
 }
 
 class BuySubscriptionProduct extends SubscriptionSelectEvents {

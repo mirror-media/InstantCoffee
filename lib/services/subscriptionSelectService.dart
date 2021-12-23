@@ -7,6 +7,7 @@ import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/helpers/appException.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/graphqlBody.dart';
+import 'package:readr_app/models/subscriptionDetail.dart';
 
 List<String> _kProductIds = <String>[
   Environment().config.monthSubscriptionId,
@@ -14,8 +15,8 @@ List<String> _kProductIds = <String>[
 ];
 
 abstract class SubscriptionSelectRepos {
+  Future<SubscriptionDetail> fetchSubscriptionDetail();
   Future<List<ProductDetails>> fetchProductDetailList();
-  Future<PurchaseDetails> fetchAndroidSubscriptionDetail();
   Future<bool> buySubscriptionProduct(PurchaseParam purchaseParam);
   Future<bool> verifyPurchase(PurchaseDetails purchaseDetails);
 }
@@ -37,19 +38,7 @@ class SubscriptionSelectServices implements SubscriptionSelectRepos{
   }
 
   @override
-  Future<List<ProductDetails>> fetchProductDetailList() async{
-    final bool isAvailable = await _inAppPurchase.isAvailable();
-    if(isAvailable) {
-      ProductDetailsResponse productDetailResponse = 
-          await _inAppPurchase.queryProductDetails(_kProductIds.toSet());
-      return productDetailResponse.productDetails;
-    }
-
-    throw FetchDataException('The payment platform is unavailable');
-  }
-
-  @override
-  Future<PurchaseDetails> fetchAndroidSubscriptionDetail() async{
+  Future<SubscriptionDetail> fetchSubscriptionDetail() async{
     String firebaseId = _auth.currentUser.uid;
     String token = await _auth.currentUser.getIdToken();
 
@@ -59,18 +48,20 @@ class SubscriptionSelectServices implements SubscriptionSelectRepos{
         subscription(
           orderBy: { createdAt: desc },
           where: {
-            isActive: true,
-            paymentMethod: google_play
+            isActive: true
           },
           first: 1
         ) {
           frequency
-          googlePlayPurchaseToken
           paymentMethod
+          isCanceled
+          googlePlayPurchaseToken
         }
+        type
       }
     }
     """;
+
     Map<String, String> variables = {"firebaseId": "$firebaseId"};
     GraphqlBody graphqlBody = GraphqlBody(
       operationName: '',
@@ -84,20 +75,21 @@ class SubscriptionSelectServices implements SubscriptionSelectRepos{
       headers: getHeaders(token),
     );
 
-    PurchaseDetails purchaseDetails = PurchaseDetails(
-      productID: jsonResponse['data']['member']['subscription'][0]['frequency'],
-      verificationData: PurchaseVerificationData(
-        localVerificationData: '',
-        serverVerificationData: jsonResponse['data']['member']['subscription'][0]['googlePlayPurchaseToken'],
-        source: '',
-      ),
-      transactionDate: '',
-      status: PurchaseStatus.purchased,
-    );
+    SubscriptionDetail subscriptionDetail = SubscriptionDetail.fromJson(jsonResponse['data']);
+    return subscriptionDetail;
+  }
 
-    return purchaseDetails;
-  }  
+  @override
+  Future<List<ProductDetails>> fetchProductDetailList() async{
+    final bool isAvailable = await _inAppPurchase.isAvailable();
+    if(isAvailable) {
+      ProductDetailsResponse productDetailResponse = 
+          await _inAppPurchase.queryProductDetails(_kProductIds.toSet());
+      return productDetailResponse.productDetails;
+    }
 
+    throw FetchDataException('The payment platform is unavailable');
+  }
 
   @override
   Future<bool> buySubscriptionProduct(PurchaseParam purchaseParam) async{

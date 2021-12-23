@@ -7,7 +7,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:in_app_purchase_android/src/billing_client_wrappers/billing_client_wrapper.dart';
-import 'package:in_app_purchase_android/src/billing_client_wrappers/purchase_wrapper.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
@@ -15,11 +14,13 @@ import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
+import 'package:readr_app/models/paymentRecord.dart';
+import 'package:readr_app/models/subscriptionDetail.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/buyingSuccessWidget.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionSelect/hintToOtherPlatform.dart';
 
 class SubscriptionSelectWidget extends StatefulWidget {
-  final SubscritionType subscritionType;
-  SubscriptionSelectWidget(this.subscritionType);
+  SubscriptionSelectWidget();
   @override
   _SubscriptionSelectWidgetState createState() => _SubscriptionSelectWidgetState();
 }
@@ -30,12 +31,12 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
   @override
   void initState() {
     super.initState();
-    _fetchSubscriptionProducts(widget.subscritionType);
+    _fetchSubscriptionProducts();
   }
 
-  _fetchSubscriptionProducts(SubscritionType subscritionType) {
+  _fetchSubscriptionProducts() {
     context.read<SubscriptionSelectBloc>().add(
-      FetchSubscriptionProducts(subscritionType)
+      FetchSubscriptionProducts()
     );
   }
 
@@ -43,18 +44,6 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
     context.read<SubscriptionSelectBloc>().add(
       BuySubscriptionProduct(purchaseParam)
     );
-  }
-
-  _removeSubscribedProduct(List<ProductDetails> productDetailList) {
-    productDetailList.removeWhere((element) {
-      String removeId;
-      if(widget.subscritionType == SubscritionType.subscribe_monthly) {
-        removeId = Environment().config.monthSubscriptionId;
-      } else if(widget.subscritionType == SubscritionType.subscribe_yearly) {
-        removeId = Environment().config.yearSubscriptionId;
-      }
-      return element.id == removeId;
-    });
   }
 
   @override
@@ -67,16 +56,19 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
             print('SubscriptionProductsLoadedFail: ${error.message}');
             return Container();
           case SubscriptionSelectStatus.loaded:
+            SubscriptionDetail subscriptionDetail = state.subscriptionDetail;
             List<ProductDetails> productDetailList = state.productDetailList;
-            PurchaseDetails previousPurchaseDetails = state.previousPurchaseDetails;
-            _removeSubscribedProduct(productDetailList);
 
             return ListView(
               children: [
                 SizedBox(height: 24),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                  child: _memberIntroBlock(productDetailList, previousPurchaseDetails),
+                  child: _memberIntroBlock(
+                    subscriptionDetail.subscritionType,
+                    productDetailList, 
+                    subscriptionDetail.googlePlayPurchaseDetails
+                  ),
                 ),
                 SizedBox(height: 48),
                 Padding(
@@ -87,16 +79,20 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
               ],
             );
           case SubscriptionSelectStatus.buying:
+            SubscriptionDetail subscriptionDetail = state.subscriptionDetail;
             List<ProductDetails> productDetailList = state.productDetailList;
-            PurchaseDetails previousPurchaseDetails = state.previousPurchaseDetails;
-            _removeSubscribedProduct(productDetailList);
 
             return ListView(
               children: [
                 SizedBox(height: 24),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                  child: _memberIntroBlock(productDetailList, previousPurchaseDetails, isBuying: true),
+                  child: _memberIntroBlock(
+                    subscriptionDetail.subscritionType,
+                    productDetailList, 
+                    subscriptionDetail.googlePlayPurchaseDetails, 
+                    isBuying: true
+                  ),
                 ),
                 SizedBox(height: 48),
                 Padding(
@@ -121,16 +117,17 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
   }
 
   Widget _memberIntroBlock(
+    SubscritionType subscritionType,
     List<ProductDetails> productDetailList, 
     PurchaseDetails previousPurchaseDetails, 
     {bool isBuying = false}
   ) {
     double width = MediaQuery.of(context).size.width;
     String boxTitle = 'Premium 會員';
-    if(widget.subscritionType == SubscritionType.subscribe_monthly){
+    if(subscritionType == SubscritionType.subscribe_monthly){
       boxTitle = '變更為年訂閱方案';
     }
-    else if(widget.subscritionType == SubscritionType.subscribe_yearly){
+    else if(subscritionType == SubscritionType.subscribe_yearly){
       boxTitle = '變更為月訂閱方案';
     }
 
@@ -231,26 +228,14 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                           ChangeSubscriptionParam changeSubscriptionParam;
                           GooglePlayPurchaseDetails oldPurchaseDetails;
                           if(previousPurchaseDetails != null) {
-                            oldPurchaseDetails = GooglePlayPurchaseDetails(
-                              productID: previousPurchaseDetails.productID,
-                              billingClientPurchase: PurchaseWrapper(
-                                sku: previousPurchaseDetails.productID,
-                                purchaseToken: previousPurchaseDetails.verificationData.serverVerificationData,
-                                purchaseState: PurchaseStateWrapper.purchased,
-                                packageName: Environment().config.androidPackageName,
-                                isAcknowledged: true,
-                              ),
-                              verificationData: previousPurchaseDetails.verificationData,
-                              status: previousPurchaseDetails.status,
-                              transactionDate: previousPurchaseDetails.transactionDate,
-                            );
+                            oldPurchaseDetails = previousPurchaseDetails;
                           }
-                          if(widget.subscritionType == SubscritionType.subscribe_monthly) {
+                          if(subscritionType == SubscritionType.subscribe_monthly) {
                             changeSubscriptionParam = ChangeSubscriptionParam(
                               oldPurchaseDetails: oldPurchaseDetails,
                               prorationMode: ProrationMode.deferred,
                             );
-                          } else if(widget.subscritionType == SubscritionType.subscribe_yearly) {
+                          } else if(subscritionType == SubscritionType.subscribe_yearly) {
                             changeSubscriptionParam = ChangeSubscriptionParam(
                               oldPurchaseDetails: oldPurchaseDetails,
                               prorationMode: ProrationMode.deferred,

@@ -42,7 +42,7 @@ class _SubscriptionSelectPageState extends State<SubscriptionSelectPage> {
       appBar: _buildBar(context),
       body: BlocProvider(
         create: (context) => _subscriptionSelectBloc,
-        child: SubscriptionSelectWidget(widget.subscritionType),
+        child: SubscriptionSelectWidget(),
       ),
     );
   }

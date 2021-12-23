@@ -7,10 +7,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/helpers/iAPSubscriptionHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
+import 'package:readr_app/models/subscriptionDetail.dart';
 import 'package:readr_app/services/subscriptionSelectService.dart';
 
 class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, SubscriptionSelectState> {
@@ -42,9 +44,19 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
     return super.close();
   }
 
-  bool _isMonthlyOrYearlySubscriber(SubscritionType subscritionType) {
-    return subscritionType == SubscritionType.subscribe_monthly || 
-    subscritionType == SubscritionType.subscribe_yearly;
+  _removeSubscribedProduct(
+    SubscritionType subscritionType,
+    List<ProductDetails> productDetailList
+  ) {
+    productDetailList.removeWhere((element) {
+      String removeId;
+      if(subscritionType == SubscritionType.subscribe_monthly) {
+        removeId = Environment().config.monthSubscriptionId;
+      } else if(subscritionType == SubscritionType.subscribe_yearly) {
+        removeId = Environment().config.yearSubscriptionId;
+      }
+      return element.id == removeId;
+    });
   }
 
   void _fetchSubscriptionProducts(
@@ -54,14 +66,19 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
     print(event.toString());
     try{
       emit(SubscriptionSelectState.loading());
-      List<ProductDetails>  productDetailList = await subscriptionSelectRepos.fetchProductDetailList();
-      PurchaseDetails previousPurchaseDetails;
-      if(_isMonthlyOrYearlySubscriber(event.subscritionType) && Platform.isAndroid) {
-        previousPurchaseDetails = await subscriptionSelectRepos.fetchAndroidSubscriptionDetail();
+      SubscriptionDetail subscriptionDetail = await subscriptionSelectRepos.fetchSubscriptionDetail();
+      List<ProductDetails> productDetailList = await subscriptionSelectRepos.fetchProductDetailList();
+
+      if(subscriptionDetail.isAutoRenewing) {
+        _removeSubscribedProduct(
+          subscriptionDetail.subscritionType,
+          productDetailList
+        );
       }
+
       emit(SubscriptionSelectState.loaded(
+        subscriptionDetail: subscriptionDetail,
         productDetailList: productDetailList,
-        previousPurchaseDetails: previousPurchaseDetails
       ));
     } on SocketException {
       emit(SubscriptionSelectState.error(
@@ -105,8 +122,8 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
         );
 
         emit(SubscriptionSelectState.loaded(
+          subscriptionDetail: state.subscriptionDetail,
           productDetailList: state.productDetailList,
-          previousPurchaseDetails: state.previousPurchaseDetails
         ));
       }
     } catch (e) {
@@ -121,8 +138,8 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
       );
 
       emit(SubscriptionSelectState.loaded(
+        subscriptionDetail: state.subscriptionDetail,
         productDetailList: state.productDetailList,
-        previousPurchaseDetails: state.previousPurchaseDetails
       ));
     }
   }
@@ -134,8 +151,8 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
     PurchaseDetails purchaseDetails = event.purchaseDetails;
     if(purchaseDetails.status == PurchaseStatus.canceled) {
       emit(SubscriptionSelectState.loaded(
+        subscriptionDetail: state.subscriptionDetail,
         productDetailList: state.productDetailList,
-        previousPurchaseDetails: state.previousPurchaseDetails
       ));
     } else if(purchaseDetails.status == PurchaseStatus.purchased) {
       bool isSuccess = await _iapSubscriptionHelper.verifyEntirePurchase(purchaseDetails);
@@ -182,8 +199,8 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
       );
 
       emit(SubscriptionSelectState.loaded(
+        subscriptionDetail: state.subscriptionDetail,
         productDetailList: state.productDetailList,
-        previousPurchaseDetails: state.previousPurchaseDetails
       ));
     }
   }
