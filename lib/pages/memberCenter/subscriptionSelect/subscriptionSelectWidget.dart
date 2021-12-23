@@ -34,6 +34,16 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
     _fetchSubscriptionProducts();
   }
 
+  bool _checkIsTheSamePlatfrom(PaymentType paymentType) {
+    if(paymentType == PaymentType.google_play && Platform.isAndroid) {
+      return true;
+    } else if (paymentType == PaymentType.app_store && Platform.isIOS) {
+      return true;
+    }
+
+    return false;
+  }
+
   _fetchSubscriptionProducts() {
     context.read<SubscriptionSelectBloc>().add(
       FetchSubscriptionProducts()
@@ -58,6 +68,10 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
           case SubscriptionSelectStatus.loaded:
             SubscriptionDetail subscriptionDetail = state.subscriptionDetail;
             List<ProductDetails> productDetailList = state.productDetailList;
+
+            if(!_checkIsTheSamePlatfrom(subscriptionDetail.paymentType)) {
+              return HintToOtherPlatform(paymentType: subscriptionDetail.paymentType);
+            }
 
             return ListView(
               children: [
