@@ -179,7 +179,8 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
       emit(
         LoginSuccess(
           israfelId: memberIdAndSubscritionType.israfelId,
-          subscritionType: memberIdAndSubscritionType.subscritionType
+          subscritionType: memberIdAndSubscritionType.subscritionType,
+          isNewebpay: memberIdAndSubscritionType.isNewebpay,
         )
       );
       Fluttertoast.showToast(
