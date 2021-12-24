@@ -69,8 +69,10 @@ class _MemberSubscriptionDetailPageState
             if (memberDetail.isCanceled) paymentMethod = '-';
             String periodNextPayDatetime = memberDetail.isCanceled
                 ? '-'
-                : DateFormat('yyyy/MM/dd')
-                    .format(memberDetail.periodNextPayDatetime);
+                : memberDetail.periodNextPayDatetime == null 
+                    ? ""
+                    : DateFormat('yyyy/MM/dd')
+                        .format(memberDetail.periodNextPayDatetime);
             return ListView(
               children: [
                 Material(

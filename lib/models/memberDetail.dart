@@ -40,9 +40,15 @@ class MemberDetail {
 
     return MemberDetail(
         frequency: frequency,
-        periodFirstDatetime: DateTime.parse(json["periodFirstDatetime"]).toLocal(),
-        periodEndDatetime: DateTime.parse(json["periodEndDatetime"]).toLocal(),
-        periodNextPayDatetime: DateTime.parse(json["periodNextPayDatetime"]).toLocal(),
+        periodFirstDatetime: json["periodFirstDatetime"] == null
+          ? null
+          : DateTime.parse(json["periodFirstDatetime"]).toLocal(),
+        periodEndDatetime: json["periodFirstDatetime"] == null
+          ? null
+          : DateTime.parse(json["periodEndDatetime"]).toLocal(),
+        periodNextPayDatetime: json["periodNextPayDatetime"] == null
+          ? null
+          : DateTime.parse(json["periodNextPayDatetime"]).toLocal(),
         paymentType: paymentType,
         cardInfoLastFour: cardInfoLastFour,
         isCanceled: json["isCanceled"] == null ? false : json["isCanceled"]);
