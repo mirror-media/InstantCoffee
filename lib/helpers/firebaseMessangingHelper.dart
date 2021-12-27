@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:readr_app/helpers/errorLogHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/fcmData.dart';
 import 'package:readr_app/models/notificationSetting.dart';
@@ -42,15 +43,36 @@ class FirebaseMessangingHelper {
 
   void _navigateToStoryPage(BuildContext context, RemoteMessage message) {
     if(message != null ) {
-      FcmData fcmData = FcmData.fromJson(message.data);
+      FcmData fcmData;
+      try{
+        fcmData = FcmData.fromJson(message.data);
       
-      if(fcmData != null && fcmData.slug != null) {
-        if(fcmData.isListeningPage) {
-          RouteGenerator.navigateToListeningStory(fcmData.slug);
-        } else {
-          RouteGenerator.navigateToStory(fcmData.slug);
+        if(fcmData != null && fcmData.slug != null) {
+          if(fcmData.isListeningPage) {
+            RouteGenerator.navigateToListeningStory(fcmData.slug);
+          } else {
+            RouteGenerator.navigateToStory(fcmData.slug);
+          }
         }
+      }catch(e){
+        String slug = "null";
+        if(fcmData != null){
+          slug = fcmData.slug;
+        }
+        ErrorLogHelper().record(
+          "Firebase Messaging NavigateToStoryPage", 
+          {
+            "fcmDataSlug": slug
+          }, 
+          e,
+        );
       }
+    }else{
+      ErrorLogHelper().record(
+        "Firebase Messaging NavigateToStoryPage", 
+        null, 
+        "RemoteMessage is null",
+      );
     }
   }
 
