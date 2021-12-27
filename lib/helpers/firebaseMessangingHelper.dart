@@ -30,8 +30,8 @@ class FirebaseMessangingHelper {
       print('User granted permission: ${settings.authorizationStatus}');
     }
 
-    RemoteMessage initialMessage = await _firebaseMessaging.getInitialMessage();
-    _navigateToStoryPage(context, initialMessage);
+    FirebaseMessaging.instance.getInitialMessage()
+      .then((initialMessage) => _navigateToStoryPage(context, initialMessage));
 
     // Also handle any interaction when the app is in the background via a
     // Stream listener
