@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BuyingSuccessWidget extends StatelessWidget {
+  final ButtonStyle buttonStyle = TextButton.styleFrom(
+    backgroundColor: appColor,
+    padding: const EdgeInsets.only(top: 12, bottom: 12),
+  );
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -121,6 +127,24 @@ class BuyingSuccessWidget extends StatelessWidget {
               fontSize: 17,
               fontWeight: FontWeight.w400,
             ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: OutlinedButton(
+            style: buttonStyle,
+            child: Container(
+              child: Center(
+                child: Text(
+                  '回首頁',
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
           ),
         ),
       ],
