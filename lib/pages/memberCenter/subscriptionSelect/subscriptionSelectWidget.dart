@@ -72,60 +72,106 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
             SubscriptionDetail subscriptionDetail = state.subscriptionDetail;
             List<ProductDetails> productDetailList = state.productDetailList;
 
-            if(!_checkIsTheSamePlatfrom(subscriptionDetail.paymentType)) {
-              return HintToOtherPlatform(paymentType: subscriptionDetail.paymentType);
+            Widget body = HintToOtherPlatform(paymentType: subscriptionDetail.paymentType);
+
+            if(_checkIsTheSamePlatfrom(subscriptionDetail.paymentType)) {
+              body = ListView(
+                children: [
+                  SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                    child: _memberIntroBlock(
+                      subscriptionDetail.subscritionType,
+                      productDetailList, 
+                      subscriptionDetail.googlePlayPurchaseDetails
+                    ),
+                  ),
+                  SizedBox(height: 48),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                    child: _memberAttention(),
+                  ),
+                  SizedBox(height: 48),
+                ],
+              );
             }
 
-            return ListView(
-              children: [
-                SizedBox(height: 24),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                  child: _memberIntroBlock(
-                    subscriptionDetail.subscritionType,
-                    productDetailList, 
-                    subscriptionDetail.googlePlayPurchaseDetails
-                  ),
-                ),
-                SizedBox(height: 48),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                  child: _memberAttention(),
-                ),
-                SizedBox(height: 48),
-              ],
-            );
+            return Scaffold(
+              appBar: _buildBar(
+                context, 
+                subscritionType: subscriptionDetail.subscritionType
+              ),
+              body: body
+            ); 
           case SubscriptionSelectStatus.buying:
             SubscriptionDetail subscriptionDetail = state.subscriptionDetail;
             List<ProductDetails> productDetailList = state.productDetailList;
 
-            return ListView(
-              children: [
-                SizedBox(height: 24),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                  child: _memberIntroBlock(
-                    subscriptionDetail.subscritionType,
-                    productDetailList, 
-                    subscriptionDetail.googlePlayPurchaseDetails, 
-                    isBuying: true
+            return Scaffold(
+              appBar: _buildBar(
+                context, 
+                subscritionType: subscriptionDetail.subscritionType
+              ),
+              body: ListView(
+                children: [
+                  SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                    child: _memberIntroBlock(
+                      subscriptionDetail.subscritionType,
+                      productDetailList, 
+                      subscriptionDetail.googlePlayPurchaseDetails, 
+                      isBuying: true
+                    ),
                   ),
-                ),
-                SizedBox(height: 48),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                  child: _memberAttention(),
-                ),
-                SizedBox(height: 48),
-              ],
+                  SizedBox(height: 48),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                    child: _memberAttention(),
+                  ),
+                  SizedBox(height: 48),
+                ],
+              ),
             );
           case SubscriptionSelectStatus.buyingSuccess: 
-            return BuyingSuccessWidget();
+            return Scaffold(
+              appBar: _buildBar(context),
+              body: BuyingSuccessWidget()
+            );
           default:
             // state is Init, Loading
-            return _loadingWidget();
+            return Scaffold(
+              appBar: _buildBar(context),
+              body: _loadingWidget()
+            );
         }
       }
+    );
+  }
+
+  Widget _buildBar(
+    BuildContext context, 
+    {SubscritionType subscritionType}
+  ) {
+    String titleText;
+    if(subscritionType == null) {
+      titleText = '';
+    } else if(subscritionType == SubscritionType.subscribe_one_time || subscritionType == SubscritionType.none){
+      titleText = '升級會員';
+    } else{
+      titleText = '變更方案';
+    }
+
+    return AppBar(
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back_ios),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+      centerTitle: true,
+      title: Text(
+        titleText,
+      ),
+      backgroundColor: appColor,
     );
   }
 
