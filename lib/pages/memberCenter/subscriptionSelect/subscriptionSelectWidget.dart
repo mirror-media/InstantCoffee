@@ -33,7 +33,12 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
     _fetchSubscriptionProducts();
   }
 
-  bool _checkIsTheSamePlatfrom(PaymentType paymentType) {
+  bool _isSubscribed(SubscritionType subscritionType) {
+    return subscritionType == SubscritionType.subscribe_monthly || 
+        subscritionType == SubscritionType.subscribe_yearly;
+  }
+
+  bool _isTheSamePlatfrom(PaymentType paymentType) {
     if(paymentType == null) {
       return true;
     }
@@ -74,7 +79,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
 
             Widget body = HintToOtherPlatform(paymentType: subscriptionDetail.paymentType);
 
-            if(_checkIsTheSamePlatfrom(subscriptionDetail.paymentType)) {
+            if(_isTheSamePlatfrom(subscriptionDetail.paymentType)) {
               body = ListView(
                 children: [
                   SizedBox(height: 24),
@@ -153,12 +158,10 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
     BuildContext context, 
     {SubscritionType subscritionType}
   ) {
-    String titleText;
-    if(subscritionType == null) {
-      titleText = '';
-    } else if(subscritionType == SubscritionType.subscribe_one_time || subscritionType == SubscritionType.none){
+    String titleText = '';
+    if(subscritionType == SubscritionType.subscribe_one_time || subscritionType == SubscritionType.none){
       titleText = '升級會員';
-    } else{
+    } else if(_isSubscribed(subscritionType)){
       titleText = '變更方案';
     }
 
@@ -323,6 +326,17 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                   );
                 }
               ),
+
+            if(_isSubscribed(subscritionType))...[
+              SizedBox(height: 12),
+              Text(
+                '變更將在本次收費週期結束時生效',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.black54,
+                ),
+              ),
+            ]
           ],
         ),
       )
