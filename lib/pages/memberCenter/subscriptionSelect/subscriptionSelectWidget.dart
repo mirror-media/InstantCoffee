@@ -233,8 +233,6 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
             _memberClause('月方案定價\$99元，限時優惠\$49元'),
             Divider(),
             _memberClause('年方案定價\$1,188元，限時優\$499元'),
-            Divider(),
-            _memberClause('10月加入年訂閱，有機會獲得品牌腕錶與裴社長廚房手記新書', textColor: Color(0xFF054F77)),
             SizedBox(height: 24),
             isBuying
             ? Column(
