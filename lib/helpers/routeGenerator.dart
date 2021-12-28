@@ -219,7 +219,6 @@ class RouteGenerator {
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => SubscriptionSelectPage(
-            args['subscritionType'],
             storySlug: args['storySlug'],
           ),
         );
@@ -429,7 +428,6 @@ class RouteGenerator {
   }
 
   static void navigateToSubscriptionSelect(
-    SubscritionType subscritionType,
     {
       bool usePushReplacement = false,
       bool isNewebpay = false,
@@ -440,7 +438,6 @@ class RouteGenerator {
       navigatorKey.currentState.pushReplacementNamed(
         subscriptionSelect,
         arguments: {
-          'subscritionType': subscritionType,
           'storySlug': storySlug
         },
       );
@@ -453,7 +450,6 @@ class RouteGenerator {
       navigatorKey.currentState.pushNamed(
         subscriptionSelect,
         arguments: {
-          'subscritionType': subscritionType,
           'storySlug': storySlug
         },
       );

@@ -110,7 +110,7 @@ class EmailVerificationSuccessPage extends StatelessWidget {
           );
         }
         else if(email == _auth.currentUser.email) {
-          RouteGenerator.navigateToSubscriptionSelect(SubscritionType.none, usePushReplacement: true);
+          RouteGenerator.navigateToSubscriptionSelect(usePushReplacement: true);
         }
         else{
           await _auth.signOut();

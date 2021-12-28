@@ -94,7 +94,7 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
                     if(subscritionType == null) {
                       RouteGenerator.navigateToLogin();
                     } else {
-                      RouteGenerator.navigateToSubscriptionSelect(subscritionType);
+                      RouteGenerator.navigateToSubscriptionSelect();
                     }
                   }
                 ),

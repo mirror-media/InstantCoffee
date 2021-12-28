@@ -222,14 +222,14 @@ class _MemberWidgetState extends State<MemberWidget> {
       buttonText = '升級 Premium 會員';
       return _navigateButton(
         buttonText,
-        () => RouteGenerator.navigateToSubscriptionSelect(subscritionType),
+        () => RouteGenerator.navigateToSubscriptionSelect(),
       );
     }
     else{
       buttonText = "變更方案";
       return _navigateButton(
         buttonText,
-        () => RouteGenerator.navigateToSubscriptionSelect(subscritionType,isNewebpay: widget.isNewebpay),
+        () => RouteGenerator.navigateToSubscriptionSelect(isNewebpay: widget.isNewebpay),
       );
     }
   }
