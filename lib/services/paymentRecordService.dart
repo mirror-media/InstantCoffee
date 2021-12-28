@@ -142,9 +142,8 @@ class PaymentRecordService {
                 isSuccess: isSuccess,
                 subscribeType: subscribeType,
               );
-              if(paymentAmount != null){
-                paymentRecords.add(paymentRecord);
-              }
+              
+              paymentRecords.add(paymentRecord);
             });
           }
         }

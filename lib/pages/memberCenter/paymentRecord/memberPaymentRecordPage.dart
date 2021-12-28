@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:readr_app/blocs/memberCenter/paymentRecord/paymentRecordBloc.dart';
@@ -7,7 +8,7 @@ import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/models/paymentRecord.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/pages/memberCenter/shared/stateErrorWidget.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 
 class MemberPaymentRecordPage extends StatefulWidget {
   final SubscritionType subscritionType;
@@ -63,41 +64,138 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
             return _noRecordWidget();
           }
           paymentRecordList = state.paymentRecords;
-          return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
-            separatorBuilder: (BuildContext context, int index){
-              return Container(
-                color: Colors.white,
-                child: Divider(
-                  thickness: 1,
-                  color: Colors.grey[300],
-                  indent: 16,
-                  endIndent: 16,
+          bool hasApplePaymentRecord = paymentRecordList.any((paymentRecord) => paymentRecord.paymentType == PaymentType.app_store);
+          // do not to display apple payment record, 
+          // cuz there is no payment amount in apple payment record.
+          if(hasApplePaymentRecord) {
+            paymentRecordList.removeWhere((paymentRecord) => paymentRecord.paymentType == PaymentType.app_store);
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if(hasApplePaymentRecord)
+                Container(
+                  color: Colors.white,
+                  child: _applePaymentHint()
                 ),
-              );
-            },
-            itemCount: paymentRecordList.length,
-            itemBuilder: (context, index) {
-              if(index == paymentRecordList.length - 1){
-                return Material(
-                  elevation: 1,
-                  color: Colors.white,
-                  child: _buildListItem(paymentRecordList[index]),
-                );
-              }
-              else{
-                return Container(
-                  color: Colors.white,
-                  child: _buildListItem(paymentRecordList[index]),
-                );
-              }
-            },
+              Expanded(
+                child: ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 8.0),
+                  separatorBuilder: (BuildContext context, int index){
+                    return Container(
+                      color: Colors.white,
+                      child: Divider(
+                        thickness: 1,
+                        color: Colors.grey[300],
+                        indent: 16,
+                        endIndent: 16,
+                      ),
+                    );
+                  },
+                  itemCount: paymentRecordList.length,
+                  itemBuilder: (context, index) {
+                    if(index == paymentRecordList.length - 1){
+                      return Material(
+                        elevation: 1,
+                        color: Colors.white,
+                        child: _buildListItem(paymentRecordList[index]),
+                      );
+                    }
+                    else if(index == 0){
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if(hasApplePaymentRecord)...[
+                            Divider(
+                              height: 0,
+                            ),
+                            SizedBox(height: 36),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                              child: _otherRecordText(),
+                            ),
+                            SizedBox(height: 12),
+                            Divider(
+                              height: 0,
+                            ),
+                          ],
+                          if(!hasApplePaymentRecord)
+                            SizedBox(height: 8),
+                          Container(
+                            color: Colors.white,
+                            child: _buildListItem(paymentRecordList[index]),
+                          ),
+                        ],
+                      );
+                    }
+                    else{
+                      return Container(
+                        color: Colors.white,
+                        child: _buildListItem(paymentRecordList[index]),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ],
           );
         }
         return Center(
           child: CircularProgressIndicator(),
         );
       }
+    );
+  }
+
+  Widget _applePaymentHint() {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Center(
+        child: RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: '如想了解您在 Apple Store 購買的訂單資訊，請至 ',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black
+                ),
+              ),
+              TextSpan(
+                text: 'Apple Store',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.blue
+                ),
+                recognizer: TapGestureRecognizer()
+                    ..onTap = () { 
+                      launch("https://finance-app.itunes.apple.com/purchases");
+                    },
+              ),
+              TextSpan(
+                text: ' 查看。',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _otherRecordText() {
+    return Text(
+      '其他付款紀錄',
+      style: TextStyle(
+        fontSize: 15,
+      ),
     );
   }
 
@@ -159,7 +257,7 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
       }
     }
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+      padding: const EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
