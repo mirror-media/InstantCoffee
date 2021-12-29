@@ -781,7 +781,7 @@ return BlocBuilder<StoryBloc, StoryState>(
         if(FirebaseAuth.instance.currentUser == null){
           RouteGenerator.navigateToLogin();
         } else {
-          RouteGenerator.navigateToSubscriptionSelect(SubscritionType.none);
+          RouteGenerator.navigateToSubscriptionSelect();
         }
       }, 
       icon: ClipRRect(
