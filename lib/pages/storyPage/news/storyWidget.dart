@@ -1,5 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +8,9 @@ import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/helpers/paragraphFormat.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/category.dart';
+import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/models/paragraph.dart';
 import 'package:readr_app/models/paragrpahList.dart';
 import 'package:readr_app/models/people.dart';
@@ -25,6 +27,7 @@ import 'package:readr_app/widgets/mMVideoPlayer.dart';
 import 'package:readr_app/blocs/storyPage/news/bloc.dart';
 import 'package:readr_app/blocs/storyPage/news/events.dart';
 import 'package:readr_app/blocs/storyPage/news/states.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class StoryWidget extends StatefulWidget {
@@ -143,8 +146,10 @@ return BlocBuilder<StoryBloc, StoryState>(
               ),
             SizedBox(height: 16),
             _buildUpdateDateWidget(story),
-            SizedBox(height: 13),
+            SizedBox(height: 24),
             _fbIframeWidget(),
+            SizedBox(height: 16),
+            _socialButtons(),
             _buildRelatedWidget(context, story.relatedStory),
             SizedBox(height: 16),
             _buildMoreContentWidget(),
@@ -734,6 +739,78 @@ return BlocBuilder<StoryBloc, StoryState>(
         javascriptMode: JavascriptMode.unrestricted,
         debuggingEnabled: true,
       ),
+    );
+  }
+
+  Widget _socialButtons(){
+    Widget lineButton = TextButton.icon(
+      onPressed: () => launch('https://lin.ee/dkD1s4q'), 
+      icon: Image.asset(lineIconPng), 
+      label: Text('加入', 
+        style: TextStyle(
+          fontSize: 16, 
+          color: Color.fromRGBO(74, 74, 74, 1),
+        ),
+      ),
+    );
+
+    Widget igButton = TextButton.icon(
+      onPressed: () => launch('https://www.instagram.com/mirror_media/'), 
+      icon: Image.asset(igIconPng), 
+      label: Text('追蹤', 
+        style: TextStyle(
+          fontSize: 16, 
+          color: Color.fromRGBO(74, 74, 74, 1),
+        ),
+      ),
+    );
+
+    Widget ytButton = TextButton.icon(
+      onPressed: () => launch('https://www.youtube.com/channel/UCYkldEK001GxR884OZMFnRw?sub_confirmation=1'), 
+      icon: Image.asset(ytIconPng), 
+      label: Text('訂閱', 
+        style: TextStyle(
+          fontSize: 16, 
+          color: Color.fromRGBO(74, 74, 74, 1),
+        ),
+      ),
+    );
+
+    Widget addMemberButton = TextButton.icon(
+      onPressed: (){
+        if(FirebaseAuth.instance.currentUser == null){
+          RouteGenerator.navigateToLogin();
+        } else {
+          RouteGenerator.navigateToSubscriptionSelect(SubscritionType.none);
+        }
+      }, 
+      icon: ClipRRect(
+        borderRadius: BorderRadius.circular(12.0),
+        child: Image.asset('assets/icon/icon.jpg', width: 32, height: 32),
+      ), 
+      label: Text('加入會員', 
+        style: TextStyle(
+          fontSize: 16, 
+          color: Color.fromRGBO(74, 74, 74, 1),
+        ),
+      ),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            lineButton,
+            const SizedBox(width: 24),
+            igButton,
+            const SizedBox(width: 24),
+            ytButton,
+          ],
+        ),
+        addMemberButton,
+      ],
     );
   }
 }
