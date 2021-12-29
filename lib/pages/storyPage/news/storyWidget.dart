@@ -562,10 +562,13 @@ return BlocBuilder<StoryBloc, StoryState>(
       List<Widget> tagWidgets = List();
       for (int i = 0; i < tags.length; i++) {
         tagWidgets.add(
-          Text(
-            '#' + tags[i].name,
-            style: TextStyle(fontSize: 18, color: appColor),
-          ),
+          GestureDetector(
+            onTap: () => RouteGenerator.navigateToTagPage(tags[i]),
+            child: Text(
+              '#' + tags[i].name,
+              style: TextStyle(fontSize: 18, color: appColor),
+            ),
+          )
         );
 
         if (i != tags.length - 1) {

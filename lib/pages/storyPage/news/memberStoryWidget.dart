@@ -9,6 +9,7 @@ import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/paragraphFormat.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/paragraph.dart';
 import 'package:readr_app/models/paragrpahList.dart';
@@ -428,7 +429,7 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
                   forceStrutHeight: true, fontSize: 13, height: 1.5),
                 ),
               ),
-              onTap: null,
+              onTap: () => RouteGenerator.navigateToTagPage(tags[i]),
           )
         );
       }

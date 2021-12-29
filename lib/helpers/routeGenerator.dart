@@ -6,6 +6,7 @@ import 'package:readr_app/blocs/onBoarding/bloc.dart';
 import 'package:readr_app/initialApp.dart';
 import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
+import 'package:readr_app/models/tag.dart';
 import 'package:readr_app/pages/emailLogin/emailLoginPage.dart';
 import 'package:readr_app/pages/emailRegistered/emailRegisteredPage.dart';
 import 'package:readr_app/pages/emailVerification/emailVerificationPage.dart';
@@ -26,6 +27,7 @@ import 'package:readr_app/pages/storyPage/news/storyPage.dart';
 
 import 'package:readr_app/pages/memberCenter/editMemberProfile/editMemberProfilePage.dart';
 import 'package:readr_app/pages/memberCenter/editMemberContactInfo/editMemberContactInfoPage.dart';
+import 'package:readr_app/pages/tag/tagPage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RouteGenerator {
@@ -51,6 +53,7 @@ class RouteGenerator {
   static const String magazineBrowser = '/magazineBrowser';
   static const String subscriptionSelect = '/subscriptionSelect';
   static const String newebpayChangePlan = '/newebpayChangePlan';
+  static const String tagPage = '/tag';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -226,6 +229,12 @@ class RouteGenerator {
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => NewebpayChangePlanPage(),
+        );
+      case tagPage:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => TagPage(tag: args['tag'],),
         );
       default:
         // If there is no such named route in the switch statement, e.g. /third
@@ -454,6 +463,15 @@ class RouteGenerator {
         },
       );
     }
+  }
+
+  static void navigateToTagPage(Tag tag) {
+    navigatorKey.currentState.pushNamed(
+      tagPage,
+      arguments: {
+          'tag': tag
+        },
+    );
   }
 
   static void printRouteSettings() {
