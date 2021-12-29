@@ -9,8 +9,22 @@ class HintToOtherPlatform extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('請至${paymentType.name}平台更動')
+    String hintText;
+    if(paymentType == PaymentType.newebpay){
+      hintText = '由於您先前於鏡週刊網頁版購買，如要變更方案，請至鏡週刊網頁操作';
+    } else if(paymentType == PaymentType.google_play) {
+      hintText = '由於您先前於google paly 購買，如要變更方案，請至google paly 操作';
+    } else if(paymentType == PaymentType.app_store) {
+      hintText = '由於您先前於apple store 購買，如要變更方案，請至apple store 操作';
+    }
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24.0, 48.0, 24.0, 0.0),
+      child: Text(
+        hintText,
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 17),
+      ),
     );
   }
 }
