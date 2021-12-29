@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -7,7 +8,9 @@ import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/helpers/paragraphFormat.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/category.dart';
+import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/models/paragraph.dart';
 import 'package:readr_app/models/paragrpahList.dart';
 import 'package:readr_app/models/people.dart';
@@ -24,6 +27,8 @@ import 'package:readr_app/widgets/mMVideoPlayer.dart';
 import 'package:readr_app/blocs/storyPage/news/bloc.dart';
 import 'package:readr_app/blocs/storyPage/news/events.dart';
 import 'package:readr_app/blocs/storyPage/news/states.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class StoryWidget extends StatefulWidget {
   final bool isMemberCheck;
@@ -141,6 +146,10 @@ return BlocBuilder<StoryBloc, StoryState>(
               ),
             SizedBox(height: 16),
             _buildUpdateDateWidget(story),
+            SizedBox(height: 24),
+            _fbIframeWidget(),
+            SizedBox(height: 16),
+            _socialButtons(),
             _buildRelatedWidget(context, story.relatedStory),
             SizedBox(height: 16),
             _buildMoreContentWidget(),
@@ -717,6 +726,91 @@ return BlocBuilder<StoryBloc, StoryState>(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         child: DownloadMagazineWidget(),
       ),
+    );
+  }
+
+  Widget _fbIframeWidget() {
+    const String iframe = '<html><body><iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fmirrormediamg&tabs&width=340&height=130&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=2138298816406811" width="340" height="130" style="border:none;overflow:hidden;transform: scale(2.85);transform-origin:0 0;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe></body></html>';
+    return Container(
+      padding: const EdgeInsets.only(right: 16, left: 14),
+      height: 160,
+      child: WebView(
+        initialUrl: Uri.dataFromString(iframe, mimeType: 'text/html').toString(),
+        javascriptMode: JavascriptMode.unrestricted,
+        debuggingEnabled: true,
+      ),
+    );
+  }
+
+  Widget _socialButtons(){
+    Widget lineButton = TextButton.icon(
+      onPressed: () => launch('https://lin.ee/dkD1s4q'), 
+      icon: Image.asset(lineIconPng), 
+      label: Text('加入', 
+        style: TextStyle(
+          fontSize: 16, 
+          color: Color.fromRGBO(74, 74, 74, 1),
+        ),
+      ),
+    );
+
+    Widget igButton = TextButton.icon(
+      onPressed: () => launch('https://www.instagram.com/mirror_media/'), 
+      icon: Image.asset(igIconPng), 
+      label: Text('追蹤', 
+        style: TextStyle(
+          fontSize: 16, 
+          color: Color.fromRGBO(74, 74, 74, 1),
+        ),
+      ),
+    );
+
+    Widget ytButton = TextButton.icon(
+      onPressed: () => launch('https://www.youtube.com/channel/UCYkldEK001GxR884OZMFnRw?sub_confirmation=1'), 
+      icon: Image.asset(ytIconPng), 
+      label: Text('訂閱', 
+        style: TextStyle(
+          fontSize: 16, 
+          color: Color.fromRGBO(74, 74, 74, 1),
+        ),
+      ),
+    );
+
+    Widget addMemberButton = TextButton.icon(
+      onPressed: (){
+        if(FirebaseAuth.instance.currentUser == null){
+          RouteGenerator.navigateToLogin();
+        } else {
+          RouteGenerator.navigateToSubscriptionSelect();
+        }
+      }, 
+      icon: ClipRRect(
+        borderRadius: BorderRadius.circular(12.0),
+        child: Image.asset('assets/icon/icon.jpg', width: 32, height: 32),
+      ), 
+      label: Text('加入會員', 
+        style: TextStyle(
+          fontSize: 16, 
+          color: Color.fromRGBO(74, 74, 74, 1),
+        ),
+      ),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            lineButton,
+            const SizedBox(width: 24),
+            igButton,
+            const SizedBox(width: 24),
+            ytButton,
+          ],
+        ),
+        addMemberButton,
+      ],
     );
   }
 }

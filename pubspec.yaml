@@ -165,6 +165,9 @@ flutter:
     - assets/image/google_icon.png
     - assets/image/apple_icon.png
     - assets/image/wine_warning.png
+    - assets/image/ig_icon.png
+    - assets/image/line_icon.png
+    - assets/image/yt_icon.png
     - packages/constants/countries.json
     - packages/constants/taiwan-districts.json
     - assets/data/records.json
