@@ -205,6 +205,9 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
   ) async{
     PurchaseDetails purchaseDetails = event.purchaseDetails;
     if(purchaseDetails.status == PurchaseStatus.canceled) {
+      if(Platform.isIOS) {
+        await _iapSubscriptionHelper.completePurchase(purchaseDetails);
+      }
       emit(SubscriptionSelectState.loaded(
         subscriptionDetail: state.subscriptionDetail,
         productDetailList: state.productDetailList,

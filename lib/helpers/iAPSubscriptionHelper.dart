@@ -76,6 +76,10 @@ class IAPSubscriptionHelper {
     return valid;
   }
 
+  Future<void> completePurchase(PurchaseDetails purchaseDetails) async{
+    await _inAppPurchase.completePurchase(purchaseDetails);
+  }
+
   Future<bool> verifyEntirePurchase(PurchaseDetails purchaseDetails) async{
     bool valid = await _verifyPurchase(purchaseDetails);
     if (valid) {
