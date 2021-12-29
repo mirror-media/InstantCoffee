@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/tagPage/cubit.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/recordList.dart';
@@ -23,90 +24,57 @@ class _TagWidgetState extends State<TagWidget> {
 
   @override
   void initState() {
-    // _fetchStoryListByTagSlug();
-    _buildMockData();
+    _fetchStoryListByTagId();
     super.initState();
   }
 
-  // _fetchStoryListByTagSlug() {
-  //   context
-  //       .read<tagRecordListBloc>()
-  //       .add(FetchStoryListByTagSlug(widget.tag.slug));
-  // }
+  _fetchStoryListByTagId() {
+    context.read<TagPageCubit>().fetchTagStoryList(widget.tag.id);
+  }
 
-  // _fetchNextPageByTagSlug() async {
-  //   context
-  //       .read<tagRecordListBloc>()
-  //       .add(FetchNextPageByTagSlug(widget.tag.slug));
-  // }
-
-  void _buildMockData(){
-    Record data1 = Record(
-        title: 'LISA 示範情人節穿搭 CELINE 七夕膠囊系列好火紅', 
-        photoUrl: 'https://storage.googleapis.com/mirrormedia-files/assets/images/20210317185015-013b905320686dea9abf085902f36118.png',
-        slug: '',
-        publishedDate: '',
-        isMemberCheck: false,
-        );
-    Record data2 = Record(
-        title: '【搞懂特別股】股神也押寶大賺　特別股成投資市場新寵', 
-        photoUrl: 'https://storage.googleapis.com/mirrormedia-files/assets/images/20210310161729-e29776bb6fd1ab3869439e41c8cb3e0e-mobile.jpg',
-        slug: '',
-        publishedDate: '',
-        isMemberCheck: false,
-        );
-    for(int i = 0; i < 5;i++){
-      _tagRecordList.add(data1);
-      _tagRecordList.add(data2);
-    }
+  _fetchNextPage() async {
+    context.read<TagPageCubit>().fetchNextPage();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _buildList(_tagRecordList);
+    return BlocBuilder<TagPageCubit, TagPageState>(
+        builder: (BuildContext context, TagPageState state) {
+      if (state is TagPageError) {
+        final error = state.error;
+        print('tagRecordListError: ${error.message}');
+        if (loadingMore) {
+          _fetchNextPage();
+        } else {
+          return error.renderWidget(
+                onPressed: () => _fetchStoryListByTagId());
+        }
+      }
 
-    // return BlocBuilder<tagRecordListBloc, tagRecordListState>(
-    //     builder: (BuildContext context, tagRecordListState state) {
-    //   if (state.status == tagRecordListStatus.error) {
-    //     final error = state.error;
-    //     print('tagRecordListError: ${error.message}');
-    //     if (loadingMore) {
-    //       _fetchNextPageByTagSlug();
-    //     } else {
-    //       if (error is NoInternetException) {
-    //         return error.renderWidget(
-    //             onPressed: () => _fetchNextPageByTagSlug());
-    //       }
+      if (state is TagPageLoadingNextPage) {
+        loadingMore = true;
+        return _buildList(_tagRecordList);
+      }
 
-    //       return error.renderWidget();
-    //     }
-    //   }
+      if (state is TagPageLoadNextPageFailed) {
+        _tagRecordList = state.tagStoryList;
+        loadingMore = true;
+        _fetchNextPage();
+        return _buildList(_tagRecordList);
+      }
 
-    //   if (state.status == tagRecordListStatus.loadingMore) {
-    //     _tagRecordList = state.tagRecordList!;
-    //     loadingMore = true;
-    //     return _buildList(_tagRecordList);
-    //   }
-
-    //   if (state.status == tagRecordListStatus.loadingMoreFail) {
-    //     _tagRecordList = state.tagRecordList!;
-    //     loadingMore = true;
-    //     _fetchNextPageByTagSlug();
-    //     return _buildList(_tagRecordList);
-    //   }
-
-    //   if (state.status == tagRecordListStatus.loaded) {
-    //     _tagRecordList = state.tagRecordList!;
-    //     loadingMore = false;
-    //     return _buildList(_tagRecordList);
-    //   }
-    //   // state is Init, loading, or other
-    //   return Center(
-    //     child: Platform.isAndroid
-    //         ? const CircularProgressIndicator()
-    //         : const CupertinoActivityIndicator(),
-    //   );
-    // });
+      if (state is TagPageLoaded) {
+        _tagRecordList = state.tagStoryList;
+        loadingMore = false;
+        return _buildList(_tagRecordList);
+      }
+      // state is Init, loading, or other
+      return Center(
+        child: Platform.isAndroid
+            ? const CircularProgressIndicator()
+            : const CupertinoActivityIndicator(),
+      );
+    });
   }
 
   Widget _buildList(RecordList tagRecordList) {
@@ -134,7 +102,7 @@ class _TagWidgetState extends State<TagWidget> {
               padding: const EdgeInsets.only(bottom: 24),
             );
           }
-          // if (!loadingMore) _fetchNextPageByTagSlug();
+          if (!loadingMore) _fetchNextPage();
           return Center(
             child: Platform.isAndroid
                 ? const CircularProgressIndicator()
@@ -183,7 +151,11 @@ class _TagWidgetState extends State<TagWidget> {
         ],
       ),
       onTap: () {
-        // RouteGenerator.navigateToStory(record.slug);
+        RouteGenerator.navigateToStory(
+          record.slug,
+          isMemberCheck: record.isMemberCheck, 
+          isMemberContent: record.isMemberContent,
+        );
       },
     );
   }

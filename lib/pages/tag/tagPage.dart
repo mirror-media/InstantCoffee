@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/tagPage/cubit.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/tag.dart';
 import 'package:readr_app/pages/tag/tagWidget.dart';
@@ -29,7 +30,10 @@ class _TagPageState extends State<TagPage> {
     return Scaffold(
       appBar: _buildBar(context),
       backgroundColor: Colors.white,
-      body: TagWidget(_tag),
+      body: BlocProvider(
+        create: (context) => TagPageCubit(),
+        child: TagWidget(_tag),
+      ),
     );
   }
 
