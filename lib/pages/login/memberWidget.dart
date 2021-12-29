@@ -78,11 +78,15 @@ class _MemberWidgetState extends State<MemberWidget> {
                       child: _horizontalDivider(width),
                     ),
                     _memberPaymentRecordButton(widget.subscritionType),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                      child: _horizontalDivider(width),
-                    ),
-                    _subscriptionSelectButton(widget.subscritionType),
+                    if(widget.subscritionType == SubscritionType.none ||
+                      widget.subscritionType == SubscritionType.subscribe_one_time
+                    )...[
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                        child: _horizontalDivider(width),
+                      ),
+                      _subscriptionSelectButton(widget.subscritionType),
+                    ]
                   ],
                 ],
               ),
@@ -217,21 +221,10 @@ class _MemberWidgetState extends State<MemberWidget> {
   }
  
   Widget _subscriptionSelectButton(SubscritionType subscritionType) {
-    String buttonText;
-    if(subscritionType == SubscritionType.none || subscritionType == SubscritionType.subscribe_one_time){
-      buttonText = '升級 Premium 會員';
-      return _navigateButton(
-        buttonText,
-        () => RouteGenerator.navigateToSubscriptionSelect(),
-      );
-    }
-    else{
-      buttonText = "變更方案";
-      return _navigateButton(
-        buttonText,
-        () => RouteGenerator.navigateToSubscriptionSelect(isNewebpay: widget.isNewebpay),
-      );
-    }
+    return _navigateButton(
+      '升級 Premium 會員',
+      () => RouteGenerator.navigateToSubscriptionSelect(),
+    );
   }
 
   Widget _memberProfileButton() {
