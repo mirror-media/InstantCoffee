@@ -17,11 +17,11 @@ import 'package:readr_app/services/loginService.dart';
 
 class MemberWidget extends StatefulWidget {
   final String israfelId;
-  final SubscritionType subscritionType;
+  final SubscriptionType subscriptionType;
   final bool isNewebpay;
   MemberWidget({
     @required this.israfelId,
-    @required this.subscritionType,
+    @required this.subscriptionType,
     @required this.isNewebpay,
   });
 
@@ -48,21 +48,21 @@ class _MemberWidgetState extends State<MemberWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 48),
-                _memberLevelBlock(widget.subscritionType),
+                _memberLevelBlock(widget.subscriptionType),
                 SizedBox(height: 24),
               ],
             ),
           ),
-          if(widget.subscritionType != SubscritionType.staff)
+          if(widget.subscriptionType != SubscriptionType.staff)
             Container(
               color: Colors.white,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _horizontalDivider(width),
-                  _memberSubscriptionDetailButton(widget.subscritionType),
-                  if(widget.subscritionType == SubscritionType.none || 
-                    widget.subscritionType == SubscritionType.subscribe_one_time
+                  _memberSubscriptionDetailButton(widget.subscriptionType),
+                  if(widget.subscriptionType == SubscriptionType.none || 
+                    widget.subscriptionType == SubscriptionType.subscribe_one_time
                   )...[
                     Padding(
                     padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
@@ -70,22 +70,22 @@ class _MemberWidgetState extends State<MemberWidget> {
                   ),
                     _memberSubscribedArticleButton(),
                   ],
-                  if(widget.subscritionType != SubscritionType.marketing && 
-                    widget.subscritionType != SubscritionType.subscribe_group
+                  if(widget.subscriptionType != SubscriptionType.marketing && 
+                    widget.subscriptionType != SubscriptionType.subscribe_group
                   )...[
                     Padding(
                       padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
                       child: _horizontalDivider(width),
                     ),
-                    _memberPaymentRecordButton(widget.subscritionType),
-                    if(widget.subscritionType == SubscritionType.none ||
-                      widget.subscritionType == SubscritionType.subscribe_one_time
+                    _memberPaymentRecordButton(widget.subscriptionType),
+                    if(widget.subscriptionType == SubscriptionType.none ||
+                      widget.subscriptionType == SubscriptionType.subscribe_one_time
                     )...[
                       Padding(
                         padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
                         child: _horizontalDivider(width),
                       ),
-                      _subscriptionSelectButton(widget.subscritionType),
+                      _subscriptionSelectButton(widget.subscriptionType),
                     ]
                   ],
                 ],
@@ -143,7 +143,7 @@ class _MemberWidgetState extends State<MemberWidget> {
     );
   }
 
-  Widget _memberLevelBlock(SubscritionType subscritionType) {
+  Widget _memberLevelBlock(SubscriptionType subscriptionType) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -158,7 +158,7 @@ class _MemberWidgetState extends State<MemberWidget> {
         Padding(
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
           child: MemberSubscriptionTypeTitleWiget(
-            subscritionType: subscritionType,
+            subscriptionType: subscriptionType,
             fontSize: 20,
           ),
         ),
@@ -174,13 +174,13 @@ class _MemberWidgetState extends State<MemberWidget> {
     );
   }
 
-  Widget _memberSubscriptionDetailButton(SubscritionType subscritionType) {
+  Widget _memberSubscriptionDetailButton(SubscriptionType subscriptionType) {
     return _navigateButton(
       '我的方案細節',
       () => Navigator.push(context,
           MaterialPageRoute(builder: (context) {
             return BlocProvider(
-              child: MemberSubscriptionDetailPage(subscritionType: subscritionType,),
+              child: MemberSubscriptionDetailPage(subscriptionType: subscriptionType,),
               create: (BuildContext context) =>
                   MemberDetailCubit());
                   }
@@ -204,7 +204,7 @@ class _MemberWidgetState extends State<MemberWidget> {
     );
   }
 
-  Widget _memberPaymentRecordButton(SubscritionType subscritionType) {
+  Widget _memberPaymentRecordButton(SubscriptionType subscriptionType) {
     return _navigateButton(
       '付款紀錄',
       () => Navigator.push(
@@ -212,7 +212,7 @@ class _MemberWidgetState extends State<MemberWidget> {
         MaterialPageRoute(builder: (context){
           return BlocProvider(
             create: (BuildContext context) => PaymentRecordBloc(),
-            child: MemberPaymentRecordPage(subscritionType),
+            child: MemberPaymentRecordPage(subscriptionType),
             );
           }
         )
@@ -220,7 +220,7 @@ class _MemberWidgetState extends State<MemberWidget> {
     );
   }
  
-  Widget _subscriptionSelectButton(SubscritionType subscritionType) {
+  Widget _subscriptionSelectButton(SubscriptionType subscriptionType) {
     return _navigateButton(
       '升級 Premium 會員',
       () => RouteGenerator.navigateToSubscriptionSelect(),
@@ -351,7 +351,7 @@ class _MemberWidgetState extends State<MemberWidget> {
       ),
       onTap: () => RouteGenerator.navigateToDeleteMember(
         widget.israfelId,
-        widget.subscritionType
+        widget.subscriptionType
       )
     );
   }

@@ -40,11 +40,11 @@ class _LoginWidgetState extends State<LoginWidget> {
         }
         if (state is LoginSuccess) {
           String israfelId = state.israfelId;
-          SubscritionType subscritionType = state.subscritionType;
+          SubscriptionType subscriptionType = state.subscriptionType;
 
           return MemberWidget(
             israfelId: israfelId,
-            subscritionType: subscritionType,
+            subscriptionType: subscriptionType,
             isNewebpay: state.isNewebpay,
           );
         }

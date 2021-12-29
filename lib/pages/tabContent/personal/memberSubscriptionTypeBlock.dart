@@ -29,8 +29,8 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
     return BlocBuilder<MemberSubscriptionTypeCubit, MemberSubscriptionTypeState>(
       builder: (context, state) {
         if(state is MemberSubscriptionTypeLoadedState) {
-          SubscritionType subscritionType = state.subscritionType;
-          return _buildMemberTypeBlock(subscritionType);
+          SubscriptionType subscriptionType = state.subscriptionType;
+          return _buildMemberTypeBlock(subscriptionType);
         }
         
         // state is member subscription type init or loading
@@ -54,7 +54,7 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
     );
   }
 
-  Widget _buildMemberTypeBlock(SubscritionType subscritionType) {
+  Widget _buildMemberTypeBlock(SubscriptionType subscriptionType) {
     double width = MediaQuery.of(context).size.width/3.3;
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -65,11 +65,11 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
           child: Row(
             children: [
               Expanded(
-                child: _memberTypeTitle(subscritionType)
+                child: _memberTypeTitle(subscriptionType)
               ),
-              if( subscritionType == null ||
-                subscritionType == SubscritionType.none ||
-                subscritionType == SubscritionType.subscribe_one_time
+              if( subscriptionType == null ||
+                subscriptionType == SubscriptionType.none ||
+                subscriptionType == SubscriptionType.subscribe_one_time
               )
                 TextButton(
                   style: TextButton.styleFrom(
@@ -80,7 +80,7 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
                     width: width,
                     child: Center(
                       child: Text(
-                        subscritionType == null
+                        subscriptionType == null
                         ? '加入會員'
                         : '升級會員',
                         style: TextStyle(
@@ -91,7 +91,7 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
                     ),
                   ),
                   onPressed: () {
-                    if(subscritionType == null) {
+                    if(subscriptionType == null) {
                       RouteGenerator.navigateToLogin();
                     } else {
                       RouteGenerator.navigateToSubscriptionSelect();
@@ -105,8 +105,8 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
     );
   }
 
-  Widget _memberTypeTitle(SubscritionType subscritionType) {
-    if(subscritionType == null) {
+  Widget _memberTypeTitle(SubscriptionType subscriptionType) {
+    if(subscriptionType == null) {
       return Text(
         '加入 Premium 會員\n享受零廣告閱讀體驗',
         style: TextStyle(
@@ -124,7 +124,7 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
         ),
         SizedBox(height: 4),
         MemberSubscriptionTypeTitleWiget(
-          subscritionType: subscritionType,
+          subscriptionType: subscriptionType,
           fontSize: 17,
         ),
       ],

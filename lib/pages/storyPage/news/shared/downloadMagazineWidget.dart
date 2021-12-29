@@ -19,15 +19,15 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
     context.read<MemberSubscriptionTypeCubit>().fetchMemberSubscriptionType();
   }
 
-  void _delayNavigator(SubscritionType subscritionType) async{
+  void _delayNavigator(SubscriptionType subscriptionType) async{
     await Future.delayed(Duration());
-    if(subscritionType != null) {
-      RouteGenerator.navigateToMagazine(subscritionType);
+    if(subscriptionType != null) {
+      RouteGenerator.navigateToMagazine(subscriptionType);
     } else {
       RouteGenerator.navigateToLogin(
         routeName: RouteGenerator.magazine,
         routeArguments: {
-          'subscritionType': subscritionType,
+          'subscriptionType': subscriptionType,
         },
       );
     }
@@ -42,8 +42,8 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
         if(state is MemberSubscriptionTypeLoadingState) {
           return _downloadMagazineWidget(width, true);
         } else if(state is MemberSubscriptionTypeLoadedState) {
-          SubscritionType subscritionType = state.subscritionType;
-          _delayNavigator(subscritionType);
+          SubscriptionType subscriptionType = state.subscriptionType;
+          _delayNavigator(subscriptionType);
           return _downloadMagazineWidget(width, false);
         }
         

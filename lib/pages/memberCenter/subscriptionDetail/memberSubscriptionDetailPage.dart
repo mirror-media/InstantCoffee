@@ -10,8 +10,8 @@ import 'package:readr_app/pages/memberCenter/shared/stateErrorWidget.dart';
 import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
 
 class MemberSubscriptionDetailPage extends StatefulWidget {
-  final SubscritionType subscritionType;
-  MemberSubscriptionDetailPage({this.subscritionType});
+  final SubscriptionType subscriptionType;
+  MemberSubscriptionDetailPage({this.subscriptionType});
   @override
   _MemberSubscriptionDetailPageState createState() =>
       _MemberSubscriptionDetailPageState();
@@ -19,12 +19,12 @@ class MemberSubscriptionDetailPage extends StatefulWidget {
 
 class _MemberSubscriptionDetailPageState
     extends State<MemberSubscriptionDetailPage> {
-  SubscritionType _subscritionType;
+  SubscriptionType _subscriptionType;
   @override
   void initState() {
     super.initState();
-    _subscritionType = widget.subscritionType;
-    if (_subscritionType == SubscritionType.subscribe_monthly || _subscritionType == SubscritionType.subscribe_yearly) 
+    _subscriptionType = widget.subscriptionType;
+    if (_subscriptionType == SubscriptionType.subscribe_monthly || _subscriptionType == SubscriptionType.subscribe_yearly) 
       _getMemberDetail();
   }
 
@@ -53,7 +53,7 @@ class _MemberSubscriptionDetailPageState
 
   Widget _buildContent(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    if (_subscritionType == SubscritionType.subscribe_monthly || _subscritionType == SubscritionType.subscribe_yearly) {
+    if (_subscriptionType == SubscriptionType.subscribe_monthly || _subscriptionType == SubscriptionType.subscribe_yearly) {
       return BlocBuilder<MemberDetailCubit, MemberDetailState>(
         builder: (context, state) {
           if (state is MemberDetailLoad) {
@@ -84,7 +84,7 @@ class _MemberSubscriptionDetailPageState
                   child: Container(
                     color: Colors.white,
                     padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-                    child: _memberSubscriptionTypeWidget(_subscritionType),
+                    child: _memberSubscriptionTypeWidget(_subscriptionType),
                   ),
                 ),
                 Material(
@@ -196,7 +196,7 @@ class _MemberSubscriptionDetailPageState
           child: Container(
             color: Colors.white,
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: _memberSubscriptionTypeWidget(_subscritionType),
+            child: _memberSubscriptionTypeWidget(_subscriptionType),
           ),
         ),
         Material(
@@ -254,7 +254,7 @@ class _MemberSubscriptionDetailPageState
     ]);
   }
 
-  Widget _memberSubscriptionTypeWidget(SubscritionType subscritionType){
+  Widget _memberSubscriptionTypeWidget(SubscriptionType subscriptionType){
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(
         '會員等級',
@@ -264,7 +264,7 @@ class _MemberSubscriptionDetailPageState
         height: 4,
       ),
       MemberSubscriptionTypeTitleWiget(
-        subscritionType: subscritionType,
+        subscriptionType: subscriptionType,
         fontSize: 17,
         ),
     ]);

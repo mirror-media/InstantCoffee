@@ -11,20 +11,20 @@ import 'package:readr_app/pages/memberCenter/shared/stateErrorWidget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MemberPaymentRecordPage extends StatefulWidget {
-  final SubscritionType subscritionType;
-  MemberPaymentRecordPage(this.subscritionType);
+  final SubscriptionType subscriptionType;
+  MemberPaymentRecordPage(this.subscriptionType);
   @override
   _MemberPaymentRecordPageState createState() => _MemberPaymentRecordPageState();
 }
 
 class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
   List<PaymentRecord> paymentRecordList = [];
-  SubscritionType _subscritionType;
+  SubscriptionType _subscriptionType;
   @override
   void initState(){
     super.initState();
     _fetchPaymentRecords();
-    _subscritionType = widget.subscritionType;
+    _subscriptionType = widget.subscriptionType;
   }
 
   _fetchPaymentRecords() {
@@ -211,8 +211,8 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
             fontSize: 17,
           ),
         ),
-        _subscritionType == SubscritionType.none 
-          || _subscritionType == SubscritionType.subscribe_one_time ? Container(
+        _subscriptionType == SubscriptionType.none 
+          || _subscriptionType == SubscriptionType.subscribe_one_time ? Container(
           margin: const EdgeInsets.only(top: 24),
           padding: const EdgeInsets.symmetric(horizontal: 80),
           child: ElevatedButton(

@@ -3,17 +3,17 @@ import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 
 class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
-  final SubscritionType subscritionType;
+  final SubscriptionType subscriptionType;
   final double fontSize;
   MemberSubscriptionTypeTitleWiget({
-    @required this.subscritionType,
+    @required this.subscriptionType,
     @required this.fontSize,
   });
 
   @override
   Widget build(BuildContext context) {
-    if(subscritionType == SubscritionType.none ||
-      subscritionType == SubscritionType.subscribe_one_time
+    if(subscriptionType == SubscriptionType.none ||
+      subscriptionType == SubscriptionType.subscribe_one_time
     ) {
       return Text(
         'Basic 會員',
@@ -23,8 +23,8 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
       );
     }
 
-    if(subscritionType == SubscritionType.subscribe_monthly || 
-      subscritionType == SubscritionType.subscribe_yearly
+    if(subscriptionType == SubscriptionType.subscribe_monthly || 
+      subscriptionType == SubscriptionType.subscribe_yearly
     ) {
       return Row(
         children: [
@@ -44,7 +44,7 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
       );
     }
 
-    if(subscritionType == SubscritionType.staff){
+    if(subscriptionType == SubscriptionType.staff){
       return Text(
         '鏡集團員工',
         style: TextStyle(
@@ -53,7 +53,7 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
       );
     }
 
-    if(subscritionType == SubscritionType.subscribe_group){
+    if(subscriptionType == SubscriptionType.subscribe_group){
       return Text(
         '團體訂閱',
         style: TextStyle(
@@ -62,7 +62,7 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
       );
     }
 
-    // subscritionType == SubscritionType.marketing
+    // subscriptionType == SubscriptionType.marketing
     return Text(
       'VIP',
       style: TextStyle(

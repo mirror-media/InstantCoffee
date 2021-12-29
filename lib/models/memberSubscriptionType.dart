@@ -1,6 +1,6 @@
 import 'package:readr_app/helpers/EnumParser.dart';
 
-enum SubscritionType { 
+enum SubscriptionType { 
   none, 
   marketing, 
   subscribe_one_time, 
@@ -15,31 +15,31 @@ enum MemberStateType {
   inactive
 }
 
-class MemberIdAndSubscritionType {
+class MemberIdAndSubscriptionType {
   final String israfelId;
   final MemberStateType state;
-  SubscritionType subscritionType;
+  SubscriptionType subscriptionType;
   final bool isNewebpay;
 
-  MemberIdAndSubscritionType({
+  MemberIdAndSubscriptionType({
     this.israfelId,
     this.state,
-    this.subscritionType,
+    this.subscriptionType,
     this.isNewebpay,
   });
 
-  factory MemberIdAndSubscritionType.fromJson(Map<String, dynamic> json) {
+  factory MemberIdAndSubscriptionType.fromJson(Map<String, dynamic> json) {
     if(json == null) {
-      return MemberIdAndSubscritionType(
+      return MemberIdAndSubscriptionType(
         israfelId: null,
         state: null,
-        subscritionType: SubscritionType.none,
+        subscriptionType: SubscriptionType.none,
         isNewebpay: false,
       );
     }
 
     String type = json['type'];
-    SubscritionType subscritionType = type.toEnum(SubscritionType.values);
+    SubscriptionType subscriptionType = type.toEnum(SubscriptionType.values);
 
     String state = json['state'];
     MemberStateType memberStateType = state.toEnum(MemberStateType.values);
@@ -49,10 +49,10 @@ class MemberIdAndSubscritionType {
       isNewebpay = true;
     }
 
-    return MemberIdAndSubscritionType(
+    return MemberIdAndSubscriptionType(
       israfelId: json['id'],
       state: memberStateType,
-      subscritionType: subscritionType,
+      subscriptionType: subscriptionType,
       isNewebpay: isNewebpay,
     );
   }

@@ -33,9 +33,9 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
     _fetchSubscriptionProducts();
   }
 
-  bool _isSubscribed(SubscritionType subscritionType) {
-    return subscritionType == SubscritionType.subscribe_monthly || 
-        subscritionType == SubscritionType.subscribe_yearly;
+  bool _isSubscribed(SubscriptionType subscriptionType) {
+    return subscriptionType == SubscriptionType.subscribe_monthly || 
+        subscriptionType == SubscriptionType.subscribe_yearly;
   }
 
   bool _isTheSamePlatfrom(PaymentType paymentType) {
@@ -86,7 +86,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
                     child: _memberIntroBlock(
-                      subscriptionDetail.subscritionType,
+                      subscriptionDetail.subscriptionType,
                       productDetailList, 
                       subscriptionDetail.googlePlayPurchaseDetails
                     ),
@@ -104,7 +104,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
             return Scaffold(
               appBar: _buildBar(
                 context, 
-                subscritionType: subscriptionDetail.subscritionType
+                subscriptionType: subscriptionDetail.subscriptionType
               ),
               body: body
             ); 
@@ -115,7 +115,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
             return Scaffold(
               appBar: _buildBar(
                 context, 
-                subscritionType: subscriptionDetail.subscritionType
+                subscriptionType: subscriptionDetail.subscriptionType
               ),
               body: ListView(
                 children: [
@@ -123,7 +123,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
                     child: _memberIntroBlock(
-                      subscriptionDetail.subscritionType,
+                      subscriptionDetail.subscriptionType,
                       productDetailList, 
                       subscriptionDetail.googlePlayPurchaseDetails, 
                       isBuying: true
@@ -156,12 +156,12 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
 
   Widget _buildBar(
     BuildContext context, 
-    {SubscritionType subscritionType}
+    {SubscriptionType subscriptionType}
   ) {
     String titleText = '';
-    if(subscritionType == SubscritionType.subscribe_one_time || subscritionType == SubscritionType.none){
+    if(subscriptionType == SubscriptionType.subscribe_one_time || subscriptionType == SubscriptionType.none){
       titleText = '升級會員';
-    } else if(_isSubscribed(subscritionType)){
+    } else if(_isSubscribed(subscriptionType)){
       titleText = '變更方案';
     }
 
@@ -183,17 +183,17 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
   }
 
   Widget _memberIntroBlock(
-    SubscritionType subscritionType,
+    SubscriptionType subscriptionType,
     List<ProductDetails> productDetailList, 
     PurchaseDetails previousPurchaseDetails, 
     {bool isBuying = false}
   ) {
     double width = MediaQuery.of(context).size.width;
     String boxTitle = 'Premium 會員';
-    if(subscritionType == SubscritionType.subscribe_monthly){
+    if(subscriptionType == SubscriptionType.subscribe_monthly){
       boxTitle = '變更為年訂閱方案';
     }
-    else if(subscritionType == SubscritionType.subscribe_yearly){
+    else if(subscriptionType == SubscriptionType.subscribe_yearly){
       boxTitle = '變更為月訂閱方案';
     }
 
@@ -294,12 +294,12 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                           if(previousPurchaseDetails != null) {
                             oldPurchaseDetails = previousPurchaseDetails;
                           }
-                          if(subscritionType == SubscritionType.subscribe_monthly) {
+                          if(subscriptionType == SubscriptionType.subscribe_monthly) {
                             changeSubscriptionParam = ChangeSubscriptionParam(
                               oldPurchaseDetails: oldPurchaseDetails,
                               prorationMode: ProrationMode.deferred,
                             );
-                          } else if(subscritionType == SubscritionType.subscribe_yearly) {
+                          } else if(subscriptionType == SubscriptionType.subscribe_yearly) {
                             changeSubscriptionParam = ChangeSubscriptionParam(
                               oldPurchaseDetails: oldPurchaseDetails,
                               prorationMode: ProrationMode.deferred,
@@ -325,7 +325,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                 }
               ),
 
-            if(_isSubscribed(subscritionType))...[
+            if(_isSubscribed(subscriptionType))...[
               SizedBox(height: 12),
               Text(
                 '變更將在本次收費週期結束時生效',

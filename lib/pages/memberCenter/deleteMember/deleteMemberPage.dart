@@ -7,16 +7,16 @@ import 'package:readr_app/pages/memberCenter/deleteMember/prohibitDeletingWidget
 
 class DeleteMemberPage extends StatelessWidget {
   final String israfelId;
-  final SubscritionType subscritionType;
+  final SubscriptionType subscriptionType;
   DeleteMemberPage({
     @required this.israfelId,
-    @required this.subscritionType,
+    @required this.subscriptionType,
   });
 
   bool _isPremiumOrVip() {
-    return subscritionType == SubscritionType.marketing ||
-        subscritionType == SubscritionType.subscribe_monthly ||
-        subscritionType == SubscritionType.subscribe_yearly;
+    return subscriptionType == SubscriptionType.marketing ||
+        subscriptionType == SubscriptionType.subscribe_monthly ||
+        subscriptionType == SubscriptionType.subscribe_yearly;
   }
 
   @override

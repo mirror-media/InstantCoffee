@@ -7,21 +7,21 @@ import 'package:in_app_purchase_android/src/billing_client_wrappers/purchase_wra
 import 'package:readr_app/models/paymentRecord.dart';
 
 class SubscriptionDetail {
-  final SubscritionType subscritionType;
+  final SubscriptionType subscriptionType;
   final PaymentType paymentType;
   final bool isAutoRenewing;
   final GooglePlayPurchaseDetails googlePlayPurchaseDetails;
 
   SubscriptionDetail({
-    this.subscritionType,
+    this.subscriptionType,
     this.paymentType,
     this.isAutoRenewing,
     this.googlePlayPurchaseDetails,
   });
 
   factory SubscriptionDetail.fromJson(Map<String, dynamic> json) {
-    String subscritionTypeJson = json['member']['type'];
-    SubscritionType subscritionType = subscritionTypeJson.toEnum(SubscritionType.values);
+    String subscriptionTypeJson = json['member']['type'];
+    SubscriptionType subscriptionType = subscriptionTypeJson.toEnum(SubscriptionType.values);
 
     PaymentType paymentType;
     bool isAutoRenewing = false;
@@ -59,7 +59,7 @@ class SubscriptionDetail {
 
     
     return SubscriptionDetail(
-      subscritionType: subscritionType,
+      subscriptionType: subscriptionType,
       paymentType: paymentType,
       isAutoRenewing: isAutoRenewing,
       googlePlayPurchaseDetails: googlePlayPurchaseDetails

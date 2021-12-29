@@ -13,7 +13,7 @@ const String memberStateTypeIsNotFound = 'Member state type is not found';
 const String memberStateTypeIsNotActive = 'Member state type is not active';
 
 abstract class MemberRepos {
-  Future<MemberIdAndSubscritionType> checkSubscriptionType(User user, String token);
+  Future<MemberIdAndSubscriptionType> checkSubscriptionType(User user, String token);
   Future<bool> createMember(String email, String firebaseId, String token);
   Future<Member> fetchMemberData(String firebaseId, String token);
   Future<bool> updateMemberProfile(String israfelId, String token, String name, Gender gender, String birthday);
@@ -36,7 +36,7 @@ class MemberService implements MemberRepos{
   }
 
   @override
-  Future<MemberIdAndSubscritionType> checkSubscriptionType(User user, String token) async{
+  Future<MemberIdAndSubscriptionType> checkSubscriptionType(User user, String token) async{
     String query = 
     """
     query checkSubscriptionType(\$firebaseId: String!) {
@@ -85,17 +85,17 @@ class MemberService implements MemberRepos{
       throw BadRequestException(jsonResponse['errors'][0]['message']);
     }
 
-    MemberIdAndSubscritionType memberIdAndSubscritionType = MemberIdAndSubscritionType.fromJson(jsonResponse['data']['allMembers'][0]);
-    if(memberIdAndSubscritionType.state != MemberStateType.active) {
+    MemberIdAndSubscriptionType memberIdAndSubscriptionType = MemberIdAndSubscriptionType.fromJson(jsonResponse['data']['allMembers'][0]);
+    if(memberIdAndSubscriptionType.state != MemberStateType.active) {
       throw BadRequestException(memberStateTypeIsNotActive);
     }
     if(user.emailVerified){
       String domain = user.email.split('@')[1];
       if(mirrormediaGroupDomain.contains(domain)){
-        memberIdAndSubscritionType.subscritionType = SubscritionType.staff;
+        memberIdAndSubscriptionType.subscriptionType = SubscriptionType.staff;
       }
     }
-    return memberIdAndSubscritionType;
+    return memberIdAndSubscriptionType;
   }
 
   Future<bool> createMember(

@@ -10,9 +10,9 @@ import 'package:readr_app/pages/magazine/onlineMagazineWidget.dart';
 import 'package:readr_app/services/magazineService.dart';
 
 class MagazinePage extends StatefulWidget {
-  final SubscritionType subscritionType;
+  final SubscriptionType subscriptionType;
   MagazinePage({
-    @required this.subscritionType,
+    @required this.subscriptionType,
   });
 
   @override
@@ -22,11 +22,11 @@ class MagazinePage extends StatefulWidget {
 class _MagazinePageState extends State<MagazinePage> {
   ScrollController _listviewController = ScrollController();
   
-  bool _checkPermission(SubscritionType subscritionType) {
-    return widget.subscritionType == SubscritionType.subscribe_monthly ||
-    widget.subscritionType == SubscritionType.subscribe_yearly ||
-    widget.subscritionType == SubscritionType.marketing ||
-    widget.subscritionType == SubscritionType.staff;
+  bool _checkPermission(SubscriptionType subscriptionType) {
+    return widget.subscriptionType == SubscriptionType.subscribe_monthly ||
+    widget.subscriptionType == SubscriptionType.subscribe_yearly ||
+    widget.subscriptionType == SubscriptionType.marketing ||
+    widget.subscriptionType == SubscriptionType.staff;
   }
 
   @override
@@ -40,7 +40,7 @@ class _MagazinePageState extends State<MagazinePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _buildBar(context),
-      body: _checkPermission(widget.subscritionType)
+      body: _checkPermission(widget.subscriptionType)
       ? ListView(
           controller: _listviewController,
           children: [

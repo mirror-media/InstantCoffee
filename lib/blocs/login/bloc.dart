@@ -86,7 +86,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
       );
     }
     if(createSuccess) {
-      await _fetchMemberSubscritionTypeToLogin(emit);
+      await _fetchMemberSubscriptionTypeToLogin(emit);
     } else {
       try {
         await _auth.currentUser.delete();
@@ -163,24 +163,24 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
     if(_auth.currentUser == null) {
       emit(LoginInitState());
     } else {
-      await _fetchMemberSubscritionTypeToLogin(emit);
+      await _fetchMemberSubscriptionTypeToLogin(emit);
     }
   }
 
-  Future<void> _fetchMemberSubscritionTypeToLogin(
+  Future<void> _fetchMemberSubscriptionTypeToLogin(
     Emitter<LoginState> emit,
   ) async{
     try {
       String token = await _auth.currentUser.getIdToken();
-      MemberIdAndSubscritionType memberIdAndSubscritionType = await _memberService.checkSubscriptionType(
+      MemberIdAndSubscriptionType memberIdAndSubscriptionType = await _memberService.checkSubscriptionType(
         _auth.currentUser, 
         token
       );
       emit(
         LoginSuccess(
-          israfelId: memberIdAndSubscritionType.israfelId,
-          subscritionType: memberIdAndSubscritionType.subscritionType,
-          isNewebpay: memberIdAndSubscritionType.isNewebpay,
+          israfelId: memberIdAndSubscriptionType.israfelId,
+          subscriptionType: memberIdAndSubscriptionType.subscriptionType,
+          isNewebpay: memberIdAndSubscriptionType.isNewebpay,
         )
       );
       Fluttertoast.showToast(
@@ -192,13 +192,13 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
         textColor: Colors.white,
         fontSize: 16.0
       );
-      _navigateToRouteName(memberIdAndSubscritionType.subscritionType);
+      _navigateToRouteName(memberIdAndSubscriptionType.subscriptionType);
     } catch(e) {
       // fetch member subscrition type fail
       print(e.toString());
       
       _errorLogHelper.record(
-        'FetchMemberSubscritionTypeToLogin',
+        'FetchMemberSubscriptionTypeToLogin',
         {}, 
         e.toString()
       );
@@ -209,7 +209,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
     }
   }
 
-  void _navigateToRouteName(SubscritionType subscritionType) {
+  void _navigateToRouteName(SubscriptionType subscriptionType) {
     if(routeName != RouteGenerator.login) {
       if(routeName == RouteGenerator.story) {
         RouteGenerator.navigatorKey.currentState.popUntil(ModalRoute.withName(RouteGenerator.root));
@@ -217,8 +217,8 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
         RouteGenerator.navigatorKey.currentState.pop();
       }
 
-      if(routeArguments.containsKey('subscritionType')) {
-        routeArguments.update('subscritionType', (value) => subscritionType);
+      if(routeArguments.containsKey('subscriptionType')) {
+        routeArguments.update('subscriptionType', (value) => subscriptionType);
       }
 
       RouteGenerator.navigatorKey.currentState.pushNamed(
@@ -238,12 +238,12 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
     } else {
       try {
         String token = await _auth.currentUser.getIdToken();
-        MemberIdAndSubscritionType memberIdAndSubscritionType = await _memberService.checkSubscriptionType(_auth.currentUser, token);
+        MemberIdAndSubscriptionType memberIdAndSubscriptionType = await _memberService.checkSubscriptionType(_auth.currentUser, token);
         emit(
           LoginSuccess(
-            israfelId: memberIdAndSubscritionType.israfelId,
-            subscritionType: memberIdAndSubscritionType.subscritionType,
-            isNewebpay: memberIdAndSubscritionType.isNewebpay,
+            israfelId: memberIdAndSubscriptionType.israfelId,
+            subscriptionType: memberIdAndSubscriptionType.subscriptionType,
+            isNewebpay: memberIdAndSubscriptionType.isNewebpay,
           )
         );
       } catch(e) {

@@ -7,6 +7,6 @@ class MemberSubscriptionTypeInitState extends MemberSubscriptionTypeState {}
 class MemberSubscriptionTypeLoadingState extends MemberSubscriptionTypeState {}
 
 class MemberSubscriptionTypeLoadedState extends MemberSubscriptionTypeState {
-  final SubscritionType subscritionType;
-  MemberSubscriptionTypeLoadedState({this.subscritionType});
+  final SubscriptionType subscriptionType;
+  MemberSubscriptionTypeLoadedState({this.subscriptionType});
 }

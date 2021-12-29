@@ -147,7 +147,7 @@ class RouteGenerator {
           settings: settings,
           builder: (context) => DeleteMemberPage(
             israfelId: args['israfelId'],
-            subscritionType: args['subscritionType'],
+            subscriptionType: args['subscriptionType'],
           ),
           fullscreenDialog: true,
         );
@@ -206,7 +206,7 @@ class RouteGenerator {
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => MagazinePage(
-            subscritionType: args['subscritionType'],
+            subscriptionType: args['subscriptionType'],
           )
         );
       case magazineBrowser:
@@ -356,13 +356,13 @@ class RouteGenerator {
 
   static void navigateToDeleteMember(
     String israfelId,
-    SubscritionType subscritionType
+    SubscriptionType subscriptionType
   ) {
     navigatorKey.currentState.pushNamed(
       deleteMember,
       arguments: {
         'israfelId': israfelId,
-        'subscritionType': subscritionType,
+        'subscriptionType': subscriptionType,
       },
     );
   }
@@ -404,12 +404,12 @@ class RouteGenerator {
   }
 
   static void navigateToMagazine(
-    SubscritionType subscritionType,
+    SubscriptionType subscriptionType,
   ) {
     navigatorKey.currentState.pushNamed(
       magazine,
       arguments: {
-        'subscritionType': subscritionType
+        'subscriptionType': subscriptionType
       },
     );
   }

@@ -3,13 +3,13 @@ import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 
 class HintToWebsitePage extends StatelessWidget {
-  final SubscritionType subscritionType;
-  HintToWebsitePage(this.subscritionType);
+  final SubscriptionType subscriptionType;
+  HintToWebsitePage(this.subscriptionType);
   @override
   Widget build(BuildContext context) {
     String hintText;
     String titleText;
-    if(subscritionType == SubscritionType.subscribe_one_time){
+    if(subscriptionType == SubscriptionType.subscribe_one_time){
       titleText = '升級會員';
       hintText = '若欲升級 Premium 會員，請至網頁版進行操作。\nAPP 升級功能將於近期上線。';
     }

@@ -60,15 +60,15 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
     return false;
   }
 
-  bool _isSubscribed(SubscritionType subscritionType) {
-    return subscritionType == SubscritionType.subscribe_monthly || 
-        subscritionType == SubscritionType.subscribe_yearly;
+  bool _isSubscribed(SubscriptionType subscriptionType) {
+    return subscriptionType == SubscriptionType.subscribe_monthly || 
+        subscriptionType == SubscriptionType.subscribe_yearly;
   }
 
   bool _isNeedToShowWarning(SubscriptionDetail subscriptionDetail) {
 
     return _isTheSamePlatfrom(subscriptionDetail.paymentType) &&
-        _isSubscribed(subscriptionDetail.subscritionType) && 
+        _isSubscribed(subscriptionDetail.subscriptionType) && 
         Platform.isAndroid;
   }
 
@@ -116,14 +116,14 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
   }
 
   _removeSubscribedProduct(
-    SubscritionType subscritionType,
+    SubscriptionType subscriptionType,
     List<ProductDetails> productDetailList
   ) {
     productDetailList.removeWhere((element) {
       String removeId;
-      if(subscritionType == SubscritionType.subscribe_monthly) {
+      if(subscriptionType == SubscriptionType.subscribe_monthly) {
         removeId = Environment().config.monthSubscriptionId;
-      } else if(subscritionType == SubscritionType.subscribe_yearly) {
+      } else if(subscriptionType == SubscriptionType.subscribe_yearly) {
         //removeId = Environment().config.yearSubscriptionId;
       }
       return element.id == removeId;
@@ -142,7 +142,7 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
 
       if(subscriptionDetail.isAutoRenewing) {
         _removeSubscribedProduct(
-          subscriptionDetail.subscritionType,
+          subscriptionDetail.subscriptionType,
           productDetailList
         );
       }
