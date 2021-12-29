@@ -11,7 +11,6 @@ import 'package:readr_app/models/subscriptionDetail.dart';
 
 List<String> _kProductIds = <String>[
   Environment().config.monthSubscriptionId,
-  Environment().config.yearSubscriptionId,
 ];
 
 abstract class SubscriptionSelectRepos {

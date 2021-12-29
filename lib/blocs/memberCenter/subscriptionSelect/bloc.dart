@@ -124,7 +124,7 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
       if(subscritionType == SubscritionType.subscribe_monthly) {
         removeId = Environment().config.monthSubscriptionId;
       } else if(subscritionType == SubscritionType.subscribe_yearly) {
-        removeId = Environment().config.yearSubscriptionId;
+        //removeId = Environment().config.yearSubscriptionId;
       }
       return element.id == removeId;
     });
