@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +25,7 @@ import 'package:readr_app/widgets/mMVideoPlayer.dart';
 import 'package:readr_app/blocs/storyPage/news/bloc.dart';
 import 'package:readr_app/blocs/storyPage/news/events.dart';
 import 'package:readr_app/blocs/storyPage/news/states.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class StoryWidget extends StatefulWidget {
   final bool isMemberCheck;
@@ -141,6 +143,8 @@ return BlocBuilder<StoryBloc, StoryState>(
               ),
             SizedBox(height: 16),
             _buildUpdateDateWidget(story),
+            SizedBox(height: 13),
+            _fbIframeWidget(),
             _buildRelatedWidget(context, story.relatedStory),
             SizedBox(height: 16),
             _buildMoreContentWidget(),
@@ -716,6 +720,19 @@ return BlocBuilder<StoryBloc, StoryState>(
       child: Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         child: DownloadMagazineWidget(),
+      ),
+    );
+  }
+
+  Widget _fbIframeWidget() {
+    const String iframe = '<html><body><iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fmirrormediamg&tabs&width=340&height=130&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=2138298816406811" width="340" height="130" style="border:none;overflow:hidden;transform: scale(2.85);transform-origin:0 0;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe></body></html>';
+    return Container(
+      padding: const EdgeInsets.only(right: 16, left: 14),
+      height: 160,
+      child: WebView(
+        initialUrl: Uri.dataFromString(iframe, mimeType: 'text/html').toString(),
+        javascriptMode: JavascriptMode.unrestricted,
+        debuggingEnabled: true,
       ),
     );
   }
