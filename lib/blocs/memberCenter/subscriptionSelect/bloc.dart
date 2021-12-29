@@ -13,6 +13,7 @@ import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/helpers/iAPSubscriptionHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
+import 'package:readr_app/models/paymentRecord.dart';
 import 'package:readr_app/models/subscriptionDetail.dart';
 import 'package:readr_app/services/subscriptionSelectService.dart';
 
@@ -45,9 +46,29 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
     return super.close();
   }
 
-  bool _isNeedToShowWarning(SubscritionType subscritionType) {
-    return (subscritionType == SubscritionType.subscribe_monthly || 
-        subscritionType == SubscritionType.subscribe_yearly) &&
+  bool _isTheSamePlatfrom(PaymentType paymentType) {
+    if(paymentType == null) {
+      return true;
+    }
+
+    if(paymentType == PaymentType.google_play && Platform.isAndroid) {
+      return true;
+    } else if (paymentType == PaymentType.app_store && Platform.isIOS) {
+      return true;
+    }
+
+    return false;
+  }
+
+  bool _isSubscribed(SubscritionType subscritionType) {
+    return subscritionType == SubscritionType.subscribe_monthly || 
+        subscritionType == SubscritionType.subscribe_yearly;
+  }
+
+  bool _isNeedToShowWarning(SubscriptionDetail subscriptionDetail) {
+
+    return _isTheSamePlatfrom(subscriptionDetail.paymentType) &&
+        _isSubscribed(subscriptionDetail.subscritionType) && 
         Platform.isAndroid;
   }
 
@@ -131,7 +152,7 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
         productDetailList: productDetailList,
       ));
 
-      if(_isNeedToShowWarning(subscriptionDetail.subscritionType)) {
+      if(_isNeedToShowWarning(subscriptionDetail)) {
         _showWarningDialog();
       }
     } on SocketException {
