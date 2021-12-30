@@ -17,7 +17,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # iOS and android is the same version
 # dev version
-version: 4.2.0+69
+version: 4.2.0+70
 # prod version
 # version: 4.1.2+354
 
