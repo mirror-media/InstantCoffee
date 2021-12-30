@@ -3,9 +3,10 @@ enum PaymentType{
   app_store,
   google_play,
 }
+
 class PaymentRecord {
   final String paymentOrderNumber;
-  final String subscribeType;
+  final String productName;
   final String paymentCurrency;
   final int paymentAmount;
   final DateTime paymentDate;
@@ -15,7 +16,7 @@ class PaymentRecord {
 
   PaymentRecord({
     this.paymentOrderNumber,
-    this.subscribeType,
+    this.productName,
     this.paymentCurrency,
     this.paymentAmount,
     this.paymentDate,

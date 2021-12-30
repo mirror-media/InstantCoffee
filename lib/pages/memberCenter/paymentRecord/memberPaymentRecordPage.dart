@@ -274,7 +274,7 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
               ),
               SizedBox(height: 2),
               Text(
-                paymentRecord.subscribeType,
+                paymentRecord.productName,
                 style: TextStyle(fontSize: 17),
               ),
               SizedBox(height: 4),

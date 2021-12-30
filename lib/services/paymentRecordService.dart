@@ -29,9 +29,8 @@ class PaymentRecordService {
           ) {
           orderNumber
           frequency
-          currency
           paymentMethod
-          amount
+          currency
           newebpayPayment(orderBy: { paymentTime: desc }) {
             status
             frequency
@@ -45,7 +44,6 @@ class PaymentRecordService {
 						transactionDatetime
           }
           appStorePayment(orderBy: {purchaseDate: desc}){
-            amount
 						purchaseDate
           }
         }
@@ -73,44 +71,37 @@ class PaymentRecordService {
         PaymentRecord paymentRecord;
         String paymentCurrency = subscription['currency'] == null ? 'TWD':subscription['currency'];
         String paymentOrderNumber = subscription['orderNumber'];
+
         int paymentAmount;
-        DateTime paymentDate = DateTime(2021);
-        String paymentMethod;
-        String creditCardInfoLastFour;
-        String subscribeType = '單篇訂閱';
-        bool isSuccess;
-        if(subscription['frequency'] == 'monthly'){
-          subscribeType = '月方案';
-        } else if(subscription['frequency'] == 'yearly'){
-          subscribeType = '年方案';
-        }
+        String paymentMethod = '';
+        DateTime paymentDate;
+        bool isSuccess = true;
+        String productName = '未知';
 
         if(subscription['paymentMethod'] == 'newebpay' && subscription['newebpayPayment'] != null){
           subscription['newebpayPayment'].forEach((newebpayPayment){
             paymentAmount = newebpayPayment['amount'];
-            creditCardInfoLastFour = newebpayPayment['cardInfoLastFour'];
+
+            String creditCardInfoLastFour = newebpayPayment['cardInfoLastFour'];
             paymentMethod = '信用卡付款($creditCardInfoLastFour)';
+
             if(newebpayPayment['paymentTime'] != null){
               paymentDate = DateTime.parse(newebpayPayment['paymentTime']).toLocal();
             }
-            if(newebpayPayment['status'] == 'SUCCESS'){
-              isSuccess = true;
-            }
-            else{
-              isSuccess = false;
-            }
+
+            isSuccess = newebpayPayment['status'] == 'SUCCESS';
+
             if(newebpayPayment['frequency'] == 'monthly'){
-              subscribeType = '月方案';
+              productName = '月方案';
+            } else if(newebpayPayment['frequency'] == 'yearly'){
+              productName = '年方案';
+            } else {
+              productName = '單篇訂閱';
             }
-            else if(newebpayPayment['frequency'] == 'yearly'){
-              subscribeType = '年方案';
-            }
-            else{
-              subscribeType = '單篇訂閱';
-            }
+
             paymentRecord = PaymentRecord(
               paymentOrderNumber: paymentOrderNumber,
-              subscribeType: subscribeType,
+              productName: productName,
               paymentCurrency: paymentCurrency,
               paymentAmount: paymentAmount,
               paymentDate: paymentDate,
@@ -118,31 +109,32 @@ class PaymentRecordService {
               isSuccess: isSuccess,
               paymentType: PaymentType.newebpay,
             );
+
             paymentRecords.add(paymentRecord);
           });
         }
         else if(subscription['paymentMethod'] == 'app_store'){
-          paymentAmount = subscription['amount'];
           paymentMethod = 'App Store 續扣';
           if(subscription['appStorePayment'] != null){
             subscription['appStorePayment'].forEach((appStorePayment){
               if(appStorePayment['purchaseDate'] != null){
                 paymentDate = DateTime.parse(appStorePayment['purchaseDate']).toLocal();
               }
-              if(appStorePayment['amount'] != null){
-                paymentAmount = appStorePayment['amount'].toInt();
-              }
+
+              // TODO: need to fix after api gateway update
+              // if(appStorePayment['productId'] == Environment().config.monthSubscriptionId){
+              //   productName = '月方案';
+              // }
+              productName = '月方案';
+
               paymentRecord = PaymentRecord(
                 paymentOrderNumber: paymentOrderNumber,
                 paymentType: PaymentType.app_store,
-                paymentCurrency: paymentCurrency,
-                paymentAmount: paymentAmount,
                 paymentDate: paymentDate,
                 paymentMethod: paymentMethod,
-                isSuccess: isSuccess,
-                subscribeType: subscribeType,
+                productName: productName,
               );
-              
+
               paymentRecords.add(paymentRecord);
             });
           }
@@ -158,6 +150,13 @@ class PaymentRecordService {
               if(googlePlayPayment['amount'] != null){
                 paymentAmount = googlePlayPayment['amount'];
               }
+
+              // TODO: need to fix after api gateway update
+              // if(appStorePayment['productId'] == Environment().config.monthSubscriptionId){
+              //   productName = '月方案';
+              // }
+              productName = '月方案';
+
               paymentRecord = PaymentRecord(
                 paymentOrderNumber: paymentOrderNumber,
                 paymentType: PaymentType.google_play,
@@ -166,11 +165,10 @@ class PaymentRecordService {
                 paymentDate: paymentDate,
                 paymentMethod: paymentMethod,
                 isSuccess: isSuccess,
-                subscribeType: subscribeType,
+                productName: productName,
               );
-              if(paymentAmount != null){
-                paymentRecords.add(paymentRecord);
-              }
+
+              paymentRecords.add(paymentRecord);
             });
           }
         }
