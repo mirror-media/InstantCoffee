@@ -5,6 +5,8 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:readr_app/services/subscriptionSelectService.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
+import 'package:in_app_purchase_android/billing_client_wrappers.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 class IAPSubscriptionHelper {  
   static final IAPSubscriptionHelper _instance = IAPSubscriptionHelper._internal();
@@ -37,6 +39,30 @@ class IAPSubscriptionHelper {
           .toList();
       purchaseDetails.forEach((purchaseDetail) {
         verifyEntirePurchase(purchaseDetail);
+      });
+    } else if(Platform.isAndroid) {
+      BillingClient billingClient = BillingClient((PurchasesResultWrapper resultWrapper) async {});
+      List<PurchasesResultWrapper> responses;
+
+      responses = await Future.wait([
+        billingClient.queryPurchases(SkuType.subs)
+      ]);
+
+      List<PurchaseDetails> pastPurchases =
+          responses.expand((PurchasesResultWrapper response) {
+        return response.purchasesList;
+      }).map((PurchaseWrapper purchaseWrapper) {
+        final GooglePlayPurchaseDetails purchaseDetails =
+            GooglePlayPurchaseDetails.fromPurchase(purchaseWrapper);
+
+        return purchaseDetails;
+      }).toList();
+
+      pastPurchases.forEach((purchaseDetail) {
+        if(purchaseDetail.status == PurchaseStatus.purchased && 
+            purchaseDetail.pendingCompletePurchase) {
+          verifyEntirePurchase(purchaseDetail);
+        }
       });
     }
   }
