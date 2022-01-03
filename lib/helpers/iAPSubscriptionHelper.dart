@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:readr_app/services/subscriptionSelectService.dart';
+import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
+import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 
 class IAPSubscriptionHelper {  
   static final IAPSubscriptionHelper _instance = IAPSubscriptionHelper._internal();
@@ -18,8 +20,40 @@ class IAPSubscriptionHelper {
   StreamSubscription<List<PurchaseDetails>> _subscription;
   InAppPurchase _inAppPurchase = InAppPurchase.instance;
 
-  void setSubscription() {
-    _subscription = _inAppPurchase.purchaseStream.listen((purchaseDetailsList) {
+  void handleIncompletePurchases() async{
+    if(Platform.isIOS) {
+      SKPaymentQueueWrapper skPaymentQueueWrapper = SKPaymentQueueWrapper();
+      List<SKPaymentTransactionWrapper> transactions = await skPaymentQueueWrapper.transactions();
+      List<SKPaymentTransactionWrapper> purchasedTransactions = [];
+      transactions.forEach((skPaymentTransactionWrapper) async{
+        if(skPaymentTransactionWrapper.transactionState == SKPaymentTransactionStateWrapper.purchased) {
+          purchasedTransactions.add(skPaymentTransactionWrapper);
+        }
+      });
+      String receiptData = await getReceiptData();
+      List<PurchaseDetails> purchaseDetails = purchasedTransactions
+          .map((SKPaymentTransactionWrapper transaction) =>
+              AppStorePurchaseDetails.fromSKTransaction(transaction, receiptData))
+          .toList();
+      purchaseDetails.forEach((purchaseDetail) {
+        verifyEntirePurchase(purchaseDetail);
+      });
+    }
+  }
+
+  Future<String> getReceiptData() async {
+    String _receiptData;
+    try {
+      _receiptData = await SKReceiptManager.retrieveReceiptData();
+    } catch (e) {
+      _receiptData = '';
+    }
+    return _receiptData;
+  }
+
+  void setSubscription() async{
+    final Stream<List<PurchaseDetails>> purchaseUpdated = _inAppPurchase.purchaseStream;
+    _subscription = purchaseUpdated.listen((purchaseDetailsList) {
       _listenToPurchaseUpdated(purchaseDetailsList);
     }, onDone: () {
       _subscription.cancel();
@@ -55,7 +89,7 @@ class IAPSubscriptionHelper {
 
   Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) async{
     SubscriptionSelectServices subscriptionSelectServices = SubscriptionSelectServices();
-    return subscriptionSelectServices.verifyPurchase(purchaseDetails);
+    return await subscriptionSelectServices.verifyPurchase(purchaseDetails);
   }
 
   Future<bool> _handleInvalidPurchase(PurchaseDetails purchaseDetails) async{
