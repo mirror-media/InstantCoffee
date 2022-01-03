@@ -3,7 +3,7 @@ import 'package:readr_app/helpers/EnumParser.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
-import 'package:in_app_purchase_android/src/billing_client_wrappers/purchase_wrapper.dart';
+import 'package:in_app_purchase_android/billing_client_wrappers.dart';
 import 'package:readr_app/models/paymentRecord.dart';
 
 class SubscriptionDetail {
