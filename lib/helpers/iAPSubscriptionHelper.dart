@@ -5,8 +5,6 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:readr_app/services/subscriptionSelectService.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
-import 'package:in_app_purchase_android/billing_client_wrappers.dart';
-import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 class IAPSubscriptionHelper {  
   static final IAPSubscriptionHelper _instance = IAPSubscriptionHelper._internal();
@@ -22,7 +20,7 @@ class IAPSubscriptionHelper {
   StreamSubscription<List<PurchaseDetails>> _subscription;
   InAppPurchase _inAppPurchase = InAppPurchase.instance;
 
-  void handleIncompletePurchases() async{
+  Future<void> handleIncompletePurchases() async{
     if(Platform.isIOS) {
       SKPaymentQueueWrapper skPaymentQueueWrapper = SKPaymentQueueWrapper();
       List<SKPaymentTransactionWrapper> transactions = await skPaymentQueueWrapper.transactions();
@@ -41,29 +39,7 @@ class IAPSubscriptionHelper {
         verifyEntirePurchase(purchaseDetail);
       });
     } else if(Platform.isAndroid) {
-      BillingClient billingClient = BillingClient((PurchasesResultWrapper resultWrapper) async {});
-      List<PurchasesResultWrapper> responses;
-
-      responses = await Future.wait([
-        billingClient.queryPurchases(SkuType.subs)
-      ]);
-
-      List<PurchaseDetails> pastPurchases =
-          responses.expand((PurchasesResultWrapper response) {
-        return response.purchasesList;
-      }).map((PurchaseWrapper purchaseWrapper) {
-        final GooglePlayPurchaseDetails purchaseDetails =
-            GooglePlayPurchaseDetails.fromPurchase(purchaseWrapper);
-
-        return purchaseDetails;
-      }).toList();
-
-      pastPurchases.forEach((purchaseDetail) {
-        if(purchaseDetail.status == PurchaseStatus.purchased && 
-            purchaseDetail.pendingCompletePurchase) {
-          verifyEntirePurchase(purchaseDetail);
-        }
-      });
+      _inAppPurchase.restorePurchases();
     }
   }
 
@@ -78,6 +54,7 @@ class IAPSubscriptionHelper {
   }
 
   void setSubscription() async{
+    await _inAppPurchase.isAvailable();
     final Stream<List<PurchaseDetails>> purchaseUpdated = _inAppPurchase.purchaseStream;
     _subscription = purchaseUpdated.listen((purchaseDetailsList) {
       _listenToPurchaseUpdated(purchaseDetailsList);
@@ -86,6 +63,7 @@ class IAPSubscriptionHelper {
     }, onError: (error) {
       // handle error here.
     });
+    handleIncompletePurchases();
   }
 
   void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
@@ -107,6 +85,13 @@ class IAPSubscriptionHelper {
         else if (purchaseDetails.status == PurchaseStatus.canceled) {
           if(Platform.isIOS) {
             await _inAppPurchase.completePurchase(purchaseDetails);
+          }
+        }
+        else if (purchaseDetails.status == PurchaseStatus.restored) {
+          if(Platform.isAndroid) {
+            if(purchaseDetails.pendingCompletePurchase) {
+              verifyEntirePurchase(purchaseDetails);
+            }
           }
         }
       }

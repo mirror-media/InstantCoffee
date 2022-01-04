@@ -16,7 +16,6 @@ class _MirrorMediaAppState extends State<MirrorMediaApp> {
 
   @override
   void initState() {
-    iapSubscriptionHelper.handleIncompletePurchases();
     iapSubscriptionHelper.setSubscription();
     super.initState();
   }
