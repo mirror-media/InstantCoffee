@@ -83,7 +83,7 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
                       child: isLoading
                       ? SpinKitThreeBounce(color: appColor, size: 17,)
                       : Text(
-                          '立即下載',
+                          '線上閱讀',
                           style: TextStyle(
                             fontSize: 17,
                             color: Colors.white,
@@ -119,8 +119,8 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
             SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.only(left: 32, right: 32),
-              child: RaisedButton(
-                color: Colors.white,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.white),
                 child: Container(
                   width: width,
                   child: Center(
@@ -129,7 +129,7 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
                       child: isLoading
                       ? SpinKitThreeBounce(color: appColor, size: 17,)
                       : Text(
-                          '立即下載',
+                          '線上閱讀',
                           style: TextStyle(
                             fontSize: 17,
                             color: appColor,
