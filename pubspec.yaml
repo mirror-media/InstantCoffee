@@ -131,6 +131,9 @@ dependencies:
   # more powerful webview
   flutter_inappwebview: ^5.3.2
 
+  # zoomable widget
+  photo_view: ^0.13.0
+
   intl: ^0.17.0
 
 dependency_overrides:
