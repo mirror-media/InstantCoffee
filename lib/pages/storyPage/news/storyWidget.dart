@@ -207,22 +207,31 @@ return BlocBuilder<StoryBloc, StoryState>(
             aspectRatio: 16 / 9,
           ),
         if (story.heroImage != null && story.heroVideo == null)
-          CachedNetworkImage(
-            height: height,
-            width: width,
-            imageUrl: story.heroImage,
-            placeholder: (context, url) => Container(
+          InkWell(
+            onTap: (){
+              if(story.heroImage != Environment().config.mirrorMediaNotImageUrl
+                && story.imageUrlList.isNotEmpty
+              ){
+                RouteGenerator.navigateToImageViewer(story.imageUrlList);
+              }
+            },
+            child: CachedNetworkImage(
               height: height,
               width: width,
-              color: Colors.grey,
+              imageUrl: story.heroImage,
+              placeholder: (context, url) => Container(
+                height: height,
+                width: width,
+                color: Colors.grey,
+              ),
+              errorWidget: (context, url, error) => Container(
+                height: height,
+                width: width,
+                color: Colors.grey,
+                child: Icon(Icons.error),
+              ),
+              fit: BoxFit.cover,
             ),
-            errorWidget: (context, url, error) => Container(
-              height: height,
-              width: width,
-              color: Colors.grey,
-              child: Icon(Icons.error),
-            ),
-            fit: BoxFit.cover,
           ),
         if (story.heroCaption != '')
           Padding(
@@ -486,7 +495,7 @@ return BlocBuilder<StoryBloc, StoryState>(
                       foregroundPainter: (isNeedFadding && index == story.apiDatas.length-1)
                       ? FadingEffect()
                       : null,
-                      child: paragraphFormat.parseTheParagraph(paragraph, context),
+                      child: paragraphFormat.parseTheParagraph(paragraph, context, story.imageUrlList),
                     ),
                     if(isAdsActivated && (!aT1IsActivated && unStyleParagraphCount == storyAT1AdIndex)) 
                     ...[
