@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -28,74 +29,84 @@ class MagazineItemWidget extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(
-        top: 20.0, bottom: 20.0,
+        top: 16.0, bottom: 16.0,
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _displayMagazineImage(imageWidth, imageHeight, magazine),
-          SizedBox(width: 16),
-          Expanded(
-            child: Column(
+          Container(
+            //height: imageHeight + 10,
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  magazine.issue,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: appColor,
-                  ),
-                  softWrap: false,
-                  overflow: TextOverflow.fade,
-                ),
-                SizedBox(width: 8),
-                Text(
-                  publishedDate,
-                  style: TextStyle(fontSize: 13),
-                ),
-                SizedBox(height: 8.0),
-                RichText(
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
-                  text: TextSpan(
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20.0,
-                    ),
-                    text: magazine.title,
+                _displayMagazineImage(imageWidth, imageHeight, magazine),
+                Container(
+                  width: MediaQuery.of(context).size.width - 48 - imageWidth - 20,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        magazine.issue,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: appColor,
+                        ),
+                        softWrap: false,
+                        overflow: TextOverflow.fade,
+                      ),
+                      SizedBox(height: 2.0),
+                      Text(
+                        publishedDate,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.black38,
+                        ),
+                      ),
+                      SizedBox(height: 8.0),
+                      AutoSizeText(
+                        magazine.title,
+                        maxLines: 2,
+                        minFontSize: 15,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 17,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-            child: InkWell(
-              child: Container(
-                height: imageHeight,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Ink(
-                      width: 31,
-                      height: 33,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(magazineDownloadIconPng),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              onTap: () {
-                _navigateToMagazineBrowser(context, magazine);
-              },
+            padding: const EdgeInsets.only(top: 12, bottom: 16),
+            child: Divider(
+              height: 1,
+              thickness: 1,
+              color: Colors.black12,
             ),
           ),
-        ],
+          TextButton.icon(
+            icon: Icon(
+              Icons.import_contacts_outlined,
+              color: appColor,
+              size: 17,
+            ),
+            label: Text(
+              '線上閱讀',
+              style: TextStyle(
+              fontSize: 15,
+              color: appColor,
+              fontWeight: FontWeight.w400,
+              ),
+            ),
+            onPressed: (){
+              _navigateToMagazineBrowser(context,magazine);
+            }
+          ),
+        ]
       ),
     );
   }

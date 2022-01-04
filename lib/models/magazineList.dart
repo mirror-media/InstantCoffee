@@ -8,13 +8,13 @@ class MagazineList extends CustomizedList<Magazine> {
   // constructor
   MagazineList();
 
-  factory MagazineList.fromJson(List<dynamic> parsedJson) {
+  factory MagazineList.fromJson(List<dynamic> parsedJson, String type) {
     if (parsedJson == null) {
       return null;
     }
 
     MagazineList magazines = MagazineList();
-    List parseList = parsedJson.map((i) => Magazine.fromJson(i)).toList();
+    List parseList = parsedJson.map((i) => Magazine.fromJson(i, type)).toList();
     parseList.forEach((element) {
       magazines.add(element);
     });
@@ -22,9 +22,9 @@ class MagazineList extends CustomizedList<Magazine> {
     return magazines;
   }
 
-  factory MagazineList.parseResponseBody(String body) {
+  factory MagazineList.parseResponseBody(String body, String type) {
     final jsonData = json.decode(body);
 
-    return MagazineList.fromJson(jsonData);
+    return MagazineList.fromJson(jsonData, type);
   }
 }

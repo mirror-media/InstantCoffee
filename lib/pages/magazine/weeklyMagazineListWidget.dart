@@ -51,22 +51,19 @@ class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
       children: [
         if(_currentMagazineList.length > 0)
           MagazineListLabel(label: '當期雜誌'),
-        SizedBox(height: 16),
         ListView.separated(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          separatorBuilder: (BuildContext context, int index) => Padding(
-            padding: const EdgeInsets.only(
-              left: 24.0, right: 24,
-            ),
-            child: Divider(),
+          separatorBuilder: (BuildContext context, int index) => Container(
+            height: 4,
+            color: Color.fromRGBO(248, 248, 249, 1),
           ),
           itemCount: _currentMagazineList.length,
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.only(
                 left: 24.0, right: 24,
-                top: 16, bottom: 16
+                top: 20, bottom: 16
               ),
               child: _buildTheFirstMagazine(
                 context,
@@ -77,17 +74,14 @@ class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
             );
           }
         ),
-        SizedBox(height: 16),
         if(_remainMagazineList.length > 0)
           MagazineListLabel(label: '近期雜誌',),
         ListView.separated(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          separatorBuilder: (BuildContext context, int index) => Padding(
-            padding: const EdgeInsets.only(
-              left: 24.0, right: 24,
-            ),
-            child: Divider(),
+          separatorBuilder: (BuildContext context, int index) => Container(
+            height: 4,
+            color: Color.fromRGBO(248, 248, 249, 1),
           ),
           itemCount: _remainMagazineList.length,
           itemBuilder: (context, index) {
@@ -134,25 +128,26 @@ class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
     double imageWidth = (width-padding*2)/2.5;
     double imageHeight = imageWidth/0.75;
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _displayMagazineImage(imageWidth, imageHeight, magazine),
-        SizedBox(width: 10),
-        Expanded(
-          child: Container(
-            height: imageHeight,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
+        Container(
+          height: imageHeight,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _displayMagazineImage(imageWidth, imageHeight, magazine),
+              Container(
+                width: MediaQuery.of(context).size.width - 48 - imageWidth - 20,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       magazine.issue,
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 15,
                         color: appColor,
                       ),
                       softWrap: false,
@@ -172,30 +167,35 @@ class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
                     ),
                   ],
                 ),
-                RaisedButton(
-                  color: appColor,
-                  child: Container(
-                    width: width,
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 10, bottom: 10),
-                        child: Text(
-                          '下載當期雜誌',
-                          style: TextStyle(
-                            fontSize: 17,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  onPressed: (){
-                    _navigateToMagazineBrowser(magazine);
-                  }
-                ),
-              ],
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 12, bottom: 16),
+          child: Divider(
+            height: 1,
+            thickness: 1,
+            color: Colors.black12,
+          ),
+        ),
+        TextButton.icon(
+          icon: Icon(
+            Icons.import_contacts_outlined,
+            color: appColor,
+            size: 17,
+          ),
+          label: Text(
+            '線上閱讀',
+            style: TextStyle(
+            fontSize: 15,
+            color: appColor,
+            fontWeight: FontWeight.w400,
             ),
           ),
+          onPressed: (){
+            _navigateToMagazineBrowser(magazine);
+          }
         ),
       ]
     );

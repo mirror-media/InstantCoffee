@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
@@ -28,6 +29,7 @@ import 'package:readr_app/pages/storyPage/news/storyPage.dart';
 import 'package:readr_app/pages/memberCenter/editMemberProfile/editMemberProfilePage.dart';
 import 'package:readr_app/pages/memberCenter/editMemberContactInfo/editMemberContactInfoPage.dart';
 import 'package:readr_app/pages/tag/tagPage.dart';
+import 'package:readr_app/widgets/imageViewerWidget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RouteGenerator {
@@ -54,6 +56,7 @@ class RouteGenerator {
   static const String subscriptionSelect = '/subscriptionSelect';
   static const String newebpayChangePlan = '/newebpayChangePlan';
   static const String tagPage = '/tag';
+  static const String imageViewer = '/imageViewer';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -215,6 +218,7 @@ class RouteGenerator {
           settings: settings,
           builder: (_) => MagazineBrowser(
             magazine: args['magazine'],
+            token: args['token'],
           )
         );
       case subscriptionSelect:
@@ -235,6 +239,16 @@ class RouteGenerator {
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => TagPage(tag: args['tag'],),
+        );
+      case imageViewer:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => ImageViewerWidget(
+            args['imageUrlList'],
+            openIndex: args['openIndex'],
+          ),
+          fullscreenDialog: true,
         );
       default:
         // If there is no such named route in the switch statement, e.g. /third
@@ -420,19 +434,36 @@ class RouteGenerator {
     // https://github.com/flutter/flutter/issues/48245
     // There is a issue when opening pdf file in webview on android, 
     // so change to launch URL on android.
-    if(Platform.isAndroid) {
-      if (await canLaunch(magazine.pdfUrl)) {
-        await launch(magazine.pdfUrl);
-      } else {
-        throw 'Could not launch $magazine.pdfUrl';
-      }
-    } else {
+    String url;
+    String token;
+    if(magazine.type == 'weekly'){
+      url = magazine.onlineReadingUrl;
+      User user = FirebaseAuth.instance.currentUser;
+      token = await user.getIdToken();
       navigatorKey.currentState.pushNamed(
         magazineBrowser,
         arguments: {
           'magazine': magazine,
+          'token': token,
         },
       );
+    }else{
+      url = magazine.pdfUrl;
+      if(Platform.isAndroid) {
+        if (await canLaunch(url)) {
+          await launch(url);
+        } else {
+          throw 'Could not launch $url';
+        }
+      } else {
+        navigatorKey.currentState.pushNamed(
+          magazineBrowser,
+          arguments: {
+            'magazine': magazine,
+            'token': token,
+          },
+        );
+      }
     }
   }
 
@@ -470,6 +501,17 @@ class RouteGenerator {
       tagPage,
       arguments: {
           'tag': tag
+        },
+    );
+  }
+
+  static void navigateToImageViewer(
+    List<String> imageUrlList, {int openIndex = 0}){
+    navigatorKey.currentState.pushNamed(
+      imageViewer,
+      arguments: {
+          'imageUrlList': imageUrlList,
+          'openIndex': openIndex,
         },
     );
   }
