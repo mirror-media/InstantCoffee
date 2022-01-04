@@ -15,15 +15,22 @@ class MagazineBrowser extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget browser;
     InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
+      crossPlatform: InAppWebViewOptions(
+        disableContextMenu: magazine.type == 'weekly',
+      ),
       android: AndroidInAppWebViewOptions(
         useHybridComposition: true,
+        allowContentAccess: magazine.type != 'weekly',
+      ),
+      ios: IOSInAppWebViewOptions(
+        allowsLinkPreview: magazine.type != 'weekly',
+        disableLongPressContextMenuOnLinks: magazine.type == 'weekly',
       ),
     );
     if(magazine.type == 'weekly'){
       browser = InAppWebView(
         initialUrlRequest: URLRequest(
           url: Uri.parse(magazine.onlineReadingUrl),
-          headers: {'Authorization': 'Bearer $token'},
         ),
         initialOptions: options,
       );
