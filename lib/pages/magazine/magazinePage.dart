@@ -100,7 +100,7 @@ class _MagazinePageState extends State<MagazinePage> {
         onPressed: () => Navigator.of(context).pop(),
       ),
       centerTitle: true,
-      title: Text('下載電子雜誌'),
+      title: Text('電子雜誌'),
       backgroundColor: appColor,
     );
   }

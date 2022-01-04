@@ -12,7 +12,7 @@ class MagazineListLabel extends StatelessWidget {
 
     return Container(
       width: width,
-      color: Color(0xffE5E5E5),
+      color: Color.fromRGBO(248, 248, 249, 1),
       child: Padding(
         padding: const EdgeInsets.only(
           top: 36.0, bottom: 12.0,
