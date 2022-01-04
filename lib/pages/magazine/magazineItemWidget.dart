@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -34,7 +35,7 @@ class MagazineItemWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            height: imageHeight,
+            //height: imageHeight + 10,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,16 +64,15 @@ class MagazineItemWidget extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 8.0),
-                      RichText(
-                        overflow: TextOverflow.ellipsis,
+                      AutoSizeText(
+                        magazine.title,
                         maxLines: 2,
-                        text: TextSpan(
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 17.0,
-                          ),
-                          text: magazine.title,
+                        minFontSize: 15,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 17,
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
