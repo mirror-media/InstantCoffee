@@ -10,7 +10,6 @@ import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/helpers/paragraphFormat.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/category.dart';
-import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/models/paragraph.dart';
 import 'package:readr_app/models/paragrpahList.dart';
 import 'package:readr_app/models/people.dart';
