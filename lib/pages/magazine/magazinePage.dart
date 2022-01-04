@@ -62,7 +62,7 @@ class _MagazinePageState extends State<MagazinePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              '加入Premium會員，免費閱覽最新電子版週刊',
+              '加入Premium會員，免費線上閱讀動態雜誌',
               style: TextStyle(
                 color: Colors.black26,
                 fontSize: 17,
@@ -100,7 +100,7 @@ class _MagazinePageState extends State<MagazinePage> {
         onPressed: () => Navigator.of(context).pop(),
       ),
       centerTitle: true,
-      title: Text('下載電子雜誌'),
+      title: Text('電子雜誌'),
       backgroundColor: appColor,
     );
   }

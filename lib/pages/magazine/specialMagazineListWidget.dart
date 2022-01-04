@@ -27,11 +27,9 @@ class _SpecialMagazineListWidgetState extends State<SpecialMagazineListWidget> {
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      separatorBuilder: (BuildContext context, int index) => Padding(
-        padding: const EdgeInsets.only(
-          left: 24.0, right: 24,
-        ),
-        child: Divider(),
+      separatorBuilder: (BuildContext context, int index) => Container(
+        height: 4,
+        color: Color.fromRGBO(248, 248, 249, 1),
       ),
       itemCount: widget.magazineList.length,
       itemBuilder: (context, index) {
@@ -56,7 +54,7 @@ class _SpecialMagazineListWidgetState extends State<SpecialMagazineListWidget> {
               if(widget.isLoadingMoreDone)
                 Container(
                   width: width,
-                  color: Color(0xffE5E5E5),
+                  color: Color.fromRGBO(248, 248, 249, 1),
                   child: Padding(
                     padding: const EdgeInsets.only(
                       top: 24.0, bottom: 12.0,
@@ -64,7 +62,7 @@ class _SpecialMagazineListWidgetState extends State<SpecialMagazineListWidget> {
                     child: Center(
                       child: Text(
                         '所有期數都在上面囉',
-                        style: TextStyle(fontSize: 15),
+                        style: TextStyle(fontSize: 13, color: Colors.black38),
                       ),
                     ),
                   ),

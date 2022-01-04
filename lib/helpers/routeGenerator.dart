@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
@@ -215,6 +216,7 @@ class RouteGenerator {
           settings: settings,
           builder: (_) => MagazineBrowser(
             magazine: args['magazine'],
+            token: args['token'],
           )
         );
       case subscriptionSelect:
@@ -420,19 +422,36 @@ class RouteGenerator {
     // https://github.com/flutter/flutter/issues/48245
     // There is a issue when opening pdf file in webview on android, 
     // so change to launch URL on android.
-    if(Platform.isAndroid) {
-      if (await canLaunch(magazine.pdfUrl)) {
-        await launch(magazine.pdfUrl);
-      } else {
-        throw 'Could not launch $magazine.pdfUrl';
-      }
-    } else {
+    String url;
+    String token;
+    if(magazine.type == 'weekly'){
+      url = magazine.onlineReadingUrl;
+      User user = FirebaseAuth.instance.currentUser;
+      token = await user.getIdToken();
       navigatorKey.currentState.pushNamed(
         magazineBrowser,
         arguments: {
           'magazine': magazine,
+          'token': token,
         },
       );
+    }else{
+      url = magazine.pdfUrl;
+      if(Platform.isAndroid) {
+        if (await canLaunch(url)) {
+          await launch(url);
+        } else {
+          throw 'Could not launch $url';
+        }
+      } else {
+        navigatorKey.currentState.pushNamed(
+          magazineBrowser,
+          arguments: {
+            'magazine': magazine,
+            'token': token,
+          },
+        );
+      }
     }
   }
 
