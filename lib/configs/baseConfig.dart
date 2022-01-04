@@ -50,8 +50,5 @@ abstract class BaseConfig {
   String get iOSStoryAdJsonLocation;
   String get androidStoryAdJsonLocation;
 
-  String get appsFlyerKey;
   String get firebaseApiKey;
-
-  String get appVersionApi;
 }
