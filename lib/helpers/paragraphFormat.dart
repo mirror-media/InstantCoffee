@@ -20,7 +20,8 @@ class ParagraphFormat {
   bool _isMemberContent = false;
   Widget parseTheParagraph(
     Paragraph paragraph, 
-    BuildContext context, 
+    BuildContext context,
+    List<String> imageUrlList, 
     {double htmlFontSize = 20, 
     bool isMemberContent = false,
     }) {
@@ -116,6 +117,7 @@ class ParagraphFormat {
             aspectRatio: paragraph.contents[0].aspectRatio,
             isMemberContent: _isMemberContent,
             textSize: _isMemberContent ? 14 : 16,
+            imageUrlList: imageUrlList,
           );
         }
         break;
@@ -124,6 +126,7 @@ class ParagraphFormat {
           return ImageAndDescriptionSlideShowWidget(
             contentList: paragraph.contents,
             isMemberContent: _isMemberContent,
+            imageUrlList: imageUrlList,
           );
         }
         break;
