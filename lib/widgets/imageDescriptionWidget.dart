@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:readr_app/helpers/routeGenerator.dart';
 
 class ImageDescriptionWidget extends StatelessWidget {
   final String imageUrl;
@@ -8,10 +9,12 @@ class ImageDescriptionWidget extends StatelessWidget {
   final double aspectRatio;
   final double textSize;
   final bool isMemberContent;
+  final List<String> imageUrlList;
   ImageDescriptionWidget({
     @required this.imageUrl,
     @required this.description,
     @required this.width,
+    @required this.imageUrlList,
     this.aspectRatio = 16 / 9,
     this.textSize = 16,
     this.isMemberContent = false,
@@ -28,22 +31,30 @@ class ImageDescriptionWidget extends StatelessWidget {
         shrinkWrap: true,
         children: [
           if (imageUrl != '')
-            CachedNetworkImage(
-              //height: imageHeight,
-              width: width,
-              imageUrl: imageUrl,
-              placeholder: (context, url) => Container(
-                height: height,
+            InkWell(
+              onTap: () {
+                int index = imageUrlList.indexOf(imageUrl);
+                if(index == -1){
+                  index = 0;
+                }
+                RouteGenerator.navigateToImageViewer(imageUrlList, openIndex: index);
+              },
+              child: CachedNetworkImage(
                 width: width,
-                color: Colors.grey,
+                imageUrl: imageUrl,
+                placeholder: (context, url) => Container(
+                  height: height,
+                  width: width,
+                  color: Colors.grey,
+                ),
+                errorWidget: (context, url, error) => Container(
+                  height: height,
+                  width: width,
+                  color: Colors.grey,
+                  child: Icon(Icons.error),
+                ),
+                fit: BoxFit.cover,
               ),
-              errorWidget: (context, url, error) => Container(
-                height: height,
-                width: width,
-                color: Colors.grey,
-                child: Icon(Icons.error),
-              ),
-              fit: BoxFit.cover,
             ),
           if (description != '')...[
             const SizedBox(
@@ -100,7 +111,13 @@ class ImageDescriptionWidget extends StatelessWidget {
             ),
         ],
       ),
-      onTap: () {},
+      onTap: () {
+        int index = imageUrlList.indexOf(imageUrl);
+        if(index == -1){
+          index = 0;
+        }
+        RouteGenerator.navigateToImageViewer(imageUrlList, openIndex: index);
+      },
     );
   }
 }

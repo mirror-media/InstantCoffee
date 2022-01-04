@@ -7,8 +7,10 @@ import 'package:readr_app/widgets/imageDescriptionWidget.dart';
 class ImageAndDescriptionSlideShowWidget extends StatefulWidget {
   final ContentList contentList;
   final bool isMemberContent;
+  final List<String> imageUrlList;
   ImageAndDescriptionSlideShowWidget({
     @required this.contentList,
+     @required this.imageUrlList,
     this.isMemberContent = false,
   });
 
@@ -118,6 +120,7 @@ class _ImageAndDescriptionSlideShowWidgetState
               width: width,
               aspectRatio: content.aspectRatio,
               isMemberContent: widget.isMemberContent,
+              imageUrlList: widget.imageUrlList,
             ))
         .toList();
 
