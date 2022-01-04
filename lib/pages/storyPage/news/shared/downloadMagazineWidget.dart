@@ -64,7 +64,7 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                '月費、年費會員可享免費下載電子雜誌',
+                '月費、年費會員免費線上閱讀動態雜誌',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,
@@ -110,7 +110,7 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
         child: Column(
           children: [
             Text(
-              '月費、年費會員免費下載電子雜誌',
+              '月費、年費會員免費線上閱讀動態雜誌',
               style: TextStyle(
                 fontSize: 20,
                 color: Colors.white,

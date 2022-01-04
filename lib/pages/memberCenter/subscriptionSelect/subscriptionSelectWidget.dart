@@ -228,7 +228,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
             Divider(),
             _memberClause('專區好文不分頁流暢閱讀'),
             Divider(),
-            _memberClause('免費下載最新電子版週刊'),
+            _memberClause('免費線上閱讀動態雜誌'),
             Divider(),
             _memberClause('月方案定價\$99元，限時優惠\$49元'),
             Divider(),
