@@ -1,21 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/magazine.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class MagazineBrowser extends StatelessWidget {
   final Magazine magazine;
+  final String token;
   MagazineBrowser({
-    @required this.magazine
+    @required this.magazine,
+    this.token,
   });
   
   @override
   Widget build(BuildContext context) {
+    Widget browser;
+    InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
+      android: AndroidInAppWebViewOptions(
+        useHybridComposition: true,
+      ),
+    );
+    if(magazine.type == 'weekly'){
+      browser = InAppWebView(
+        initialUrlRequest: URLRequest(
+          url: Uri.parse(magazine.onlineReadingUrl),
+          headers: {'Authorization': 'Bearer $token'},
+        ),
+        initialOptions: options,
+      );
+    }else{
+      browser = InAppWebView(
+        initialUrlRequest: URLRequest(
+          url: Uri.parse(magazine.pdfUrl),
+        ),
+        initialOptions: options,
+      );
+    }
     return Scaffold(
       appBar: _buildBar(context),
-      body: WebView(
-        initialUrl: magazine.pdfUrl,
-      ),
+      body: browser,
     );
   }
 
