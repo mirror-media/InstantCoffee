@@ -37,6 +37,7 @@ class Story {
   bool isAdvertised;
   bool isTruncated;
   String state;
+  List<String> imageUrlList;
 
   StoryAd storyAd;
 
@@ -67,6 +68,7 @@ class Story {
     this.isAdvertised,
     this.isTruncated,
     this.state,
+    this.imageUrlList,
 
     this.storyAd,
   });
@@ -92,6 +94,8 @@ class Story {
     CategoryList categoryBuilder = CategoryList();
     TagList tagBuilder = TagList();
     final title = origTitle.replaceAll('　', "\n");
+    List<String> imageUrlList = [];
+
     if (json["relateds"] != null) {
       for (int i = 0; i < json["relateds"].length; i++) {
         Record record = Record.fromJson(json["relateds"][i]);
@@ -118,10 +122,26 @@ class Story {
         json['heroImage']['image'] != null &&
         json['heroImage']['image'].containsKey('resizedTargets')) {
       photoUrl = json['heroImage']['image']['resizedTargets']['mobile']['url'];
+      imageUrlList.add(photoUrl);
     }
     if (json.containsKey('heroVideo')) {
       if (json['heroVideo'] != null) {
         videoUrl = json['heroVideo']['video']['url'];
+      }
+    }
+
+    for(var paragraph in apiDatas){
+      if (paragraph.contents != null && 
+        paragraph.contents.length > 0 &&
+        paragraph.contents[0].data != ''){
+        if(paragraph.type == 'image'){
+          imageUrlList.add(paragraph.contents[0].data);
+        }else if(paragraph.type == 'slideshow'){
+          var contentList = paragraph.contents;
+          for(var content in contentList){
+            imageUrlList.add(content.data);
+          }
+        }
       }
     }
 
@@ -152,6 +172,7 @@ class Story {
       isAdult: json['isAdult'],
       isTruncated: json['isTruncated'],
       isAdvertised: json['isAdvertised'] ?? false,
+      imageUrlList: imageUrlList,
     );
   }
 

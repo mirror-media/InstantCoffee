@@ -29,6 +29,7 @@ import 'package:readr_app/pages/storyPage/news/storyPage.dart';
 import 'package:readr_app/pages/memberCenter/editMemberProfile/editMemberProfilePage.dart';
 import 'package:readr_app/pages/memberCenter/editMemberContactInfo/editMemberContactInfoPage.dart';
 import 'package:readr_app/pages/tag/tagPage.dart';
+import 'package:readr_app/widgets/imageViewerWidget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RouteGenerator {
@@ -55,6 +56,7 @@ class RouteGenerator {
   static const String subscriptionSelect = '/subscriptionSelect';
   static const String newebpayChangePlan = '/newebpayChangePlan';
   static const String tagPage = '/tag';
+  static const String imageViewer = '/imageViewer';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -237,6 +239,16 @@ class RouteGenerator {
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => TagPage(tag: args['tag'],),
+        );
+      case imageViewer:
+        Map args = settings.arguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => ImageViewerWidget(
+            args['imageUrlList'],
+            openIndex: args['openIndex'],
+          ),
+          fullscreenDialog: true,
         );
       default:
         // If there is no such named route in the switch statement, e.g. /third
@@ -489,6 +501,17 @@ class RouteGenerator {
       tagPage,
       arguments: {
           'tag': tag
+        },
+    );
+  }
+
+  static void navigateToImageViewer(
+    List<String> imageUrlList, {int openIndex = 0}){
+    navigatorKey.currentState.pushNamed(
+      imageViewer,
+      arguments: {
+          'imageUrlList': imageUrlList,
+          'openIndex': openIndex,
         },
     );
   }
