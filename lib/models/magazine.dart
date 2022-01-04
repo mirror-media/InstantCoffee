@@ -41,13 +41,17 @@ class Magazine {
     if(type == 'weekly'){
       String issue = json['issue'];
       String book;
+      String periodsString;
       if(issue.contains('A')){
         book = 'Book_A';
+        periodsString = issue.replaceAll(new RegExp(r'[^0-9]'),'');
+        periodsString = 'A' + periodsString;
       }else{
         book = 'Book_B';
+        periodsString = issue.replaceAll(new RegExp(r'[^0-9]'),'');
+        periodsString = 'B' + periodsString;
       }
-      String periodsString = issue.replaceAll(new RegExp(r'[^0-9]'),'');
-      onlineReadingUrl = Environment().config.mirrorMediaDomain + '/magazine/$book/B$periodsString-Publish';
+      onlineReadingUrl = Environment().config.onlineMagazineUrl + '/$book/$periodsString-Publish/index.html#p=1';
     }
 
     return Magazine(
