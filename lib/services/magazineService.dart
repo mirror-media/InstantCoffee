@@ -18,7 +18,7 @@ class MagazineServices implements MagazineRepos{
       Environment().config.magazinesApi + '?max_results=$maxResults&sort=-publishedDate&page=$page&where={"type":{"\$in":["$type"]}}', 
       maxAge: magazineCacheDuration
     );
-    MagazineList magazineList = MagazineList.fromJson(jsonResponse['_items']);
+    MagazineList magazineList = MagazineList.fromJson(jsonResponse['_items'], type);
     magazineList.total = jsonResponse['_meta']['total'];
     return magazineList;
   }
