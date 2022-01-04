@@ -58,8 +58,9 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
       return Card(
         elevation: 10,
         color: Colors.white,
-        child: Padding(
+        child: Container(
           padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+          margin: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -105,8 +106,9 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
     }
     return Container(
       color: appColor,
-      child: Padding(
+      child: Container(
         padding: const EdgeInsets.only(top: 24, bottom: 26),
+        margin: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           children: [
             Text(
