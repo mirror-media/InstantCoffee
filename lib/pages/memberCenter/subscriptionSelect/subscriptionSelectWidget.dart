@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
-import 'package:in_app_purchase_android/src/billing_client_wrappers/billing_client_wrapper.dart';
+import 'package:in_app_purchase_android/billing_client_wrappers.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
@@ -228,7 +228,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
             Divider(),
             _memberClause('專區好文不分頁流暢閱讀'),
             Divider(),
-            _memberClause('免費下載最新電子版週刊'),
+            _memberClause('免費閱讀數位版動態雜誌'),
             Divider(),
             _memberClause('月方案定價\$99元，限時優惠\$49元'),
             Divider(),
