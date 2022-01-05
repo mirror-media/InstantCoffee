@@ -7,13 +7,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
-import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/helpers/iAPSubscriptionHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
-import 'package:readr_app/models/paymentRecord.dart';
 import 'package:readr_app/models/subscriptionDetail.dart';
 import 'package:readr_app/services/subscriptionSelectService.dart';
 
@@ -44,75 +42,6 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
     _iapSubscriptionHelper.verifyPurchaseInBloc = false;
     _buyingPurchaseSubscription.cancel();
     return super.close();
-  }
-
-  bool _isTheSamePlatfrom(PaymentType paymentType) {
-    if(paymentType == null) {
-      return true;
-    }
-
-    if(paymentType == PaymentType.google_play && Platform.isAndroid) {
-      return true;
-    } else if (paymentType == PaymentType.app_store && Platform.isIOS) {
-      return true;
-    }
-
-    return false;
-  }
-
-  bool _isSubscribed(SubscriptionType subscriptionType) {
-    return subscriptionType == SubscriptionType.subscribe_monthly || 
-        subscriptionType == SubscriptionType.subscribe_yearly;
-  }
-
-  bool _isNeedToShowWarning(SubscriptionDetail subscriptionDetail) {
-
-    return _isTheSamePlatfrom(subscriptionDetail.paymentType) &&
-        _isSubscribed(subscriptionDetail.subscriptionType) && 
-        Platform.isAndroid;
-  }
-
-  void _showWarningDialog() {
-    final ButtonStyle buttonStyle = TextButton.styleFrom(
-      backgroundColor: appColor,
-      padding: const EdgeInsets.only(top: 12, bottom: 12),
-    );
-
-    showDialog(
-      barrierDismissible: false,
-      context: RouteGenerator.navigatorKey.currentContext,
-      builder: (BuildContext context) {
-        double width = MediaQuery.of(context).size.width;
-        double height = MediaQuery.of(context).size.height;
-
-        return AlertDialog(
-          content: Container(
-            height: height/3,
-            child: Column(
-              children: [
-                Expanded(child: Text('若您於 Android 安卓手機操作變更方案，新方案將於新的一期自動生效。新方案生效前，您的頁面仍會顯示原本的訂閱方案，這是正常的，請不用擔心。如有問題可聯繫客服人員。')),
-                OutlinedButton(
-                  style: buttonStyle,
-                  child: Container(
-                    width: width,
-                    child: Center(
-                      child: Text(
-                        '我知道了',
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.white
-                        ),
-                      ),
-                    ),
-                  ),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 
   _removeSubscribedProduct(
@@ -151,10 +80,6 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
         subscriptionDetail: subscriptionDetail,
         productDetailList: productDetailList,
       ));
-
-      if(_isNeedToShowWarning(subscriptionDetail)) {
-        _showWarningDialog();
-      }
     } on SocketException {
       emit(SubscriptionSelectState.error(
         errorMessages: NoInternetException('No Internet'),
