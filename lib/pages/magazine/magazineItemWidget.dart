@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
@@ -89,10 +90,11 @@ class MagazineItemWidget extends StatelessWidget {
             ),
           ),
           TextButton.icon(
-            icon: Icon(
-              Icons.import_contacts_outlined,
+            icon: SvgPicture.asset(
+              bookIconSvg,
               color: appColor,
-              size: 17,
+              width: 16,
+              height: 14,
             ),
             label: Text(
               '線上閱讀',
