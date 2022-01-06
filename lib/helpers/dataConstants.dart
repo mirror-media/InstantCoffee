@@ -38,6 +38,7 @@ const String subscribeBannerJpg = 'assets/image/subscribe_banner_mobile.jpg';
 const String lineIconPng = 'assets/image/line_icon.png';
 const String igIconPng = 'assets/image/ig_icon.png';
 const String ytIconPng = 'assets/image/yt_icon.png';
+const String bookIconSvg = 'assets/image/magazine/book_icon.svg';
 
 // online magazine URL
 const String hamiMagazineURL = 'https://bookstore.emome.net/Searchs/finish/keyword:%E9%8F%A1%E9%80%B1%E5%88%8A';
