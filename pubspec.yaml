@@ -134,6 +134,9 @@ dependencies:
   # zoomable widget
   photo_view: ^0.13.0
 
+  # svg loader
+  flutter_svg: ^0.21.0
+
   intl: ^0.17.0
 
 dependency_overrides:
@@ -197,6 +200,7 @@ flutter:
     - assets/image/magazine/my_book.png
     - assets/image/magazine/pubu.png
     - assets/image/magazine/readmoo.png
+    - assets/image/magazine/book_icon.svg
     # member subscription
     - assets/image/badge.png
     - assets/image/subscription_icon.png
