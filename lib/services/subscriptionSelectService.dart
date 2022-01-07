@@ -54,7 +54,6 @@ class SubscriptionSelectServices implements SubscriptionSelectRepos{
           frequency
           paymentMethod
           isCanceled
-          googlePlayPurchaseToken
         }
         type
       }

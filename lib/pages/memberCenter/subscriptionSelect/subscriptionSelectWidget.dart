@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:in_app_purchase_android/in_app_purchase_android.dart';
-import 'package:in_app_purchase_android/billing_client_wrappers.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
@@ -87,8 +85,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                     padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
                     child: _memberIntroBlock(
                       subscriptionDetail.subscriptionType,
-                      productDetailList, 
-                      subscriptionDetail.googlePlayPurchaseDetails
+                      productDetailList
                     ),
                   ),
                   SizedBox(height: 48),
@@ -125,7 +122,6 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                     child: _memberIntroBlock(
                       subscriptionDetail.subscriptionType,
                       productDetailList, 
-                      subscriptionDetail.googlePlayPurchaseDetails, 
                       isBuying: true
                     ),
                   ),
@@ -184,8 +180,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
 
   Widget _memberIntroBlock(
     SubscriptionType subscriptionType,
-    List<ProductDetails> productDetailList, 
-    PurchaseDetails previousPurchaseDetails, 
+    List<ProductDetails> productDetailList,
     {bool isBuying = false}
   ) {
     double width = MediaQuery.of(context).size.width;
@@ -287,34 +282,9 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                     onPressed: () async{
                       await _auth.currentUser.reload();
                       if(_auth.currentUser.emailVerified) {
-                        PurchaseParam purchaseParam;
-                        if (Platform.isAndroid) {
-                          ChangeSubscriptionParam changeSubscriptionParam;
-                          GooglePlayPurchaseDetails oldPurchaseDetails;
-                          if(previousPurchaseDetails != null) {
-                            oldPurchaseDetails = previousPurchaseDetails;
-                          }
-                          if(subscriptionType == SubscriptionType.subscribe_monthly) {
-                            changeSubscriptionParam = ChangeSubscriptionParam(
-                              oldPurchaseDetails: oldPurchaseDetails,
-                              prorationMode: ProrationMode.deferred,
-                            );
-                          } else if(subscriptionType == SubscriptionType.subscribe_yearly) {
-                            changeSubscriptionParam = ChangeSubscriptionParam(
-                              oldPurchaseDetails: oldPurchaseDetails,
-                              prorationMode: ProrationMode.deferred,
-                            );
-                          }
-
-                          purchaseParam = GooglePlayPurchaseParam(
+                        PurchaseParam purchaseParam = PurchaseParam(
                             productDetails: productDetailList[index],
-                            changeSubscriptionParam: changeSubscriptionParam
-                          );
-                        } else {
-                          purchaseParam = PurchaseParam(
-                            productDetails: productDetailList[index],
-                          );
-                        }
+                        );
 
                         _buySubscriptionProduct(purchaseParam);
                       } else {

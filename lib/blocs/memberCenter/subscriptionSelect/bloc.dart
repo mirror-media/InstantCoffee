@@ -7,11 +7,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
-import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/helpers/iAPSubscriptionHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
-import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/models/subscriptionDetail.dart';
 import 'package:readr_app/services/subscriptionSelectService.dart';
 
@@ -44,21 +42,6 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
     return super.close();
   }
 
-  _removeSubscribedProduct(
-    SubscriptionType subscriptionType,
-    List<ProductDetails> productDetailList
-  ) {
-    productDetailList.removeWhere((element) {
-      String removeId;
-      if(subscriptionType == SubscriptionType.subscribe_monthly) {
-        removeId = Environment().config.monthSubscriptionId;
-      } else if(subscriptionType == SubscriptionType.subscribe_yearly) {
-        //removeId = Environment().config.yearSubscriptionId;
-      }
-      return element.id == removeId;
-    });
-  }
-
   void _fetchSubscriptionProducts(
     FetchSubscriptionProducts event,
     Emitter<SubscriptionSelectState> emit,
@@ -66,15 +49,9 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
     print(event.toString());
     try{
       emit(SubscriptionSelectState.loading());
+
       SubscriptionDetail subscriptionDetail = await subscriptionSelectRepos.fetchSubscriptionDetail();
       List<ProductDetails> productDetailList = await subscriptionSelectRepos.fetchProductDetailList();
-
-      if(subscriptionDetail.isAutoRenewing) {
-        _removeSubscribedProduct(
-          subscriptionDetail.subscriptionType,
-          productDetailList
-        );
-      }
 
       emit(SubscriptionSelectState.loaded(
         subscriptionDetail: subscriptionDetail,
