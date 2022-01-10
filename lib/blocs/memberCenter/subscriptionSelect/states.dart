@@ -7,6 +7,7 @@ enum SubscriptionSelectStatus {
   loaded, 
   buying,
   buyingSuccess,
+  verifyPurchaseFail,
   error 
 }
 
@@ -49,6 +50,9 @@ class SubscriptionSelectState {
 
   const SubscriptionSelectState.buyingSuccess()
       : this._(status: SubscriptionSelectStatus.buyingSuccess);
+
+  const SubscriptionSelectState.verifyPurchaseFail()
+      : this._(status: SubscriptionSelectStatus.verifyPurchaseFail);
 
   const SubscriptionSelectState.error({
     dynamic errorMessages

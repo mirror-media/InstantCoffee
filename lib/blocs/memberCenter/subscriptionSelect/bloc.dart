@@ -164,7 +164,7 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
           textColor: Colors.white,
           fontSize: 16.0
         );
-        emit(SubscriptionSelectState.buyingSuccess());
+        emit(SubscriptionSelectState.verifyPurchaseFail());
       }
     } else if(purchaseDetails.status == PurchaseStatus.error) {
       print("error code: ${purchaseDetails.error.code}");

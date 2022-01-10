@@ -134,7 +134,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                 ],
               ),
             );
-          case SubscriptionSelectStatus.buyingSuccess: 
+          case SubscriptionSelectStatus.verifyPurchaseFail: 
             return Scaffold(
               appBar: _buildBar(context),
               body: BuyingSuccessWidget()
