@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class BuyingSuccessWidget extends StatelessWidget {
+class VerifyPurchaseFailWidget extends StatelessWidget {
   final ButtonStyle buttonStyle = TextButton.styleFrom(
     backgroundColor: appColor,
     padding: const EdgeInsets.only(top: 12, bottom: 12),

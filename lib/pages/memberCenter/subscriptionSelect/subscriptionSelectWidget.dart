@@ -13,7 +13,7 @@ import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/models/paymentRecord.dart';
 import 'package:readr_app/models/subscriptionDetail.dart';
-import 'package:readr_app/pages/memberCenter/subscriptionSelect/buyingSuccessWidget.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionSelect/verifyPurchaseFailWidget.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/hintToOtherPlatform.dart';
 
 class SubscriptionSelectWidget extends StatefulWidget {
@@ -137,7 +137,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
           case SubscriptionSelectStatus.verifyPurchaseFail: 
             return Scaffold(
               appBar: _buildBar(context),
-              body: BuyingSuccessWidget()
+              body: VerifyPurchaseFailWidget()
             );
           default:
             // state is Init, Loading
