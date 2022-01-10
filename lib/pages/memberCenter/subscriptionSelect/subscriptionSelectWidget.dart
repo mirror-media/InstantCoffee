@@ -192,6 +192,9 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
       boxTitle = '變更為月訂閱方案';
     }
 
+    int originalPrice = Platform.isAndroid ? 99 : 100;
+    int specialPrice = Platform.isAndroid ? 49 : 50;
+
     return Card(
       elevation: 10,
       child: Padding(
@@ -225,9 +228,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
             Divider(),
             _memberClause('免費閱讀數位版動態雜誌'),
             Divider(),
-            _memberClause('月方案定價\$99元，限時優惠\$49元'),
-            Divider(),
-            _memberClause('年方案定價\$1,188元，限時優\$499元'),
+            _memberClause('月方案定價 \$$originalPrice 元，限時優惠 \$$specialPrice 元'),
             SizedBox(height: 24),
             isBuying
             ? Column(
