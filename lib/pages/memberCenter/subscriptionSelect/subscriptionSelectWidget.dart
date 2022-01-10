@@ -192,8 +192,8 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
       boxTitle = '變更為月訂閱方案';
     }
 
-    int originalPrice = Platform.isAndroid ? 99 : 100;
-    int specialPrice = Platform.isAndroid ? 49 : 50;
+    int originalPrice = 99;
+    int specialPrice = 50;
 
     return Card(
       elevation: 10,
