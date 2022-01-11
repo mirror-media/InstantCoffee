@@ -15,12 +15,14 @@ class SubscriptionSelectState {
   final SubscriptionSelectStatus status;
   final SubscriptionDetail subscriptionDetail;
   final List<ProductDetails> productDetailList;
+  final String storySlug;
   final dynamic errorMessages;
 
   const SubscriptionSelectState._({
     this.status,
     this.subscriptionDetail,
     this.productDetailList,
+    this.storySlug,
     this.errorMessages,
   });
 
@@ -48,8 +50,12 @@ class SubscriptionSelectState {
         productDetailList: productDetailList,
       );
 
-  const SubscriptionSelectState.buyingSuccess()
-      : this._(status: SubscriptionSelectStatus.buyingSuccess);
+  const SubscriptionSelectState.buyingSuccess({
+    String storySlug,
+  })  : this._(
+        status: SubscriptionSelectStatus.buyingSuccess,
+        storySlug: storySlug
+      );
 
   const SubscriptionSelectState.verifyPurchaseFail()
       : this._(status: SubscriptionSelectStatus.verifyPurchaseFail);
