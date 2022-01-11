@@ -13,6 +13,7 @@ import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/models/paymentRecord.dart';
 import 'package:readr_app/models/subscriptionDetail.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionSelect/buyingSuccessWidget.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/verifyPurchaseFailWidget.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/hintToOtherPlatform.dart';
 
@@ -133,6 +134,13 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                   SizedBox(height: 48),
                 ],
               ),
+            );
+          case SubscriptionSelectStatus.buyingSuccess: 
+            String storySlug = state.storySlug;
+
+            return Scaffold(
+              appBar: _buildBar(context),
+              body: BuyingSuccessWidget(storySlug: storySlug)
             );
           case SubscriptionSelectStatus.verifyPurchaseFail: 
             return Scaffold(

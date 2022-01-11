@@ -9,7 +9,6 @@ import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/helpers/iAPSubscriptionHelper.dart';
-import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/subscriptionDetail.dart';
 import 'package:readr_app/services/subscriptionSelectService.dart';
 
@@ -137,33 +136,19 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
       ));
     } else if(purchaseDetails.status == PurchaseStatus.purchased) {
       bool isSuccess = await _iapSubscriptionHelper.verifyEntirePurchase(purchaseDetails);
-      if(isSuccess) {
-        Fluttertoast.showToast(
-          msg: '變更方案成功',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0
-        );
-
-        RouteGenerator.navigatorKey.currentState.popUntil((route) => route.isFirst);
-        if(this.storySlug != null) {
-          RouteGenerator.navigateToStory(storySlug);
-        } else {
-          RouteGenerator.navigateToLogin();
-        }
+      Fluttertoast.showToast(
+        msg: '變更方案成功',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0
+      );
+      
+      if(isSuccess) { 
+        emit(SubscriptionSelectState.buyingSuccess(storySlug: this.storySlug));
       } else {
-        Fluttertoast.showToast(
-          msg: '變更方案成功',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0
-        );
         emit(SubscriptionSelectState.verifyPurchaseFail());
       }
     } else if(purchaseDetails.status == PurchaseStatus.error) {
