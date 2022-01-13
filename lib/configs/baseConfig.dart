@@ -9,6 +9,8 @@ abstract class BaseConfig {
   String get errorLogApi;
 
   String get monthSubscriptionId;
+  String get verifyAndroidPurchaseApi;
+  String get verifyIosPurchaseApi;
 
   String get mirrorMediaNotImageUrl;
   String get latestApi;
