@@ -7,6 +7,7 @@ import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/helpers/appException.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/graphqlBody.dart';
+import 'package:readr_app/models/paymentRecord.dart';
 import 'package:readr_app/models/subscriptionDetail.dart';
 
 List<String> _kProductIds = <String>[
@@ -104,54 +105,57 @@ class SubscriptionSelectServices implements SubscriptionSelectRepos{
 
   @override
   Future<bool> verifyPurchase(PurchaseDetails purchaseDetails) async{
+    if(_auth.currentUser == null) {
+      return false;
+    }
+    if(purchaseDetails.verificationData.source == PaymentType.app_store.name) {
+      return await _verifyPurchaseByIos(purchaseDetails);
+    }
+    return await _verifyPurchaseByAndroid(purchaseDetails);
+  }
+
+  Future<bool> _verifyPurchaseByAndroid(PurchaseDetails purchaseDetails) async{
     String token = await _auth.currentUser.getIdToken();
 
-    String mutation = 
-    """
-    mutation (
-      \$firebaseId: String!,
-      \$packageName: String!,
-      \$productId: String!, 
-      \$source: upsertSubscriptionAppSourceType!,
-      \$verificationData: String!
-    ){
-      upsertAppSubscription(
-        info: {
-          firebaseId: \$firebaseId
-          packageName: \$packageName
-          productId: \$productId
-          source: \$source
-          verificationData: \$verificationData
-        }
-      ) {
-        success
-      }
-    }
-    """;
-    Map<String,String> variables = {
-      "firebaseId" : _auth.currentUser.uid,
+    Map<String, String> bodyMap = {
+      "firebaseId": _auth.currentUser.uid,
       "packageName" : Platform.isAndroid
           ? Environment().config.androidPackageName 
           : Environment().config.iOSBundleId,
-      "productId" : purchaseDetails.productID,
-      "source" : purchaseDetails.verificationData.source,
-      "verificationData": purchaseDetails.verificationData.serverVerificationData,
+      "subscriptionId": purchaseDetails.productID,
+      "purchaseToken": purchaseDetails.verificationData.serverVerificationData
     };
-
-    GraphqlBody graphqlBody = GraphqlBody(
-      operationName: '',
-      query: mutation,
-      variables: variables,
-    );
 
     try {
       final jsonResponse = await _helper.postByUrl(
-        Environment().config.memberApi,
-        jsonEncode(graphqlBody.toJson()),
+        Environment().config.verifyAndroidPurchaseApi,
+        jsonEncode(bodyMap),
         headers: getHeaders(token),
       );
 
-      return !jsonResponse.containsKey('errors');
+      return jsonResponse.containsKey('status') && jsonResponse['status'] == 'success';
+    } catch(e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> _verifyPurchaseByIos(PurchaseDetails purchaseDetails) async{
+    String token = await _auth.currentUser.getIdToken();
+
+    Map<String, String> bodyMap = {
+      "firebaseId": _auth.currentUser.uid,
+      "receiptData": purchaseDetails.verificationData.serverVerificationData
+    };
+
+    try {
+      final jsonResponse = await _helper.postByUrl(
+        Environment().config.verifyIosPurchaseApi,
+        jsonEncode(bodyMap),
+        headers: getHeaders(token),
+      );
+
+      return jsonResponse.containsKey('status') && jsonResponse['status'] == 'success';
     } catch(e) {
       print(e);
       return false;
