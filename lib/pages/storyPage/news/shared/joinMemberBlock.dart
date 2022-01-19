@@ -48,7 +48,7 @@ class JoinMemberBlock extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    '限時優惠每月\$49元',
+                    '限時優惠每月\$50元',
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w400,
