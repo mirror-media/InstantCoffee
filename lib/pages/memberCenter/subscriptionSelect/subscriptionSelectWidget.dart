@@ -17,7 +17,7 @@ import 'package:readr_app/models/subscriptionDetail.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/buyingSuccessWidget.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/verifyPurchaseFailWidget.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/hintToOtherPlatform.dart';
-import 'package:readr_app/pages/termsOfService/mMTermsOfServicePage.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SubscriptionSelectWidget extends StatefulWidget {
   SubscriptionSelectWidget();
@@ -357,7 +357,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
         _orderClause(1, '月方案計算天數為 30 日，年方案計算天數為 365 日。'),
         _orderClause(2, '月訂閱方案經會員授權扣款購買即為完成服務，因此月費會員無法退費，但可取消繼續訂閱。'),
         _orderClause(3, '訂閱購買的同時會開啓自動續費(扣款)，在訂閱到期時將依據原訂閱方案自動扣款，並延續訂閱。'),
-        _orderClause(4, '訂閱相關問題請 email 至會員專屬客服信箱 MM-onlineservice@mirrormedia.mg， 我們會盡快為您協助處理。'),
+        _orderContactEmail(4),
         _orderTermsOfService(5),
         _orderClause(6, """本抽獎活動為機會中獎活動，依中華民國稅法規定，中獎金額超過 NT\$1,000元，中獎人須併入個人年度綜合所得稅申報；若中獎金額超過 NT\$20,010元，中獎人須自行負擔10%之機會中獎所得稅（非中華民國境內居住之個人為20%）並配合本公司辦理代扣繳相關事宜(得獎者應先繳納中獎所得稅後，本公司方將中獎獎項提供予得獎人)。
 中獎人須提供姓名、身分證字號、戶籍地址及身分證正、反面影本，以供本公司依法向稅捐機關進行年度申報作業。"""),
@@ -384,6 +384,66 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
               content,
               style: TextStyle(
                 fontSize: 16,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _orderContactEmail(int order) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        textBaseline: TextBaseline.alphabetic,
+        children: [
+          Text(
+            "$order.",
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+          SizedBox(width: 16),
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '訂閱相關問題請 email 至會員專屬客服信箱 ',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'MM-onlineservice@mirrormedia.mg',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: appColor,
+                    ),
+                    recognizer: TapGestureRecognizer()..onTap = () async{
+                      final Uri emailLaunchUri = Uri(
+                        scheme: 'mailto',
+                        path: 'MM-onlineservice@mirrormedia.mg',
+                      );
+
+                      if (await canLaunch(emailLaunchUri.toString())) {
+                        await launch(emailLaunchUri.toString());
+                      } else {
+                        throw 'Could not launch MM-onlineservice@mirrormedia.mg';
+                      }
+                    },
+                  ),
+                  TextSpan(
+                    text: '， 我們會盡快為您協助處理。',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
