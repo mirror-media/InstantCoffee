@@ -65,4 +65,5 @@ const bool isListeningWidgetAdsActivated = true;
 const int storyAT1AdIndex = 1;
 const int storyAT2AdIndex = 5;
 
+const String mirrorMediaServiceEmail = 'MM-onlineservice@mirrormedia.mg';
 const mirrormediaGroupDomain = ['mnews.com.tw','mnews.tw','mirrormedia.mg','mirrorfiction.com'];

@@ -401,13 +401,13 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
           onTap: () async{
             final Uri emailLaunchUri = Uri(
               scheme: 'mailto',
-              path: 'mm-onlineservice@mirrormedia.mg',
+              path: mirrorMediaServiceEmail,
             );
 
             if (await canLaunch(emailLaunchUri.toString())) {
               await launch(emailLaunchUri.toString());
             } else {
-              throw 'Could not launch mm-onlineservice@mirrormedia.mg';
+              throw 'Could not launch $mirrorMediaServiceEmail';
             }
           }
         ),

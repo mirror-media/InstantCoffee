@@ -210,7 +210,7 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
             child: Padding(
               padding: const EdgeInsets.only(left: 24.0, right: 24.0),
               child: Text(
-                'mm-onlineservice@mirrormedia.mg',
+                mirrorMediaServiceEmail,
                 style: TextStyle(
                   fontSize: 17,
                 ),
@@ -220,13 +220,13 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
           onTap: () async{
             final Uri emailLaunchUri = Uri(
               scheme: 'mailto',
-              path: 'mm-onlineservice@mirrormedia.mg',
+              path: mirrorMediaServiceEmail,
             );
 
             if (await canLaunch(emailLaunchUri.toString())) {
               await launch(emailLaunchUri.toString());
             } else {
-              throw 'Could not launch mm-onlineservice@mirrormedia.mg';
+              throw 'Could not launch $mirrorMediaServiceEmail';
             }
           }
         ),

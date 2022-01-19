@@ -65,7 +65,7 @@ class VerifyPurchaseFailWidget extends StatelessWidget {
                     ),
                     TextButton(
                       child: Text(
-                        'mm-onlineservice@mirrormedia.mg',
+                        mirrorMediaServiceEmail,
                         style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w400,
@@ -74,13 +74,13 @@ class VerifyPurchaseFailWidget extends StatelessWidget {
                       onPressed: () async{
                         final Uri emailLaunchUri = Uri(
                           scheme: 'mailto',
-                          path: 'mm-onlineservice@mirrormedia.mg',
+                          path: mirrorMediaServiceEmail,
                         );
 
                         if (await canLaunch(emailLaunchUri.toString())) {
                           await launch(emailLaunchUri.toString());
                         } else {
-                          throw 'Could not launch mm-onlineservice@mirrormedia.mg';
+                          throw 'Could not launch $mirrorMediaServiceEmail';
                         }
                       }, 
                     ),

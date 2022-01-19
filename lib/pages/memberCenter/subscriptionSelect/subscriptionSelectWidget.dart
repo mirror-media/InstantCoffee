@@ -418,7 +418,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                     ),
                   ),
                   TextSpan(
-                    text: 'MM-onlineservice@mirrormedia.mg',
+                    text: mirrorMediaServiceEmail,
                     style: TextStyle(
                       fontSize: 16,
                       color: appColor,
@@ -426,13 +426,13 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                     recognizer: TapGestureRecognizer()..onTap = () async{
                       final Uri emailLaunchUri = Uri(
                         scheme: 'mailto',
-                        path: 'MM-onlineservice@mirrormedia.mg',
+                        path: mirrorMediaServiceEmail,
                       );
 
                       if (await canLaunch(emailLaunchUri.toString())) {
                         await launch(emailLaunchUri.toString());
                       } else {
-                        throw 'Could not launch MM-onlineservice@mirrormedia.mg';
+                        throw 'Could not launch $mirrorMediaServiceEmail';
                       }
                     },
                   ),
