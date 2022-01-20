@@ -344,19 +344,23 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
   }
 
   Widget _memberAttention() {
+    final String platfromName = Platform.isAndroid
+    ? 'Google play'
+    : 'App store';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '注意事項',
+          '自動續訂服務說明',
           style: TextStyle(
             fontSize: 22,
           ),
         ),
         SizedBox(height: 12),
-        _orderClause(1, '月方案計算天數為 30 日，年方案計算天數為 365 日。'),
-        _orderClause(2, '月訂閱方案經會員授權扣款購買即為完成服務，因此月費會員無法退費，但可取消繼續訂閱。'),
-        _orderClause(3, '訂閱購買的同時會開啓自動續費(扣款)，在訂閱到期時將依據原訂閱方案自動扣款，並延續訂閱。'),
+        _orderClause(1, '月訂閱服務以30天為一期。訂閱後將會透過您的 $platfromName 帳號直接進行扣款。'),
+        _orderClause(2, '本訂閱方案採自動續訂，訂閱到期日前24小時內，自動續訂扣款。付款成功後會順延一個訂閱週期。'),
+        _orderCancelSubscription(3),
         _orderContactEmail(4),
         _orderTermsOfService(5),
       ],
@@ -382,6 +386,69 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
               content,
               style: TextStyle(
                 fontSize: 16,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _orderCancelSubscription(int order) {
+    final String cancelSubscriptionUrl = Platform.isAndroid
+    ? 'https://support.google.com/googleplay/answer/7018481'
+    : 'https://support.apple.com/HT202039';
+    final String platfromName = Platform.isAndroid
+    ? 'Google'
+    : 'Apple';
+
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        textBaseline: TextBaseline.alphabetic,
+        children: [
+          Text(
+            "$order.",
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+          SizedBox(width: 16),
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '若要取消自動續訂，請在訂閱到期日至少三日前取消訂閱。相關步驟請參照 $platfromName 官方網站操作說明：',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black
+                    ),
+                  ),
+                  TextSpan(
+                    text: '取消 $platfromName 訂閱項目',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: appColor,
+                    ),
+                    recognizer: TapGestureRecognizer()..onTap = () async{
+                      if (await canLaunch(cancelSubscriptionUrl)) {
+                        await launch(cancelSubscriptionUrl);
+                      } else {
+                        throw 'Could not launch $cancelSubscriptionUrl';
+                      }
+                    },
+                  ),
+                  TextSpan(
+                    text: '。',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
