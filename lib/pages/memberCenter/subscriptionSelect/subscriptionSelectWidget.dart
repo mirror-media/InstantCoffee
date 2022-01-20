@@ -286,6 +286,13 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                                 color: index%2==0 ? Colors.white60 : Colors.black38,
                               ),
                             ),
+                            Text(
+                              productDetailList[index].description,
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: index%2==0 ? Colors.white60 : Colors.black38,
+                              ),
+                            ),
                           ],
                         ),
                       ),
