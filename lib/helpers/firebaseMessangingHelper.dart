@@ -94,7 +94,7 @@ class FirebaseMessangingHelper {
             notificationSetting.notificationSettingList!.forEach(
               (element) { 
                 if(element.value) {
-                  subscribeToTopic(element.topic);
+                  subscribeToTopic(element.topic!);
                 }
               }
             );
@@ -102,7 +102,7 @@ class FirebaseMessangingHelper {
         }
         else {
           if(notificationSetting.value) {
-            subscribeToTopic(notificationSetting.topic);
+            subscribeToTopic(notificationSetting.topic!);
           }
         }
       }
@@ -127,20 +127,20 @@ class FirebaseMessangingHelper {
       notificationSetting.notificationSettingList!.forEach(
         (element) { 
           if(notificationSetting.value && element.value) {
-            subscribeToTopic(element.topic);
+            subscribeToTopic(element.topic!);
           }
           else if(!notificationSetting.value || !element.value){
-            unsubscribeFromTopic(element.topic);
+            unsubscribeFromTopic(element.topic!);
           }
         }
       );
     }
     else {
       if(notificationSetting.value) {
-        subscribeToTopic(notificationSetting.topic);
+        subscribeToTopic(notificationSetting.topic!);
       }
       else {
-        unsubscribeFromTopic(notificationSetting.topic);
+        unsubscribeFromTopic(notificationSetting.topic!);
       }
     }
   }

@@ -4,7 +4,7 @@ class NotificationSetting {
   final String type;
   final String id;
   final String title;
-  final String topic;
+  final String? topic;
   bool value;
   final NotificationSettingList? notificationSettingList;
 
@@ -18,7 +18,7 @@ class NotificationSetting {
   });
 
   factory NotificationSetting.fromJson(Map<String, dynamic> json) {
-    return new NotificationSetting(
+    return NotificationSetting(
       type: json['type'],
       id: json['id'],
       title: json['title'],

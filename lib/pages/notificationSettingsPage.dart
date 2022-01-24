@@ -31,7 +31,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   List<GlobalKey<AppExpansionTileState>> _expansionTileKeys = [];
   final LocalStorage _storage = LocalStorage('setting');
   FirebaseMessangingHelper _firebaseMessangingHelper = FirebaseMessangingHelper();
-  NotificationSettingList? _notificationSettingList = NotificationSettingList();
+  NotificationSettingList? _notificationSettingList;
   String _version = "";
   String _buildNumber = "";
 
@@ -52,8 +52,10 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
   _setNotificationSettingList() async {
     if (await _storage.ready) {
-      _notificationSettingList =
-          NotificationSettingList.fromJson(_storage.getItem("notification"));
+      if(_storage.getItem("notification") != null) {
+        _notificationSettingList =
+            NotificationSettingList.fromJson(_storage.getItem("notification"));
+      }
     }
 
     if (_notificationSettingList == null) {
@@ -120,8 +122,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
           NotificationSetting? user = userList?.getById(asset.id);
           if(user != null && user.id == asset.id) {
             if(user.topic != asset.topic && user.value) {
-              _firebaseMessangingHelper.unsubscribeFromTopic(user.topic);
-              _firebaseMessangingHelper.subscribeToTopic(asset.topic);
+              _firebaseMessangingHelper.unsubscribeFromTopic(user.topic!);
+              _firebaseMessangingHelper.subscribeToTopic(asset.topic!);
             }
             asset.value = user.value;
 
@@ -140,8 +142,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       userList.forEach(
         (user) { 
           NotificationSetting? asset = assetList?.getById(user.id);
-          if(asset == null && user.value) {
-            _firebaseMessangingHelper.unsubscribeFromTopic(user.topic);
+          if(asset == null && user.topic != null && user.value) {
+            _firebaseMessangingHelper.unsubscribeFromTopic(user.topic!);
           }
         }
       );
