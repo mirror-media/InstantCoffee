@@ -20,7 +20,7 @@ class MMTermsOfServicePage extends StatelessWidget {
     );
   }
 
-  Widget _buildBar(BuildContext context) {
+  PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
       centerTitle: true,

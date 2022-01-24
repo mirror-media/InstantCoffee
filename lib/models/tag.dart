@@ -3,8 +3,8 @@ class Tag {
   String name;
 
   Tag({
-    this.id,
-    this.name,
+    required this.id,
+    required this.name,
   });
 
   factory Tag.fromJson(Map<String, dynamic> json) {
@@ -18,4 +18,8 @@ class Tag {
         '_id': id,
         'name': name,
       };
+
+  static List<Tag> tagListFromJson(List<dynamic> jsonList) {
+    return jsonList.map<Tag>((json) => Tag.fromJson(json)).toList();
+  }
 }

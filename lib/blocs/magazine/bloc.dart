@@ -7,9 +7,9 @@ import 'package:readr_app/services/magazineService.dart';
 
 class MagazineBloc extends Bloc<MagazineEvents, MagazineState> {
   final MagazineRepos magazineRepos;
-  MagazineList magazineList;
+  MagazineList magazineList = MagazineList();
 
-  MagazineBloc({this.magazineRepos}) : super(MagazineInitState());
+  MagazineBloc({required this.magazineRepos}) : super(MagazineInitState());
 
   @override
   Stream<MagazineState> mapEventToState(MagazineEvents event) async* {

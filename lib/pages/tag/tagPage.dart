@@ -9,7 +9,7 @@ import 'package:readr_app/pages/tag/tagWidget.dart';
 class TagPage extends StatefulWidget {
   final Tag tag;
   const TagPage({
-    @required this.tag,
+    required this.tag,
   });
 
   @override
@@ -17,7 +17,7 @@ class TagPage extends StatefulWidget {
 }
 
 class _TagPageState extends State<TagPage> {
-  Tag _tag;
+  late Tag _tag;
 
   @override
   void initState() {

@@ -8,8 +8,8 @@ class JoinMemberBlock extends StatelessWidget {
   final String storySlug;
   final bool isMemberContent;
   JoinMemberBlock({ 
-    @required this.isMember,
-    @required this.storySlug,
+    required this.isMember,
+    required this.storySlug,
     this.isMemberContent = false,
   });
 

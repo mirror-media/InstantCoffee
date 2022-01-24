@@ -4,8 +4,8 @@ import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 
 class BirthdayPicker extends StatefulWidget {
-  final String birthday;
-  final ValueChanged<String> onBirthdayChange;
+  final String? birthday;
+  final ValueChanged<String?>? onBirthdayChange;
   BirthdayPicker({
     this.birthday,
     this.onBirthdayChange
@@ -16,12 +16,11 @@ class BirthdayPicker extends StatefulWidget {
 }
 
 class _BirthdayPickerState extends State<BirthdayPicker> {
-  bool _isPickerActivated;
-  String _birthday;
+  bool _isPickerActivated = false;
+  String? _birthday;
 
   @override
   void initState() {
-    _isPickerActivated = false;
     _birthday = widget.birthday;
     super.initState();
   }
@@ -89,7 +88,7 @@ class _BirthdayPickerState extends State<BirthdayPicker> {
     );
   }
 
-  _showPicker(double height, ValueChanged<String> onBirthdayChange) async{
+  _showPicker(double height, ValueChanged<String?>? onBirthdayChange) async{
     DateTime targetDateTime = DateTimeFormat.changeBirthdayStringToDatetime(_birthday) ?? DateTime(1911, 1, 1);
     await showModalBottomSheet(
       context: context,
@@ -133,7 +132,9 @@ class _BirthdayPickerState extends State<BirthdayPicker> {
                       onTap: (){
                         setState(() {
                           _birthday = DateTimeFormat.changeDatetimeToIso8601String(targetDateTime);
-                          onBirthdayChange(_birthday);
+                          if(onBirthdayChange != null) {
+                            onBirthdayChange(_birthday);
+                          }
                           Navigator.pop(context);
                         });
                       }

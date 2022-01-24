@@ -6,7 +6,7 @@ import 'package:readr_app/models/record.dart';
 class SearchListItem extends StatelessWidget {
   final Record record;
   SearchListItem({
-    @required this.record,
+    required this.record,
   });
   
   @override

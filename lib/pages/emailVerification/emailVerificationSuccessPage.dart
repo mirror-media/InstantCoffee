@@ -8,7 +8,7 @@ import 'package:readr_app/pages/login/loginPage.dart';
 class EmailVerificationSuccessPage extends StatelessWidget {
   final String email;
   EmailVerificationSuccessPage({
-    @required this.email,
+    required this.email,
   });
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -27,7 +27,7 @@ class EmailVerificationSuccessPage extends StatelessWidget {
     return false;
   }
 
-  Widget _buildBar(BuildContext context) {
+  PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
       centerTitle: true,
       title: Text('驗證信箱'),
@@ -42,12 +42,12 @@ class EmailVerificationSuccessPage extends StatelessWidget {
       contentText = '$email 已驗證成功！\n請重新登入，繼續完成訂購流程。';
       buttonText = '重新登入';
     }
-    else if(email == _auth.currentUser.email) {
+    else if(email == _auth.currentUser!.email) {
       contentText = '$email 已驗證成功！';
       buttonText = '繼續前往付款';
     }
     else{
-      contentText = '$email 已驗證成功！\n\n提醒您，此裝置目前登入帳號為：\n${_auth.currentUser.email}';
+      contentText = '$email 已驗證成功！\n\n提醒您，此裝置目前登入帳號為：\n${_auth.currentUser!.email}';
       buttonText = '換個帳號重新登入';
     }
     return Column(
@@ -109,7 +109,7 @@ class EmailVerificationSuccessPage extends StatelessWidget {
             MaterialPageRoute(builder: (context) => LoginPage(),),
           );
         }
-        else if(email == _auth.currentUser.email) {
+        else if(email == _auth.currentUser!.email) {
           RouteGenerator.navigateToSubscriptionSelect(usePushReplacement: true);
         }
         else{

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MagazineListLabel extends StatelessWidget {
   final String label;
   MagazineListLabel({
-    @required this.label,
+    required this.label,
   });
 
   @override

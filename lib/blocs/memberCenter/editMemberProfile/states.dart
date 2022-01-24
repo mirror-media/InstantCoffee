@@ -8,7 +8,7 @@ class MemberLoading extends EditMemberProfileState {}
 
 class MemberLoaded extends EditMemberProfileState {
   final Member member;
-  MemberLoaded({this.member});
+  MemberLoaded({required this.member});
 }
 
 class MemberLoadedError extends EditMemberProfileState {
@@ -20,5 +20,5 @@ class MemberLoadedError extends EditMemberProfileState {
 
 class SavingLoading extends EditMemberProfileState {
   final Member member;
-  SavingLoading({this.member});
+  SavingLoading({required this.member});
 }

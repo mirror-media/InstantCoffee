@@ -4,11 +4,11 @@ enum StoryStatus { initial, loading, loaded, error }
 
 class StoryState {
   final StoryStatus status;
-  final StoryRes storyRes;
+  final StoryRes? storyRes;
   final errorMessages;
 
   const StoryState({
-    this.status,
+    required this.status,
     this.storyRes,
     this.errorMessages,
   });
@@ -26,7 +26,7 @@ class StoryState {
   }
 
   factory StoryState.loaded({
-    StoryRes storyRes,
+    required StoryRes storyRes,
   }) {
     return StoryState(
       status: StoryStatus.loaded,

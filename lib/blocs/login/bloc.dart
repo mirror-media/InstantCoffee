@@ -18,12 +18,12 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
   final LoginRepos loginRepos;
 
   final String routeName;
-  final Map routeArguments;
+  final Map? routeArguments;
 
   LoginBloc({
-    this.loginRepos,
+    required this.loginRepos,
 
-    this.routeName,
+    required this.routeName,
     this.routeArguments,
   }) : super(LoadingUI()) {
     on<CheckIsLoginOrNot>(_onCheckIsLoginOrNot);
@@ -48,9 +48,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
       bool isNewUser = false;
       if(frebaseLoginStatus.message is UserCredential) {
         UserCredential userCredential = frebaseLoginStatus.message;
-        if(userCredential.additionalUserInfo != null) {
-          isNewUser = userCredential.additionalUserInfo.isNewUser;
-        }
+        isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
       }
       await _handleCreateMember(isNewUser, emit);
     } else if(frebaseLoginStatus.status == FirebaseStatus.Error) {
@@ -78,10 +76,10 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
     bool createSuccess = true;
     if(isNewUser) {
       print('CreateMember');
-      String token = await _auth.currentUser.getIdToken();
+      String token = await _auth.currentUser!.getIdToken();
       createSuccess = await _memberService.createMember(
-        _auth.currentUser.email,
-        _auth.currentUser.uid,
+        _auth.currentUser!.email,
+        _auth.currentUser!.uid,
         token
       );
     }
@@ -89,7 +87,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
       await _fetchMemberSubscriptionTypeToLogin(emit);
     } else {
       try {
-        await _auth.currentUser.delete();
+        await _auth.currentUser!.delete();
       } catch (e) {
         print(e);
         await _auth.signOut();
@@ -171,15 +169,13 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
     Emitter<LoginState> emit,
   ) async{
     try {
-      String token = await _auth.currentUser.getIdToken();
       MemberIdAndSubscriptionType memberIdAndSubscriptionType = await _memberService.checkSubscriptionType(
-        _auth.currentUser, 
-        token
+        _auth.currentUser!
       );
       emit(
         LoginSuccess(
-          israfelId: memberIdAndSubscriptionType.israfelId,
-          subscriptionType: memberIdAndSubscriptionType.subscriptionType,
+          israfelId: memberIdAndSubscriptionType.israfelId!,
+          subscriptionType: memberIdAndSubscriptionType.subscriptionType!,
           isNewebpay: memberIdAndSubscriptionType.isNewebpay,
         )
       );
@@ -192,7 +188,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
         textColor: Colors.white,
         fontSize: 16.0
       );
-      _navigateToRouteName(memberIdAndSubscriptionType.subscriptionType);
+      _navigateToRouteName(memberIdAndSubscriptionType.subscriptionType!);
     } catch(e) {
       // fetch member subscrition type fail
       print(e.toString());
@@ -212,16 +208,17 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
   void _navigateToRouteName(SubscriptionType subscriptionType) {
     if(routeName != RouteGenerator.login) {
       if(routeName == RouteGenerator.story) {
-        RouteGenerator.navigatorKey.currentState.popUntil(ModalRoute.withName(RouteGenerator.root));
+        RouteGenerator.navigatorKey.currentState!.popUntil(ModalRoute.withName(RouteGenerator.root));
       } else {
-        RouteGenerator.navigatorKey.currentState.pop();
+        RouteGenerator.navigatorKey.currentState!.pop();
       }
 
-      if(routeArguments.containsKey('subscriptionType')) {
-        routeArguments.update('subscriptionType', (value) => subscriptionType);
+      if(routeArguments != null &&
+        routeArguments!.containsKey('subscriptionType')) {
+        routeArguments!.update('subscriptionType', (value) => subscriptionType);
       }
 
-      RouteGenerator.navigatorKey.currentState.pushNamed(
+      RouteGenerator.navigatorKey.currentState!.pushNamed(
         routeName,
         arguments: routeArguments,
       );
@@ -237,12 +234,13 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
       emit(LoginInitState());
     } else {
       try {
-        String token = await _auth.currentUser.getIdToken();
-        MemberIdAndSubscriptionType memberIdAndSubscriptionType = await _memberService.checkSubscriptionType(_auth.currentUser, token);
+        MemberIdAndSubscriptionType memberIdAndSubscriptionType = await _memberService.checkSubscriptionType(
+          _auth.currentUser!
+        );
         emit(
           LoginSuccess(
-            israfelId: memberIdAndSubscriptionType.israfelId,
-            subscriptionType: memberIdAndSubscriptionType.subscriptionType,
+            israfelId: memberIdAndSubscriptionType.israfelId!,
+            subscriptionType: memberIdAndSubscriptionType.subscriptionType!,
             isNewebpay: memberIdAndSubscriptionType.isNewebpay,
           )
         );
@@ -250,7 +248,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
         // there is no member in israfel
         if(e.toString() == "Invalid Request: $memberStateTypeIsNotFound") {
           try {
-            await _auth.currentUser.delete();
+            await _auth.currentUser!.delete();
           } catch (e) {
             print(e);
             await _auth.signOut();
@@ -418,28 +416,13 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
           RegisteredByAnotherMethod(warningMessage: registeredByAppleMethodWarningMessage)
         );
       } else if (signInMethodsStringList.contains('password')) {
-        await RouteGenerator.navigatorKey.currentState.pushNamed(
-          RouteGenerator.emailLogin,
-          arguments: {
-            'email': event.email,
-          },
-        );
+        await RouteGenerator.navigateToEmailLogin(email: event.email);
         await _renderingUiAfterEmailLogin(emit);
       } else if(signInMethodsStringList.contains('emailLink')) {
-        await RouteGenerator.navigatorKey.currentState.pushNamed(
-          RouteGenerator.passwordResetPrompt,
-          arguments: {
-            'email': event.email,
-          },
-        );
+        await RouteGenerator.navigateToPasswordResetPrompt(email: event.email);
         await _renderingUiAfterEmailLogin(emit);
       } else {
-        await RouteGenerator.navigatorKey.currentState.pushNamed(
-          RouteGenerator.emailRegistered,
-          arguments: {
-            'email': event.email,
-          },
-        );
+        await RouteGenerator.navigateToEmailRegistered(email: event.email);
         await _renderingUiAfterEmailLogin(emit);
       }
     } on SocketException {

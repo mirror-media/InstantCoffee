@@ -8,7 +8,7 @@ import 'package:readr_app/services/emailSignInService.dart';
 class EmailRegisteredPage extends StatelessWidget {
   final String email;
   EmailRegisteredPage({
-    this.email
+    required this.email
   });
 
   @override
@@ -22,7 +22,7 @@ class EmailRegisteredPage extends StatelessWidget {
     );
   }
 
-  Widget _buildBar(BuildContext context) {
+  PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),

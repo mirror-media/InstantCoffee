@@ -1,7 +1,8 @@
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/helpers/cacheDurationCache.dart';
 import 'package:readr_app/helpers/environment.dart';
-import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/models/record.dart';
+import 'package:readr_app/models/recordListAndAllCount.dart';
 
 class TagService{
   ApiBaseHelper _helper = ApiBaseHelper();
@@ -10,7 +11,7 @@ class TagService{
   String _nextPageUrl = '';
   String get getNextUrl => this._nextPageUrl;
   
-  Future<RecordList> fetchRecordList(String url) async{ 
+  Future<RecordListAndAllCount> fetchRecordList(String url) async{ 
     dynamic jsonResponse;
     if(page <= 2) {
       jsonResponse = await _helper.getByCacheAndAutoCache(url, maxAge: contentTabCacheDuration);
@@ -38,11 +39,12 @@ class TagService{
     } else {
       jsonObject = [];
     }
-    RecordList records = RecordList.fromJson(jsonObject);
-    if(records.isNotEmpty){
-      records.allRecordCount = jsonResponse['_meta']['total'];
-    }
-    return records;
+
+    RecordListAndAllCount recordListAndAllCount = RecordListAndAllCount(
+      recordList: Record.recordListFromJson(jsonObject),
+      allCount: jsonResponse['_meta']['total']
+    );
+    return recordListAndAllCount;
   }
 
   int initialPage() {

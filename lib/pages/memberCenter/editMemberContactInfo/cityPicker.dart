@@ -4,15 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/events.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/models/cityList.dart';
+import 'package:readr_app/models/contact/city.dart';
 import 'package:readr_app/models/member.dart';
 
 class CityPicker extends StatefulWidget {
-  final CityList cityList;
+  final List<City> cityList;
   final Member member;
   CityPicker({
-    @required this.cityList,
-    @required this.member,
+    required this.cityList,
+    required this.member,
   });
 
   @override
@@ -20,13 +20,12 @@ class CityPicker extends StatefulWidget {
 }
 
 class _CityPickerState extends State<CityPicker> {
-  bool _isPickerActivated;
-  String _city;
-  List<Widget> _cityListWidget;
+  bool _isPickerActivated = false;
+  List<Widget> _cityListWidget = [];
+  String? _city;
 
   @override
   void initState() {
-    _isPickerActivated = false;
     _city = widget.member.contactAddress.city;
     setCountryListWidget();
     super.initState();
@@ -45,7 +44,6 @@ class _CityPickerState extends State<CityPicker> {
   }
 
   setCountryListWidget() {
-    _cityListWidget = [];
     widget.cityList.forEach(
       (city) { 
         _cityListWidget.add(Text(city.name));
@@ -115,10 +113,10 @@ class _CityPickerState extends State<CityPicker> {
     );
   }
 
-  _showPicker(double height, CityList cityList, Member member) async{
+  _showPicker(double height, List<City> cityList, Member member) async{
     int targetIndex = _city == null
     ? 0
-    : cityList.findIndexByName(_city);
+    : City.findCityListIndexByName(cityList, _city!);
 
     await showModalBottomSheet(
       context: context,

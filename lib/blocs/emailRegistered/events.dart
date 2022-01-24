@@ -15,8 +15,8 @@ class CreateUserWithEmailAndPassword extends EmailRegisteredEvents {
   final String email;
   final String password;
   CreateUserWithEmailAndPassword({
-    this.email, 
-    this.password,
+    required this.email, 
+    required this.password,
   });
 
   @override
@@ -32,10 +32,10 @@ class CreateUserWithEmailAndPassword extends EmailRegisteredEvents {
         FirebaseAuth auth = FirebaseAuth.instance;
         MemberService memberService = MemberService();
         
-        String token = await auth.currentUser.getIdToken();
+        String token = await auth.currentUser!.getIdToken();
         bool createSuccess = await memberService.createMember(
-          auth.currentUser.email,
-          auth.currentUser.uid,
+          auth.currentUser!.email,
+          auth.currentUser!.uid,
           token
         );
         
@@ -43,7 +43,7 @@ class CreateUserWithEmailAndPassword extends EmailRegisteredEvents {
           yield EmailRegisteredSuccess();
         } else {
           try {
-            await auth.currentUser.delete();
+            await auth.currentUser!.delete();
           } catch (e) {
             print(e);
             await auth.signOut();

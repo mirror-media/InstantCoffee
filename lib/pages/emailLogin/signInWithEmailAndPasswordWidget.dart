@@ -8,7 +8,7 @@ import 'package:readr_app/pages/emailLogin/emailLoginForm.dart';
 class SignInWithEmailAndPasswordWidget extends StatefulWidget {
   final String email;
   SignInWithEmailAndPasswordWidget({
-    @required this.email
+    required this.email
   });
 
   @override

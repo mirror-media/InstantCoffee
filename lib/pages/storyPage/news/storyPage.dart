@@ -12,7 +12,7 @@ class StoryPage extends StatelessWidget {
   final bool isMemberCheck;
   final bool isMemberContent;
   const StoryPage(
-      {Key key, @required this.slug, @required this.isMemberCheck, this.isMemberContent = false})
+      {Key? key, required this.slug, required this.isMemberCheck, this.isMemberContent = false})
       : super(key: key);
 
   @override

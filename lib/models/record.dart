@@ -1,6 +1,5 @@
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/category.dart';
-import 'package:readr_app/models/categoryList.dart';
 
 class Record {
   String title;
@@ -11,12 +10,12 @@ class Record {
   bool isMemberContent;
 
   Record({
-    this.title,
-    this.slug,
-    this.publishedDate,
-    this.photoUrl,
-    this.isMemberCheck,
-    this.isMemberContent,
+    required this.title,
+    required this.slug,
+    required this.publishedDate,
+    required this.photoUrl,
+    this.isMemberCheck = true,
+    this.isMemberContent = false,
   });
 
   factory Record.fromJson(Map<String, dynamic> json) {
@@ -43,7 +42,7 @@ class Record {
     if (json.containsKey('publishedDate')) {
       origPublishedDate = json['publishedDate'];
     } else {
-      origPublishedDate = json['publishTime'];
+      origPublishedDate = json['publishTime'] ?? '';
     }
 
     String photoUrl = Environment().config.mirrorMediaNotImageUrl;
@@ -55,7 +54,7 @@ class Record {
       photoUrl = json['photoUrl'];
     }
     
-    CategoryList categoryBuilder = CategoryList();
+    List<Category> categoryBuilder = [];
     if (json["categories"] != null) {
       for (int i = 0; i < json["categories"].length; i++) {
         Category category = Category.fromJson(json["categories"][i]);
@@ -79,7 +78,7 @@ class Record {
       photoUrl: photoUrl,
       isMemberCheck: categoryBuilder.length == 0
       ? true
-      : categoryBuilder.isMemberOnly(),
+      : Category.isMemberOnlyInCategoryList(categoryBuilder),
       isMemberContent: isMemberContent,
     );
   }
@@ -98,5 +97,22 @@ class Record {
   bool operator ==(covariant Record other) {
     // compare this to other
     return this.slug == other.slug;
+  }
+
+  static List<Record> recordListFromJson(List<dynamic> jsonList) {
+    return jsonList.map<Record>((json) => Record.fromJson(json)).toList();
+  }
+
+  static List<Record> filterDuplicatedSlugByAnother(
+    List<Record> base,
+    List<Record> another,
+  ) {
+    List<Record> records = [];
+    base.forEach((element) { 
+      if(!another.contains(element)) {
+        records.add(element);
+      }
+    });
+    return records;
   }
 }

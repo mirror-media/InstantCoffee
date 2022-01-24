@@ -7,7 +7,7 @@ class SubscribedArticlesInitial extends SubscribedArticlesState {}
 
 class SubscribedArticlesLoaded extends SubscribedArticlesState {
   final List<SubscribedArticle> subscribedArticles;
-  SubscribedArticlesLoaded({this.subscribedArticles});
+  SubscribedArticlesLoaded({required this.subscribedArticles});
 }
 
 class SubscribedArticlesError extends SubscribedArticlesState {

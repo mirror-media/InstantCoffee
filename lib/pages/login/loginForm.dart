@@ -12,7 +12,7 @@ import 'package:readr_app/widgets/memberLoginPolicy.dart';
 class LoginForm extends StatefulWidget {
   final LoginState state;
   LoginForm({
-    @required this.state,
+    required this.state,
   });
 
   @override
@@ -81,7 +81,7 @@ class _LoginFormState extends State<LoginForm> {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
-              child: _loginWarningText(widget.state),
+              child: _loginWarningText(widget.state as RegisteredByAnotherMethod),
             ),
           ),
         SliverToBoxAdapter(
@@ -190,7 +190,7 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  Widget _thirdPartyLoginButton(String imageLocation, String contentText, Function ontapFunction) {
+  Widget _thirdPartyLoginButton(String imageLocation, String contentText, Function()? ontapFunction) {
     return InkWell(
       borderRadius: BorderRadius.circular(5.0),
       child: Container(
@@ -279,10 +279,10 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  String validateEmail(String value) {
-    Pattern pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
+  String? validateEmail(String? value) {
+    String pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
     RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value) || value == null)
+    if (value == null || !regex.hasMatch(value))
       return 'Email 格式填寫錯誤';
     else
       return null;
@@ -384,7 +384,7 @@ class _LoginFormState extends State<LoginForm> {
         ),
       ),
       onTap: () {
-        if (_formKey.currentState.validate()) {
+        if (_formKey.currentState!.validate()) {
           _fetchSignInMethodsForEmail(_email);
         }
       }

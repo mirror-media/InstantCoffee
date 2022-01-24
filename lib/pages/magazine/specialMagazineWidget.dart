@@ -9,7 +9,7 @@ import 'package:readr_app/pages/magazine/specialMagazineListWidget.dart';
 class SpecialMagazineWidget extends StatefulWidget {
   final ScrollController listviewController;
   SpecialMagazineWidget({
-    @required this.listviewController,
+    required this.listviewController,
   });
 
   @override

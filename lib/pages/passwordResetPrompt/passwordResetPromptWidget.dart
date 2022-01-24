@@ -5,7 +5,7 @@ import 'package:readr_app/helpers/routeGenerator.dart';
 class PasswordResetPromptWidget extends StatelessWidget {
   final String email;
   PasswordResetPromptWidget({
-    @required this.email,
+    required this.email,
   });
 
   @override

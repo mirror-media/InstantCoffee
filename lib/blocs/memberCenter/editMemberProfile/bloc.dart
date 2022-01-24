@@ -5,7 +5,7 @@ import 'package:readr_app/services/memberService.dart';
 
 class EditMemberProfileBloc extends Bloc<EditMemberProfileEvents, EditMemberProfileState> {
   final MemberRepos memberRepos;
-  EditMemberProfileBloc({this.memberRepos}) : super(EditMemberProfileInitState());
+  EditMemberProfileBloc({required this.memberRepos}) : super(EditMemberProfileInitState());
 
   @override
   Stream<EditMemberProfileState> mapEventToState(EditMemberProfileEvents event) async* {

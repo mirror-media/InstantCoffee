@@ -3,7 +3,7 @@ class MemberResponse<T> {
 
   T data;
 
-  String message;
+  String? message;
 
   MemberResponse.completed(this.data) : status = Status.Complete;
 

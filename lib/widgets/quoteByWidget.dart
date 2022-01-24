@@ -5,10 +5,10 @@ import 'dart:math' as math;
 
 class QuoteByWidget extends StatelessWidget {
   final String quote;
-  final String quoteBy;
+  final String? quoteBy;
   final bool isMemberContent;
   QuoteByWidget({
-    @required this.quote,
+    required this.quote,
     this.quoteBy,
     this.isMemberContent = false,
   });

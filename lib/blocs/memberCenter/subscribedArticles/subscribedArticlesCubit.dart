@@ -16,9 +16,9 @@ class SubscribedArticlesCubit extends Cubit<SubscribedArticlesState> {
     print('Get subscribed articles');
     try {
       FirebaseAuth auth = FirebaseAuth.instance;
-      String token = await auth.currentUser.getIdToken();
+      String token = await auth.currentUser!.getIdToken();
       SubscribedArticlesService subscribedArticlesService = SubscribedArticlesService();
-      List<SubscribedArticle> subscribedArticles = await subscribedArticlesService.getSubscribedArticles(auth.currentUser.uid, token);
+      List<SubscribedArticle> subscribedArticles = await subscribedArticlesService.getSubscribedArticles(auth.currentUser!.uid, token);
       emit(SubscribedArticlesLoaded(subscribedArticles: subscribedArticles));
     } on SocketException {
       emit(SubscribedArticlesError(

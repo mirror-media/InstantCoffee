@@ -40,7 +40,7 @@ class _MMTermsOfServiceWidgetState extends State<MMTermsOfServiceWidget> {
             _delayNavigatorPop();
             return Container();
           case StoryStatus.loaded:
-            StoryRes storyRes = state.storyRes;
+            StoryRes storyRes = state.storyRes!;
 
             if(storyRes.story.apiDatas.length == 0) {
               _delayNavigatorPop();

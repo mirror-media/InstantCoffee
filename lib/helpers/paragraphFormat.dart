@@ -5,7 +5,7 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:flutter/material.dart';
 
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/models/contentList.dart';
+import 'package:readr_app/models/content.dart';
 import 'package:readr_app/models/paragraph.dart';
 import 'package:readr_app/widgets/annotationWidget.dart';
 import 'package:readr_app/widgets/imageAndDescriptionSlideShowWidget.dart';
@@ -18,6 +18,11 @@ import 'package:readr_app/widgets/youtubeWidget.dart';
 
 class ParagraphFormat {
   bool _isMemberContent = false;
+
+  bool isParagraphFirstContentsAvailable(List<Content> contentList) {
+    return contentList.length > 0 && contentList[0].data != null;
+  }
+
   Widget parseTheParagraph(
     Paragraph paragraph, 
     BuildContext context,
@@ -29,35 +34,35 @@ class ParagraphFormat {
     switch (paragraph.type) {
       case 'header-one':
         {
-          if (paragraph.contents.length > 0) {
+          if (isParagraphFirstContentsAvailable(paragraph.contents)) {
             return parseTheTextToHtmlWidget(
-                '<h1>' + paragraph.contents[0].data + '</h1>', null, fontSize: htmlFontSize);
+                '<h1>' + paragraph.contents[0].data! + '</h1>', fontSize: htmlFontSize);
           }
           return Container();
         }
       case 'header-two':
         {
-          if (paragraph.contents.length > 0) {
+          if (isParagraphFirstContentsAvailable(paragraph.contents)) {
             return parseTheTextToHtmlWidget(
-                '<h2>' + paragraph.contents[0].data + '</h2>', null, fontSize: htmlFontSize);
+                '<h2>' + paragraph.contents[0].data! + '</h2>', fontSize: htmlFontSize);
           }
           return Container();
         }
       case 'code-block':
       case 'unstyled':
         {
-          if (paragraph.contents.length > 0) {
-            return parseTheTextToHtmlWidget(paragraph.contents[0].data, null, fontSize: htmlFontSize);
+          if (isParagraphFirstContentsAvailable(paragraph.contents)) {
+            return parseTheTextToHtmlWidget(paragraph.contents[0].data!, fontSize: htmlFontSize);
           }
           return Container();
         }
       case 'blockquote':
         {
-          if (paragraph.contents.length > 0) {
+          if (isParagraphFirstContentsAvailable(paragraph.contents)) {
             Widget blockquote;
             if(_isMemberContent){
               blockquote = QuoteByWidget(
-                quote: paragraph.contents[0].data,
+                quote: paragraph.contents[0].data!,
                 isMemberContent: _isMemberContent,
               );
               return _addPaddingIfNeeded(blockquote);
@@ -76,7 +81,7 @@ class ParagraphFormat {
                 SizedBox(width: 8),
                 Expanded(
                     child: parseTheTextToHtmlWidget(
-                        paragraph.contents[0].data, null, fontSize: htmlFontSize)),
+                        paragraph.contents[0].data!, fontSize: htmlFontSize)),
                 SizedBox(width: 8),
                 Icon(
                   Icons.format_quote,
@@ -89,19 +94,16 @@ class ParagraphFormat {
           }
           return Container();
         }
-        break;
       case 'ordered-list-item':
         {
           Widget orderedListItem = buildOrderListWidget(paragraph.contents, htmlFontSize: htmlFontSize);
           return _addPaddingIfNeeded(orderedListItem);
         }
-        break;
       case 'unordered-list-item':
         {
           Widget unOrderedListItem = buildUnorderListWidget(paragraph.contents, htmlFontSize: htmlFontSize);
           return _addPaddingIfNeeded(unOrderedListItem);
         }
-        break;
       case 'image':
         {
           var width;
@@ -110,17 +112,19 @@ class ParagraphFormat {
           }else{
             width = MediaQuery.of(context).size.width - 32;
           }
-          return ImageDescriptionWidget(
-            imageUrl: paragraph.contents[0].data,
-            description: paragraph.contents[0].description,
-            width: width,
-            aspectRatio: paragraph.contents[0].aspectRatio,
-            isMemberContent: _isMemberContent,
-            textSize: _isMemberContent ? 14 : 16,
-            imageUrlList: imageUrlList,
-          );
+          if(isParagraphFirstContentsAvailable(paragraph.contents)) {
+            return ImageDescriptionWidget(
+              imageUrl: paragraph.contents[0].data!,
+              description: paragraph.contents[0].description!,
+              width: width,
+              aspectRatio: paragraph.contents[0].aspectRatio!,
+              isMemberContent: _isMemberContent,
+              textSize: _isMemberContent ? 14 : 16,
+              imageUrlList: imageUrlList,
+            );
+          }
+          return Container();
         }
-        break;
       case 'slideshow':
         {
           return ImageAndDescriptionSlideShowWidget(
@@ -129,7 +133,6 @@ class ParagraphFormat {
             imageUrlList: imageUrlList,
           );
         }
-        break;
       case 'youtube':
         {
           var width;
@@ -138,86 +141,108 @@ class ParagraphFormat {
           }else{
             width = MediaQuery.of(context).size.width - 40;
           }
-          return YoutubeWidget(
-            width: width,
-            youtubeId: paragraph.contents[0].data,
-            description: paragraph.contents[0].description,
-          );
+          if(isParagraphFirstContentsAvailable(paragraph.contents)) {
+            return YoutubeWidget(
+              width: width,
+              youtubeId: paragraph.contents[0].data!,
+              description: paragraph.contents[0].description,
+            );
+          }
+          return Container();
         }
       case 'video':
         {
-          Widget video = MMVideoPlayer(
-            videourl: paragraph.contents[0].data,
-            aspectRatio: 16 / 9,
-          );
-          return _addPaddingIfNeeded(video);
+          if(isParagraphFirstContentsAvailable(paragraph.contents)) {
+            Widget video = MMVideoPlayer(
+              videourl: paragraph.contents[0].data!,
+              aspectRatio: 16 / 9,
+            );
+            return _addPaddingIfNeeded(video);
+          }
+          return Container();
         }
-        break;
       case 'audio':
         {
-          List<String> titleAndDescription =
-              paragraph.contents[0].description.split(';');
-          
-          Widget audio = MMAudioPlayer(
-            audioUrl: paragraph.contents[0].data,
-            title: titleAndDescription[0],
-          );
-          return _addPaddingIfNeeded(audio);
+          if(isParagraphFirstContentsAvailable(paragraph.contents)) {
+            List<String> titleAndDescription = [];
+            if(paragraph.contents[0].description != null) {
+              titleAndDescription =
+                  paragraph.contents[0].description!.split(';');
+            }
+            
+            Widget audio = MMAudioPlayer(
+              audioUrl: paragraph.contents[0].data!,
+              title: titleAndDescription[0],
+            );
+            return _addPaddingIfNeeded(audio);
+          }
+          return Container();
         }
-        break;
       case 'embeddedcode':
         {
-          Widget embeddedcode = EmbeddedCodeWidget(
-            embeddedCode: paragraph.contents[0].data,
-            aspectRatio:  paragraph.contents[0].aspectRatio,
-          );
-          return _addPaddingIfNeeded(embeddedcode);
+          if(isParagraphFirstContentsAvailable(paragraph.contents)) {
+            Widget embeddedcode = EmbeddedCodeWidget(
+              embeddedCode: paragraph.contents[0].data!,
+              aspectRatio:  paragraph.contents[0].aspectRatio,
+            );
+            return _addPaddingIfNeeded(embeddedcode);
+          }
+          return Container();
         }
-        break;
       case 'infobox':
         {
-          Widget infoBox = InfoBoxWidget(
-            title: paragraph.contents[0].description,
-            description: paragraph.contents[0].data,
-            isMemberContent: _isMemberContent,
-          );
-          return _addPaddingIfNeeded(infoBox);
+          if(isParagraphFirstContentsAvailable(paragraph.contents)) {
+            Widget infoBox = InfoBoxWidget(
+              title: paragraph.contents[0].description!,
+              description: paragraph.contents[0].data!,
+              isMemberContent: _isMemberContent,
+            );
+            return _addPaddingIfNeeded(infoBox);
+          }
+          return Container();
         }
-        break;
       case 'annotation':
         {
-          Widget annotation = AnnotationWidget(
-            data: paragraph.contents[0].data,
-            isMemberContent: _isMemberContent,
-          );
-          return _addPaddingIfNeeded(annotation);
+          if(isParagraphFirstContentsAvailable(paragraph.contents)) {
+            Widget annotation = AnnotationWidget(
+              data: paragraph.contents[0].data!,
+              isMemberContent: _isMemberContent,
+            );
+            return _addPaddingIfNeeded(annotation);
+          }
+          return Container();
         }
-        break;
       case 'quoteby':
         {
-          Widget quoteby = QuoteByWidget(
-            quote: paragraph.contents[0].data,
-            quoteBy: paragraph.contents[0].description,
-            isMemberContent: _isMemberContent,
-          );
-          return _addPaddingIfNeeded(quoteby);
+          if(isParagraphFirstContentsAvailable(paragraph.contents)) {
+            Widget quoteby = QuoteByWidget(
+              quote: paragraph.contents[0].data!,
+              quoteBy: paragraph.contents[0].description,
+              isMemberContent: _isMemberContent,
+            );
+            return _addPaddingIfNeeded(quoteby);
+          }
+          return Container();
         }
-        break;
       default:
         {
           return Container();
         }
-        break;
     }
   }
 
-  Widget parseTheTextToHtmlWidget(String data, Color color, {double fontSize = 20}) {
+  Widget parseTheTextToHtmlWidget(
+    String data,
+    {
+      Color? color,
+      double fontSize = 20
+    }
+  ) {
     if(_isMemberContent){
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: HtmlWidget(
           data,
-          hyperlinkColor: Colors.blue,
           textStyle: TextStyle(
             fontSize: fontSize,
             height: 1.8,
@@ -248,7 +273,10 @@ class ParagraphFormat {
                 'font-weight': 'normal',
                 'font-size': '20px',
               };
+            } else if (element.localName == 'a') {
+              return {'color': 'blue'};
             }
+
             return null;
           },
         ),
@@ -256,12 +284,18 @@ class ParagraphFormat {
     }
     return HtmlWidget(
       data,
-      hyperlinkColor: Colors.blue,
       textStyle: TextStyle(
         fontSize: fontSize,
         height: 1.8,
         color: color,
       ),
+      customStylesBuilder: (element) {
+        if (element.localName == 'a') {
+          return {'color': 'blue'};
+        }
+
+        return null;
+      },
     );
   }
 
@@ -275,22 +309,25 @@ class ParagraphFormat {
     return widget;
   }
 
-  List<String> _convertStrangedataList(ContentList contentList) {
-    List<String> resultList = List<String>();
-    if (contentList.length == 1 && contentList[0].data[0] == '[') {
-      // api data is strange [[...]]
-      String dataString =
-          contentList[0].data.substring(1, contentList[0].data.length - 1);
-      resultList = dataString.split(', ');
-    } else {
-      contentList.forEach((content) {
-        resultList.add(content.data);
-      });
+  List<String> _convertStrangedataList(List<Content> contentList) {
+    List<String> resultList = [];
+    if(isParagraphFirstContentsAvailable(contentList)) {
+      if (contentList.length == 1 && contentList[0].data![0] == '[') {
+        // api data is strange [[...]]
+        String dataString =
+            contentList[0].data!.substring(1, contentList[0].data!.length - 1);
+        resultList = dataString.split(', ');
+      } else {
+        contentList.forEach((content) {
+          resultList.add(content.data!);
+        });
+      }
     }
+
     return resultList;
   }
 
-  Widget buildOrderListWidget(ContentList contentList, {double htmlFontSize = 20}) {
+  Widget buildOrderListWidget(List<Content> contentList, {double htmlFontSize = 20}) {
     List<String> dataList = _convertStrangedataList(contentList);
 
     return ListView.builder(
@@ -309,13 +346,13 @@ class ParagraphFormat {
                 ),
               ),
               SizedBox(width: 16),
-              Expanded(child: parseTheTextToHtmlWidget(dataList[index], null, fontSize: htmlFontSize)),
+              Expanded(child: parseTheTextToHtmlWidget(dataList[index], fontSize: htmlFontSize)),
             ],
           );
         });
   }
 
-  Widget buildUnorderListWidget(ContentList contentList, {double htmlFontSize = 20}) {
+  Widget buildUnorderListWidget(List<Content> contentList, {double htmlFontSize = 20}) {
     List<String> dataList = _convertStrangedataList(contentList);
 
     return ListView.builder(
@@ -338,7 +375,7 @@ class ParagraphFormat {
                 ),
               ),
               SizedBox(width: 16),
-              Expanded(child: parseTheTextToHtmlWidget(dataList[index], null, fontSize: htmlFontSize)),
+              Expanded(child: parseTheTextToHtmlWidget(dataList[index], fontSize: htmlFontSize)),
             ],
           );
         });

@@ -11,9 +11,9 @@ class LoginSuccess extends LoginState {
   final SubscriptionType subscriptionType;
   final bool isNewebpay;
   LoginSuccess({
-    this.israfelId,
-    this.subscriptionType,
-    this.isNewebpay,
+    required this.israfelId,
+    required this.subscriptionType,
+    required this.isNewebpay,
   });
 }
 
@@ -22,7 +22,7 @@ enum LoginType { google, facebook, apple }
 class LoginLoading extends LoginState {
   final LoginType loginType;
   LoginLoading({
-    this.loginType,
+    required this.loginType,
   });
 }
 
@@ -30,7 +30,7 @@ class FetchSignInMethodsForEmailLoading extends LoginState {}
 
 class RegisteredByAnotherMethod extends LoginInitState {
   final String warningMessage;
-  RegisteredByAnotherMethod({this.warningMessage});
+  RegisteredByAnotherMethod({required this.warningMessage});
 }
 
 class LoginFail extends LoginState {

@@ -3,7 +3,7 @@ class FirebaseLoginStatus {
   dynamic message;
 
   FirebaseLoginStatus({
-    this.status,
+    required this.status,
     this.message,
   });
 }

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/storyPage/news/events.dart';
@@ -20,8 +19,8 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> {
   final StoryRepos storyRepos;
 
   StoryBloc({
-    @required this.storySlug,
-    @required this.storyRepos
+    required this.storySlug,
+    required this.storyRepos
   }) : super(StoryState.init());
 
   @override
@@ -51,10 +50,7 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> {
 
         story.storyAd = StoryAd.fromJson(storyAdMaps['other']);
         for(int i=0; i<story.sections.length; i++) {
-          String sectionName;
-          if (story != null) {
-            sectionName = story.getSectionName();
-          }
+          String? sectionName = story.getSectionName();
           
           if(sectionName != null && storyAdMaps[sectionName] != null) {
             story.storyAd = StoryAd.fromJson(storyAdMaps[sectionName]);

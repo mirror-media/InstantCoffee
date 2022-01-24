@@ -5,7 +5,7 @@ import 'package:readr_app/services/emailSignInService.dart';
 
 class PasswordUpdateBloc extends Bloc<PasswordUpdateEvents, PasswordUpdateState> {
   final EmailSignInRepos emailSignInRepos;
-  PasswordUpdateBloc({this.emailSignInRepos}) : super(OldPasswordConfirmInitState());
+  PasswordUpdateBloc({required this.emailSignInRepos}) : super(OldPasswordConfirmInitState());
 
   @override
   Stream<PasswordUpdateState> mapEventToState(PasswordUpdateEvents event) async* {

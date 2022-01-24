@@ -5,10 +5,10 @@ class SectionAd {
   final String stUnitId;
 
   SectionAd({
-    this.aT1UnitId,
-    this.aT2UnitId,
-    this.aT3UnitId,
-    this.stUnitId
+    required this.aT1UnitId,
+    required this.aT2UnitId,
+    required this.aT3UnitId,
+    required this.stUnitId
   });
 
   factory SectionAd.fromJson(Map<String, dynamic> json) {

@@ -4,7 +4,7 @@ class ErrorStatelessWidget extends StatelessWidget {
   final String errorMessage;
   final Function onRetryPressed;
 
-  const ErrorStatelessWidget({Key key, this.errorMessage, this.onRetryPressed})
+  const ErrorStatelessWidget({Key? key, required this.errorMessage, required this.onRetryPressed})
       : super(key: key);
 
   @override

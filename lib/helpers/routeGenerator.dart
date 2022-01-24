@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
@@ -72,7 +71,7 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case login:
-        Map args = settings.arguments;
+        Map args = settings.arguments as Map;
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => LoginPage(
@@ -82,7 +81,7 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case emailRegistered:
-        Map args = settings.arguments;
+        Map args = settings.arguments as Map;
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => EmailRegisteredPage(
@@ -91,7 +90,7 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case emailLogin:
-        Map args = settings.arguments;
+        Map args = settings.arguments as Map;
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => EmailLoginPage(
@@ -100,7 +99,7 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case passwordResetPrompt:
-        Map args = settings.arguments;
+        Map args = settings.arguments as Map;
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => PasswordResetPromptPage(
@@ -109,7 +108,7 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case passwordResetEmail:
-        Map args = settings.arguments;
+        Map args = settings.arguments as Map;
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => PasswordResetEmailPage(
@@ -118,7 +117,7 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case passwordReset:
-        Map args = settings.arguments;
+        Map args = settings.arguments as Map;
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => PasswordResetPage(
@@ -145,7 +144,7 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case deleteMember:
-        Map args = settings.arguments;
+        Map args = settings.arguments as Map;
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => DeleteMemberPage(
@@ -161,7 +160,7 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case notificationSettings:
-        Object args = settings.arguments;
+        Object args = settings.arguments!;
         // Validation of correct data type
         if (args is OnBoardingBloc) {
           return MaterialPageRoute(
@@ -177,7 +176,7 @@ class RouteGenerator {
         // You can also throw an exception while in development.
         return _errorRoute(settings);
       case story:
-        Map args = settings.arguments;
+        Map args = settings.arguments as Map;
         // Validation of correct data type
         if (args['slug'] is String) {
           return MaterialPageRoute(
@@ -192,7 +191,7 @@ class RouteGenerator {
         // You can also throw an exception while in development.
         return _errorRoute(settings);
       case listeningStory:
-        Map args = settings.arguments;
+        Map args = settings.arguments as Map;
         // Validation of correct data type
         if (args['slug'] is String) {
           return MaterialPageRoute(
@@ -205,7 +204,7 @@ class RouteGenerator {
         // You can also throw an exception while in development.
         return _errorRoute(settings);
       case magazine:
-        Map args = settings.arguments;
+        Map args = settings.arguments as Map;
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => MagazinePage(
@@ -213,16 +212,15 @@ class RouteGenerator {
           )
         );
       case magazineBrowser:
-        Map args = settings.arguments;
+        Map args = settings.arguments as Map;
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => MagazineBrowser(
             magazine: args['magazine'],
-            token: args['token'],
           )
         );
       case subscriptionSelect:
-        Map args = settings.arguments;
+        Map args = settings.arguments as Map;
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => SubscriptionSelectPage(
@@ -235,13 +233,13 @@ class RouteGenerator {
           builder: (context) => NewebpayChangePlanPage(),
         );
       case tagPage:
-        Map args = settings.arguments;
+        Map args = settings.arguments as Map;
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => TagPage(tag: args['tag'],),
         );
       case imageViewer:
-        Map args = settings.arguments;
+        Map args = settings.arguments as Map;
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => ImageViewerWidget(
@@ -273,16 +271,16 @@ class RouteGenerator {
   }
 
   static void navigateToSearch() {
-    navigatorKey.currentState.pushNamed(search);
+    navigatorKey.currentState!.pushNamed(search);
   }
 
   static void navigateToLogin(
     {
       String routeName = login,
-      Object routeArguments,
+      Object? routeArguments,
     }
   ) {
-    navigatorKey.currentState.pushNamed(
+    navigatorKey.currentState!.pushNamed(
       login,
       arguments: {
         'routeName': routeName,
@@ -291,12 +289,10 @@ class RouteGenerator {
     );
   }
 
-  static Future<void> navigateToEmailRegistered(
-    {
-      String email,
-    }
-  ) async{
-    await navigatorKey.currentState.pushNamed(
+  static Future<void> navigateToEmailRegistered({
+    required String email,
+  }) async{
+    await navigatorKey.currentState!.pushNamed(
       emailRegistered,
       arguments: {
         'email': email,
@@ -304,12 +300,10 @@ class RouteGenerator {
     );
   }
 
-  static Future<void> navigateToEmailLogin(
-    {
-      String email,
-    }
-  ) async{
-    await navigatorKey.currentState.pushNamed(
+  static Future<void> navigateToEmailLogin({
+    required String email,
+  }) async{
+    await navigatorKey.currentState!.pushNamed(
       emailLogin,
       arguments: {
         'email': email,
@@ -317,12 +311,10 @@ class RouteGenerator {
     );
   }
 
-  static Future<void> navigateToPasswordResetPrompt(
-    {
-      String email,
-    }
-  ) async{
-    await navigatorKey.currentState.pushNamed(
+  static Future<void> navigateToPasswordResetPrompt({
+    required String email,
+  }) async{
+    await navigatorKey.currentState!.pushNamed(
       passwordResetPrompt,
       arguments: {
         'email': email,
@@ -330,12 +322,10 @@ class RouteGenerator {
     );
   }
 
-  static Future<void> navigateToPasswordResetEmail(
-    {
-      String email,
-    }
-  ) async{
-    await navigatorKey.currentState.pushNamed(
+  static Future<void> navigateToPasswordResetEmail({
+    required String email,
+  }) async{
+    await navigatorKey.currentState!.pushNamed(
       passwordResetEmail,
       arguments: {
         'email': email,
@@ -343,12 +333,10 @@ class RouteGenerator {
     );
   }
   
-  static void navigateToPasswordReset(
-    {
-      String code,
-    }
-  ) {
-    navigatorKey.currentState.pushNamed(
+  static void navigateToPasswordReset({
+    required String code,
+  }) {
+    navigatorKey.currentState!.pushNamed(
       passwordReset,
       arguments: {
         'code': code,
@@ -357,22 +345,22 @@ class RouteGenerator {
   }
 
   static void navigateToPasswordUpdate() {
-    navigatorKey.currentState.pushNamed(passwordUpdate);
+    navigatorKey.currentState!.pushNamed(passwordUpdate);
   }
 
   static void navigateToEditMemberProfile() {
-    navigatorKey.currentState.pushNamed(editMemberProfile);
+    navigatorKey.currentState!.pushNamed(editMemberProfile);
   }
 
   static void navigateToEditMemberContactInfo() {
-    navigatorKey.currentState.pushNamed(editMemberContactInfo);
+    navigatorKey.currentState!.pushNamed(editMemberContactInfo);
   }
 
   static void navigateToDeleteMember(
     String israfelId,
     SubscriptionType subscriptionType
   ) {
-    navigatorKey.currentState.pushNamed(
+    navigatorKey.currentState!.pushNamed(
       deleteMember,
       arguments: {
         'israfelId': israfelId,
@@ -382,11 +370,11 @@ class RouteGenerator {
   }
 
   static void navigateToEmailVerification() {
-    navigatorKey.currentState.pushNamed(emailVerification,);
+    navigatorKey.currentState!.pushNamed(emailVerification,);
   }
 
   static void navigateToNotificationSettings(OnBoardingBloc onBoardingBloc) {
-    navigatorKey.currentState.pushNamed(
+    navigatorKey.currentState!.pushNamed(
       notificationSettings,
       arguments: onBoardingBloc,
     );
@@ -398,7 +386,7 @@ class RouteGenerator {
      bool isMemberContent = false,
     }
   ) {
-    navigatorKey.currentState.pushNamed(
+    navigatorKey.currentState!.pushNamed(
       story,
       arguments: {
         'slug': slug,
@@ -409,7 +397,7 @@ class RouteGenerator {
   }
 
   static void navigateToListeningStory(String slug) {
-    navigatorKey.currentState.pushNamed(
+    navigatorKey.currentState!.pushNamed(
       listeningStory,
       arguments: {
         'slug': slug
@@ -420,7 +408,7 @@ class RouteGenerator {
   static void navigateToMagazine(
     SubscriptionType subscriptionType,
   ) {
-    navigatorKey.currentState.pushNamed(
+    navigatorKey.currentState!.pushNamed(
       magazine,
       arguments: {
         'subscriptionType': subscriptionType
@@ -434,17 +422,14 @@ class RouteGenerator {
     // https://github.com/flutter/flutter/issues/48245
     // There is a issue when opening pdf file in webview on android, 
     // so change to launch URL on android.
-    String url;
-    String token;
+    late String url;
     if(magazine.type == 'weekly'){
       url = magazine.onlineReadingUrl;
-      User user = FirebaseAuth.instance.currentUser;
-      token = await user.getIdToken();
-      navigatorKey.currentState.pushNamed(
+
+      navigatorKey.currentState!.pushNamed(
         magazineBrowser,
         arguments: {
           'magazine': magazine,
-          'token': token,
         },
       );
     }else{
@@ -456,11 +441,10 @@ class RouteGenerator {
           throw 'Could not launch $url';
         }
       } else {
-        navigatorKey.currentState.pushNamed(
+        navigatorKey.currentState!.pushNamed(
           magazineBrowser,
           arguments: {
             'magazine': magazine,
-            'token': token,
           },
         );
       }
@@ -471,23 +455,23 @@ class RouteGenerator {
     {
       bool usePushReplacement = false,
       bool isNewebpay = false,
-      String storySlug,
+      String? storySlug,
     }
   ) {
     if(usePushReplacement){
-      navigatorKey.currentState.pushReplacementNamed(
+      navigatorKey.currentState!.pushReplacementNamed(
         subscriptionSelect,
         arguments: {
           'storySlug': storySlug
         },
       );
     }else if(isNewebpay){
-      navigatorKey.currentState.pushNamed(
+      navigatorKey.currentState!.pushNamed(
         newebpayChangePlan,
       );
     }
     else{
-      navigatorKey.currentState.pushNamed(
+      navigatorKey.currentState!.pushNamed(
         subscriptionSelect,
         arguments: {
           'storySlug': storySlug
@@ -497,7 +481,7 @@ class RouteGenerator {
   }
 
   static void navigateToTagPage(Tag tag) {
-    navigatorKey.currentState.pushNamed(
+    navigatorKey.currentState!.pushNamed(
       tagPage,
       arguments: {
           'tag': tag
@@ -507,7 +491,7 @@ class RouteGenerator {
 
   static void navigateToImageViewer(
     List<String> imageUrlList, {int openIndex = 0}){
-    navigatorKey.currentState.pushNamed(
+    navigatorKey.currentState!.pushNamed(
       imageViewer,
       arguments: {
           'imageUrlList': imageUrlList,
@@ -517,7 +501,7 @@ class RouteGenerator {
   }
 
   static void printRouteSettings() {
-    var route = ModalRoute.of(navigatorKey.currentContext);
+    var route = ModalRoute.of(navigatorKey.currentContext!);
     if(route!=null){
       print('route is current: ${route.isCurrent}');
       print('route name: ${route.settings.name}');

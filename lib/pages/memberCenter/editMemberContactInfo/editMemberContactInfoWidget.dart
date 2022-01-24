@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,8 +6,8 @@ import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/events.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/states.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/models/cityList.dart';
-import 'package:readr_app/models/countryList.dart';
+import 'package:readr_app/models/contact/city.dart';
+import 'package:readr_app/models/contact/country.dart';
 import 'package:readr_app/models/member.dart';
 import 'package:readr_app/pages/memberCenter/editMemberContactInfo/cityPicker.dart';
 import 'package:readr_app/pages/memberCenter/editMemberContactInfo/countryPicker.dart';
@@ -21,8 +19,8 @@ class EditMemberContactInfoWidget extends StatefulWidget {
 }
 
 class _EditMemberContactInfoWidgetState extends State<EditMemberContactInfoWidget> {
-  CountryList _countryList;
-  CityList _cityList;
+  List<Country>? _countryList;
+  List<City>? _cityList;
 
   @override
   void initState() {
@@ -32,12 +30,10 @@ class _EditMemberContactInfoWidgetState extends State<EditMemberContactInfoWidge
 
   Future<void> fetchCountryListAndCityListFromJson() async{
     String jsonCountries = await rootBundle.loadString('packages/constants/countries.json');
-    final jsonCountryList = json.decode(jsonCountries);
-    _countryList = CountryList.fromJson(jsonCountryList);
+    _countryList = Country.parseCountryList(jsonCountries);
 
     String jsonCities = await rootBundle.loadString('packages/constants/taiwan-districts.json');
-    final jsonCityList = json.decode(jsonCities);
-    _cityList = CityList.fromJson(jsonCityList);
+    _cityList = City.parseCityList(jsonCities);
 
     setState(() {});
     _fetchMemberContactInfo();
@@ -68,7 +64,7 @@ class _EditMemberContactInfoWidgetState extends State<EditMemberContactInfoWidge
       builder: (BuildContext context, EditMemberContactInfoState state) {
         if (state is MemberLoadedError) {
           final error = state.error;
-          print('StoryError: ${error.message}');
+          print('MemberLoadedError: ${error.message}');
           return Scaffold(
             appBar: _buildBar(context, null),
             body: Container(),
@@ -101,9 +97,9 @@ class _EditMemberContactInfoWidgetState extends State<EditMemberContactInfoWidge
     );
   }
   
-  Widget _buildBar(
+  PreferredSizeWidget _buildBar(
     BuildContext context, 
-    Member member, 
+    Member? member, 
     { bool isSaveLoading = false }
   ) {
     return AppBar(
@@ -169,7 +165,7 @@ class _EditMemberContactInfoWidgetState extends State<EditMemberContactInfoWidge
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
           child: CountryPicker(
             member: member,
-            countryList: _countryList,
+            countryList: _countryList!,
           ),
         ),
         if(member.contactAddress.country == '臺灣')...[
@@ -182,7 +178,7 @@ class _EditMemberContactInfoWidgetState extends State<EditMemberContactInfoWidge
                   flex: 3,
                   child: CityPicker(
                     member: member,
-                    cityList: _cityList,
+                    cityList: _cityList!,
                   ),
                 ),
                 SizedBox(width: 12),
@@ -190,7 +186,7 @@ class _EditMemberContactInfoWidgetState extends State<EditMemberContactInfoWidge
                   flex: 4,
                   child: DistrictPicker(
                     member: member,
-                    cityList: _cityList,
+                    cityList: _cityList!,
                   ),
                 ),
               ],

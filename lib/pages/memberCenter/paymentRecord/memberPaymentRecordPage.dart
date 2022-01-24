@@ -19,7 +19,7 @@ class MemberPaymentRecordPage extends StatefulWidget {
 
 class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
   List<PaymentRecord> paymentRecordList = [];
-  SubscriptionType _subscriptionType;
+  late SubscriptionType _subscriptionType;
   @override
   void initState(){
     super.initState();
@@ -39,7 +39,7 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
     );
   }
 
-  Widget _buildBar(BuildContext context) {
+  PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),

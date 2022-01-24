@@ -20,9 +20,9 @@ class MemberWidget extends StatefulWidget {
   final SubscriptionType subscriptionType;
   final bool isNewebpay;
   MemberWidget({
-    @required this.israfelId,
-    @required this.subscriptionType,
-    @required this.isNewebpay,
+    required this.israfelId,
+    required this.subscriptionType,
+    required this.isNewebpay,
   });
 
   @override

@@ -1,14 +1,15 @@
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
-import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/models/record.dart';
+import 'package:readr_app/models/recordListAndAllCount.dart';
 import 'package:readr_app/models/section.dart';
-import 'package:readr_app/models/sectionList.dart';
 import 'package:readr_app/services/sectionService.dart';
 
 abstract class SearchRepos {
-  Future<SectionList> fetchSectionList();
-  Future<RecordList> searchByKeywordAndSectionId(String keyword, {String sectionName = '', int page = 1, int maxResults = 20});
-  Future<RecordList> searchNextPageByKeywordAndSectionId(String keyword, {String sectionName = ''});
+  Future<List<Section>> fetchSectionList();
+  Future<RecordListAndAllCount> searchByKeywordAndSectionName(String keyword, {String sectionName = '', int page = 1, int maxResults = 20});
+  Future<RecordListAndAllCount> searchNextPageByKeywordAndSectionName(String keyword, {String sectionName = ''});
+  void reducePage(int count);
 }
 
 class SearchServices implements SearchRepos{
@@ -18,18 +19,19 @@ class SearchServices implements SearchRepos{
   int maxResults = 20;
 
   @override
-  Future<SectionList> fetchSectionList() async{
+  Future<List<Section>> fetchSectionList() async{
     Section initialTargetSection = Section(
       key: '',
       name: '',
       title: '全部類別',
       description: '',
       order: 0,
+      focus: false,
       type: 'fixed',
     );
     
     SectionService sectionService = SectionService();
-    SectionList sectionList = await sectionService.fetchSectionList(needMenu: false);
+    List<Section> sectionList = await sectionService.fetchSectionList(needMenu: false);
     sectionList.insert(
       0, 
       initialTargetSection,
@@ -39,7 +41,7 @@ class SearchServices implements SearchRepos{
   }
 
   @override
-  Future<RecordList> searchByKeywordAndSectionId(String keyword, {String sectionName = '', int page = 1, int maxResults = 20}) async {
+  Future<RecordListAndAllCount> searchByKeywordAndSectionName(String keyword, {String sectionName = '', int page = 1, int maxResults = 20}) async {
     String searchApi = '${Environment().config.searchApi}?max_results=$maxResults&page=$page&keywords=$keyword';
     if(sectionName != '' && sectionName != '全部類別') {
       searchApi = '${Environment().config.searchApi}?max_results=$maxResults&page=$page&keywords=$keyword&section=$sectionName';
@@ -47,14 +49,21 @@ class SearchServices implements SearchRepos{
 
     final jsonResponse = await _helper.getByUrl(searchApi);
 
-    RecordList recordList = RecordList.fromJson(jsonResponse["hits"]["hits"]);
-    recordList.allRecordCount = jsonResponse["hits"]["total"]['value'];
-    return recordList;
+    RecordListAndAllCount recordListAndAllCount = RecordListAndAllCount(
+      recordList: Record.recordListFromJson(jsonResponse["hits"]["hits"]),
+      allCount: jsonResponse["hits"]["total"]['value'],
+    );
+    return recordListAndAllCount;
   }
 
   @override
-  Future<RecordList> searchNextPageByKeywordAndSectionId(String keyword, {String sectionName = ''}) async{
+  Future<RecordListAndAllCount> searchNextPageByKeywordAndSectionName(String keyword, {String sectionName = ''}) async{
     page = page + 1;
-    return await searchByKeywordAndSectionId(keyword, sectionName: sectionName, page: page);
+    return await searchByKeywordAndSectionName(keyword, sectionName: sectionName, page: page);
+  }
+
+  @override
+  void reducePage(int count) {
+    page = page - count;
   }
 }

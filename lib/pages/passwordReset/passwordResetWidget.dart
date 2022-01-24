@@ -9,7 +9,7 @@ import 'package:readr_app/pages/passwordReset/passwordResetSuccessWidget.dart';
 class PasswordResetWidget extends StatefulWidget {
   final String code;
   PasswordResetWidget({
-    @required this.code,
+    required this.code,
   });
 
   @override

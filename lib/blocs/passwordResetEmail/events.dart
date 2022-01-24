@@ -13,7 +13,7 @@ abstract class PasswordResetEmailEvents{
 class SendPasswordResetEmail extends PasswordResetEmailEvents {
   final String email;
   SendPasswordResetEmail({
-    this.email, 
+    required this.email, 
   });
 
   @override

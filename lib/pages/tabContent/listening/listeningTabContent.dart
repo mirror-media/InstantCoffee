@@ -7,7 +7,6 @@ import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
-import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
@@ -16,8 +15,8 @@ class ListeningTabContent extends StatefulWidget {
   final Section section;
   final ScrollController scrollController;
   ListeningTabContent({
-    @required this.section,
-    @required this.scrollController,
+    required this.section,
+    required this.scrollController,
   });
 
   @override
@@ -25,11 +24,11 @@ class ListeningTabContent extends StatefulWidget {
 }
 
 class _ListeningTabContentState extends State<ListeningTabContent> {
-  ListeningTabContentBloc _listeningTabContentBloc;
+  late ListeningTabContentBloc _listeningTabContentBloc;
 
   @override
   void initState() {
-    _listeningTabContentBloc = ListeningTabContentBloc(widget.section.sectionAd);
+    _listeningTabContentBloc = ListeningTabContentBloc(widget.section.sectionAd!);
     super.initState();
   }
 
@@ -61,32 +60,29 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
   }
 
   Widget _buildListeningTabContentBody() {
-    return StreamBuilder<ApiResponse<RecordList>>(
+    return StreamBuilder<ApiResponse<List<Record>>>(
       stream: _listeningTabContentBloc.listeningTabContentStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          switch (snapshot.data.status) {
+          switch (snapshot.data!.status) {
             case Status.LOADING:
               return Center(child: CircularProgressIndicator());
-              break;
 
             case Status.LOADINGMORE:
             case Status.COMPLETED:
-              RecordList recordList = snapshot.data.data == null
+              List<Record> recordList = snapshot.data!.data == null
                   ? _listeningTabContentBloc.records
-                  : snapshot.data.data;
+                  : snapshot.data!.data!;
 
               return _buildTheRecordList(
-                  context, _listeningTabContentBloc, recordList, snapshot.data.status);
-              break;
+                  context, _listeningTabContentBloc, recordList, snapshot.data!.status);
 
             case Status.ERROR:
               return ErrorStatelessWidget(
-                errorMessage: snapshot.data.message,
+                errorMessage: snapshot.data!.message!,
                 onRetryPressed: () =>
                     _listeningTabContentBloc.fetchRecordList(),
               );
-              break;
           }
         }
         return Container();
@@ -95,7 +91,7 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
   }
 
   Widget _buildTheRecordList(
-      BuildContext context, ListeningTabContentBloc listeningTabContentBloc, RecordList recordList, Status status) {
+      BuildContext context, ListeningTabContentBloc listeningTabContentBloc, List<Record> recordList, Status status) {
     
     return CustomScrollView(
       controller: widget.scrollController,

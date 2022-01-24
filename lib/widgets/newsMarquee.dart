@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:readr_app/blocs/newsMarqueeBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
-import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/models/record.dart';
 import 'package:readr_app/widgets/newsMarqueeWidget.dart';
 
 class NewsMarquee extends StatefulWidget {
@@ -11,13 +11,7 @@ class NewsMarquee extends StatefulWidget {
 }
 
 class _NewsMarqueeState extends State<NewsMarquee> {
-  NewsMarqueeBloc _newsMarqueeBloc;
-
-  @override
-  void initState() {
-    _newsMarqueeBloc = NewsMarqueeBloc();
-    super.initState();
-  }
+  NewsMarqueeBloc _newsMarqueeBloc = NewsMarqueeBloc();
 
   @override
   void dispose() {
@@ -27,16 +21,15 @@ class _NewsMarqueeState extends State<NewsMarquee> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<ApiResponse<RecordList>>(
+    return StreamBuilder<ApiResponse<List<Record>>>(
       stream: _newsMarqueeBloc.recordListStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          RecordList recordList = snapshot.data.data;
+          List<Record>? recordList = snapshot.data?.data;
 
-          switch (snapshot.data.status) {
+          switch (snapshot.data!.status) {
             case Status.LOADING:
               return Container();
-              break;
 
             case Status.LOADINGMORE:
             case Status.COMPLETED:
@@ -50,11 +43,9 @@ class _NewsMarqueeState extends State<NewsMarquee> {
                   recordList: recordList,
                 ),
               );
-              break;
 
             case Status.ERROR:
               return Container();
-              break;
           }
         }
         return Container();

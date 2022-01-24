@@ -5,10 +5,8 @@ import 'package:readr_app/models/magazine.dart';
 
 class MagazineBrowser extends StatelessWidget {
   final Magazine magazine;
-  final String token;
   MagazineBrowser({
-    @required this.magazine,
-    this.token,
+    required this.magazine,
   });
   
   @override
@@ -27,6 +25,7 @@ class MagazineBrowser extends StatelessWidget {
         disableLongPressContextMenuOnLinks: magazine.type == 'weekly',
       ),
     );
+
     if(magazine.type == 'weekly'){
       browser = InAppWebView(
         initialUrlRequest: URLRequest(
@@ -48,7 +47,7 @@ class MagazineBrowser extends StatelessWidget {
     );
   }
 
-  Widget _buildBar(BuildContext context) {
+  PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),

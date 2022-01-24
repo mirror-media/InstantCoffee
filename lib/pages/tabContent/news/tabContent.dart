@@ -6,10 +6,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/tabContentBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
-import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/widgets/editorChoiceCarousel.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
@@ -20,8 +18,8 @@ class TabContent extends StatefulWidget {
   final ScrollController scrollController;
   final bool needCarousel;
   TabContent({
-    @required this.section,
-    @required this.scrollController,
+    required this.section,
+    required this.scrollController,
     this.needCarousel = false,
   });
 
@@ -30,12 +28,12 @@ class TabContent extends StatefulWidget {
 }
 
 class _TabContentState extends State<TabContent> {
-  TabContentBloc _tabContentBloc;
+  late TabContentBloc _tabContentBloc;
 
   @override
   void initState() {
     _tabContentBloc = TabContentBloc(
-      widget.section.sectionAd,
+      widget.section.sectionAd!,
       widget.section.key, 
       widget.section.type, 
       widget.needCarousel
@@ -80,32 +78,29 @@ class _TabContentState extends State<TabContent> {
       stream: _tabContentBloc.recordListStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          TabContentState tabContentState = snapshot.data.data;
+          TabContentState? tabContentState = snapshot.data!.data;
 
-          switch (snapshot.data.status) {
+          switch (snapshot.data!.status) {
             case Status.LOADING:
               return Center(child: CircularProgressIndicator());
-              break;
 
             case Status.LOADINGMORE:
             case Status.COMPLETED:
-              RecordList recordList = tabContentState == null
+              List<Record> recordList = tabContentState == null
                   ? _tabContentBloc.records
                   : tabContentState.recordList;
-              RecordList editorChoiceList = tabContentState == null
+              List<Record>? editorChoiceList = tabContentState == null
                   ? null
                   : tabContentState.editorChoiceList;
 
               return _buildTheRecordList(context, recordList,
-                  editorChoiceList, snapshot.data.status, _tabContentBloc);
-              break;
+                  editorChoiceList, snapshot.data!.status, _tabContentBloc);
 
             case Status.ERROR:
               return ErrorStatelessWidget(
-                errorMessage: snapshot.data.message,
+                errorMessage: snapshot.data!.message!,
                 onRetryPressed: () => _tabContentBloc.fetchRecordList(),
               );
-              break;
           }
         }
         return Container();
@@ -113,8 +108,8 @@ class _TabContentState extends State<TabContent> {
     );
   }
 
-  Widget _buildTheRecordList(BuildContext context, RecordList recordList,
-      RecordList editorChoiceList, Status status, TabContentBloc tabContentBloc) {
+  Widget _buildTheRecordList(BuildContext context, List<Record> recordList,
+      List<Record>? editorChoiceList, Status status, TabContentBloc tabContentBloc) {
     
     return CustomScrollView(
       controller: widget.scrollController,
@@ -125,8 +120,7 @@ class _TabContentState extends State<TabContent> {
               tabContentBloc.loadingMore(index);
               
               if (index == 0) {
-                if(widget.needCarousel) {
-
+                if(widget.needCarousel && editorChoiceList != null) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

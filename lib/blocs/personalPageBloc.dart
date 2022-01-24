@@ -3,59 +3,51 @@ import 'dart:convert';
 
 import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
-import 'package:readr_app/models/categoryList.dart';
-import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/models/category.dart';
+import 'package:readr_app/models/record.dart';
 import 'package:readr_app/services/categoryService.dart';
 import 'package:readr_app/services/personalSubscriptionService.dart';
 
 class PersonalPageBloc {
-  LocalStorage _storage;
-  CategoryService _categoryService;
-  PersonalSubscriptionService _personalSubscriptionService;
+  LocalStorage _storage = LocalStorage('setting');
+  CategoryService _categoryService = CategoryService();
+  PersonalSubscriptionService _personalSubscriptionService = PersonalSubscriptionService();
 
-  CategoryList _categoryList;
-  RecordList _recordList;
-  CategoryList get categoryList => _categoryList;
-  RecordList get recordList => _recordList;
+  List<Category> _categoryList = [];
+  List<Record> _recordList = [];
+  List<Category> get categoryList => _categoryList;
+  List<Record> get recordList => _recordList;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   bool _needLoadingMore = true;
   bool get needLoadingMore => _needLoadingMore;
 
-  StreamController _categoryController;
-  StreamSink<ApiResponse<CategoryList>> get categorySink =>
+  StreamController<ApiResponse<List<Category>>> _categoryController = 
+      StreamController<ApiResponse<List<Category>>>();
+  StreamSink<ApiResponse<List<Category>>> get categorySink =>
       _categoryController.sink;
-  Stream<ApiResponse<CategoryList>> get categoryStream =>
+  Stream<ApiResponse<List<Category>>> get categoryStream =>
       _categoryController.stream;
 
-  StreamController _personalSubscriptionController;
-  StreamSink<ApiResponse<RecordList>> get personalSubscriptionSink =>
+  StreamController<ApiResponse<List<Record>>> _personalSubscriptionController =
+      StreamController<ApiResponse<List<Record>>>();
+  StreamSink<ApiResponse<List<Record>>> get personalSubscriptionSink =>
       _personalSubscriptionController.sink;
-  Stream<ApiResponse<RecordList>> get personalSubscriptionStream =>
+  Stream<ApiResponse<List<Record>>> get personalSubscriptionStream =>
       _personalSubscriptionController.stream;
 
   PersonalPageBloc() {
-    _storage = LocalStorage('setting');
-    _categoryList = CategoryList();
-    _recordList = RecordList();
-
-    _categoryService = CategoryService();
-    _personalSubscriptionService = PersonalSubscriptionService();
-    _categoryController = StreamController<ApiResponse<CategoryList>>();
-    _personalSubscriptionController =
-        StreamController<ApiResponse<RecordList>>();
-
     fetchCategoryListAndSubscriptionList();
   }
 
-  categorySinkToAdd(ApiResponse<CategoryList> value) {
+  categorySinkToAdd(ApiResponse<List<Category>> value) {
     if (!_categoryController.isClosed) {
       categorySink.add(value);
     }
   }
 
-  personalSubscriptionSinkToAdd(ApiResponse<RecordList> value) {
+  personalSubscriptionSinkToAdd(ApiResponse<List<Record>> value) {
     if (!_personalSubscriptionController.isClosed) {
       personalSubscriptionSink.add(value);
     }
@@ -65,16 +57,16 @@ class PersonalPageBloc {
     categorySinkToAdd(ApiResponse.loading('Fetching Category List'));
 
     try {
-      CategoryList localCategoryList;
-      CategoryList onlineCategoryList;
+      List<Category>? localCategoryList;
+      List<Category> onlineCategoryList = await _categoryService.fetchCategoryList();
       if (await _storage.ready) {
-        localCategoryList =
-            CategoryList.fromJson(_storage.getItem("categoryList"));
+        if(_storage.getItem("categoryList") != null) {
+          localCategoryList =
+              Category.categoryListFromJson(_storage.getItem("categoryList"));
+        }
       }
 
-      onlineCategoryList = await _categoryService.fetchCategoryList();
-
-      CategoryList theNewestCategoryList = CategoryList.getTheNewestCategoryList(
+      List<Category> theNewestCategoryList = Category.getTheNewestCategoryList(
           localCategoryList: localCategoryList,
           onlineCategoryList: onlineCategoryList);
       _categoryList = theNewestCategoryList;
@@ -87,9 +79,9 @@ class PersonalPageBloc {
     }
   }
 
-  fetchSubscriptionList(CategoryList categoryList, {int page = 1}) async {
+  fetchSubscriptionList(List<Category> categoryList, {int page = 1}) async {
     _isLoading = true;
-    if (_recordList == null || _recordList.length == 0) {
+    if (_recordList.length == 0) {
       personalSubscriptionSinkToAdd(
           ApiResponse.loading('Fetching Subscription Content'));
     } else {
@@ -98,19 +90,19 @@ class PersonalPageBloc {
     }
 
     try {
-      List<String> subscriptionIdStringList = categoryList.getSubscriptionIdStringList;
+      List<String> subscriptionIdStringList = Category.getSubscriptionIdStringList(categoryList);
       if(subscriptionIdStringList.length == 0) {
         _recordList.clear();
       } else {
         String categoryListJson = json.encode(subscriptionIdStringList);
-        RecordList latests = await _personalSubscriptionService.fetchRecordList(categoryListJson, page: page);
+        List<Record> latests = await _personalSubscriptionService.fetchRecordList(categoryListJson, page: page);
         _needLoadingMore = latests.length != 0;
 
         if (page == 1) {
           _recordList.clear();
         }
 
-        latests = latests.filterDuplicatedSlugByAnother(_recordList);
+        latests = Record.filterDuplicatedSlugByAnother(latests, _recordList);
         _recordList.addAll(latests);
       }
       _isLoading = false;
@@ -122,13 +114,13 @@ class PersonalPageBloc {
     }
   }
 
-  changeCategoryList(CategoryList categoryList) {
+  changeCategoryList(List<Category> categoryList) {
     categorySinkToAdd(ApiResponse.completed(categoryList));
   }
 
-  setCategoryListInStorage(CategoryList categoryList) {
+  setCategoryListInStorage(List<Category> categoryList) {
     _categoryList = categoryList;
-    _storage.setItem("categoryList", categoryList.toJson());
+    _storage.setItem("categoryList", Category.categoryListToJson(categoryList));
     changeCategoryList(categoryList);
     _recordList.clear();
     _personalSubscriptionService.initialPage();
@@ -142,7 +134,7 @@ class PersonalPageBloc {
   }
 
   dispose() {
-    _categoryController?.close();
-    _personalSubscriptionController?.close();
+    _categoryController.close();
+    _personalSubscriptionController.close();
   }
 }

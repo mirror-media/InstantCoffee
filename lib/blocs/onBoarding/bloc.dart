@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/blocs/onBoarding/events.dart';
 import 'package:readr_app/blocs/onBoarding/states.dart';
-import 'package:readr_app/models/onBoarding.dart';
+import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/models/onBoardingHint.dart';
 import 'package:readr_app/widgets/holePainter.dart';
 import 'package:readr_app/widgets/invertedClipper.dart';
@@ -11,9 +11,10 @@ import 'package:readr_app/widgets/invertedClipper.dart';
 class OnBoardingBloc extends Bloc<OnBoardingEvents, OnBoardingState> {
   LocalStorage _storage = LocalStorage('setting');
 
-  OnBoardingBloc({OnBoardingStatus status}) : super(OnBoardingState()) {
+  OnBoardingBloc() : super(OnBoardingState()) {
     on<CheckOnBoarding>(_checkOnBoarding);
     on<GoToNextHint>(_goToNextHint);
+    on<CloseOnBoarding>(_closeOnBoarding);
   }
 
   void _checkOnBoarding(
@@ -23,10 +24,7 @@ class OnBoardingBloc extends Bloc<OnBoardingEvents, OnBoardingState> {
     bool isOnBoarding = await getOnBoardingFromStorage();
     if(isOnBoarding) {
       emit(
-        state.copyWith(
-          status: OnBoardingStatus.firstPage,
-          onBoarding: null,
-        )
+        OnBoardingState(isOnBoarding: true),
       );
     }
   }
@@ -37,9 +35,19 @@ class OnBoardingBloc extends Bloc<OnBoardingEvents, OnBoardingState> {
   ) async{
     emit(
       state.copyWith(
+        isOnBoarding: state.isOnBoarding,
         status: event.onBoardingStatus,
-        onBoarding: event.onBoarding,
+        onBoardingPosition: event.onBoardingPosition,
       )
+    );
+  }
+  
+  void _closeOnBoarding(
+    CloseOnBoarding event,
+    Emitter<OnBoardingState> emit,
+  ) async{
+    emit(
+      OnBoardingState(isOnBoarding: false),
     );
   }
   
@@ -64,19 +72,19 @@ class OnBoardingBloc extends Bloc<OnBoardingEvents, OnBoardingState> {
     await setOnBoardingToStorage(false);
   }
 
-  Future<OnBoarding> getSizeAndPosition(GlobalKey key) async{
-    RenderBox _box = key.currentContext.findRenderObject();
+  Future<OnBoardingPosition> getSizeAndPosition(GlobalKey key) async{
+    RenderBox _box = key.currentContext!.findRenderObject()! as RenderBox;
     Size size = _box.size;
     Offset offset = _box.localToGlobal(Offset.zero);
     
-    OnBoarding onBoarding = OnBoarding(
+    OnBoardingPosition onBoardingPosition = OnBoardingPosition(
       left: offset.dx,
       top: offset.dy,
       width: size.width,
       height: size.height,
     );
 
-    return onBoarding;
+    return onBoardingPosition;
   }
 
   ClipPath getClipPathOverlay(double left, double top, double width, double height) {

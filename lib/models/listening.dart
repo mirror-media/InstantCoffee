@@ -7,14 +7,14 @@ class Listening {
   String photoUrl;
   String publishedAt;
 
-  StoryAd storyAd;
+  StoryAd? storyAd;
   
   Listening({
-    this.slug,
-    this.title,
-    this.description,
-    this.photoUrl,
-    this.publishedAt,
+    required this.slug,
+    required this.title,
+    required this.description,
+    required this.photoUrl,
+    required this.publishedAt,
 
     this.storyAd,
   });

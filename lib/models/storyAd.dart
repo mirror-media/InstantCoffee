@@ -8,13 +8,13 @@ class StoryAd {
   final String stUnitId;
 
   StoryAd({
-    this.hDUnitId,
-    this.fTUnitId,
-    this.aT1UnitId,
-    this.aT2UnitId,
-    this.aT3UnitId,
-    this.e1UnitId,
-    this.stUnitId
+    required this.hDUnitId,
+    required this.fTUnitId,
+    required this.aT1UnitId,
+    required this.aT2UnitId,
+    required this.aT3UnitId,
+    required this.e1UnitId,
+    required this.stUnitId
   });
 
   factory StoryAd.fromJson(Map<String, dynamic> json) {

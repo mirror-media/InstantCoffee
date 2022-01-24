@@ -8,7 +8,7 @@ class MemberLoading extends EditMemberContactInfoState {}
 
 class MemberLoaded extends EditMemberContactInfoState {
   final Member member;
-  MemberLoaded({this.member});
+  MemberLoaded({required this.member});
 }
 
 class MemberLoadedError extends EditMemberContactInfoState {
@@ -20,5 +20,5 @@ class MemberLoadedError extends EditMemberContactInfoState {
 
 class SavingLoading extends EditMemberContactInfoState {
   final Member member;
-  SavingLoading({this.member});
+  SavingLoading({required this.member});
 }

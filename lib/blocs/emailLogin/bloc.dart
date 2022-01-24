@@ -6,7 +6,7 @@ import 'package:readr_app/services/emailSignInService.dart';
 class EmailLoginBloc extends Bloc<EmailLoginEvents, EmailLoginState> {
   final EmailSignInRepos emailSignInRepos;
 
-  EmailLoginBloc({this.emailSignInRepos}) : super(EmailLoginInitState());
+  EmailLoginBloc({required this.emailSignInRepos}) : super(EmailLoginInitState());
 
   @override
   Stream<EmailLoginState> mapEventToState(EmailLoginEvents event) async* {

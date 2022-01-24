@@ -29,7 +29,7 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
     return BlocBuilder<MemberSubscriptionTypeCubit, MemberSubscriptionTypeState>(
       builder: (context, state) {
         if(state is MemberSubscriptionTypeLoadedState) {
-          SubscriptionType subscriptionType = state.subscriptionType;
+          SubscriptionType? subscriptionType = state.subscriptionType;
           return _buildMemberTypeBlock(subscriptionType);
         }
         
@@ -54,7 +54,7 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
     );
   }
 
-  Widget _buildMemberTypeBlock(SubscriptionType subscriptionType) {
+  Widget _buildMemberTypeBlock(SubscriptionType? subscriptionType) {
     double width = MediaQuery.of(context).size.width/3.3;
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -105,7 +105,7 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
     );
   }
 
-  Widget _memberTypeTitle(SubscriptionType subscriptionType) {
+  Widget _memberTypeTitle(SubscriptionType? subscriptionType) {
     if(subscriptionType == null) {
       return Text(
         '加入 Premium 會員\n享受零廣告閱讀體驗',

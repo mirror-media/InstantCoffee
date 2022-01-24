@@ -3,16 +3,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/personalPageBloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/models/categoryList.dart';
+import 'package:readr_app/models/category.dart';
 
 class UnsubscriptionCategoryList extends StatefulWidget {
-  final StreamController<CategoryList> controller;
-  final CategoryList categoryList;
+  final StreamController<List<Category>> controller;
+  final List<Category> categoryList;
   final PersonalPageBloc personalPageBloc;
   UnsubscriptionCategoryList({
-    @required this.controller,
-    @required this.categoryList,
-    @required this.personalPageBloc,
+    required this.controller,
+    required this.categoryList,
+    required this.personalPageBloc,
   });
   
   @override
@@ -23,12 +23,14 @@ class _UnsubscriptionCategoryListState extends State<UnsubscriptionCategoryList>
   @override
   Widget build(BuildContext context) {
 
-    return StreamBuilder<CategoryList>(
+    return StreamBuilder<List<Category>>(
       initialData: widget.categoryList,
       stream: widget.controller.stream,
       builder: (context, snapshot) {
-        CategoryList unsubscriptionCategoryList = snapshot.data ;
-        return unsubscriptionCategoryList.length - unsubscriptionCategoryList.subscriptionCount == 0
+        List<Category> unsubscriptionCategoryList = snapshot.data!;
+        return unsubscriptionCategoryList.length - 
+            Category.subscriptionCountInCategoryList(unsubscriptionCategoryList) 
+            == 0
         ? Center(child: Text('全部已訂閱'))
         : ListView.builder(
             itemCount: unsubscriptionCategoryList.length,

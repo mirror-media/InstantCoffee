@@ -8,7 +8,7 @@ import 'package:share/share.dart';
 class ListeningStoryPage extends StatelessWidget {
   final String slug;
   const ListeningStoryPage(
-      {Key key, @required this.slug})
+      {Key? key, required this.slug})
       : super(key: key);
 
   @override

@@ -8,7 +8,7 @@ import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/appException.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/models/listening.dart';
-import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/storyAd.dart';
 import 'package:readr_app/services/listeningTabContentService.dart';
 import 'package:readr_app/services/listeningWidgetService.dart';
@@ -16,7 +16,7 @@ import 'package:readr_app/services/listeningWidgetService.dart';
 class ListeningStoryCubit extends Cubit<ListeningStoryState> {
   String storySlug;
   ListeningStoryCubit({
-    this.storySlug,
+    required this.storySlug,
   }) : super(ListeningStoryInitState());
 
   void fetchListeningStoryPageInfo(String slug) async {
@@ -27,7 +27,7 @@ class ListeningStoryCubit extends Cubit<ListeningStoryState> {
       ListeningWidgetService listeningWidgetService = ListeningWidgetService();
       ListeningTabContentService listeningTabContentService = ListeningTabContentService();
       Listening listening = await listeningWidgetService.fetchListening(slug);
-      RecordList recordList = await listeningTabContentService.fetchRecordList(
+      List<Record> recordList = await listeningTabContentService.fetchRecordList(
           Environment().config.apiBase +
               'youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw');
 

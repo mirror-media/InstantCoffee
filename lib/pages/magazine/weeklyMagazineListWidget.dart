@@ -12,7 +12,7 @@ import 'package:readr_app/pages/magazine/magazineListLabel.dart';
 class WeeklyMagazineListWidget extends StatefulWidget {
   final MagazineList magazineList;
   WeeklyMagazineListWidget({
-    @required this.magazineList,
+    required this.magazineList,
   });
 
   @override
@@ -20,8 +20,8 @@ class WeeklyMagazineListWidget extends StatefulWidget {
 }
 
 class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
- List<Magazine> _currentMagazineList;
- List<Magazine> _remainMagazineList;
+ late List<Magazine> _currentMagazineList;
+ late List<Magazine> _remainMagazineList;
 
   @override
   void initState() {
@@ -39,7 +39,7 @@ class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
 
   List<Magazine> getRemainMagazineList(MagazineList magazineList) {
     if(magazineList.length < 3) {
-      return List<Magazine>();
+      return [];
     }
     return magazineList.sublist(2, magazineList.length);
   }

@@ -5,8 +5,8 @@ class StoryRes {
   final Story story;
 
   StoryRes({
-    this.isMember,
-    this.story,
+    required this.isMember,
+    required this.story,
   });
 
   factory StoryRes.fromJson(Map<String, dynamic> json) {

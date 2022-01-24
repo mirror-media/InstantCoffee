@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-
-import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/models/record.dart';
 import 'package:readr_app/widgets/carouselDisplayWidget.dart';
 
 class EditorChoiceCarousel extends StatefulWidget {
-  final RecordList editorChoiceList;
+  final List<Record> editorChoiceList;
   final double aspectRatio;
   EditorChoiceCarousel({
-    @required this.editorChoiceList,
+    required this.editorChoiceList,
     this.aspectRatio = 16/9,
   });
 
@@ -17,12 +16,11 @@ class EditorChoiceCarousel extends StatefulWidget {
 }
 
 class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
-  CarouselController _carouselController;
-  CarouselOptions _options;
+  CarouselController _carouselController = CarouselController();
+  late CarouselOptions _options;
 
   @override
   void initState() {
-    _carouselController = CarouselController();
     _options = CarouselOptions(
       viewportFraction: 1.0,
       aspectRatio: widget.aspectRatio,
@@ -42,8 +40,7 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    return widget.editorChoiceList == null ||
-            widget.editorChoiceList.length == 0
+    return widget.editorChoiceList.length == 0
         ? Container()
         : Stack(
             children: [
@@ -91,7 +88,7 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
           );
   }
 
-  List<Widget> _imageSliders(double width, RecordList editorChoiceList) {
+  List<Widget> _imageSliders(double width, List<Record> editorChoiceList) {
     return editorChoiceList
         .map(
           (item) => CarouselDisplayWidget(

@@ -12,7 +12,7 @@ class MagazineItemWidget extends StatelessWidget {
   final Magazine magazine;
   final double padding;
   MagazineItemWidget({
-    @required this.magazine,
+    required this.magazine,
     this.padding = 24.0
   });
 

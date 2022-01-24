@@ -13,8 +13,7 @@ import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/appLinkHelper.dart';
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
-import 'package:readr_app/models/onBoarding.dart';
-import 'package:readr_app/models/sectionList.dart';
+import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/termsOfService/mMTermsOfServicePage.dart';
 import 'package:readr_app/pages/tabContent/listening/listeningTabContent.dart';
@@ -26,7 +25,7 @@ import 'package:readr_app/helpers/dataConstants.dart';
 class HomePage extends StatefulWidget {
   final GlobalKey settingKey;
   HomePage({
-    @required this.settingKey,
+    required this.settingKey,
   });
 
   @override
@@ -35,48 +34,38 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin, WidgetsBindingObserver {
   final LocalStorage _storage = LocalStorage('setting');
-  AppLinkHelper _appLinkHelper;
-  FirebaseMessangingHelper _firebaseMessangingHelper;
+  AppLinkHelper _appLinkHelper = AppLinkHelper();
+  FirebaseMessangingHelper _firebaseMessangingHelper = FirebaseMessangingHelper();
 
-  OnBoardingBloc _onBoardingBloc;
-  SectionBloc _sectionBloc;
+  late OnBoardingBloc _onBoardingBloc;
+  SectionBloc _sectionBloc = SectionBloc();
 
   /// tab controller
-  int _initialTabIndex;
-  TabController _tabController;
-  StreamController<Color> _tabColorController;
+  int _initialTabIndex = 0;
+  TabController? _tabController;
+  StreamController<Color>? _tabColorController;
 
-  List<GlobalKey> _tabKeys;
-  List<Tab> _tabs;
-  List<Widget> _tabWidgets;
-  List<ScrollController> _scrollControllerList;
+  List<GlobalKey> _tabKeys = [];
+  List<Tab> _tabs = [];
+  List<Widget> _tabWidgets = [];
+  List<ScrollController> _scrollControllerList = [];
 
   @override
   void initState() {
-    _appLinkHelper = AppLinkHelper();
-    _firebaseMessangingHelper = FirebaseMessangingHelper();
-
-    WidgetsBinding.instance.addObserver(this);
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addObserver(this);
+    SchedulerBinding.instance!.addPostFrameCallback((_) {
       _appLinkHelper.configAppLink(context);
       _appLinkHelper.listenAppLink(context);
       _firebaseMessangingHelper.configFirebaseMessaging(context);
     });
 
     _onBoardingBloc = context.read<OnBoardingBloc>();
-    _sectionBloc = SectionBloc();
 
-    /// tab controller
-    _initialTabIndex = 0;
-    _tabKeys = List<GlobalKey>();
-    _tabs = List<Tab>();
-    _tabWidgets = List<Widget>();
-    _scrollControllerList = List<ScrollController>();
     _showTermsOfService();
     super.initState();
   }
 
-  _initializeTabController(SectionList sectionItems) {
+  _initializeTabController(List<Section> sectionItems) {
     _tabKeys.clear();
     _tabs.clear();
     _tabWidgets.clear();
@@ -127,30 +116,30 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
       vsync: this,
       length: sectionItems.length,
       initialIndex:
-          _tabController == null ? _initialTabIndex : _tabController.index,
+          _tabController == null ? _initialTabIndex : _tabController!.index,
     )..addListener(() { 
       // when index is member
-      if (_tabController.index == 3) {
-        _tabColorController.sink.add(Color(0xffDB1730));
+      if (_tabController!.index == 3) {
+        _tabColorController!.sink.add(Color(0xffDB1730));
       } else {
-        _tabColorController.sink.add(appColor);
+        _tabColorController!.sink.add(appColor);
       }
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{  
-      if(_onBoardingBloc.state.status == OnBoardingStatus.firstPage) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async{  
+      if(_onBoardingBloc.state.isOnBoarding) {
         // get personal tab size and position by personal tab key(_tabKeys[2])
-        OnBoarding onBoarding = await _onBoardingBloc.getSizeAndPosition(_tabKeys[2]);
-        onBoarding.left -= 16;
-        onBoarding.width += 32;
-        onBoarding.function = () {
-          _tabController.animateTo(2);
+        OnBoardingPosition onBoardingPosition = await _onBoardingBloc.getSizeAndPosition(_tabKeys[2]);
+        onBoardingPosition.left -= 16;
+        onBoardingPosition.width += 32;
+        onBoardingPosition.function = () {
+          _tabController!.animateTo(2);
         };
 
         _onBoardingBloc.add(
           GoToNextHint(
-            onBoardingStatus: OnBoardingStatus.secondPage,
-            onBoarding: onBoarding,
+            onBoardingStatus: OnBoardingStatus.firstPage,
+            onBoardingPosition: onBoardingPosition,
           )
         );
       }
@@ -201,26 +190,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      body: StreamBuilder<ApiResponse<SectionList>>(
+      body: StreamBuilder<ApiResponse<List<Section>>>(
         stream: _sectionBloc.sectionListStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            switch (snapshot.data.status) {
+            switch (snapshot.data!.status) {
               case Status.LOADING:
                 return Center(child: CircularProgressIndicator());
-                break;
 
               case Status.LOADINGMORE:
               case Status.COMPLETED:
-                SectionList sectionList = snapshot.data.data;
+                List<Section> sectionList = snapshot.data!.data!;
                 _initializeTabController(sectionList);
 
-                return _buildTabs(_tabs, _tabWidgets, _tabController);
-                break;
+                return _buildTabs(_tabs, _tabWidgets, _tabController!);
 
               case Status.ERROR:
                 return Container();
-                break;
             }
           }
           return Container();
@@ -229,7 +215,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
     );
   }
 
-  Widget _buildBar(BuildContext context) {
+  PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
       elevation: 0.1,
       leading: IconButton(
@@ -267,9 +253,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
             color: Color.fromARGB(255, 229, 229, 229),
             child: StreamBuilder<Color>(
               initialData: appColor,
-              stream: _tabColorController.stream,
+              stream: _tabColorController!.stream,
               builder: (context, snapshot) {
-                Color tabBarColor = snapshot.data;
+                Color tabBarColor = snapshot.data!;
 
                 return TabBar(
                   isScrollable: true,

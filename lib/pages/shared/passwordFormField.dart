@@ -4,8 +4,8 @@ class PasswordFormField extends StatefulWidget {
   final String title;
   final TextEditingController passwordEditingController;
   PasswordFormField({
-    @required this.title,
-    @required this.passwordEditingController,
+    required this.title,
+    required this.passwordEditingController,
   });
 
   @override

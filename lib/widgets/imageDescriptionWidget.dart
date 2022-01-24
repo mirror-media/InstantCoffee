@@ -11,10 +11,10 @@ class ImageDescriptionWidget extends StatelessWidget {
   final bool isMemberContent;
   final List<String> imageUrlList;
   ImageDescriptionWidget({
-    @required this.imageUrl,
-    @required this.description,
-    @required this.width,
-    @required this.imageUrlList,
+    required this.imageUrl,
+    required this.description,
+    required this.width,
+    required this.imageUrlList,
     this.aspectRatio = 16 / 9,
     this.textSize = 16,
     this.isMemberContent = false,

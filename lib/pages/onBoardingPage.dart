@@ -4,7 +4,7 @@ import 'package:readr_app/blocs/onBoarding/bloc.dart';
 import 'package:readr_app/blocs/onBoarding/events.dart';
 import 'package:readr_app/blocs/onBoarding/states.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
-import 'package:readr_app/models/onBoarding.dart';
+import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/pages/homePage.dart';
 
 class OnBoardingPage extends StatefulWidget {
@@ -14,7 +14,7 @@ class OnBoardingPage extends StatefulWidget {
 
 class _OnBoardingPageState extends State<OnBoardingPage> {
   GlobalKey _settingKey = GlobalKey();
-  OnBoardingBloc _onBoardingBloc;
+  late OnBoardingBloc _onBoardingBloc;
 
   @override
   void initState() {
@@ -33,7 +33,8 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<OnBoardingBloc, OnBoardingState>(
       builder: (BuildContext context, OnBoardingState state) {
-        OnBoarding onBoarding = state.onBoarding;
+        bool isOnBoarding = state.isOnBoarding;
+        OnBoardingPosition? onBoardingPosition = state.onBoardingPosition;
 
         return Material(
           type: MaterialType.transparency,
@@ -42,40 +43,39 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
               HomePage(
                 settingKey: _settingKey,
               ),
-              if(onBoarding != null)
+              if(isOnBoarding && onBoardingPosition != null)
                 GestureDetector(
                   onTap: () async{
-                    if( state.status == OnBoardingStatus.thirdPage) {
-                      OnBoarding onBoarding = await _onBoardingBloc.getSizeAndPosition(_settingKey);
-                      onBoarding.function = () {
+                    if( state.status == OnBoardingStatus.secondPage) {
+                      OnBoardingPosition onBoardingPosition = await _onBoardingBloc.getSizeAndPosition(_settingKey);
+                      onBoardingPosition.function = () {
                         RouteGenerator.navigateToNotificationSettings(_onBoardingBloc);
                       };
                       
                       _onBoardingBloc.add(
                         GoToNextHint(
-                          onBoardingStatus: OnBoardingStatus.fourthPage,
-                          onBoarding: onBoarding,
+                          onBoardingStatus: OnBoardingStatus.thirdPage,
+                          onBoardingPosition: onBoardingPosition,
                         )
                       );
                     } else {
-                      onBoarding.function?.call();
+                      onBoardingPosition.function?.call();
                     }
                   },
                   child: _onBoardingBloc.getCustomPaintOverlay(
                     context,
-                    onBoarding.left,
-                    onBoarding.top,
-                    onBoarding.width,
-                    onBoarding.height
+                    onBoardingPosition.left,
+                    onBoardingPosition.top,
+                    onBoardingPosition.width,
+                    onBoardingPosition.height
                   ),
                 ),
-              // if(onBoarding.isOnBoarding)
-              if(onBoarding != null)
+              if(isOnBoarding && onBoardingPosition != null)
                 _onBoardingBloc.getHint(
                   context,
-                  onBoarding.left, 
-                  onBoarding.top + onBoarding.height,
-                  state.onBoardingHint
+                  onBoardingPosition.left, 
+                  onBoardingPosition.top + onBoardingPosition.height,
+                  state.onBoardingHint!
                 ),
             ],
           ),

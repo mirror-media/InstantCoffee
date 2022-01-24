@@ -13,7 +13,7 @@ class ImageViewerWidget extends StatefulWidget {
 
 class _ImageViewerWidgetState extends State<ImageViewerWidget>{
   int nowIndex = 0;
-  PageController _controller;
+  late PageController _controller;
 
   @override
   void initState() {
@@ -56,7 +56,7 @@ class _ImageViewerWidgetState extends State<ImageViewerWidget>{
                     value: progress == null
                         ? null
                         : progress.cumulativeBytesLoaded /
-                            progress.expectedTotalBytes,
+                            progress.expectedTotalBytes!,
                   ),
                 ),
               ),

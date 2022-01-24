@@ -9,6 +9,7 @@ import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/graphqlBody.dart';
 import 'package:readr_app/models/paymentRecord.dart';
 import 'package:readr_app/models/subscriptionDetail.dart';
+import 'package:readr_app/services/memberService.dart';
 
 List<String> _kProductIds = <String>[
   Environment().config.monthSubscriptionId,
@@ -26,21 +27,10 @@ class SubscriptionSelectServices implements SubscriptionSelectRepos{
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Map<String,String> getHeaders(String token) {
-    Map<String,String> headers = {
-      "Content-Type": "application/json",
-    };
-    if(token != null) {
-      headers.addAll({"Authorization": "Bearer $token"});
-    }
-
-    return headers;
-  }
-
   @override
   Future<SubscriptionDetail> fetchSubscriptionDetail() async{
-    String firebaseId = _auth.currentUser.uid;
-    String token = await _auth.currentUser.getIdToken();
+    String? firebaseId = _auth.currentUser?.uid;
+    String? token = await _auth.currentUser?.getIdToken();
 
     String query = """
     query fetchMemberSubscriptions(\$firebaseId: String!) {
@@ -71,7 +61,7 @@ class SubscriptionSelectServices implements SubscriptionSelectRepos{
     final jsonResponse = await _helper.postByUrl(
       Environment().config.memberApi,
       jsonEncode(graphqlBody.toJson()),
-      headers: getHeaders(token),
+      headers: MemberService.getHeaders(token),
     );
 
     SubscriptionDetail subscriptionDetail = SubscriptionDetail.fromJson(jsonResponse['data']);
@@ -115,10 +105,11 @@ class SubscriptionSelectServices implements SubscriptionSelectRepos{
   }
 
   Future<bool> _verifyPurchaseByAndroid(PurchaseDetails purchaseDetails) async{
-    String token = await _auth.currentUser.getIdToken();
+    String firebaseId = _auth.currentUser!.uid;
+    String token = await _auth.currentUser!.getIdToken();
 
     Map<String, String> bodyMap = {
-      "firebaseId": _auth.currentUser.uid,
+      "firebaseId": firebaseId,
       "packageName" : Platform.isAndroid
           ? Environment().config.androidPackageName 
           : Environment().config.iOSBundleId,
@@ -130,7 +121,7 @@ class SubscriptionSelectServices implements SubscriptionSelectRepos{
       final jsonResponse = await _helper.postByUrl(
         Environment().config.verifyAndroidPurchaseApi,
         jsonEncode(bodyMap),
-        headers: getHeaders(token),
+        headers: MemberService.getHeaders(token),
       );
 
       return jsonResponse.containsKey('status') && jsonResponse['status'] == 'success';
@@ -141,10 +132,11 @@ class SubscriptionSelectServices implements SubscriptionSelectRepos{
   }
 
   Future<bool> _verifyPurchaseByIos(PurchaseDetails purchaseDetails) async{
-    String token = await _auth.currentUser.getIdToken();
+    String firebaseId = _auth.currentUser!.uid;
+    String token = await _auth.currentUser!.getIdToken();
 
     Map<String, String> bodyMap = {
-      "firebaseId": _auth.currentUser.uid,
+      "firebaseId": firebaseId,
       "receiptData": purchaseDetails.verificationData.serverVerificationData
     };
 
@@ -152,7 +144,7 @@ class SubscriptionSelectServices implements SubscriptionSelectRepos{
       final jsonResponse = await _helper.postByUrl(
         Environment().config.verifyIosPurchaseApi,
         jsonEncode(bodyMap),
-        headers: getHeaders(token),
+        headers: MemberService.getHeaders(token),
       );
 
       return jsonResponse.containsKey('status') && jsonResponse['status'] == 'success';

@@ -4,12 +4,12 @@ import 'package:readr_app/models/paymentRecord.dart';
 class HintToOtherPlatform extends StatelessWidget {
   final PaymentType paymentType;
   HintToOtherPlatform({
-    @required this.paymentType,
+    required this.paymentType,
   });
   
   @override
   Widget build(BuildContext context) {
-    String hintText;
+    String hintText = '';
     if(paymentType == PaymentType.newebpay){
       hintText = '由於您先前於鏡週刊網頁版購買，如要變更方案，請至鏡週刊網頁操作';
     } else if(paymentType == PaymentType.google_play) {

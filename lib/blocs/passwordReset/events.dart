@@ -12,7 +12,7 @@ class ConfirmPasswordReset extends PasswordResetEvents {
   final String code;
   final String newPassword;
   ConfirmPasswordReset({
-    this.code, this.newPassword
+    required this.code, required this.newPassword
   });
 
   @override

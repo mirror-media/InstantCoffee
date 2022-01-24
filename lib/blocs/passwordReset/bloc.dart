@@ -6,7 +6,7 @@ import 'package:readr_app/services/emailSignInService.dart';
 class PasswordResetBloc extends Bloc<PasswordResetEvents, PasswordResetState> {
   final EmailSignInRepos emailSignInRepos;
 
-  PasswordResetBloc({this.emailSignInRepos}) : super(PasswordResetInitState());
+  PasswordResetBloc({required this.emailSignInRepos}) : super(PasswordResetInitState());
 
   @override
   Stream<PasswordResetState> mapEventToState(PasswordResetEvents event) async* {

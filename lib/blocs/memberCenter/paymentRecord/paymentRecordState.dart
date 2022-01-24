@@ -7,7 +7,7 @@ class PaymentRecordInitial extends PaymentRecordState {}
 
 class PaymentRecordLoaded extends PaymentRecordState {
   final List<PaymentRecord> paymentRecords;
-  PaymentRecordLoaded({this.paymentRecords});
+  PaymentRecordLoaded({required this.paymentRecords});
 }
 
 class PaymentRecordError extends PaymentRecordState {

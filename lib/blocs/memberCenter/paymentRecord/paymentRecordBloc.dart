@@ -13,8 +13,7 @@ part 'paymentRecordState.dart';
 
 class PaymentRecordBloc extends Bloc<PaymentRecordEvent, PaymentRecordState> {
   PaymentRecordBloc() : super(PaymentRecordInitial());
-  String _token;
-  FirebaseAuth _auth;
+  FirebaseAuth _auth= FirebaseAuth.instance;
   PaymentRecordService paymentRecordService = PaymentRecordService();
 
   @override
@@ -23,10 +22,9 @@ class PaymentRecordBloc extends Bloc<PaymentRecordEvent, PaymentRecordState> {
   ) async* {
     print(event.toString());
     try {
-      _auth = FirebaseAuth.instance;
-      _token = await _auth.currentUser.getIdToken();
+      String _token = await _auth.currentUser!.getIdToken();
       List<PaymentRecord> paymentRecords = await paymentRecordService.fetchPaymentRecord(
-        _auth.currentUser.uid, _token);
+        _auth.currentUser!.uid, _token);
       yield PaymentRecordLoaded(paymentRecords: paymentRecords);
     } on SocketException {
       yield PaymentRecordError(

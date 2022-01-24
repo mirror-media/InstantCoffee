@@ -14,8 +14,8 @@ class SignInWithEmailAndPassword extends EmailLoginEvents {
   final String email;
   final String password;
   SignInWithEmailAndPassword({
-    this.email, 
-    this.password,
+    required this.email, 
+    required this.password,
   });
 
   @override

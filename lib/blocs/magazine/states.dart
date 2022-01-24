@@ -8,12 +8,12 @@ class MagazineLoading extends MagazineState {}
 
 class MagazineLoadingMore extends MagazineState {
   final MagazineList magazineList;
-  MagazineLoadingMore({this.magazineList});
+  MagazineLoadingMore({required this.magazineList});
 }
 
 class MagazineLoaded extends MagazineState {
   final MagazineList magazineList;
-  MagazineLoaded({this.magazineList});
+  MagazineLoaded({required this.magazineList});
 }
 
 class MagazineError extends MagazineState {

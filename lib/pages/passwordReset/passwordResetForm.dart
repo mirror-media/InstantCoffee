@@ -12,8 +12,8 @@ class PasswordResetForm extends StatefulWidget {
   final String code;
   final PasswordResetState state;
   PasswordResetForm({
-    @required this.code,
-    @required this.state,
+    required this.code,
+    required this.state,
   });
 
   _PasswordResetFormState createState() => _PasswordResetFormState();

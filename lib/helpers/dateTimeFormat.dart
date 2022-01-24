@@ -20,13 +20,13 @@ class DateTimeFormat {
     return DateFormat(formatType).format(gmt8Date);
   }
 
-  static DateTime changeBirthdayStringToDatetime(String data,) {
-    try{
-      DateTime parsedDate = DateFormat('yyyy-MM-dd').parse(data);
-      return parsedDate;
-    } catch(e) {
+  static DateTime? changeBirthdayStringToDatetime(String? data) {
+    if(data == null) {
       return null;
     }
+
+    DateTime parsedDate = DateFormat('yyyy-MM-dd').parse(data);
+    return parsedDate;
   }
 
   static String changeDatetimeToIso8601String(DateTime data) {

@@ -12,17 +12,16 @@ import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
-import 'package:readr_app/models/categoryList.dart';
-import 'package:readr_app/models/onBoarding.dart';
+import 'package:readr_app/models/category.dart';
+import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/models/record.dart';
-import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/pages/tabContent/personal/memberSubscriptionTypeBlock.dart';
 import 'package:readr_app/widgets/unsubscriptionCategoryList.dart';
 
 class PersonalTabContent extends StatefulWidget {
   final ScrollController scrollController;
   PersonalTabContent({
-    @required this.scrollController,
+    required this.scrollController,
   });
 
   @override
@@ -30,16 +29,8 @@ class PersonalTabContent extends StatefulWidget {
 }
 
 class _PersonalTabContentState extends State<PersonalTabContent> {
-  GlobalKey _categoryKey;
-  PersonalPageBloc _personalPageBloc;
-
-  @override
-  void initState() {
-    _categoryKey = GlobalKey();
-    _personalPageBloc = PersonalPageBloc();
-
-    super.initState();
-  }
+  GlobalKey _categoryKey = GlobalKey();
+  PersonalPageBloc _personalPageBloc = PersonalPageBloc();
 
   @override
   void dispose() {
@@ -49,39 +40,36 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<ApiResponse<CategoryList>>(
+    return StreamBuilder<ApiResponse<List<Category>>>(
       stream: _personalPageBloc.categoryStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          switch (snapshot.data.status) {
+          switch (snapshot.data!.status) {
             case Status.LOADING:
               return Center(child: CircularProgressIndicator());
-              break;
 
             case Status.LOADINGMORE:
             case Status.COMPLETED:
-              CategoryList categoryList = snapshot.data.data;
-              WidgetsBinding.instance.addPostFrameCallback((_) async{
+              List<Category> categoryList = snapshot.data!.data!;
+              WidgetsBinding.instance!.addPostFrameCallback((_) async{
                 OnBoardingBloc onBoardingBloc = context.read<OnBoardingBloc>();
-                if(onBoardingBloc.state.status == OnBoardingStatus.secondPage) {
-                  OnBoarding onBoarding = await onBoardingBloc.getSizeAndPosition(_categoryKey);
-                  onBoarding.left = 0;
-                  onBoarding.height += 16;
+                if(onBoardingBloc.state.status == OnBoardingStatus.firstPage) {
+                  OnBoardingPosition onBoardingPosition = await onBoardingBloc.getSizeAndPosition(_categoryKey);
+                  onBoardingPosition.left = 0;
+                  onBoardingPosition.height += 16;
                   
                   onBoardingBloc.add(
                     GoToNextHint(
-                      onBoardingStatus: OnBoardingStatus.thirdPage,
-                      onBoarding: onBoarding,
+                      onBoardingStatus: OnBoardingStatus.secondPage,
+                      onBoardingPosition: onBoardingPosition,
                     )
                   );
                 }
               });
               return _buildPersonalTabContent(widget.scrollController, context, categoryList, _personalPageBloc);
-              break;
 
             case Status.ERROR:
               return Container();
-              break;
           }
         }
         return Container();
@@ -92,7 +80,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
   Widget _buildPersonalTabContent(
       ScrollController scrollController, 
       BuildContext context, 
-      CategoryList categoryList, 
+      List<Category> categoryList, 
       PersonalPageBloc personalPageBloc) {
     return CustomScrollView(
       controller: scrollController,
@@ -113,24 +101,23 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
             color: Colors.black,
           ),
         ),
-        StreamBuilder<ApiResponse<RecordList>>(
+        StreamBuilder<ApiResponse<List<Record>>>(
           stream: _personalPageBloc.personalSubscriptionStream,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              switch (snapshot.data.status) {
+              switch (snapshot.data!.status) {
                 case Status.LOADING:
                   return SliverToBoxAdapter(
                     child: Center(child: CircularProgressIndicator()),
                   );
-                  break;
 
                 case Status.LOADINGMORE:
                 case Status.COMPLETED:
-                  RecordList recordList = snapshot.data.data == null
+                  List<Record> recordList = snapshot.data!.data == null
                       ? _personalPageBloc.recordList
-                      : snapshot.data.data;
-                  Status status = snapshot.data.status;
-                  if(recordList == null || recordList.length == 0) {
+                      : snapshot.data!.data!;
+                  Status status = snapshot.data!.status;
+                  if(recordList.length == 0) {
                     return SliverList(
                       delegate: SliverChildListDelegate(
                         [
@@ -164,16 +151,14 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
 
                         return _buildSubscribtoinList(context, recordList, index, status);
                       },
-                      childCount: recordList == null ? 0 : recordList.length,
+                      childCount: recordList.length,
                     ),
                   );
-                  break;
 
                 case Status.ERROR:
                   return SliverToBoxAdapter(
                     child: Container(),
                   );
-                  break;
               }
             }
             return SliverToBoxAdapter(
@@ -186,7 +171,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
   }
 
   Widget _buildCategoryList(
-      BuildContext context, CategoryList categoryList, PersonalPageBloc personalPageBloc) {
+      BuildContext context, List<Category> categoryList, PersonalPageBloc personalPageBloc) {
     return Column(
       key: _categoryKey,
       children: [
@@ -211,7 +196,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
           ],
         ),
         SizedBox(height: 4),
-        categoryList.subscriptionCount == 0
+        Category.subscriptionCountInCategoryList(categoryList) == 0
         ? Container()
         : Container(
             height: 32,
@@ -263,14 +248,14 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
     );
   }
 
-  _showUnsubscriptionDialog(BuildContext context, CategoryList categoryList, PersonalPageBloc personalPageBloc){
+  _showUnsubscriptionDialog(BuildContext context, List<Category> categoryList, PersonalPageBloc personalPageBloc){
     var contentHeight = MediaQuery.of(context).size.height/3;
 
     showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        StreamController<CategoryList> controller = StreamController<CategoryList>();
+        StreamController<List<Category>> controller = StreamController<List<Category>>();
         return AlertDialog(
           title: Text('新增訂閱項目'),
           content: Container(
@@ -297,7 +282,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
   }
 
   _buildSubscribtoinList(
-      BuildContext context, RecordList recordList, int index, Status status) {
+      BuildContext context, List<Record> recordList, int index, Status status) {
     Record record = recordList[index];
     var width = MediaQuery.of(context).size.width;
     double imageSize = 25 * (width - 32) / 100;

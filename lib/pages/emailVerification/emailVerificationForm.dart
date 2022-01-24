@@ -12,7 +12,7 @@ import 'package:readr_app/pages/shared/sendingEmailButton.dart';
 class EmailVerificationForm extends StatefulWidget {
   final EmailVerificationState state;
   EmailVerificationForm({
-    @required this.state
+    required this.state
   });
 
   @override
@@ -27,7 +27,7 @@ class _EmailVerificationFormState extends State<EmailVerificationForm> {
 
   @override
   void initState() {
-    _emailEditingController.text = _auth.currentUser?.email;
+    _emailEditingController.text = _auth.currentUser?.email ?? '';
     _emailIsValid = _isEmailValid();
     _emailEditingController.addListener(
       () {
@@ -40,14 +40,14 @@ class _EmailVerificationFormState extends State<EmailVerificationForm> {
   }
 
   bool _isEmailValid() {
-    Pattern pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
+    String pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
     RegExp regex = RegExp(pattern);
     return _emailEditingController.text != null && regex.hasMatch(_emailEditingController.text);
   }
 
   bool _isEmailReadOnly() {
-    for(int i=0; i<_auth.currentUser.providerData.length; i++) {
-      if(_auth.currentUser.providerData[i].providerId == 'password') {
+    for(int i=0; i<_auth.currentUser!.providerData.length; i++) {
+      if(_auth.currentUser!.providerData[i].providerId == 'password') {
         return true;
       }
     }
@@ -166,10 +166,10 @@ class _EmailVerificationFormState extends State<EmailVerificationForm> {
     );
   }
 
-  String _validateEmail(String value) {
-    Pattern pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
+  String? _validateEmail(String? value) {
+    String pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
     RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value) || value == null)
+    if (value == null || !regex.hasMatch(value))
       return '請輸入有效的 Email 地址';
     else
       return null;

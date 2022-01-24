@@ -9,8 +9,8 @@ class DeleteMemberPage extends StatelessWidget {
   final String israfelId;
   final SubscriptionType subscriptionType;
   DeleteMemberPage({
-    @required this.israfelId,
-    @required this.subscriptionType,
+    required this.israfelId,
+    required this.subscriptionType,
   });
 
   bool _isPremiumOrVip() {

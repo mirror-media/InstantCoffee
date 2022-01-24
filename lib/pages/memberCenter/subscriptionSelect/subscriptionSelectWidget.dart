@@ -34,12 +34,12 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
     _fetchSubscriptionProducts();
   }
 
-  bool _isSubscribed(SubscriptionType subscriptionType) {
+  bool _isSubscribed(SubscriptionType? subscriptionType) {
     return subscriptionType == SubscriptionType.subscribe_monthly || 
         subscriptionType == SubscriptionType.subscribe_yearly;
   }
 
-  bool _isTheSamePlatfrom(PaymentType paymentType) {
+  bool _isTheSamePlatfrom(PaymentType? paymentType) {
     if(paymentType == null) {
       return true;
     }
@@ -75,8 +75,8 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
             print('SubscriptionProductsLoadedFail: ${error.message}');
             return Container();
           case SubscriptionSelectStatus.loaded:
-            SubscriptionDetail subscriptionDetail = state.subscriptionDetail;
-            List<ProductDetails> productDetailList = state.productDetailList;
+            SubscriptionDetail subscriptionDetail = state.subscriptionDetail!;
+            List<ProductDetails> productDetailList = state.productDetailList!;
 
             Widget body = HintToOtherPlatform(paymentType: subscriptionDetail.paymentType);
 
@@ -109,8 +109,8 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
               body: body
             ); 
           case SubscriptionSelectStatus.buying:
-            SubscriptionDetail subscriptionDetail = state.subscriptionDetail;
-            List<ProductDetails> productDetailList = state.productDetailList;
+            SubscriptionDetail subscriptionDetail = state.subscriptionDetail!;
+            List<ProductDetails> productDetailList = state.productDetailList!;
 
             return Scaffold(
               appBar: _buildBar(
@@ -138,7 +138,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
               ),
             );
           case SubscriptionSelectStatus.buyingSuccess: 
-            String storySlug = state.storySlug;
+            String? storySlug = state.storySlug;
 
             return Scaffold(
               appBar: _buildBar(context),
@@ -160,9 +160,9 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
     );
   }
 
-  Widget _buildBar(
+  PreferredSizeWidget _buildBar(
     BuildContext context, 
-    {SubscriptionType subscriptionType}
+    {SubscriptionType? subscriptionType}
   ) {
     String titleText = '';
     if(subscriptionType == SubscriptionType.subscribe_one_time || subscriptionType == SubscriptionType.none){
@@ -298,8 +298,8 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                       ),
                     ),
                     onPressed: () async{
-                      await _auth.currentUser.reload();
-                      if(_auth.currentUser.emailVerified) {
+                      await _auth.currentUser!.reload();
+                      if(_auth.currentUser!.emailVerified) {
                         PurchaseParam purchaseParam = PurchaseParam(
                             productDetails: productDetailList[index],
                         );

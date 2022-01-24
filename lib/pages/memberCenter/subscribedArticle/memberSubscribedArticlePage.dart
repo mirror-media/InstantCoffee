@@ -72,7 +72,7 @@ class _MemberSubscribedArticlePageState extends State<MemberSubscribedArticlePag
     );
   }
 
-  Widget _buildBar(BuildContext context) {
+  PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),
@@ -99,7 +99,7 @@ class _MemberSubscribedArticlePageState extends State<MemberSubscribedArticlePag
              CachedNetworkImage(
                 height: imageSize,
                 width: imageSize,
-                imageUrl: subscribedArticle.photoUrl,
+                imageUrl: subscribedArticle.photoUrl!,
                 placeholder: (context, url) => Container(
                  height: imageSize,
                   width: imageSize,
@@ -122,7 +122,7 @@ class _MemberSubscribedArticlePageState extends State<MemberSubscribedArticlePag
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      subscribedArticle.title,
+                      subscribedArticle.title!,
                       style: TextStyle(fontSize: 17),
                     ),
                     SizedBox(height: 4.0),
@@ -140,7 +140,7 @@ class _MemberSubscribedArticlePageState extends State<MemberSubscribedArticlePag
             ],
           ),
         ),
-        onTap: () => RouteGenerator.navigateToStory(subscribedArticle.slug),
+        onTap: () => RouteGenerator.navigateToStory(subscribedArticle.slug!),
       );
   }
 }

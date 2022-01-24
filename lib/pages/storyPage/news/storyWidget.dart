@@ -11,13 +11,12 @@ import 'package:readr_app/helpers/paragraphFormat.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/paragraph.dart';
-import 'package:readr_app/models/paragrpahList.dart';
 import 'package:readr_app/models/people.dart';
-import 'package:readr_app/models/peopleList.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/story.dart';
+import 'package:readr_app/models/storyAd.dart';
 import 'package:readr_app/models/storyRes.dart';
-import 'package:readr_app/models/tagList.dart';
+import 'package:readr_app/models/tag.dart';
 import 'package:readr_app/pages/storyPage/news/shared/downloadMagazineWidget.dart';
 import 'package:readr_app/pages/storyPage/news/shared/joinMemberBlock.dart';
 import 'package:readr_app/widgets/fadingEffectPainter.dart';
@@ -32,7 +31,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 class StoryWidget extends StatefulWidget {
   final bool isMemberCheck;
   const StoryWidget(
-      {key, @required this.isMemberCheck}) 
+      {key, required this.isMemberCheck}) 
       : super(key: key);
 
   @override
@@ -42,7 +41,7 @@ class StoryWidget extends StatefulWidget {
 }
 
 class _StoryWidget extends State<StoryWidget> {
-  StoryBloc _storyBloc;
+  late StoryBloc _storyBloc;
 
   @override
   void initState() {
@@ -57,14 +56,14 @@ class _StoryWidget extends State<StoryWidget> {
     );
   }
 
-  Color _getSectionColor(Story story) {
-    String sectionName;
+  Color _getSectionColor(Story? story) {
+    String? sectionName;
     if (story != null) {
       sectionName = story.getSectionName();
     }
 
-    if (sectionColorMaps.containsKey(sectionName)) {
-      return Color(sectionColorMaps[sectionName]);
+    if (sectionName != null && sectionColorMaps.containsKey(sectionName)) {
+      return Color(sectionColorMaps[sectionName]!);
     }
 
     return appColor;
@@ -73,7 +72,7 @@ class _StoryWidget extends State<StoryWidget> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = width / 16 * 9;
-return BlocBuilder<StoryBloc, StoryState>(
+    return BlocBuilder<StoryBloc, StoryState>(
       builder: (BuildContext context, StoryState state) {
         switch (state.status) {
           case StoryStatus.error:
@@ -81,7 +80,7 @@ return BlocBuilder<StoryBloc, StoryState>(
             print('StoryError: ${error.message}');
             return Container();
           case StoryStatus.loaded:
-            StoryRes storyRes = state.storyRes;
+            StoryRes storyRes = state.storyRes!;
 
             return _buildStoryWidget(storyRes, width, height);
           default:
@@ -103,8 +102,10 @@ return BlocBuilder<StoryBloc, StoryState>(
   ) {
     bool isMember = storyRes.isMember;
     Story story = storyRes.story;
+    StoryAd storyAd = story.storyAd!;
     bool isTruncated = story.isTruncated;
-    bool isAdsActivated = isStoryWidgetAdsActivated && (isTruncated || !story.categories.isMemberOnly());
+    bool isAdsActivated = isStoryWidgetAdsActivated && 
+        (isTruncated || !Category.isMemberOnlyInCategoryList(story.categories));
     Color sectionColor = _getSectionColor(story);
 
     return Column(
@@ -115,7 +116,7 @@ return BlocBuilder<StoryBloc, StoryState>(
             ...[
               SizedBox(height: 16),
               MMAdBanner(
-                adUnitId: story.storyAd.hDUnitId,
+                adUnitId: storyAd.hDUnitId,
                 adSize: AdSize.mediumRectangle,
                 isKeepAlive: true,
               ),
@@ -139,7 +140,7 @@ return BlocBuilder<StoryBloc, StoryState>(
             ],
             if(isAdsActivated)
               MMAdBanner(
-                adUnitId: story.storyAd.aT3UnitId,
+                adUnitId: storyAd.aT3UnitId,
                 adSize: AdSize.mediumRectangle,
                 isKeepAlive: true,
               ),
@@ -164,7 +165,7 @@ return BlocBuilder<StoryBloc, StoryState>(
             ...[
               SizedBox(height: 16),
               MMAdBanner(
-                adUnitId: story.storyAd.e1UnitId,
+                adUnitId: storyAd.e1UnitId,
                 adSize: AdSize.mediumRectangle,
                 isKeepAlive: true,
               ),
@@ -175,7 +176,7 @@ return BlocBuilder<StoryBloc, StoryState>(
             if(isAdsActivated)
             ...[
               MMAdBanner(
-                adUnitId: story.storyAd.fTUnitId,
+                adUnitId: storyAd.fTUnitId,
                 adSize: AdSize.mediumRectangle,
                 isKeepAlive: true,
               ),
@@ -190,7 +191,7 @@ return BlocBuilder<StoryBloc, StoryState>(
           ),
         if(isAdsActivated && !_isWineCategory(story.categories))
           MMAdBanner(
-            adUnitId: story.storyAd.stUnitId,
+            adUnitId: storyAd.stUnitId,
             adSize: AdSize.banner,
             isKeepAlive: true,
           ),
@@ -203,10 +204,10 @@ return BlocBuilder<StoryBloc, StoryState>(
       children: [
         if (story.heroVideo != null)
           MMVideoPlayer(
-            videourl: story.heroVideo,
+            videourl: story.heroVideo!,
             aspectRatio: 16 / 9,
           ),
-        if (story.heroImage != null && story.heroVideo == null)
+        if (story.heroVideo == null)
           InkWell(
             onTap: (){
               if(story.heroImage != Environment().config.mirrorMediaNotImageUrl
@@ -237,7 +238,7 @@ return BlocBuilder<StoryBloc, StoryState>(
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
             child: Text(
-              story.heroCaption,
+              story.heroCaption!,
               style: TextStyle(fontSize: 16),
             ),
           ),
@@ -269,10 +270,6 @@ return BlocBuilder<StoryBloc, StoryState>(
   }
 
   bool _isWineCategory(List<Category> categories) {
-    if(categories == null) {
-      return false;
-    }
-
     for(Category category in categories) {
       if(category.id == Environment().config.wineSectionKey ||
       category.id == Environment().config.wine1SectionKey) {
@@ -283,10 +280,7 @@ return BlocBuilder<StoryBloc, StoryState>(
   }
 
   Widget _buildCategory(BuildContext context, Story story, Color sectionColor) {
-    List<Category> categories = List<Category>();
-    if(story.categories != null) {
-      categories = story.categories;
-    }
+    List<Category> categories= story.categories;
 
     if(story.isAdvertised) {
       return Container();
@@ -321,8 +315,8 @@ return BlocBuilder<StoryBloc, StoryState>(
     );
   }
 
-  List<Widget> _addAuthorItems(PeopleList peopleList) {
-    List<Widget> authorItems = List();
+  List<Widget> _addAuthorItems(List<People> peopleList) {
+    List<Widget> authorItems = [];
 
     for (People author in peopleList) {
       authorItems.add(Padding(
@@ -336,7 +330,7 @@ return BlocBuilder<StoryBloc, StoryState>(
   }
 
   Widget _buildAuthors(BuildContext context, Story story) {
-    List<Widget> authorItems = List();
+    List<Widget> authorItems = [];
 
     // VerticalDivider is broken? so use Container
     var myVerticalDivider = Padding(
@@ -401,7 +395,7 @@ return BlocBuilder<StoryBloc, StoryState>(
     if (story.extendByline != '' && story.extendByline != null) {
       authorItems.add(Text("文"));
       authorItems.add(myVerticalDivider);
-      authorItems.add(Text(story.extendByline));
+      authorItems.add(Text(story.extendByline!));
     }
 
     return Padding(
@@ -414,17 +408,17 @@ return BlocBuilder<StoryBloc, StoryState>(
   }
 
   Widget _buildBrief(Story story, Color sectionColor) {
-    ParagraphList articles = story.brief;
+    List<Paragraph> articles = story.brief;
 
     if (articles.length > 0) {
       ParagraphFormat paragraphFormat = ParagraphFormat();
-      List<Widget> articleWidgets = List();
+      List<Widget> articleWidgets = [];
       for (int i = 0; i < articles.length; i++) {
         if (articles[i].type == 'unstyled') {
           if (articles[i].contents.length > 0) {
             articleWidgets.add(
               paragraphFormat.parseTheTextToHtmlWidget(
-                  articles[i].contents[0].data, Colors.white),
+                  articles[i].contents[0].data!, color: Colors.white),
             );
           }
 
@@ -473,8 +467,7 @@ return BlocBuilder<StoryBloc, StoryState>(
           itemCount: story.apiDatas.length,
           itemBuilder: (context, index) {
             Paragraph paragraph = story.apiDatas[index];
-            if (paragraph.contents != null && 
-                paragraph.contents.length > 0 &&
+            if (paragraph.contents.length > 0 &&
                 paragraph.contents[0].data != '') {
               if(unStyleParagraphCount == storyAT1AdIndex) {
                 aT1IsActivated = true;
@@ -501,7 +494,7 @@ return BlocBuilder<StoryBloc, StoryState>(
                     ...[
                       SizedBox(height: 16),
                       MMAdBanner(
-                        adUnitId: story.storyAd.aT1UnitId,
+                        adUnitId: story.storyAd!.aT1UnitId,
                         adSize: AdSize.mediumRectangle,
                         isKeepAlive: true,
                       ),
@@ -510,7 +503,7 @@ return BlocBuilder<StoryBloc, StoryState>(
                     ...[
                       SizedBox(height: 16),
                       MMAdBanner(
-                        adUnitId: story.storyAd.aT2UnitId,
+                        adUnitId: story.storyAd!.aT2UnitId,
                         adSize: AdSize.mediumRectangle,
                         isKeepAlive: true,
                       ),
@@ -534,8 +527,8 @@ return BlocBuilder<StoryBloc, StoryState>(
     );
   }
 
-  Widget _buildTagWidget(BuildContext context, TagList tags) {
-    return tags == null || tags.length == 0
+  Widget _buildTagWidget(BuildContext context, List<Tag> tags) {
+    return tags.length == 0
     ? Container()
     : Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -563,35 +556,31 @@ return BlocBuilder<StoryBloc, StoryState>(
       );
   }
 
-  Widget _buildTags(BuildContext context, TagList tags) {
-    if (tags == null) {
-      return Container();
-    } else {
-      List<Widget> tagWidgets = List();
-      for (int i = 0; i < tags.length; i++) {
-        tagWidgets.add(
-          GestureDetector(
-            onTap: () => RouteGenerator.navigateToTagPage(tags[i]),
-            child: Text(
-              '#' + tags[i].name,
-              style: TextStyle(fontSize: 18, color: appColor),
-            ),
-          )
-        );
-
-        if (i != tags.length - 1) {
-          tagWidgets.add(
-            Text(
-              '、',
-              style: TextStyle(fontSize: 18, color: appColor),
-            ),
-          );
-        }
-      }
-      return Wrap(
-        children: tagWidgets,
+  Widget _buildTags(BuildContext context, List<Tag> tags) {
+    List<Widget> tagWidgets = [];
+    for (int i = 0; i < tags.length; i++) {
+      tagWidgets.add(
+        GestureDetector(
+          onTap: () => RouteGenerator.navigateToTagPage(tags[i]),
+          child: Text(
+            '#' + tags[i].name,
+            style: TextStyle(fontSize: 18, color: appColor),
+          ),
+        )
       );
+
+      if (i != tags.length - 1) {
+        tagWidgets.add(
+          Text(
+            '、',
+            style: TextStyle(fontSize: 18, color: appColor),
+          ),
+        );
+      }
     }
+    return Wrap(
+      children: tagWidgets,
+    );
   }
 
   _buildUpdateDateWidget(Story story) {
@@ -629,7 +618,7 @@ return BlocBuilder<StoryBloc, StoryState>(
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
-      child: paragraphFormat.parseTheTextToHtmlWidget(moreContentHtml, null, fontSize: 18),
+      child: paragraphFormat.parseTheTextToHtmlWidget(moreContentHtml, fontSize: 18),
     );
   }
 
@@ -647,7 +636,7 @@ return BlocBuilder<StoryBloc, StoryState>(
   }
 
   Widget _buildRelatedWidget(BuildContext context, List<Record> relateds) {
-    List<Widget> relatedList = List();
+    List<Widget> relatedList = [];
     // VerticalDivider is broken? so use Container
     var myVerticalDivider = Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),

@@ -8,7 +8,7 @@ import 'package:readr_app/services/loginService.dart';
 
 class LoginPage extends StatelessWidget {
   final String routeName;
-  final Object routeArguments;
+  final dynamic routeArguments;
   LoginPage({
     this.routeName = RouteGenerator.login,
     this.routeArguments,
@@ -30,7 +30,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _buildBar(BuildContext context) {
+  PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),

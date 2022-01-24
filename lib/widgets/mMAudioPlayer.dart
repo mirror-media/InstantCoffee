@@ -7,12 +7,12 @@ class MMAudioPlayer extends StatefulWidget {
   final String audioUrl;
 
   /// The title of audio
-  final String title;
+  final String? title;
 
   /// The description of audio
-  final String description;
+  final String? description;
   MMAudioPlayer({
-    @required this.audioUrl,
+    required this.audioUrl,
     this.title,
     this.description,
   });
@@ -22,8 +22,8 @@ class MMAudioPlayer extends StatefulWidget {
 }
 
 class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveClientMixin {
-  Color _audioColor = Colors.orange[800];
-  AudioPlayer _audioPlayer;
+  Color _audioColor = Colors.orange.shade800;
+  AudioPlayer _audioPlayer = AudioPlayer();
   bool get _checkIsPlaying => !(_audioPlayer.state == PlayerState.COMPLETED ||
       _audioPlayer.state == PlayerState.STOPPED ||
       _audioPlayer.state == PlayerState.PAUSED);
@@ -39,7 +39,6 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveCl
   }
 
   void _initAudioPlayer() async {
-    _audioPlayer = AudioPlayer();
     await _audioPlayer.setUrl(widget.audioUrl);
   }
 
@@ -100,7 +99,7 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveCl
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0, top: 12, bottom: 12),
                   child: Text(
-                    widget.title,
+                    widget.title!,
                     style: TextStyle(
                       fontSize: 16,
                       // height: 1.8,
@@ -139,9 +138,9 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveCl
                     builder: (context, snapshot) {
                       double sliderPosition = snapshot.data == null
                           ? 0.0
-                          : snapshot.data.inMilliseconds.toDouble();
+                          : snapshot.data!.inMilliseconds.toDouble();
                       String position =
-                          DateTimeFormat.stringDuration(snapshot.data);
+                          DateTimeFormat.stringDuration(snapshot.data!);
                       String duration = DateTimeFormat.stringDuration(
                           Duration(milliseconds: _duration));
                       return Column(
@@ -154,10 +153,7 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveCl
                             activeColor: _audioColor,
                             inactiveColor: Colors.black,
                             onChanged: (v) {
-                              if (_audioPlayer.state != null) {
-                                _audioPlayer
-                                    .seek(Duration(milliseconds: v.toInt()));
-                              }
+                              _audioPlayer.seek(Duration(milliseconds: v.toInt()));
                             },
                           ),
                           Padding(

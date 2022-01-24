@@ -5,7 +5,7 @@ import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSele
 import 'package:readr_app/services/subscriptionSelectService.dart';
 
 class SubscriptionSelectPage extends StatefulWidget {
-  final String storySlug;
+  final String? storySlug;
   SubscriptionSelectPage(
     {this.storySlug}
   );
@@ -15,7 +15,7 @@ class SubscriptionSelectPage extends StatefulWidget {
 }
 
 class _SubscriptionSelectPageState extends State<SubscriptionSelectPage> {
-  SubscriptionSelectBloc _subscriptionSelectBloc;
+  late SubscriptionSelectBloc _subscriptionSelectBloc;
 
   @override
   void initState() {

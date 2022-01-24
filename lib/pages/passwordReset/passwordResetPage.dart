@@ -8,7 +8,7 @@ import 'package:readr_app/services/emailSignInService.dart';
 class PasswordResetPage extends StatelessWidget {
   final String code;
   PasswordResetPage({
-    @required this.code,
+    required this.code,
   });
 
   @override
@@ -24,7 +24,7 @@ class PasswordResetPage extends StatelessWidget {
     );
   }
 
-  Widget _buildBar(BuildContext context) {
+  PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),

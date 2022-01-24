@@ -5,9 +5,9 @@ class OnBoardingHint {
   double top;
 
   OnBoardingHint({
-    this.page,
-    this.hintText,
-    this.left,
-    this.top,
+    required this.page,
+    required this.hintText,
+    required this.left,
+    required this.top,
   });
 }

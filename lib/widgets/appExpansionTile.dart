@@ -4,40 +4,38 @@ import 'package:flutter/material.dart';
 const Duration _kExpand = const Duration(milliseconds: 200);
 
 class AppExpansionTile extends StatefulWidget {
-    const AppExpansionTile({
-        Key key,
-        this.leading,
-        @required this.title,
-        this.backgroundColor,
-        this.onExpansionChanged,
-        this.children: const <Widget>[],
-        this.trailing,
-        this.initiallyExpanded: false,
-    })
-        : assert(initiallyExpanded != null),
-            super(key: key);
+  const AppExpansionTile({
+      Key? key,
+      this.leading,
+      required this.title,
+      this.backgroundColor,
+      required this.onExpansionChanged,
+      this.children: const <Widget>[],
+      this.trailing,
+      this.initiallyExpanded: false,
+  }) : super(key: key);
 
-    final Widget leading;
-    final Widget title;
-    final ValueChanged<bool> onExpansionChanged;
-    final List<Widget> children;
-    final Color backgroundColor;
-    final Widget trailing;
-    final bool initiallyExpanded;
+  final Widget? leading;
+  final Widget title;
+  final ValueChanged<bool> onExpansionChanged;
+  final List<Widget> children;
+  final Color? backgroundColor;
+  final Widget? trailing;
+  final bool initiallyExpanded;
 
-    @override
-    AppExpansionTileState createState() => new AppExpansionTileState();
+  @override
+  AppExpansionTileState createState() => new AppExpansionTileState();
 }
 
 class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerProviderStateMixin {
-    AnimationController _controller;
-    CurvedAnimation _easeOutAnimation;
-    CurvedAnimation _easeInAnimation;
-    ColorTween _borderColor;
-    ColorTween _headerColor;
-    ColorTween _iconColor;
-    ColorTween _backgroundColor;
-    Animation<double> _iconTurns;
+    late AnimationController _controller;
+    late CurvedAnimation _easeOutAnimation;
+    late CurvedAnimation _easeInAnimation;
+    late ColorTween _borderColor;
+    late ColorTween _headerColor;
+    late ColorTween _iconColor;
+    late ColorTween _backgroundColor;
+    late Animation<double> _iconTurns;
 
     bool _isExpanded = false;
 
@@ -96,9 +94,9 @@ class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerPro
         }
     }
 
-    Widget _buildChildren(BuildContext context, Widget child) {
+    Widget _buildChildren(BuildContext context, Widget? child) {
         final Color borderSideColor = _borderColor.evaluate(_easeOutAnimation) ?? Colors.transparent;
-        final Color titleColor = _headerColor.evaluate(_easeInAnimation);
+        final Color titleColor = _headerColor.evaluate(_easeInAnimation)!;
 
         return new Container(
             decoration: new BoxDecoration(
@@ -121,10 +119,10 @@ class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerPro
                                     .of(context)
                                     .textTheme
                                     .subtitle1
-                                    .copyWith(color: titleColor),
+                                    !.copyWith(color: titleColor),
                                 child: widget.title,
                             ),
-                            trailing: widget.trailing ?? new RotationTransition(
+                            trailing: widget.trailing ?? RotationTransition(
                                 turns: _iconTurns,
                                 child: const Icon(Icons.expand_more),
                             ),
@@ -146,7 +144,7 @@ class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerPro
         final ThemeData theme = Theme.of(context);
         _borderColor.end = theme.dividerColor;
         _headerColor
-            ..begin = theme.textTheme.subtitle1.color
+            ..begin = theme.textTheme.subtitle1!.color
             ..end = theme.accentColor;
         _iconColor
             ..begin = theme.unselectedWidgetColor

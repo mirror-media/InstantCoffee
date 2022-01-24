@@ -16,26 +16,21 @@ enum MemberStateType {
 }
 
 class MemberIdAndSubscriptionType {
-  final String israfelId;
-  final MemberStateType state;
-  SubscriptionType subscriptionType;
+  final String? israfelId;
+  final MemberStateType? state;
+  SubscriptionType? subscriptionType;
   final bool isNewebpay;
 
   MemberIdAndSubscriptionType({
     this.israfelId,
     this.state,
     this.subscriptionType,
-    this.isNewebpay,
+    this.isNewebpay = false,
   });
 
-  factory MemberIdAndSubscriptionType.fromJson(Map<String, dynamic> json) {
+  factory MemberIdAndSubscriptionType.fromJson(Map<String, dynamic>? json) {
     if(json == null) {
-      return MemberIdAndSubscriptionType(
-        israfelId: null,
-        state: null,
-        subscriptionType: SubscriptionType.none,
-        isNewebpay: false,
-      );
+      return MemberIdAndSubscriptionType();
     }
 
     String type = json['type'];

@@ -12,12 +12,11 @@ import 'package:readr_app/helpers/paragraphFormat.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/paragraph.dart';
-import 'package:readr_app/models/paragrpahList.dart';
-import 'package:readr_app/models/peopleList.dart';
+import 'package:readr_app/models/people.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/story.dart';
 import 'package:readr_app/models/storyRes.dart';
-import 'package:readr_app/models/tagList.dart';
+import 'package:readr_app/models/tag.dart';
 import 'package:readr_app/pages/storyPage/news/shared/downloadMagazineWidget.dart';
 import 'package:readr_app/pages/storyPage/news/shared/joinMemberBlock.dart';
 import 'package:readr_app/widgets/fadingEffectPainter.dart';
@@ -27,7 +26,7 @@ class MemberStoryWidget extends StatefulWidget{
   final bool isMemberCheck;
   final String slug;
   const MemberStoryWidget(
-      {key, @required this.slug, @required this.isMemberCheck}) 
+      {key, required this.slug, required this.isMemberCheck}) 
       : super(key: key);
     
   @override
@@ -57,7 +56,7 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
             print('StoryError: ${error.message}');
             return Container();
           case StoryStatus.loaded:
-            StoryRes storyRes = state.storyRes;
+            StoryRes storyRes = state.storyRes!;
 
             if(_isWineCategory(storyRes.story.categories)){
               return Column(
@@ -170,7 +169,7 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
         style: TextStyle(fontSize: 16, color: appColor),
       )
     );
-    if(categories != null && categories.isNotEmpty){
+    if(categories.isNotEmpty){
       categoriesName.add(
           const SizedBox(
             width: 8,
@@ -229,10 +228,10 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
       children: [
         if (story.heroVideo != null)
           MMVideoPlayer(
-            videourl: story.heroVideo,
+            videourl: story.heroVideo!,
             aspectRatio: 16 / 9,
           ),
-        if (story.heroImage != null && story.heroVideo == null)
+        if (story.heroVideo == null)
           InkWell(
             onTap: (){
               if(story.heroImage != Environment().config.mirrorMediaNotImageUrl
@@ -269,7 +268,7 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
             child: Text(
-              story.heroCaption,
+              story.heroCaption!,
               textAlign: TextAlign.start,
               style: const TextStyle(fontSize: 14, color: Colors.black54),
             ),
@@ -352,7 +351,7 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
               ),
             ),
             Text(
-              story.extendByline, 
+              story.extendByline!, 
               style: const TextStyle(
                 fontSize: 15,
                 color: Colors.black87,
@@ -369,7 +368,7 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
     );
   }
 
-  Widget _addAuthorItems(String typeText, PeopleList peopleList) {
+  Widget _addAuthorItems(String typeText, List<People> peopleList) {
     List<Widget> authorItems = [];
     List<Widget> rowItems = [];
 
@@ -415,8 +414,8 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
     return Row(children: rowItems,);
   }
 
-  Widget _buildTagWidget(TagList tags) {
-    if (tags == null || tags.isEmpty) {
+  Widget _buildTagWidget(List<Tag> tags) {
+    if (tags.isEmpty) {
       return Container();
     } else {
       List<Widget> tagWidgets = [];
@@ -450,7 +449,7 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
     }
   }
 
-  Widget _buildBrief(ParagraphList articles) {
+  Widget _buildBrief(List<Paragraph> articles) {
 
     if (articles.length > 0) {
       ParagraphFormat paragraphFormat = ParagraphFormat();
@@ -460,7 +459,7 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
           if (articles[i].contents.length > 0) {
             articleWidgets.add(
               paragraphFormat.parseTheTextToHtmlWidget(
-                  articles[i].contents[0].data, Colors.white, fontSize: 17),
+                  articles[i].contents[0].data!, color: Colors.white, fontSize: 17),
             );
           }
 
@@ -499,8 +498,7 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
       itemCount: story.apiDatas.length,
       itemBuilder: (context, index) {
         Paragraph paragraph = story.apiDatas[index];
-        if (paragraph.contents != null && 
-            paragraph.contents.length > 0 &&
+        if (paragraph.contents.length > 0 &&
             paragraph.contents[0].data != '') {
 
             return CustomPaint(
@@ -550,7 +548,7 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
-      child: paragraphFormat.parseTheTextToHtmlWidget(moreContentHtml, Colors.black54, fontSize: 13),
+      child: paragraphFormat.parseTheTextToHtmlWidget(moreContentHtml, color: Colors.black54, fontSize: 13),
     );
   }
 
@@ -637,10 +635,6 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
   }
 
   bool _isWineCategory(List<Category> categories) {
-    if(categories == null) {
-      return false;
-    }
-
     for(Category category in categories) {
       if(category.id == Environment().config.wineSectionKey ||
       category.id == Environment().config.wine1SectionKey) {

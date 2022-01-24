@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 class AppUpdatePage extends StatelessWidget {
   final AppUpgradeHelper appUpgradeHelper;
   AppUpdatePage({
-    @required this.appUpgradeHelper,
+    required this.appUpgradeHelper,
   });
 
   @override

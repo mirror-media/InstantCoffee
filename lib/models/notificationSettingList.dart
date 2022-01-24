@@ -8,10 +8,6 @@ class NotificationSettingList extends CustomizedList<NotificationSetting> {
   NotificationSettingList();
 
   factory NotificationSettingList.fromJson(List<dynamic> parsedJson) {
-    if (parsedJson == null) {
-      return null;
-    }
-
     NotificationSettingList notificationSettings = NotificationSettingList();
     List parseList =
         parsedJson.map((i) => NotificationSetting.fromJson(i)).toList();
@@ -22,19 +18,18 @@ class NotificationSettingList extends CustomizedList<NotificationSetting> {
     return notificationSettings;
   }
 
-  factory NotificationSettingList.parseResponseBody(String body) {
-    final jsonData = json.decode(body);
+  static NotificationSettingList? parseResponseBody(String? body) {
+    if (body == null) {
+      return null;
+    }
 
+    final jsonData = json.decode(body);
     return NotificationSettingList.fromJson(jsonData);
   }
 
   // your custom methods
   List<Map<dynamic, dynamic>> toJson() {
-    List<Map> notificationSettingMaps = List();
-    if (l == null) {
-      return null;
-    }
-
+    List<Map> notificationSettingMaps = [];
     for (NotificationSetting notificationSetting in l) {
       notificationSettingMaps.add(notificationSetting.toJson());
     }
@@ -42,18 +37,14 @@ class NotificationSettingList extends CustomizedList<NotificationSetting> {
   }
 
   String toJsonString() {
-    List<Map> notificationSettingMaps = List();
-    if (l == null) {
-      return null;
-    }
-
+    List<Map> notificationSettingMaps = [];
     for (NotificationSetting notificationSetting in l) {
       notificationSettingMaps.add(notificationSetting.toJson());
     }
     return json.encode(notificationSettingMaps);
   }
 
-  NotificationSetting getById(String id) {
+  NotificationSetting? getById(String id) {
     try{
       return l.firstWhere((element) => element.id == id);
     } catch(e) {
