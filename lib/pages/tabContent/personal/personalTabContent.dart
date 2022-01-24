@@ -268,7 +268,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
             ),
           ),
           actions: [
-            FlatButton(
+            TextButton(
               child: Text("完成", style: TextStyle(color: Colors.black),),
               onPressed:(){
                 controller.close();
