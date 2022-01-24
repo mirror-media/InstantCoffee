@@ -278,7 +278,7 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
   }
 
   Widget _buildTimeTile(String title, String time){
-    if(time == null || time == '' || time == ' '){
+    if(time == '' || time == ' '){
       return Container();
     }
     DateTimeFormat dateTimeFormat = DateTimeFormat();

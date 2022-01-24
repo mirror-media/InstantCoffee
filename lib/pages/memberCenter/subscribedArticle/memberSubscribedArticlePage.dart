@@ -36,7 +36,7 @@ class _MemberSubscribedArticlePageState extends State<MemberSubscribedArticlePag
         builder: (context, state){
           if(state is SubscribedArticlesLoaded){
             subscribedArticles = state.subscribedArticles;
-            if(subscribedArticles == null || subscribedArticles.length == 0){
+            if(subscribedArticles.length == 0){
               return Center(child: Text('無訂閱文章'));
             }
             else{

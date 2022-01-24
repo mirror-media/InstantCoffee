@@ -88,9 +88,7 @@ class AppExpansionTileState extends State<AppExpansionTile> with SingleTickerPro
                     });
                 PageStorage.of(context)?.writeState(context, _isExpanded);
             });
-            if (widget.onExpansionChanged != null) {
-                widget.onExpansionChanged(_isExpanded);
-            }
+            widget.onExpansionChanged(_isExpanded);
         }
     }
 

@@ -42,7 +42,7 @@ class _EmailVerificationFormState extends State<EmailVerificationForm> {
   bool _isEmailValid() {
     String pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
     RegExp regex = RegExp(pattern);
-    return _emailEditingController.text != null && regex.hasMatch(_emailEditingController.text);
+    return regex.hasMatch(_emailEditingController.text);
   }
 
   bool _isEmailReadOnly() {

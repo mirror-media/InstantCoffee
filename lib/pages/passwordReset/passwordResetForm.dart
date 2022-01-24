@@ -42,7 +42,7 @@ class _PasswordResetFormState extends State<PasswordResetForm> {
   }
 
   bool _isPasswordValid() {
-    return _passwordEditingController.text != null && _passwordEditingController.text.length >= 6;
+    return _passwordEditingController.text.length >= 6;
   }
 
   @override

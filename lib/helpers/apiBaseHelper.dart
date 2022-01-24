@@ -41,8 +41,8 @@ class ApiBaseHelper {
   ) async {
     MMCacheManager mMCacheManager = MMCacheManager();
     final cacheFile = await mMCacheManager.getFileFromCache(url);
-    if ( cacheFile == null ||
-      cacheFile != null && cacheFile.validTill.isBefore(DateTime.now())
+    if ( cacheFile == null || 
+      cacheFile.validTill.isBefore(DateTime.now())
     ) {
       Uri uri = Uri.parse(url);
       var responseJson;
@@ -63,7 +63,7 @@ class ApiBaseHelper {
     }
 
     var file = cacheFile.file;
-    if (file != null && await file.exists()) {
+    if (await file.exists()) {
       var mimeStr = lookupMimeType(file.path);
       String res;
       if(mimeStr == 'application/json') {

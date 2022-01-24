@@ -60,7 +60,7 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
           return StateErrorWidget(() => _fetchPaymentRecords());
         }
         else if(state is PaymentRecordLoaded){
-          if(state.paymentRecords == null || state.paymentRecords.length == 0){
+          if(state.paymentRecords.length == 0){
             return _noRecordWidget();
           }
           paymentRecordList = state.paymentRecords;
