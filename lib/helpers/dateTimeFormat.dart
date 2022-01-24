@@ -33,7 +33,7 @@ class DateTimeFormat {
     return data.toIso8601String().split('T')[0];
   }
   /// return string of duration in hh:mm:ss form(has pending 0)
-  static String stringDuration(Duration duration) {
+  static String stringDuration(Duration? duration) {
     if (duration == null) {
       return "00:00";
     }
