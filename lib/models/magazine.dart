@@ -33,7 +33,8 @@ class Magazine {
     String pdfUrl = '';
     if (json.containsKey('magazine') &&
         json['magazine'] != null &&
-        json['magazine'].containsKey('url')) {
+        json['magazine'].containsKey('url') &&
+        json['magazine']['url'] != null) {
       pdfUrl = json['magazine']['url'];
     }
 

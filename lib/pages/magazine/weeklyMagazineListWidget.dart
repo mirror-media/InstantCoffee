@@ -204,7 +204,7 @@ class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
   }
 
   void _navigateToMagazineBrowser(Magazine magazine) async{
-    if(magazine.pdfUrl == null || magazine.pdfUrl == '') {
+    if(magazine.pdfUrl == '') {
       Fluttertoast.showToast(
         msg: '下載失敗，請再試一次',
         toastLength: Toast.LENGTH_SHORT,
