@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
-import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/pages/login/loginPage.dart';
 
 class EmailVerificationSuccessPage extends StatelessWidget {
