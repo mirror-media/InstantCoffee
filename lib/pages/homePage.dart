@@ -157,7 +157,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
 
   _showTermsOfService() async{
     if(await _storage.ready) {
-      bool isAcceptTerms = await _storage.getItem("isAcceptTerms");
+      bool? isAcceptTerms = await _storage.getItem("isAcceptTerms");
       if(isAcceptTerms == null || !isAcceptTerms) {
         _storage.setItem("isAcceptTerms", false);
         await Future.delayed(Duration(seconds: 1));
