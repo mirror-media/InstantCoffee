@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
     });
 
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async{  
-      if(_onBoardingBloc.state.isOnBoarding) {
+      if(_onBoardingBloc.state.isOnBoarding && _onBoardingBloc.state.status == null) {
         // get personal tab size and position by personal tab key(_tabKeys[2])
         OnBoardingPosition onBoardingPosition = await _onBoardingBloc.getSizeAndPosition(_tabKeys[2]);
         onBoardingPosition.left -= 16;
