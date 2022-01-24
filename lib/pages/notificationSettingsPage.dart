@@ -14,7 +14,6 @@ import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/notificationSetting.dart';
-import 'package:readr_app/models/notificationSettingList.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/widgets/appExpansionTile.dart';
@@ -31,7 +30,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   List<GlobalKey<AppExpansionTileState>> _expansionTileKeys = [];
   final LocalStorage _storage = LocalStorage('setting');
   FirebaseMessangingHelper _firebaseMessangingHelper = FirebaseMessangingHelper();
-  NotificationSettingList? _notificationSettingList;
+  List<NotificationSetting>? _notificationSettingList;
   String _version = "";
   String _buildNumber = "";
 
@@ -54,20 +53,23 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     if (await _storage.ready) {
       if(_storage.getItem("notification") != null) {
         _notificationSettingList =
-            NotificationSettingList.fromJson(_storage.getItem("notification"));
+            NotificationSetting.notificationSettingListFromJson(_storage.getItem("notification"));
       }
     }
 
     if (_notificationSettingList == null) {
       await _initNotification();
     } else {
-      NotificationSettingList notificationSettingListFromAsset = await _getNotificationFromAsset();
+      List<NotificationSetting> notificationSettingListFromAsset = await _getNotificationFromAsset();
       checkAndSyncNotificationSettingList(
         notificationSettingListFromAsset,
         _notificationSettingList
       );
       _notificationSettingList = notificationSettingListFromAsset;
-      _storage.setItem("notification", _notificationSettingList!.toJson());
+      _storage.setItem(
+        "notification", 
+        NotificationSetting.toNotificationSettingListJson(_notificationSettingList!),
+      );
     }
 
     for(int i=0; i<_notificationSettingList!.length; i++) {
@@ -84,7 +86,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
         onBoardingPosition.function = () {
           _notificationSettingList![1].value = true;
           _storage.setItem(
-              "notification", _notificationSettingList!.toJson());
+            "notification", 
+            NotificationSetting.toNotificationSettingListJson(_notificationSettingList!),
+          );
 
           _firebaseMessangingHelper.subscribeTheNotification(_notificationSettingList![1]);
           _expansionTileKeys[1].currentState!.expand();
@@ -104,22 +108,28 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     setState(() {});
   }
 
-  Future<NotificationSettingList> _getNotificationFromAsset() async {
+  Future<List<NotificationSetting>> _getNotificationFromAsset() async {
     var jsonSetting =
         await rootBundle.loadString('assets/data/defaultNotificationList.json');
     var jsonSettingList = json.decode(jsonSetting)['defaultNotificationList'];
-    return NotificationSettingList.fromJson(jsonSettingList);
+    return NotificationSetting.notificationSettingListFromJson(jsonSettingList);
   }
 
   /// assetList is from defaultNotificationList.json
   /// userList is from storage notification
   /// change the title and topic from assetList
   /// keep the subscription value from userList
-  checkAndSyncNotificationSettingList(NotificationSettingList? assetList, NotificationSettingList? userList) async{
+  checkAndSyncNotificationSettingList(
+    List<NotificationSetting>? assetList, 
+    List<NotificationSetting>? userList
+  ) async{
     if(assetList != null) {
       assetList.forEach(
         (asset) { 
-          NotificationSetting? user = userList?.getById(asset.id);
+          NotificationSetting? user = NotificationSetting.getNotificationSettingListById(
+            userList, 
+            asset.id
+          );
           if(user != null && user.id == asset.id) {
             if(user.topic != asset.topic && user.value) {
               _firebaseMessangingHelper.unsubscribeFromTopic(user.topic!);
@@ -141,7 +151,10 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     if(userList != null) {
       userList.forEach(
         (user) { 
-          NotificationSetting? asset = assetList?.getById(user.id);
+          NotificationSetting? asset = NotificationSetting.getNotificationSettingListById(
+            assetList, 
+            user.id
+          );
           if(asset == null && user.topic != null && user.value) {
             _firebaseMessangingHelper.unsubscribeFromTopic(user.topic!);
           }
@@ -156,7 +169,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     var jsonSettingList = json.decode(jsonSetting)['defaultNotificationList'];
 
     _notificationSettingList =
-        NotificationSettingList.fromJson(jsonSettingList);
+        NotificationSetting.notificationSettingListFromJson(jsonSettingList);
     _storage.setItem("notification", jsonSettingList);
 
     // reset all of topics by defaultNotificationList.json
@@ -302,7 +315,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   notificationSettingList[listViewIndex].value = value;
                 });
                 _storage.setItem(
-                    "notification", _notificationSettingList!.toJson());
+                  "notification", 
+                  NotificationSetting.toNotificationSettingListJson(_notificationSettingList!),
+                );
 
                 _firebaseMessangingHelper.subscribeTheNotification(notificationSettingList[listViewIndex]);
               },
@@ -362,8 +377,10 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                 }
               });
 
-              _storage.setItem(
-                  "notification", _notificationSettingList!.toJson());
+                _storage.setItem(
+                  "notification", 
+                  NotificationSetting.toNotificationSettingListJson(_notificationSettingList!),
+                );
 
               _firebaseMessangingHelper.subscribeTheNotification(notificationSetting);
             },

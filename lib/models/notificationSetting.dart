@@ -1,12 +1,10 @@
-import 'package:readr_app/models/notificationSettingList.dart';
-
 class NotificationSetting {
   final String type;
   final String id;
   final String title;
   final String? topic;
   bool value;
-  final NotificationSettingList? notificationSettingList;
+  final List<NotificationSetting>? notificationSettingList;
 
   NotificationSetting({
     required this.type,
@@ -26,7 +24,7 @@ class NotificationSetting {
       value: json['value'],
       notificationSettingList: json['notificationSettingList'] == null
       ? null
-      : NotificationSettingList.fromJson(json['notificationSettingList']),
+      : NotificationSetting.notificationSettingListFromJson(json['notificationSettingList']),
     );
   }
 
@@ -36,6 +34,35 @@ class NotificationSetting {
         'title': title,
         'topic': topic,
         'value': value,
-        'notificationSettingList': notificationSettingList?.toJson(),
+        'notificationSettingList': notificationSettingList == null
+        ? null
+        : NotificationSetting.toNotificationSettingListJson(notificationSettingList!),
       };
+
+  static List<NotificationSetting> notificationSettingListFromJson(List<dynamic> jsonList) {
+    return jsonList.map<NotificationSetting>((json) => NotificationSetting.fromJson(json)).toList();
+  }
+
+  static List<Map<dynamic, dynamic>> toNotificationSettingListJson(List<NotificationSetting> notificationSettingList) {
+    List<Map> notificationSettingMaps = [];
+    for (NotificationSetting notificationSetting in notificationSettingList) {
+      notificationSettingMaps.add(notificationSetting.toJson());
+    }
+    return notificationSettingMaps;
+  }
+
+  static NotificationSetting? getNotificationSettingListById(
+    List<NotificationSetting>? notificationSettingList,
+    String id
+  ) {
+    if(notificationSettingList == null) {
+      return null;
+    }
+
+    try{
+      return notificationSettingList.firstWhere((element) => element.id == id);
+    } catch(e) {
+      return null;
+    }
+  }
 }

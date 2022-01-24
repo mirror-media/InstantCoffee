@@ -9,7 +9,6 @@ import 'package:readr_app/helpers/errorLogHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/fcmData.dart';
 import 'package:readr_app/models/notificationSetting.dart';
-import 'package:readr_app/models/notificationSettingList.dart';
 
 class FirebaseMessangingHelper {
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -76,11 +75,13 @@ class FirebaseMessangingHelper {
   // not use
   subscribeAllOfSubscribtionTopic() async{
     LocalStorage storage = LocalStorage('setting');
-    NotificationSettingList? notificationSettingList;
+    List<NotificationSetting>? notificationSettingList;
     
     if (await storage.ready) {
-      notificationSettingList =
-          NotificationSettingList.fromJson(storage.getItem("notification"));
+      if(storage.getItem("notification") != null) {
+        notificationSettingList = 
+            NotificationSetting.notificationSettingListFromJson(storage.getItem("notification"));
+      }
     }
 
     if (notificationSettingList == null) {
@@ -110,13 +111,13 @@ class FirebaseMessangingHelper {
   }
 
   // not use
-  Future<NotificationSettingList> _getNotification(LocalStorage storage) async {
+  Future<List<NotificationSetting>> _getNotification(LocalStorage storage) async {
     var jsonSetting =
         await rootBundle.loadString('assets/data/defaultNotificationList.json');
     var jsonSettingList = json.decode(jsonSetting)['defaultNotificationList'];
 
-    NotificationSettingList notificationSettingList =
-        NotificationSettingList.fromJson(jsonSettingList);
+    List<NotificationSetting> notificationSettingList =
+        NotificationSetting.notificationSettingListFromJson(jsonSettingList);
     storage.setItem("notification", jsonSettingList);
 
     return notificationSettingList;
