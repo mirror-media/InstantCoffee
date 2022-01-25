@@ -4,7 +4,7 @@ class EmailValidatorWidget extends StatefulWidget {
   // need to be disposed by editing controller parent
   final TextEditingController editingController;
   EmailValidatorWidget({
-    @required this.editingController
+    required this.editingController
   });
   
   @override
@@ -12,18 +12,18 @@ class EmailValidatorWidget extends StatefulWidget {
 }
 
 class _EmailValidatorWidgetState extends State<EmailValidatorWidget> {
-  TextEditingController _emailEditingController;
-  Widget _emailHint;
+  late TextEditingController _emailEditingController;
+  late Widget _emailHint;
 
   @override
   void initState() {
     _emailEditingController = widget.editingController;
-    Pattern pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
+    String pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
     RegExp regex = RegExp(pattern);
     _setEmailHint(_emailEditingController.text, regex); 
     _emailEditingController.addListener(
       () {
-        if(_emailEditingController.text == null || !regex.hasMatch(_emailEditingController.text)) {
+        if(!regex.hasMatch(_emailEditingController.text)) {
           setState(() {
             _emailHint = Text(
               'Email 格式正確',
@@ -59,7 +59,7 @@ class _EmailValidatorWidgetState extends State<EmailValidatorWidget> {
   }
 
   _setEmailHint(String text, RegExp regex) {
-    if(text == null || !regex.hasMatch(text)) {
+    if(!regex.hasMatch(text)) {
       _emailHint = Text(
         'Email 格式正確',
         style: TextStyle(

@@ -7,10 +7,10 @@ class HolePainter extends CustomPainter {
   final double height;
 
   HolePainter({
-    @required this.left,
-    @required this.top,
-    @required this.width,
-    @required this.height,  
+    required this.left,
+    required this.top,
+    required this.width,
+    required this.height,  
   });
 
   @override

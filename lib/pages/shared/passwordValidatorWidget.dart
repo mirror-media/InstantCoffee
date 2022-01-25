@@ -4,7 +4,7 @@ class PasswordValidatorWidget extends StatefulWidget {
   // need to be disposed by editing controller parent
   final TextEditingController editingController;
   PasswordValidatorWidget({
-    @required this.editingController
+    required this.editingController
   });
   
   @override
@@ -12,8 +12,8 @@ class PasswordValidatorWidget extends StatefulWidget {
 }
 
 class _PasswordValidatorWidgetState extends State<PasswordValidatorWidget> {
-  TextEditingController _passwordEditingController;
-  Widget _passwordHint;
+  late TextEditingController _passwordEditingController;
+  late Widget _passwordHint;
 
   @override
   void initState() {
@@ -21,7 +21,7 @@ class _PasswordValidatorWidgetState extends State<PasswordValidatorWidget> {
     _setPasswordHint(_passwordEditingController.text);
     _passwordEditingController.addListener(
       () {
-        if(_passwordEditingController.text == null || _passwordEditingController.text.length < 6) {
+        if(_passwordEditingController.text.length < 6) {
           setState(() {
             _passwordHint = Text(
               '密碼在 6 位數以上',
@@ -57,7 +57,7 @@ class _PasswordValidatorWidgetState extends State<PasswordValidatorWidget> {
   }
 
   _setPasswordHint(String text) {
-    if(text == null || text.length < 6) {
+    if(text.length < 6) {
       _passwordHint = Text(
         '密碼在 6 位數以上',
         style: TextStyle(

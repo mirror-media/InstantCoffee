@@ -5,7 +5,7 @@ import 'package:readr_app/pages/passwordResetPrompt/passwordResetPromptWidget.da
 class PasswordResetPromptPage extends StatelessWidget {
   final String email;
   PasswordResetPromptPage({
-    @required this.email,
+    required this.email,
   });
   
  @override
@@ -16,7 +16,7 @@ class PasswordResetPromptPage extends StatelessWidget {
     );
   }
   
-  Widget _buildBar(BuildContext context) {
+  PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),

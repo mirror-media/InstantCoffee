@@ -2,26 +2,22 @@ import 'dart:async';
 
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/services/newsMarqueeService.dart';
-import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/models/record.dart';
 
 class NewsMarqueeBloc {
-  NewsMarqueeService _recordService;
+  NewsMarqueeService _recordService = NewsMarqueeService();
 
-  StreamController _recordListController;
-
-  StreamSink<ApiResponse<RecordList>> get recordListSink =>
+  StreamController<ApiResponse<List<Record>>> _recordListController = StreamController<ApiResponse<List<Record>>>();
+  StreamSink<ApiResponse<List<Record>>> get recordListSink =>
       _recordListController.sink;
-
-  Stream<ApiResponse<RecordList>> get recordListStream =>
+  Stream<ApiResponse<List<Record>>> get recordListStream =>
       _recordListController.stream;
 
   NewsMarqueeBloc() {
-    _recordService = NewsMarqueeService();
-    _recordListController = StreamController<ApiResponse<RecordList>>();
     fetchEditorChoiceList();
   }
 
-  sinkToAdd(ApiResponse<RecordList> value) {
+  sinkToAdd(ApiResponse<List<Record>> value) {
     if (!_recordListController.isClosed) {
       recordListSink.add(value);
     }
@@ -31,7 +27,7 @@ class NewsMarqueeBloc {
     sinkToAdd(ApiResponse.loading('Fetching Tab Content'));
 
     try {
-      RecordList records = await _recordService.fetchRecordList();
+      List<Record> records = await _recordService.fetchRecordList();
 
       sinkToAdd(ApiResponse.completed(records));
     } catch (e) {
@@ -41,6 +37,6 @@ class NewsMarqueeBloc {
   }
 
   dispose() {
-    _recordListController?.close();
+    _recordListController.close();
   }
 }

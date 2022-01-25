@@ -10,15 +10,14 @@ class MemberSubscriptionTypeCubit extends Cubit<MemberSubscriptionTypeState> {
   void fetchMemberSubscriptionType() async {
     print('Fetch member subscription type');
     emit(MemberSubscriptionTypeLoadingState());
-    SubscriptionType subscriptionType = SubscriptionType.none;
+    SubscriptionType? subscriptionType;
     FirebaseAuth auth = FirebaseAuth.instance;
     if(auth.currentUser == null) {
-      emit(MemberSubscriptionTypeLoadedState(subscriptionType: null));
+      emit(MemberSubscriptionTypeLoadedState(subscriptionType: subscriptionType));
     } else {
       try {
-        String token = await auth.currentUser.getIdToken();
         MemberService memberService = MemberService();
-        MemberIdAndSubscriptionType memberIdAndSubscriptionType = await memberService.checkSubscriptionType(auth.currentUser, token);
+        MemberIdAndSubscriptionType memberIdAndSubscriptionType = await memberService.checkSubscriptionType(auth.currentUser!);
         subscriptionType = memberIdAndSubscriptionType.subscriptionType;
         emit(MemberSubscriptionTypeLoadedState(subscriptionType: subscriptionType));
       } catch(e) {

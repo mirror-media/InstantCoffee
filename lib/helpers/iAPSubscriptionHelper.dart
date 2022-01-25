@@ -17,7 +17,7 @@ class IAPSubscriptionHelper {
 
   bool verifyPurchaseInBloc = false;
   StreamController<PurchaseDetails> buyingPurchaseController = StreamController<PurchaseDetails>.broadcast();
-  StreamSubscription<List<PurchaseDetails>> _subscription;
+  late StreamSubscription<List<PurchaseDetails>> _subscription;
   InAppPurchase _inAppPurchase = InAppPurchase.instance;
 
   Future<void> handleIncompletePurchases() async{

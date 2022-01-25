@@ -7,21 +7,23 @@ enum PaymentType{
 class PaymentRecord {
   final String paymentOrderNumber;
   final String productName;
-  final String paymentCurrency;
-  final int paymentAmount;
-  final DateTime paymentDate;
-  final String paymentMethod;
-  final bool isSuccess;
   final PaymentType paymentType;
+  final String paymentMethod;
+  final DateTime paymentDate;
+  final bool isSuccess;
+
+  final String? paymentCurrency;
+  final int? paymentAmount;
 
   PaymentRecord({
-    this.paymentOrderNumber,
-    this.productName,
+    required this.paymentOrderNumber,
+    required this.productName,
+    required this.paymentType,
+    required this.paymentMethod,
+    required this.paymentDate,
+    this.isSuccess = false,
+
     this.paymentCurrency,
     this.paymentAmount,
-    this.paymentDate,
-    this.paymentMethod,
-    this.isSuccess,
-    this.paymentType,
   });
 }

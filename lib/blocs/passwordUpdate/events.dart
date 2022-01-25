@@ -14,7 +14,7 @@ abstract class PasswordUpdateEvents{
 class ConfirmOldPassword extends PasswordUpdateEvents {
   final String oldPassword;
   ConfirmOldPassword({
-    this.oldPassword
+    required this.oldPassword
   });
 
   @override
@@ -55,7 +55,7 @@ class ConfirmOldPassword extends PasswordUpdateEvents {
 class UpdatePassword extends PasswordUpdateEvents {
   final String newPassword;
   UpdatePassword({
-    this.newPassword
+    required this.newPassword
   });
 
   @override
@@ -80,7 +80,7 @@ class UpdatePassword extends PasswordUpdateEvents {
           fontSize: 16.0
         );
         
-        RouteGenerator.navigatorKey.currentState.pop();
+        RouteGenerator.navigatorKey.currentState!.pop();
       }
     } on SocketException {
       yield PasswordUpdateError(

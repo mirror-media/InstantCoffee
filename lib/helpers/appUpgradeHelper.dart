@@ -47,11 +47,11 @@ class AppUpgradeHelper {
 
   /// Return app url on App store(iOS only).
   Future<String> _getIosTrackViewUrl(String packageName) async {
-    Map iTunesResponse = await ITunesSearchAPI().lookupByBundleId(packageName);
+    Map? iTunesResponse = await ITunesSearchAPI().lookupByBundleId(packageName);
 
     String value = "";
     try {
-      value = iTunesResponse['results'][0]['trackViewUrl'];
+      value = iTunesResponse!['results'][0]['trackViewUrl'];
     } catch (e) {
       print('upgradeHelper.ITunesResults.trackViewUrl: $e');
     }

@@ -8,8 +8,8 @@ class MemberDetailInitial extends MemberDetailState {}
 class MemberDetailLoading extends MemberDetailState {}
 
 class MemberDetailLoad extends MemberDetailState {
-  final MemberDetail memberDetail;
-  MemberDetailLoad({this.memberDetail});
+  final MemberSubscriptionDetail memberSubscriptionDetail;
+  MemberDetailLoad({required this.memberSubscriptionDetail});
 }
 
 class MemberDetailError extends MemberDetailState {

@@ -22,11 +22,11 @@ class MMVideoPlayer extends StatefulWidget {
   final double aspectRatio;
 
   MMVideoPlayer({
-    Key key,
-    @required this.videourl,
-    @required this.aspectRatio,
+    Key? key,
+    required this.videourl,
+    required this.aspectRatio,
     this.autoPlay = false,
-    this.startAt,
+    this.startAt = Duration.zero,
     this.looping = false,
   }) : super(key: key);
 
@@ -35,9 +35,9 @@ class MMVideoPlayer extends StatefulWidget {
 }
 
 class _MMVideoPlayerState extends State<MMVideoPlayer> with AutomaticKeepAliveClientMixin {
-  VideoPlayerController _videoPlayerController;
-  ChewieController _chewieController;
-  Future<bool> _configChewieFuture;
+  late VideoPlayerController _videoPlayerController;
+  late ChewieController _chewieController;
+  late Future<bool> _configChewieFuture;
 
   @override
   bool get wantKeepAlive => true;
@@ -68,8 +68,8 @@ class _MMVideoPlayerState extends State<MMVideoPlayer> with AutomaticKeepAliveCl
 
   @override
   void dispose() {
-    _videoPlayerController?.dispose();
-    _chewieController?.dispose();
+    _videoPlayerController.dispose();
+    _chewieController.dispose();
     super.dispose();
   }
 
@@ -83,7 +83,7 @@ class _MMVideoPlayerState extends State<MMVideoPlayer> with AutomaticKeepAliveCl
       builder: (context, snapshot) {
         return LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-            if(!snapshot.data) {
+            if(!snapshot.data!) {
               return Container(
                 width: constraints.maxWidth,
                 height: constraints.maxWidth/widget.aspectRatio,

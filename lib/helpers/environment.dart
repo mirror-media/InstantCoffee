@@ -13,7 +13,7 @@ class Environment {
 
   static final Environment _singleton = Environment._internal();
 
-  BaseConfig config;
+  late BaseConfig config;
 
   initConfig(BuildFlavor buildFlavor) {
     config = _getConfig(buildFlavor);

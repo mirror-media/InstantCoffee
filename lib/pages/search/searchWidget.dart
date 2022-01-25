@@ -4,9 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/search/bloc.dart';
 import 'package:readr_app/blocs/search/events.dart';
 import 'package:readr_app/blocs/search/states.dart';
-import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section.dart';
-import 'package:readr_app/models/sectionList.dart';
 import 'package:readr_app/pages/search/searchListItem.dart';
 
 class SearchWidget extends StatefulWidget {
@@ -31,12 +30,20 @@ class _SearchWidgetState extends State<SearchWidget> {
     context.read<SearchBloc>().add(ChangeTargetSection(targetSection));
   }
 
-  _searchByKeywordAndSectionId(String keyword, String sectionName) async {
-    context.read<SearchBloc>().add(SearchByKeywordAndSectionId(keyword, sectionName: sectionName));
+  _searchByKeywordAndSectionName(String keyword, String sectionName) async {
+    context.read<SearchBloc>().add(SearchByKeywordAndSectionName(keyword, sectionName: sectionName));
   }
 
-  _searchNextPageByKeywordAndSectionId(String keyword, String sectionName) async {
-    context.read<SearchBloc>().add(SearchNextPageByKeywordAndSectionId(keyword, sectionName: sectionName));
+  _searchNextPageByKeywordAndSectionName(String keyword, String sectionName) async {
+    context.read<SearchBloc>().add(SearchNextPageByKeywordAndSectionName(keyword, sectionName: sectionName));
+  }
+
+  bool _isSearchStatus(SearchStatus status) {
+    return status == SearchStatus.searchLoading ||
+        status == SearchStatus.searchLoaded ||
+        status == SearchStatus.searchLoadingError ||
+        status == SearchStatus.searchLoadingMore ||
+        status == SearchStatus.searchLoadingMoreFail;
   }
 
   @override
@@ -52,16 +59,19 @@ class _SearchWidgetState extends State<SearchWidget> {
 
     return BlocBuilder<SearchBloc, SearchState>(
       builder: (BuildContext context, SearchState state) {
-        if (state is SearchPageError) {
-          final error = state.error;
-          print('SearchPageError: ${error.message}');
+        SearchStatus status = state.status;
+        if (status == SearchStatus.sectionListLoadingError) {
+          final error = state.errorMessages;
+          print('SectionListLoadingError: $error');
           
           return Container();
         }
         
-        if(state is SearchPageLoaded) {
-          Section targetSection = state.targetSection;
-          SectionList sectionList = state.sectionList;
+        if(status == SearchStatus.sectionListLoaded ||
+          _isSearchStatus(status)
+        ) {
+          Section targetSection = state.targetSection!;
+          List<Section> sectionList = state.sectionList!;
 
           return Column(
             children: [
@@ -82,7 +92,7 @@ class _SearchWidgetState extends State<SearchWidget> {
           );
         }
 
-        // SearchPageInitState or SearchPageLoading
+        // initial or sectionListLoading
         return _loadingWidget();
       }
     );
@@ -123,7 +133,7 @@ class _SearchWidgetState extends State<SearchWidget> {
             ),
           ),
           onSubmitted: (value) {
-            _searchByKeywordAndSectionId(
+            _searchByKeywordAndSectionName(
               _textController.text,
               targetSection.title,
             );
@@ -136,7 +146,7 @@ class _SearchWidgetState extends State<SearchWidget> {
   Widget _selectSectionButton(    
     double width, 
     double height, 
-    SectionList sectionList,
+    List<Section> sectionList,
     Section targetSection,
   ) {
     return Container(
@@ -173,7 +183,7 @@ class _SearchWidgetState extends State<SearchWidget> {
           ),
         ),
         onPressed: () {
-          List<Widget> widgetList = List<Widget>();
+          List<Widget> widgetList = [];
           sectionList.forEach(
             (category) {
               widgetList.add(
@@ -232,7 +242,7 @@ class _SearchWidgetState extends State<SearchWidget> {
         ),
       ), 
       onTap: () {
-        _searchByKeywordAndSectionId(
+        _searchByKeywordAndSectionName(
           _textController.text,
           targetSection.title,
         );
@@ -241,17 +251,18 @@ class _SearchWidgetState extends State<SearchWidget> {
   }
 
   Widget _buildSearchList(SearchState state) {
-    if(state is SearchLoaded) {
-      Section targetSection = state.targetSection;
-      RecordList searchList = state.searchList;
-      bool isNeedToLoadMore = searchList.length < searchList.allRecordCount;
+    SearchStatus status = state.status;
+    if(status == SearchStatus.searchLoaded) {
+      Section targetSection = state.targetSection!;
+      List<Record> searchList = state.searchStoryList!;
+      bool isNeedToLoadMore = searchList.length < state.searchListTotal!;
+
       return ListView.separated(
-        //controller: _listviewController,
         separatorBuilder: (BuildContext context, int index) => SizedBox(height: 16.0),
         itemCount: searchList.length,
         itemBuilder: (context, index) {
           if(isNeedToLoadMore && index == searchList.length - 5) {
-            _searchNextPageByKeywordAndSectionId(
+            _searchNextPageByKeywordAndSectionName(
               _textController.text,
               targetSection.title,
             );
@@ -262,10 +273,9 @@ class _SearchWidgetState extends State<SearchWidget> {
       );
     } 
 
-    if(state is SearchLoadingMore) {
-      RecordList searchList = state.searchList;
+    if(status == SearchStatus.searchLoadingMore) {
+      List<Record> searchList = state.searchStoryList!;
       return ListView.separated(
-        //controller: _listviewController,
         separatorBuilder: (BuildContext context, int index) => SizedBox(height: 16.0),
         itemCount: searchList.length,
         itemBuilder: (context, index) {
@@ -286,11 +296,11 @@ class _SearchWidgetState extends State<SearchWidget> {
       );
     }
 
-    if(state is SearchLoading) {
+    if(status == SearchStatus.searchLoading) {
       return _loadingWidget();
     }
 
-    // SearchError or nothing
+    // searchLoadingError or searchLoadingMoreFail
     return Container();
   }
 

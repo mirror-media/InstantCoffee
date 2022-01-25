@@ -18,7 +18,7 @@ class EmailSignInServices implements EmailSignInRepos{
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<List<String>> fetchSignInMethodsForEmail(String email) async {
-    List<String> resultList = List<String>();
+    List<String> resultList = [];
     try {
       resultList = await _auth.fetchSignInMethodsForEmail(email);
     } catch(onError) {
@@ -36,7 +36,7 @@ class EmailSignInServices implements EmailSignInRepos{
       print('Error create user with email and password: $onError');
       return FirebaseLoginStatus(
         status: FirebaseStatus.Error,
-        message: onError.code,
+        message: onError is FirebaseAuthException ? onError.code : onError,
       );
     }
 
@@ -55,7 +55,7 @@ class EmailSignInServices implements EmailSignInRepos{
       print('Error sign in with email and password: $onError');
       return FirebaseLoginStatus(
         status: FirebaseStatus.Error,
-        message: onError.code,
+        message: onError is FirebaseAuthException ? onError.code : onError,
       );
     }
 
@@ -90,7 +90,7 @@ class EmailSignInServices implements EmailSignInRepos{
       print('Error sending password reset email $onError');
       return FirebaseLoginStatus(
         status: FirebaseStatus.Error,
-        message: onError.code,
+        message: onError is FirebaseAuthException ? onError.code : onError,
       );
     }
 
@@ -120,16 +120,16 @@ class EmailSignInServices implements EmailSignInRepos{
     );
 
     try{
-      if(_auth.currentUser.email == null || _auth.currentUser.email != email) {
-        _auth.currentUser.verifyBeforeUpdateEmail(email, acs);
+      if(_auth.currentUser!.email == null || _auth.currentUser!.email != email) {
+        _auth.currentUser!.verifyBeforeUpdateEmail(email, acs);
       }
       
-      await _auth.currentUser.sendEmailVerification(acs);
+      await _auth.currentUser!.sendEmailVerification(acs);
     } catch(onError) {
       print('Error sending password reset email $onError');
       return FirebaseLoginStatus(
         status: FirebaseStatus.Error,
-        message: onError.code,
+        message: onError is FirebaseAuthException ? onError.code : onError,
       );
     }
 
@@ -143,14 +143,12 @@ class EmailSignInServices implements EmailSignInRepos{
   Future<FirebaseLoginStatus> applyActionCode(String code) async{
     try {
       await _auth.applyActionCode(code);
-      if(_auth.currentUser != null) {
-        _auth.currentUser.reload();
-      }
+      _auth.currentUser!.reload();
     } catch(onError) {
       print('Apply actionCode success error $onError');
       return FirebaseLoginStatus(
         status: FirebaseStatus.Error,
-        message: onError.code,
+        message: onError is FirebaseAuthException ? onError.code : onError,
       );
     }
     
@@ -176,9 +174,9 @@ class EmailSignInServices implements EmailSignInRepos{
   }
 
   Future<bool> confirmOldPassword(String oldPassword) async {
-    var user = _auth.currentUser;
+    User user = _auth.currentUser!;
     var credential = EmailAuthProvider.credential(
-      email: user.email,
+      email: user.email!,
       password: oldPassword,
     );
 
@@ -194,7 +192,7 @@ class EmailSignInServices implements EmailSignInRepos{
 
   Future<bool> updatePassword(String newPassword) async {
     try{
-      await _auth.currentUser.updatePassword(newPassword);
+      await _auth.currentUser!.updatePassword(newPassword);
     } catch(onError) {
       print('Error update password $onError');
       return false;

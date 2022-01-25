@@ -4,7 +4,7 @@ import '../models/story.dart';
 
 class DetailPage extends StatelessWidget {
   final Story record;
-  DetailPage({this.record});
+  DetailPage({required this.record});
 
   @override
   Widget build(BuildContext context) {

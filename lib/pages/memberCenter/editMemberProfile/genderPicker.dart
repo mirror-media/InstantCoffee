@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:readr_app/models/member.dart';
 
 class GenderPicker extends StatefulWidget {
-  final Gender gender;
-  final ValueChanged<Gender> onGenderChange;
+  final Gender? gender;
+  final ValueChanged<Gender?>? onGenderChange;
   GenderPicker({
     this.gender = Gender.NA,
     this.onGenderChange,
@@ -17,7 +17,7 @@ class _GenderPickerState extends State<GenderPicker> {
   String male = '男';
   String female = '女';
   String unknown = '不透露';
-  Gender _targetGender = Gender.NA;
+  Gender? _targetGender;
 
   @override
   void initState() {
@@ -25,9 +25,12 @@ class _GenderPickerState extends State<GenderPicker> {
     super.initState();
   }
 
-  void genderChange(Gender gender) {
+  void genderChange(Gender? gender) {
     setState(() {
-      widget.onGenderChange(gender);
+      if(widget.onGenderChange != null) {
+        widget.onGenderChange!(gender);
+      }
+
       _targetGender = gender;
     });
   }

@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/events.dart';
-import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/models/cityList.dart';
+import 'package:readr_app/models/contact/city.dart';
+import 'package:readr_app/models/contact/district.dart';
 import 'package:readr_app/models/member.dart';
 
 class DistrictPicker extends StatefulWidget {
-  final CityList cityList;
+  final List<City> cityList;
   final Member member;
   DistrictPicker({
-    @required this.cityList,
-    @required this.member,
+    required this.cityList,
+    required this.member,
   });
 
   @override
@@ -21,13 +21,13 @@ class DistrictPicker extends StatefulWidget {
 }
 
 class _DistrictPickerState extends State<DistrictPicker> {
-  bool _isPickerActivated;
-  String _district;
-  List<Widget> _districtListWidget;
+  bool _isPickerActivated = false;
+  List<Widget> _districtListWidget = [];
+
+  String? _district;
 
   @override
   void initState() {
-    _isPickerActivated = false;
     _district = widget.member.contactAddress.district;
     _setDistrictListWidget();
     super.initState();
@@ -47,15 +47,16 @@ class _DistrictPickerState extends State<DistrictPicker> {
   }
 
   _setDistrictListWidget() {
-    _districtListWidget = [];
     widget.cityList.forEach(
       (city) { 
         if(city.name == widget.member.contactAddress.city) {
-          city.districtList.forEach(
-            (district) { 
-              _districtListWidget.add(Text(district.name));
-            }
-          );
+          if(city.districtList != null) {
+            city.districtList!.forEach(
+              (district) { 
+                _districtListWidget.add(Text(district.name));
+              }
+            );
+          }
         }
       }
     );
@@ -124,14 +125,17 @@ class _DistrictPickerState extends State<DistrictPicker> {
     );
   }
 
-  _showPicker(double height, CityList cityList, Member member) async{
-    int cityIndex = cityList.findIndexByName(
-      member.contactAddress.city
-    );
+  _showPicker(double height, List<City> cityList, Member member) async{
+    int? cityIndex = member.contactAddress.city == null
+    ? null
+    : City.findCityListIndexByName(
+        cityList,
+        member.contactAddress.city!
+      );
 
     int targetIndex = _district == null || cityIndex == null
     ? 0
-    : cityList[cityIndex].districtList.findIndexByName(_district);
+    : District.findDistrictListIndexByName(cityList[cityIndex].districtList!, _district!);
 
     await showModalBottomSheet(
       context: context,
@@ -173,7 +177,7 @@ class _DistrictPickerState extends State<DistrictPicker> {
                         ),
                       ),
                       onTap: (){
-                        _district = cityList[cityIndex].districtList[targetIndex].name;
+                        _district = cityList[cityIndex!].districtList![targetIndex].name;
                         member.contactAddress.district = _district;
                         _changeMember(member);
                         Navigator.pop(context);

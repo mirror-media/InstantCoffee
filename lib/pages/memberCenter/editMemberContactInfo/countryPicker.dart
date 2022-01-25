@@ -4,15 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/events.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/models/countryList.dart';
+import 'package:readr_app/models/contact/country.dart';
 import 'package:readr_app/models/member.dart';
 
 class CountryPicker extends StatefulWidget {
-  final CountryList countryList;
+  final List<Country> countryList;
   final Member member;
   CountryPicker({
-    @required this.countryList,
-    @required this.member,
+    required this.countryList,
+    required this.member,
   });
 
   @override
@@ -20,13 +20,13 @@ class CountryPicker extends StatefulWidget {
 }
 
 class _CountryPickerState extends State<CountryPicker> {
-  bool _isPickerActivated;
-  String _country;
-  List<Widget> _countryListWidget;
+  bool _isPickerActivated = false;
+  List<Widget> _countryListWidget = [];
+
+  String? _country;
 
   @override
   void initState() {
-    _isPickerActivated = false;
     _country = widget.member.contactAddress.country;
     _setCountryListWidget();
     super.initState();
@@ -39,7 +39,6 @@ class _CountryPickerState extends State<CountryPicker> {
   }
 
   _setCountryListWidget() {
-    _countryListWidget = [];
     widget.countryList.forEach(
       (country) { 
         _countryListWidget.add(Text(country.taiwanName));
@@ -118,10 +117,10 @@ class _CountryPickerState extends State<CountryPicker> {
     );
   }
 
-  _showPicker(double height, CountryList countryList, Member member) async{
+  _showPicker(double height, List<Country> countryList, Member member) async{
     int targetIndex = _country == null
-    ? countryList.findIndexByTaiwanName('臺灣')
-    : countryList.findIndexByTaiwanName(_country);
+    ? Country.findCountryListIndexByTaiwanName(countryList, '臺灣')
+    : Country.findCountryListIndexByTaiwanName(countryList, _country!);
 
     await showModalBottomSheet(
       context: context,
@@ -165,7 +164,7 @@ class _CountryPickerState extends State<CountryPicker> {
                       onTap: (){
                         setState(() {
                           _country = countryList[targetIndex].taiwanName;
-                          member.contactAddress.country = _country;
+                          member.contactAddress.country = _country!;
                           if(_country != '臺灣') {
                             member.contactAddress.city = null;
                             member.contactAddress.district = null;

@@ -28,7 +28,7 @@ class NewebpayChangePlanPage extends StatelessWidget {
     );
   }
 
-  Widget _buildBar(BuildContext context, String titleText) {
+  PreferredSizeWidget _buildBar(BuildContext context, String titleText) {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),

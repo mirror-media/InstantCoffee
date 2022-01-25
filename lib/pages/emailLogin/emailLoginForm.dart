@@ -14,9 +14,9 @@ class EmailLoginForm extends StatefulWidget {
   final EmailLoginState state;
   final TextEditingController passwordEditingController;
   EmailLoginForm({
-    @required this.email,
-    @required this.state,
-    @required this.passwordEditingController,
+    required this.email,
+    required this.state,
+    required this.passwordEditingController,
   });
 
   @override
@@ -24,7 +24,7 @@ class EmailLoginForm extends StatefulWidget {
 }
 
 class _EmailLoginFormState extends State<EmailLoginForm> {
-  TextEditingController _passwordEditingController;
+  late TextEditingController _passwordEditingController;
   bool _passwordIsValid = false;
 
   @override
@@ -47,7 +47,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
   }
 
   bool _isPasswordValid() {
-    return _passwordEditingController.text != null && _passwordEditingController.text.length >= 6;
+    return _passwordEditingController.text.length >= 6;
   }
 
   @override

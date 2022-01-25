@@ -11,7 +11,7 @@ import 'package:readr_app/pages/shared/passwordValidatorWidget.dart';
 class PasswordUpdateForm extends StatefulWidget {
   final PasswordUpdateState passwordUpdateState;
   PasswordUpdateForm({
-    @required this.passwordUpdateState,
+    required this.passwordUpdateState,
   });
 
   _PasswordUpdateFormState createState() => _PasswordUpdateFormState();
@@ -40,7 +40,7 @@ class _PasswordUpdateFormState extends State<PasswordUpdateForm> {
   }
 
   bool _isPasswordValid() {
-    return _passwordEditingController.text != null && _passwordEditingController.text.length >= 6;
+    return _passwordEditingController.text.length >= 6;
   }
 
   @override

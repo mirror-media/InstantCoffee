@@ -7,10 +7,10 @@ class InvertedClipper extends CustomClipper<Path> {
   final double height;
 
   InvertedClipper({
-    @required this.left,
-    @required this.top,
-    @required this.width,
-    @required this.height,  
+    required this.left,
+    required this.top,
+    required this.width,
+    required this.height,  
   });
 
   @override

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:readr_app/blocs/memberCenter/memberDetail/memberDetailCubit.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:readr_app/models/memberDetail.dart';
+import 'package:readr_app/models/memberSubscriptionDetail.dart';
 import 'package:intl/intl.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/models/paymentRecord.dart';
@@ -11,7 +11,7 @@ import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
 
 class MemberSubscriptionDetailPage extends StatefulWidget {
   final SubscriptionType subscriptionType;
-  MemberSubscriptionDetailPage({this.subscriptionType});
+  MemberSubscriptionDetailPage({required this.subscriptionType});
   @override
   _MemberSubscriptionDetailPageState createState() =>
       _MemberSubscriptionDetailPageState();
@@ -19,7 +19,7 @@ class MemberSubscriptionDetailPage extends StatefulWidget {
 
 class _MemberSubscriptionDetailPageState
     extends State<MemberSubscriptionDetailPage> {
-  SubscriptionType _subscriptionType;
+  late SubscriptionType _subscriptionType;
   @override
   void initState() {
     super.initState();
@@ -37,7 +37,7 @@ class _MemberSubscriptionDetailPageState
     return Scaffold(appBar: _buildBar(context), body: _buildContent(context));
   }
 
-  Widget _buildBar(BuildContext context) {
+  PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),
@@ -57,22 +57,27 @@ class _MemberSubscriptionDetailPageState
       return BlocBuilder<MemberDetailCubit, MemberDetailState>(
         builder: (context, state) {
           if (state is MemberDetailLoad) {
-            MemberDetail memberDetail = state.memberDetail;
-            String period =
-                '${DateFormat('yyyy/MM/dd').format(memberDetail.periodFirstDatetime)}-${DateFormat('yyyy/MM/dd').format(memberDetail.periodEndDatetime)}';
-            String paymentMethod = '信用卡自動續扣（${memberDetail.cardInfoLastFour}）';
-            if (memberDetail.paymentType == PaymentType.app_store) {
+            MemberSubscriptionDetail memberSubscriptionDetail = state.memberSubscriptionDetail;
+            
+            String period = '';
+            if(memberSubscriptionDetail.periodFirstDatetime != null && memberSubscriptionDetail.periodEndDatetime != null) {
+              period =
+                  '${DateFormat('yyyy/MM/dd').format(memberSubscriptionDetail.periodFirstDatetime!)}-${DateFormat('yyyy/MM/dd').format(memberSubscriptionDetail.periodEndDatetime!)}';
+            }
+
+            String paymentMethod = '信用卡自動續扣（${memberSubscriptionDetail.cardInfoLastFour}）';
+            if (memberSubscriptionDetail.paymentType == PaymentType.app_store) {
               paymentMethod = 'Apple Pay 續扣';
-            } else if (memberDetail.paymentType == PaymentType.google_play) {
+            } else if (memberSubscriptionDetail.paymentType == PaymentType.google_play) {
               paymentMethod = 'Google Pay 續扣';
             }
-            if (memberDetail.isCanceled) paymentMethod = '-';
-            String periodNextPayDatetime = memberDetail.isCanceled
+            if (memberSubscriptionDetail.isCanceled) paymentMethod = '-';
+            String periodNextPayDatetime = memberSubscriptionDetail.isCanceled
                 ? '-'
-                : memberDetail.periodNextPayDatetime == null 
+                : memberSubscriptionDetail.periodNextPayDatetime == null 
                     ? ""
                     : DateFormat('yyyy/MM/dd')
-                        .format(memberDetail.periodNextPayDatetime);
+                        .format(memberSubscriptionDetail.periodNextPayDatetime!);
             return ListView(
               children: [
                 Material(
@@ -104,7 +109,7 @@ class _MemberSubscriptionDetailPageState
                   child: Container(
                     color: Colors.white,
                     padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-                    child: _memberRowContent('訂閱方案', memberDetail.frequency),
+                    child: _memberRowContent('訂閱方案', memberSubscriptionDetail.frequency),
                   ),
                 ),
                 Material(
@@ -125,7 +130,7 @@ class _MemberSubscriptionDetailPageState
                     color: Colors.white,
                     padding: const EdgeInsets.only(left: 24.0, right: 24.0),
                     child: _memberRowContent('訂閱週期', period,
-                        isCanceled: memberDetail.isCanceled),
+                        isCanceled: memberSubscriptionDetail.isCanceled),
                   ),
                 ),
                 Material(

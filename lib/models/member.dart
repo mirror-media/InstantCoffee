@@ -4,27 +4,27 @@ import 'package:readr_app/models/contactAddress.dart';
 class Member {
   final String israfelId;
   String email;
-  String name;
-  Gender gender;
-  String birthday;
+  String? name;
+  Gender? gender;
+  String? birthday;
 
-  String phoneNumber;
+  String? phoneNumber;
   ContactAddress contactAddress;
 
   Member({
-    this.israfelId,
-    this.email,
+    required this.israfelId,
+    required this.email,
     this.name,
     this.gender,
     this.birthday,
 
     this.phoneNumber,
-    this.contactAddress,
+    required this.contactAddress,
   });
 
   factory Member.fromJson(Map<String, dynamic> json) {
-    String genderString = json['gender'];
-    String birthdayString;
+    String? genderString = json['gender'];
+    String? birthdayString;
     if(json['birthday'] != null) {
       birthdayString = json['birthday'].split('T')[0];
     }
@@ -33,7 +33,9 @@ class Member {
       israfelId: json['id'],
       email: json['email'],
       name: json['name'],
-      gender: genderString.toEnum(Gender.values),
+      gender: genderString == null 
+      ? null
+      : genderString.toEnum(Gender.values),
       birthday: birthdayString,
 
       phoneNumber: json['phone'],

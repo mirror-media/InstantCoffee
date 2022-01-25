@@ -12,8 +12,8 @@ class PasswordResetForm extends StatefulWidget {
   final String code;
   final PasswordResetState state;
   PasswordResetForm({
-    @required this.code,
-    @required this.state,
+    required this.code,
+    required this.state,
   });
 
   _PasswordResetFormState createState() => _PasswordResetFormState();
@@ -42,7 +42,7 @@ class _PasswordResetFormState extends State<PasswordResetForm> {
   }
 
   bool _isPasswordValid() {
-    return _passwordEditingController.text != null && _passwordEditingController.text.length >= 6;
+    return _passwordEditingController.text.length >= 6;
   }
 
   @override

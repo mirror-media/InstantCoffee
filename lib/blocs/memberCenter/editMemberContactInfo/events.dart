@@ -26,8 +26,8 @@ class FetchMemberContactInfo extends EditMemberContactInfoEvents {
     try {
       yield MemberLoading();
       FirebaseAuth auth = FirebaseAuth.instance;
-      String token = await auth.currentUser.getIdToken();
-      Member member = await memberRepos.fetchMemberData(auth.currentUser.uid, token);
+      String token = await auth.currentUser!.getIdToken();
+      Member member = await memberRepos.fetchMemberInformation(auth.currentUser!.uid, token);
       yield MemberLoaded(member: member);
     } on SocketException {
       yield MemberLoadedError(
@@ -73,7 +73,7 @@ class UpdateMemberContactInfo extends EditMemberContactInfoEvents {
   FirebaseAuth _auth = FirebaseAuth.instance;
   final Member editMember;
   UpdateMemberContactInfo({
-    this.editMember,
+    required this.editMember,
   });
 
   @override
@@ -83,7 +83,7 @@ class UpdateMemberContactInfo extends EditMemberContactInfoEvents {
   Stream<EditMemberContactInfoState> run(MemberRepos memberRepos) async*{
     print(this.toString());
     yield SavingLoading(member: editMember);
-    String token = await _auth.currentUser.getIdToken();
+    String token = await _auth.currentUser!.getIdToken();
     bool updateSuccess = await memberRepos.updateMemberContactInfo(
       editMember.israfelId,
       token, 
@@ -116,14 +116,14 @@ class UpdateMemberContactInfo extends EditMemberContactInfoEvents {
       );
     }
 
-    RouteGenerator.navigatorKey.currentState.pop();
+    RouteGenerator.navigatorKey.currentState!.pop();
   }
 }
 
 class ChangeMember extends EditMemberContactInfoEvents {
   final Member member;
   ChangeMember({
-    this.member,
+    required this.member,
   });
   @override
   String toString() => 'ChangeMember';

@@ -14,9 +14,8 @@ import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/notificationSetting.dart';
-import 'package:readr_app/models/notificationSettingList.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/models/onBoarding.dart';
+import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/widgets/appExpansionTile.dart';
 
 class NotificationSettingsPage extends StatefulWidget {
@@ -26,20 +25,19 @@ class NotificationSettingsPage extends StatefulWidget {
 }
 
 class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
-  OnBoardingBloc _onBoardingBloc;
-  List<GlobalKey> _notificationKeys;
-  List<GlobalKey<AppExpansionTileState>> _expansionTileKeys;
+  late OnBoardingBloc _onBoardingBloc;
+  List<GlobalKey> _notificationKeys = [];
+  List<GlobalKey<AppExpansionTileState>> _expansionTileKeys = [];
   final LocalStorage _storage = LocalStorage('setting');
   FirebaseMessangingHelper _firebaseMessangingHelper = FirebaseMessangingHelper();
-  NotificationSettingList _notificationSettingList = NotificationSettingList();
+  List<NotificationSetting>? _notificationSettingList;
   String _version = "";
   String _buildNumber = "";
 
   @override
   void initState() {
     _onBoardingBloc = context.read<OnBoardingBloc>();
-    _notificationKeys = List<GlobalKey>();
-    _expansionTileKeys = List<GlobalKey<AppExpansionTileState>>();
+
     _setNotificationSettingList();
     _loadPackageInfo();
     super.initState();
@@ -53,52 +51,56 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
   _setNotificationSettingList() async {
     if (await _storage.ready) {
-      _notificationSettingList =
-          NotificationSettingList.fromJson(_storage.getItem("notification"));
+      if(_storage.getItem("notification") != null) {
+        _notificationSettingList =
+            NotificationSetting.notificationSettingListFromJson(_storage.getItem("notification"));
+      }
     }
 
     if (_notificationSettingList == null) {
       await _initNotification();
     } else {
-      NotificationSettingList notificationSettingListFromAsset = await _getNotificationFromAsset();
+      List<NotificationSetting> notificationSettingListFromAsset = await _getNotificationFromAsset();
       checkAndSyncNotificationSettingList(
         notificationSettingListFromAsset,
         _notificationSettingList
       );
       _notificationSettingList = notificationSettingListFromAsset;
-      _storage.setItem("notification", _notificationSettingList.toJson());
+      _storage.setItem(
+        "notification", 
+        NotificationSetting.toNotificationSettingListJson(_notificationSettingList!),
+      );
     }
 
-    for(int i=0; i<_notificationSettingList.length; i++) {
+    for(int i=0; i<_notificationSettingList!.length; i++) {
       _notificationKeys.add(GlobalKey());
       _expansionTileKeys.add(GlobalKey());
     }
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{  
-      if(_onBoardingBloc.state.status == OnBoardingStatus.fourthPage) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async{  
+      if(_onBoardingBloc.state.status == OnBoardingStatus.thirdPage) {
         // await navigation completed, or onBoarding will get the wrong position
         await Future.delayed(Duration(milliseconds: 300));
-        OnBoarding onBoarding = await _onBoardingBloc.getSizeAndPosition(_notificationKeys[1]);
-        onBoarding.left = 0;
-        onBoarding.height += 16;
-        onBoarding.function = () {
-          _notificationSettingList[1].value = true;
+        OnBoardingPosition onBoardingPosition = await _onBoardingBloc.getSizeAndPosition(_notificationKeys[1]);
+        onBoardingPosition.left = 0;
+        onBoardingPosition.height += 16;
+        onBoardingPosition.function = () {
+          _notificationSettingList![1].value = true;
           _storage.setItem(
-              "notification", _notificationSettingList.toJson());
+            "notification", 
+            NotificationSetting.toNotificationSettingListJson(_notificationSettingList!),
+          );
 
-          _firebaseMessangingHelper.subscribeTheNotification(_notificationSettingList[1]);
-          _expansionTileKeys[1].currentState.expand();
+          _firebaseMessangingHelper.subscribeTheNotification(_notificationSettingList![1]);
+          _expansionTileKeys[1].currentState!.expand();
           _onBoardingBloc.setOnBoardingClose();
           _onBoardingBloc.add(
-            GoToNextHint(
-              onBoardingStatus: null,
-              onBoarding: null,
-            )
+            CloseOnBoarding()
           );
         };
         _onBoardingBloc.add(
           GoToNextHint(
-            onBoardingStatus: OnBoardingStatus.close,
-            onBoarding: onBoarding,
+            onBoardingStatus: OnBoardingStatus.fourthPage,
+            onBoardingPosition: onBoardingPosition,
           )
         );
       }
@@ -106,32 +108,38 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     setState(() {});
   }
 
-  Future<NotificationSettingList> _getNotificationFromAsset() async {
+  Future<List<NotificationSetting>> _getNotificationFromAsset() async {
     var jsonSetting =
         await rootBundle.loadString('assets/data/defaultNotificationList.json');
     var jsonSettingList = json.decode(jsonSetting)['defaultNotificationList'];
-    return NotificationSettingList.fromJson(jsonSettingList);
+    return NotificationSetting.notificationSettingListFromJson(jsonSettingList);
   }
 
   /// assetList is from defaultNotificationList.json
   /// userList is from storage notification
   /// change the title and topic from assetList
   /// keep the subscription value from userList
-  checkAndSyncNotificationSettingList(NotificationSettingList assetList, NotificationSettingList userList) async{
+  checkAndSyncNotificationSettingList(
+    List<NotificationSetting>? assetList, 
+    List<NotificationSetting>? userList
+  ) async{
     if(assetList != null) {
       assetList.forEach(
         (asset) { 
-          NotificationSetting user = userList?.getById(asset.id);
+          NotificationSetting? user = NotificationSetting.getNotificationSettingListById(
+            userList, 
+            asset.id
+          );
           if(user != null && user.id == asset.id) {
             if(user.topic != asset.topic && user.value) {
-              _firebaseMessangingHelper.unsubscribeFromTopic(user.topic);
-              _firebaseMessangingHelper.subscribeToTopic(asset.topic);
+              _firebaseMessangingHelper.unsubscribeFromTopic(user.topic!);
+              _firebaseMessangingHelper.subscribeToTopic(asset.topic!);
             }
             asset.value = user.value;
 
             if(asset.notificationSettingList != null || user.notificationSettingList != null) {
               checkAndSyncNotificationSettingList(
-                asset.notificationSettingList,
+                asset.notificationSettingList!,
                 user.notificationSettingList
               );
             }
@@ -143,9 +151,12 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     if(userList != null) {
       userList.forEach(
         (user) { 
-          NotificationSetting asset = assetList?.getById(user.id);
+          NotificationSetting? asset = NotificationSetting.getNotificationSettingListById(
+            assetList, 
+            user.id
+          );
           if(asset == null && user.topic != null && user.value) {
-            _firebaseMessangingHelper.unsubscribeFromTopic(user.topic);
+            _firebaseMessangingHelper.unsubscribeFromTopic(user.topic!);
           }
         }
       );
@@ -158,11 +169,11 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     var jsonSettingList = json.decode(jsonSetting)['defaultNotificationList'];
 
     _notificationSettingList =
-        NotificationSettingList.fromJson(jsonSettingList);
+        NotificationSetting.notificationSettingListFromJson(jsonSettingList);
     _storage.setItem("notification", jsonSettingList);
 
     // reset all of topics by defaultNotificationList.json
-    _notificationSettingList.forEach(
+    _notificationSettingList!.forEach(
       (notificationSetting) { 
         _firebaseMessangingHelper.subscribeTheNotification(notificationSetting);
       }
@@ -175,7 +186,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
     return BlocBuilder<OnBoardingBloc, OnBoardingState>(
       builder: (BuildContext context, OnBoardingState state) {
-        OnBoarding onBoarding = state.onBoarding;
+        bool isOnBoarding = state.isOnBoarding;
+        OnBoardingPosition? onBoardingPosition = state.onBoardingPosition;
 
         return Material(
           type: MaterialType.transparency,
@@ -199,25 +211,25 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   ),
                 ),
               ),
-              if(onBoarding != null)
+              if(isOnBoarding && onBoardingPosition != null)
                 GestureDetector(
                   onTap: () async{
-                    onBoarding.function?.call();
+                    onBoardingPosition.function?.call();
                   },
                   child: _onBoardingBloc.getCustomPaintOverlay(
                     context,
-                    onBoarding.left,
-                    onBoarding.top,
-                    onBoarding.width,
-                    onBoarding.height,
+                    onBoardingPosition.left,
+                    onBoardingPosition.top,
+                    onBoardingPosition.width,
+                    onBoardingPosition.height,
                   ),
                 ),
-              if(onBoarding != null)
+              if(isOnBoarding && onBoardingPosition != null)
                 _onBoardingBloc.getHint(
                   context,
-                  onBoarding.left, 
-                  onBoarding.top + onBoarding.height,
-                  state.onBoardingHint
+                  onBoardingPosition.left, 
+                  onBoardingPosition.top + onBoardingPosition.height,
+                  state.onBoardingHint!
                 ),
             ],
           ),
@@ -226,7 +238,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     );
   }
 
-  Widget _buildBar(BuildContext context) {
+  PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),
@@ -263,7 +275,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   }
 
   Widget _buildNotificationSettingListSection(
-      BuildContext context, List<NotificationSetting> notificationSettingList) {
+      BuildContext context, List<NotificationSetting>? notificationSettingList) {
     if (notificationSettingList == null) {
       return Center(
           child: Padding(
@@ -285,7 +297,6 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
             child: AppExpansionTile(
               key: _expansionTileKeys[listViewIndex],
               initiallyExpanded: notificationSettingList[listViewIndex].value,
-              leading: null,
               title: ListTile(
                 title: Text(
                   notificationSettingList[listViewIndex].title,
@@ -304,7 +315,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   notificationSettingList[listViewIndex].value = value;
                 });
                 _storage.setItem(
-                    "notification", _notificationSettingList.toJson());
+                  "notification", 
+                  NotificationSetting.toNotificationSettingListJson(_notificationSettingList!),
+                );
 
                 _firebaseMessangingHelper.subscribeTheNotification(notificationSettingList[listViewIndex]);
               },
@@ -340,7 +353,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       bool isRepeatable,
       int count,
       double ratio) {
-    List<NotificationSetting> checkboxList = notificationSetting.notificationSettingList;
+    List<NotificationSetting> checkboxList = notificationSetting.notificationSettingList!;
     return GridView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
@@ -364,8 +377,10 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                 }
               });
 
-              _storage.setItem(
-                  "notification", _notificationSettingList.toJson());
+                _storage.setItem(
+                  "notification", 
+                  NotificationSetting.toNotificationSettingListJson(_notificationSettingList!),
+                );
 
               _firebaseMessangingHelper.subscribeTheNotification(notificationSetting);
             },

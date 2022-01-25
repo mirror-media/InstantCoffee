@@ -33,7 +33,7 @@ class _EditMemberProfileWidgetState extends State<EditMemberProfileWidget> {
     );
   }
 
-  String _displayMemberEmail(String inputEmail) {
+  String _displayMemberEmail(String? inputEmail) {
     if(inputEmail == null || 
       // privaterelay.appleid.com is a anonymous email provided by apple
       inputEmail.contains('privaterelay.appleid.com') ||
@@ -86,9 +86,9 @@ class _EditMemberProfileWidgetState extends State<EditMemberProfileWidget> {
     );
   }
 
-  Widget _buildBar(
+  PreferredSizeWidget _buildBar(
     BuildContext context, 
-    Member member, 
+    Member? member, 
     { bool isSaveLoading = false }
   ) {
     return AppBar(
@@ -159,7 +159,7 @@ class _EditMemberProfileWidgetState extends State<EditMemberProfileWidget> {
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
           child: GenderPicker(
             gender: member.gender,
-            onGenderChange: (Gender gender){
+            onGenderChange: (Gender? gender){
               member.gender = gender;
             },
           ),
@@ -169,7 +169,7 @@ class _EditMemberProfileWidgetState extends State<EditMemberProfileWidget> {
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
           child: BirthdayPicker(
             birthday: member.birthday,
-            onBirthdayChange: (String birthday){
+            onBirthdayChange: (String? birthday){
               member.birthday = birthday;
             },
           ),

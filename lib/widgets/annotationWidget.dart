@@ -9,7 +9,7 @@ class AnnotationWidget extends StatefulWidget {
   final String data;
   final bool isMemberContent;
   AnnotationWidget({
-    @required this.data,
+    required this.data,
     this.isMemberContent = false,
   });
 
@@ -54,17 +54,23 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
 
     for (int i = 0; i < displayStringList.length; i++) {
       if (annotationExp.hasMatch(displayStringList[i])) {
-        String body = annotationExp.firstMatch(displayStringList[i]).group(1);
-        Annotation annotation = Annotation.parseResponseBody(body);
+        String? body = annotationExp.firstMatch(displayStringList[i])!.group(1);
+        Annotation annotation = Annotation.parseResponseBody(body)!;
         if (annotation.isExpanded) {
           displayWidgets.add(
             HtmlWidget(
               annotation.text,
-              hyperlinkColor: Colors.blue[900],
               textStyle: TextStyle(
                 fontSize: 20,
                 height: 1.8,
               ),
+              customStylesBuilder: (element) {
+                if (element.localName == 'a') {
+                  return {'color': 'blue'};
+                }
+
+                return null;
+              },
             ),
           );
           displayWidgets.add(
@@ -130,11 +136,17 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
                   padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24),
                   child: HtmlWidget(
                     annotation.annotation,
-                    hyperlinkColor: Colors.blue[900],
                     textStyle: TextStyle(
                       fontSize: 15,
                       height: 1.8,
                     ),
+                    customStylesBuilder: (element) {
+                      if (element.localName == 'a') {
+                        return {'color': 'blue'};
+                      }
+
+                      return null;
+                    },
                   ),
                 ),
               )
@@ -161,11 +173,17 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
                   padding: const EdgeInsets.all(16.0),
                   child: HtmlWidget(
                     annotation.annotation,
-                    hyperlinkColor: Colors.blue[900],
                     textStyle: TextStyle(
                       fontSize: 20,
                       height: 1.8,
                     ),
+                    customStylesBuilder: (element) {
+                      if (element.localName == 'a') {
+                        return {'color': 'blue'};
+                      }
+
+                      return null;
+                    },
                   ),
                 ),
               ),
@@ -177,11 +195,17 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
           displayWidgets.add(
             HtmlWidget(
               annotation.text,
-              hyperlinkColor: Colors.blue[900],
               textStyle: TextStyle(
                 fontSize: 20,
                 height: 1.8,
               ),
+              customStylesBuilder: (element) {
+                if (element.localName == 'a') {
+                  return {'color': 'blue'};
+                }
+
+                return null;
+              },
             ),
           );
           displayWidgets.add(
@@ -239,11 +263,17 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
         displayWidgets.add(
           HtmlWidget(
             displayStringList[i],
-            hyperlinkColor: Colors.blue[900],
             textStyle: TextStyle(
               fontSize: 20,
               height: 1.8,
             ),
+            customStylesBuilder: (element) {
+              if (element.localName == 'a') {
+                return {'color': 'blue'};
+              }
+
+              return null;
+            },
           ),
         );
       }

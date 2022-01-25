@@ -1,21 +1,19 @@
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
-import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/models/record.dart';
 
 class PersonalSubscriptionService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   int page = 1;
 
-  Future<RecordList> fetchRecordList(String categoryListJson, {int page = 1}) async {
+  Future<List<Record>> fetchRecordList(String categoryListJson, {int page = 1}) async {
     String url = Environment().config.apiBase +
         'meta?where={"categories":{"\$in":$categoryListJson},"device":{"\$in":["all","app"]}}' +
         '&page=$page&sort=-publishedDate&utm_source=app&utm_medium=news&max_results=20';
 
     final jsonResponse = await _helper.getByUrl(url);
-    var jsonObject = jsonResponse['_items'];
-
-    RecordList records = RecordList.fromJson(jsonObject);
+    List<Record> records = Record.recordListFromJson(jsonResponse['_items']);
     return records;
   }
 

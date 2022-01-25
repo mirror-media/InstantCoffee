@@ -9,7 +9,6 @@ import 'package:readr_app/helpers/errorLogHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/fcmData.dart';
 import 'package:readr_app/models/notificationSetting.dart';
-import 'package:readr_app/models/notificationSettingList.dart';
 
 class FirebaseMessangingHelper {
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -41,33 +40,30 @@ class FirebaseMessangingHelper {
     });
   }
 
-  void _navigateToStoryPage(BuildContext context, RemoteMessage message) {
+  void _navigateToStoryPage(BuildContext context, RemoteMessage? message) {
     if(message != null ) {
-      FcmData fcmData;
+      FcmData? fcmData;
       try{
         fcmData = FcmData.fromJson(message.data);
       
-        if(fcmData != null && fcmData.slug != null) {
+        if(fcmData.slug != null) {
           if(fcmData.isListeningPage) {
-            RouteGenerator.navigateToListeningStory(fcmData.slug);
+            RouteGenerator.navigateToListeningStory(fcmData.slug!);
           } else {
-            RouteGenerator.navigateToStory(fcmData.slug);
+            RouteGenerator.navigateToStory(fcmData.slug!);
           }
         }
-      }catch(e){
-        String slug = "null";
-        if(fcmData != null){
-          slug = fcmData.slug;
-        }
+      } catch(e){
+        String? slug = fcmData?.slug;
         ErrorLogHelper().record(
           "Firebase Messaging NavigateToStoryPage", 
           {
             "fcmDataSlug": slug
           }, 
-          e,
+          e.toString(),
         );
       }
-    }else{
+    } else{
       ErrorLogHelper().record(
         "Firebase Messaging NavigateToStoryPage", 
         null, 
@@ -79,11 +75,13 @@ class FirebaseMessangingHelper {
   // not use
   subscribeAllOfSubscribtionTopic() async{
     LocalStorage storage = LocalStorage('setting');
-    NotificationSettingList notificationSettingList = NotificationSettingList();
+    List<NotificationSetting>? notificationSettingList;
     
     if (await storage.ready) {
-      notificationSettingList =
-          NotificationSettingList.fromJson(storage.getItem("notification"));
+      if(storage.getItem("notification") != null) {
+        notificationSettingList = 
+            NotificationSetting.notificationSettingListFromJson(storage.getItem("notification"));
+      }
     }
 
     if (notificationSettingList == null) {
@@ -93,11 +91,11 @@ class FirebaseMessangingHelper {
     notificationSettingList.forEach(
       (notificationSetting) {
         if(notificationSetting.id == 'horoscopes' || notificationSetting.id == 'subscriptionChannels') {
-          if(notificationSetting.value) {
-            notificationSetting.notificationSettingList.forEach(
+          if(notificationSetting.value && notificationSetting.notificationSettingList != null) {
+            notificationSetting.notificationSettingList!.forEach(
               (element) { 
                 if(element.value) {
-                  subscribeToTopic(element.topic);
+                  subscribeToTopic(element.topic!);
                 }
               }
             );
@@ -105,7 +103,7 @@ class FirebaseMessangingHelper {
         }
         else {
           if(notificationSetting.value) {
-            subscribeToTopic(notificationSetting.topic);
+            subscribeToTopic(notificationSetting.topic!);
           }
         }
       }
@@ -113,13 +111,13 @@ class FirebaseMessangingHelper {
   }
 
   // not use
-  Future<NotificationSettingList> _getNotification(LocalStorage storage) async {
+  Future<List<NotificationSetting>> _getNotification(LocalStorage storage) async {
     var jsonSetting =
         await rootBundle.loadString('assets/data/defaultNotificationList.json');
     var jsonSettingList = json.decode(jsonSetting)['defaultNotificationList'];
 
-    NotificationSettingList notificationSettingList =
-        NotificationSettingList.fromJson(jsonSettingList);
+    List<NotificationSetting> notificationSettingList =
+        NotificationSetting.notificationSettingListFromJson(jsonSettingList);
     storage.setItem("notification", jsonSettingList);
 
     return notificationSettingList;
@@ -127,23 +125,23 @@ class FirebaseMessangingHelper {
 
   subscribeTheNotification(NotificationSetting notificationSetting) {
     if(notificationSetting.id == 'horoscopes' || notificationSetting.id == 'subscriptionChannels') {
-      notificationSetting.notificationSettingList.forEach(
+      notificationSetting.notificationSettingList!.forEach(
         (element) { 
           if(notificationSetting.value && element.value) {
-            subscribeToTopic(element.topic);
+            subscribeToTopic(element.topic!);
           }
           else if(!notificationSetting.value || !element.value){
-            unsubscribeFromTopic(element.topic);
+            unsubscribeFromTopic(element.topic!);
           }
         }
       );
     }
     else {
       if(notificationSetting.value) {
-        subscribeToTopic(notificationSetting.topic);
+        subscribeToTopic(notificationSetting.topic!);
       }
       else {
-        unsubscribeFromTopic(notificationSetting.topic);
+        unsubscribeFromTopic(notificationSetting.topic!);
       }
     }
   }

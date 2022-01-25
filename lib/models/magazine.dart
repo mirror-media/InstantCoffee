@@ -10,13 +10,13 @@ class Magazine {
   final String onlineReadingUrl;
 
   Magazine({
-    this.type,
-    this.issue,
-    this.title,
-    this.publishedDate,
-    this.photoUrl,
-    this.pdfUrl,
-    this.onlineReadingUrl,
+    required this.type,
+    required this.issue,
+    required this.title,
+    required this.publishedDate,
+    required this.photoUrl,
+    required this.pdfUrl,
+    required this.onlineReadingUrl,
   });
 
   factory Magazine.fromJson(Map<String, dynamic> json, String type) {
@@ -33,7 +33,8 @@ class Magazine {
     String pdfUrl = '';
     if (json.containsKey('magazine') &&
         json['magazine'] != null &&
-        json['magazine'].containsKey('url')) {
+        json['magazine'].containsKey('url') &&
+        json['magazine']['url'] != null) {
       pdfUrl = json['magazine']['url'];
     }
 

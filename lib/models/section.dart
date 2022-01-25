@@ -9,16 +9,16 @@ class Section {
   int order;
   String type;
 
-  SectionAd sectionAd;
+  SectionAd? sectionAd;
 
   Section({
-    this.key,
-    this.name,
-    this.title,
-    this.description,
-    this.order,
-    this.focus,
-    this.type,
+    required this.key,
+    required this.name,
+    required this.title,
+    required this.description,
+    required this.order,
+    required this.focus,
+    required this.type,
     
     this.sectionAd,
   });
@@ -34,7 +34,7 @@ class Section {
       key: json["_id"] == null ? json["key"] : json["_id"],
       name: json["name"],
       title: json["title"],
-      description: json["description"],
+      description: json["description"] ?? "",
       order: json["sortOrder"] == null ? json["order"] : json["sortOrder"],
       focus: false,
       type: type,
@@ -52,5 +52,9 @@ class Section {
 
   void setOrder(int newOrder) {
     this.order = newOrder;
+  }
+
+  static List<Section> sectionListFromJson(List<dynamic> jsonList) {
+    return jsonList.map<Section>((json) => Section.fromJson(json)).toList();
   }
 }

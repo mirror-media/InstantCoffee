@@ -13,13 +13,13 @@ enum SubscriptionSelectStatus {
 
 class SubscriptionSelectState {
   final SubscriptionSelectStatus status;
-  final SubscriptionDetail subscriptionDetail;
-  final List<ProductDetails> productDetailList;
-  final String storySlug;
+  final SubscriptionDetail? subscriptionDetail;
+  final List<ProductDetails>? productDetailList;
+  final String? storySlug;
   final dynamic errorMessages;
 
   const SubscriptionSelectState._({
-    this.status,
+    required this.status,
     this.subscriptionDetail,
     this.productDetailList,
     this.storySlug,
@@ -33,8 +33,8 @@ class SubscriptionSelectState {
       : this._(status: SubscriptionSelectStatus.loading);
 
   const SubscriptionSelectState.loaded({
-    SubscriptionDetail subscriptionDetail,
-    List<ProductDetails> productDetailList,
+    required SubscriptionDetail subscriptionDetail,
+    required List<ProductDetails> productDetailList,
   })  : this._(
         status: SubscriptionSelectStatus.loaded,
         subscriptionDetail: subscriptionDetail,
@@ -42,8 +42,8 @@ class SubscriptionSelectState {
       );
 
   const SubscriptionSelectState.buying({
-    SubscriptionDetail subscriptionDetail,
-    List<ProductDetails> productDetailList,
+    required SubscriptionDetail subscriptionDetail,
+    required List<ProductDetails> productDetailList,
   })  : this._(
         status: SubscriptionSelectStatus.buying,
         subscriptionDetail: subscriptionDetail,
@@ -51,7 +51,7 @@ class SubscriptionSelectState {
       );
 
   const SubscriptionSelectState.buyingSuccess({
-    String storySlug,
+    String? storySlug,
   })  : this._(
         status: SubscriptionSelectStatus.buyingSuccess,
         storySlug: storySlug

@@ -8,17 +8,17 @@ class SubscriptionDetail {
   final bool isAutoRenewing;
 
   SubscriptionDetail({
-    this.subscriptionType,
-    this.paymentType,
-    this.isAutoRenewing,
+    required this.subscriptionType,
+    required this.paymentType,
+    required this.isAutoRenewing ,
   });
 
   factory SubscriptionDetail.fromJson(Map<String, dynamic> json) {
     String subscriptionTypeJson = json['member']['type'];
     SubscriptionType subscriptionType = subscriptionTypeJson.toEnum(SubscriptionType.values);
 
-    PaymentType paymentType;
-    bool isAutoRenewing = false;
+    late PaymentType paymentType;
+    late bool isAutoRenewing;
 
     if(json['member']['subscription'] != null) {
       String paymentMethodJson = json['member']['subscription'][0]['paymentMethod'];

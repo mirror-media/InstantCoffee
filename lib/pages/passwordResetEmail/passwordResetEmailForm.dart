@@ -11,8 +11,8 @@ class PasswordResetEmailForm extends StatefulWidget {
   final String email;
   final PasswordResetEmailState state;
   PasswordResetEmailForm({
-    @required this.email,
-    @required this.state,
+    required this.email,
+    required this.state,
   });
 
   @override
@@ -39,9 +39,9 @@ class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
   }
 
   bool _isEmailValid() {
-    Pattern pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
+    String pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
     RegExp regex = RegExp(pattern);
-    return _emailEditingController.text != null && regex.hasMatch(_emailEditingController.text);
+    return regex.hasMatch(_emailEditingController.text);
   }
 
   _sendPasswordResetEmail(String email) {
@@ -163,10 +163,10 @@ class _PasswordResetEmailFormState extends State<PasswordResetEmailForm> {
     );
   }
 
-  String _validateEmail(String value) {
-    Pattern pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
+  String? _validateEmail(String? value) {
+    String pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
     RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value) || value == null)
+    if (value == null || !regex.hasMatch(value))
       return '請輸入有效的 Email 地址';
     else
       return null;

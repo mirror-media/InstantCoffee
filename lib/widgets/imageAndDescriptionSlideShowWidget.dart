@@ -1,16 +1,16 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/models/contentList.dart';
+import 'package:readr_app/models/content.dart';
 import 'package:readr_app/widgets/imageDescriptionWidget.dart';
 
 class ImageAndDescriptionSlideShowWidget extends StatefulWidget {
-  final ContentList contentList;
+  final List<Content> contentList;
   final bool isMemberContent;
   final List<String> imageUrlList;
   ImageAndDescriptionSlideShowWidget({
-    @required this.contentList,
-     @required this.imageUrlList,
+    required this.contentList,
+     required this.imageUrlList,
     this.isMemberContent = false,
   });
 
@@ -21,10 +21,10 @@ class ImageAndDescriptionSlideShowWidget extends StatefulWidget {
 
 class _ImageAndDescriptionSlideShowWidgetState
     extends State<ImageAndDescriptionSlideShowWidget> {
-  double theSmallestRatio;
-  double carouselRatio;
-  ContentList contentList;
-  CarouselOptions options;
+  double? theSmallestRatio;
+  late double carouselRatio;
+  late List<Content> contentList;
+  late CarouselOptions options;
   CarouselController carouselController = CarouselController();
 
   bool backActivated = false;
@@ -86,7 +86,7 @@ class _ImageAndDescriptionSlideShowWidgetState
     contentList.forEach((content) {
       if (theSmallestRatio == null) {
         theSmallestRatio = content.aspectRatio;
-      } else if (theSmallestRatio > content.aspectRatio) {
+      } else if (theSmallestRatio! > content.aspectRatio!) {
         theSmallestRatio = content.aspectRatio;
       }
     });
@@ -103,7 +103,7 @@ class _ImageAndDescriptionSlideShowWidgetState
     double textSize = 16;
     double textHeight = 1.4;
     double textRows = 4;
-    double height = width / theSmallestRatio + 8 + textHeight * textSize * textRows;
+    double height = width / theSmallestRatio! + 8 + textHeight * textSize * textRows;
 
     carouselRatio = width / height;
     options = CarouselOptions(
@@ -115,10 +115,10 @@ class _ImageAndDescriptionSlideShowWidgetState
 
     List<Widget> silders = contentList
         .map((content) => ImageDescriptionWidget(
-              imageUrl: content.data,
-              description: content.description,
+              imageUrl: content.data!,
+              description: content.description!,
               width: width,
-              aspectRatio: content.aspectRatio,
+              aspectRatio: content.aspectRatio!,
               isMemberContent: widget.isMemberContent,
               imageUrlList: widget.imageUrlList,
             ))

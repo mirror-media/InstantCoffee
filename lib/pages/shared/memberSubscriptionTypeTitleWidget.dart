@@ -6,8 +6,8 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
   final SubscriptionType subscriptionType;
   final double fontSize;
   MemberSubscriptionTypeTitleWiget({
-    @required this.subscriptionType,
-    @required this.fontSize,
+    required this.subscriptionType,
+    required this.fontSize,
   });
 
   @override

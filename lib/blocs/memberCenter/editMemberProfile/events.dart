@@ -26,8 +26,8 @@ class FetchMemberProfile extends EditMemberProfileEvents {
     try {
       yield MemberLoading();
       FirebaseAuth auth = FirebaseAuth.instance;
-      String token = await auth.currentUser.getIdToken();
-      Member member = await memberRepos.fetchMemberData(auth.currentUser.uid, token);
+      String token = await auth.currentUser!.getIdToken();
+      Member member = await memberRepos.fetchMemberInformation(auth.currentUser!.uid, token);
       yield MemberLoaded(member: member);
     } on SocketException {
       yield MemberLoadedError(
@@ -73,7 +73,7 @@ class UpdateMemberProfile extends EditMemberProfileEvents {
   FirebaseAuth _auth = FirebaseAuth.instance;
   final Member editMember;
   UpdateMemberProfile({
-    this.editMember,
+    required this.editMember,
   });
 
   @override
@@ -83,7 +83,7 @@ class UpdateMemberProfile extends EditMemberProfileEvents {
   Stream<EditMemberProfileState> run(MemberRepos memberRepos) async*{
     print(this.toString());
     yield SavingLoading(member: editMember);
-    String token = await _auth.currentUser.getIdToken();
+    String token = await _auth.currentUser!.getIdToken();
     bool updateSuccess = await memberRepos.updateMemberProfile(
       editMember.israfelId,
       token,
@@ -114,6 +114,6 @@ class UpdateMemberProfile extends EditMemberProfileEvents {
       );
     }
 
-    RouteGenerator.navigatorKey.currentState.pop();
+    RouteGenerator.navigatorKey.currentState!.pop();
   }
 }

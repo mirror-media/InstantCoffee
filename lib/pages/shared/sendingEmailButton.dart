@@ -10,9 +10,9 @@ class SendingEmailButton extends StatefulWidget {
   final int waitingSeconds;
 
   SendingEmailButton({
-    @required this.emailIsValid,
-    @required this.isWaiting,
-    @required this.onTap,
+    required this.emailIsValid,
+    required this.isWaiting,
+    required this.onTap,
     this.waitingSeconds = 30,
   });
 
@@ -21,8 +21,8 @@ class SendingEmailButton extends StatefulWidget {
 }
 
 class _SendingEmailButtonState extends State<SendingEmailButton> {
-  bool _isWaiting;
-  Timer _timer;
+  late bool _isWaiting;
+  late Timer _timer;
 
   @override
   void initState() {

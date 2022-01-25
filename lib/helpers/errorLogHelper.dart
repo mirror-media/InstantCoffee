@@ -11,7 +11,7 @@ class ErrorLogHelper {
 
   Future<bool> record(
     String eventName,
-    Map eventParametersMap,
+    Map? eventParametersMap,
     String errorMessage,
   ) async{
     FirebaseAuth _auth = FirebaseAuth.instance;

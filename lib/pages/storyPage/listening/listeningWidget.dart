@@ -7,7 +7,7 @@ import 'package:readr_app/blocs/storyPage/listening/states.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/models/listening.dart';
-import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/models/record.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
 import 'package:readr_app/widgets/youtubeWidget.dart';
 
@@ -44,7 +44,7 @@ class _ListeningWidget extends State<ListeningWidget> {
 
         if(state is ListeningStoryLoaded) {
           Listening listening = state.listening;
-          RecordList recordList = state.recordList;
+          List<Record> recordList = state.recordList;
 
           return _buildListeningStoryWidget(
             width,
@@ -66,7 +66,7 @@ class _ListeningWidget extends State<ListeningWidget> {
   Widget _buildListeningStoryWidget(
     double width,
     Listening listening,
-    RecordList recordList,
+    List<Record> recordList,
   ) {
     return Column(
       children: [
@@ -80,7 +80,7 @@ class _ListeningWidget extends State<ListeningWidget> {
             if(isListeningWidgetAdsActivated)
             ...[
               MMAdBanner(
-                adUnitId: listening.storyAd.hDUnitId,
+                adUnitId: listening.storyAd!.hDUnitId,
                 adSize: AdSize.mediumRectangle,
                 isKeepAlive: true,
               ),
@@ -94,7 +94,7 @@ class _ListeningWidget extends State<ListeningWidget> {
             if(isListeningWidgetAdsActivated)
             ...[
               MMAdBanner(
-                adUnitId: listening.storyAd.aT1UnitId,
+                adUnitId: listening.storyAd!.aT1UnitId,
                 adSize: AdSize.mediumRectangle,
                 isKeepAlive: true,
               ),
@@ -107,7 +107,7 @@ class _ListeningWidget extends State<ListeningWidget> {
             if(isListeningWidgetAdsActivated)
             ...[
               MMAdBanner(
-                adUnitId: listening.storyAd.fTUnitId,
+                adUnitId: listening.storyAd!.fTUnitId,
                 adSize: AdSize.mediumRectangle,
                 isKeepAlive: true,
               ),
@@ -117,7 +117,7 @@ class _ListeningWidget extends State<ListeningWidget> {
         ),
         if(isListeningWidgetAdsActivated)
           MMAdBanner(
-            adUnitId: listening.storyAd.stUnitId,
+            adUnitId: listening.storyAd!.stUnitId,
             adSize: AdSize.banner,
             isKeepAlive: true,
           ),
@@ -160,7 +160,7 @@ class _ListeningWidget extends State<ListeningWidget> {
     );
   }
 
-  _buildTheNewestVideos(double width, RecordList recordList) {
+  _buildTheNewestVideos(double width, List<Record> recordList) {
     double imageWidth = width - 32;
     double imageHeight = width / 16 * 9;
 

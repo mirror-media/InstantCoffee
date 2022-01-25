@@ -4,20 +4,10 @@ import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/models/graphqlBody.dart';
 import 'package:readr_app/models/subscribedArticle.dart';
+import 'package:readr_app/services/memberService.dart';
 
 class SubscribedArticlesService {
   ApiBaseHelper _helper = ApiBaseHelper();
-
-  static Map<String, String> getHeaders(String token) {
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-    if (token != null) {
-      headers.addAll({"Authorization": "Bearer $token"});
-    }
-    
-    return headers;
-  }
 
   Future<List<SubscribedArticle>> getSubscribedArticles(
       String firebaseId, String token) async {
@@ -41,7 +31,7 @@ class SubscribedArticlesService {
     final jsonResponse = await _helper.postByUrl(
       Environment().config.memberApi,
       jsonEncode(graphqlBody.toJson()),
-      headers: getHeaders(token),
+      headers: MemberService.getHeaders(token),
     );
 
     List<SubscribedArticle> subscribedArticles = [];

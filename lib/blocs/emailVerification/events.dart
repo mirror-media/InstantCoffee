@@ -14,8 +14,8 @@ class SendEmailVerification extends EmailVerificationEvents {
   final String email;
   final String redirectUrl;
   SendEmailVerification({
-    this.email, 
-    this.redirectUrl,
+    required this.email, 
+    required this.redirectUrl,
   });
 
   @override

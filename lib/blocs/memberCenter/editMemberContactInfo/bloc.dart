@@ -5,7 +5,7 @@ import 'package:readr_app/services/memberService.dart';
 
 class EditMemberContactInfoBloc extends Bloc<EditMemberContactInfoEvents, EditMemberContactInfoState> {
   final MemberRepos memberRepos;
-  EditMemberContactInfoBloc({this.memberRepos}) : super(EditMemberContactInfoInitState());
+  EditMemberContactInfoBloc({required this.memberRepos}) : super(EditMemberContactInfoInitState());
 
   @override
   Stream<EditMemberContactInfoState> mapEventToState(EditMemberContactInfoEvents event) async* {

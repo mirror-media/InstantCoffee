@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 class DeleteMemberWidget extends StatefulWidget {
   final String israfelId;
   DeleteMemberWidget({
-    @required this.israfelId,
+    required this.israfelId,
   });
 
   @override
@@ -57,7 +57,7 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
     );
   }
 
-  Widget _buildBar(BuildContext context, {bool isDeletedSuccessfully = false}) {
+  PreferredSizeWidget _buildBar(BuildContext context, {bool isDeletedSuccessfully = false}) {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),
@@ -76,6 +76,7 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
   }
 
   Widget _askingDeleteMemberWidget(BuildContext context) {
+    String? email = _auth.currentUser?.email;
     return ListView(
       children: [
         SizedBox(height: 72),
@@ -95,7 +96,7 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
           child: Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: Text(
-              '您的會員帳號為：${_auth.currentUser.email}',
+              '您的會員帳號為：$email',
               style: TextStyle(
                 fontSize: 17,
               ),

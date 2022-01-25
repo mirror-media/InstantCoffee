@@ -3,11 +3,11 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class YoutubeWidget extends StatefulWidget {
   final String youtubeId;
-  final String description;
+  final String? description;
   final double width;
   YoutubeWidget({
-    @required this.width,
-    @required this.youtubeId,
+    required this.width,
+    required this.youtubeId,
     this.description,
   });
 
@@ -50,7 +50,7 @@ class _YoutubeWidgetState extends State<YoutubeWidget> with AutomaticKeepAliveCl
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(
-              widget.description,
+              widget.description!,
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ),

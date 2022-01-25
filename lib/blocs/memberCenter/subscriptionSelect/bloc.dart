@@ -15,13 +15,13 @@ import 'package:readr_app/services/subscriptionSelectService.dart';
 class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, SubscriptionSelectState> {
   IAPSubscriptionHelper _iapSubscriptionHelper = IAPSubscriptionHelper();
   final SubscriptionSelectRepos subscriptionSelectRepos;
-  final String storySlug;
+  final String? storySlug;
 
-  StreamSubscription<PurchaseDetails> _buyingPurchaseSubscription;
+  late StreamSubscription<PurchaseDetails> _buyingPurchaseSubscription;
 
   SubscriptionSelectBloc({
-    this.subscriptionSelectRepos,
-    this.storySlug
+    required this.subscriptionSelectRepos,
+    required this.storySlug
   }) : super(SubscriptionSelectState.init()) {
     _iapSubscriptionHelper.verifyPurchaseInBloc = true;
 
@@ -82,8 +82,8 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
     print(event.toString());
     try{
       emit(SubscriptionSelectState.buying(
-        subscriptionDetail: state.subscriptionDetail,
-        productDetailList: state.productDetailList
+        subscriptionDetail: state.subscriptionDetail!,
+        productDetailList: state.productDetailList!
       ));
       bool buySuccess = await subscriptionSelectRepos.buySubscriptionProduct(event.purchaseParam);
       if(buySuccess) {
@@ -99,8 +99,8 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
         );
 
         emit(SubscriptionSelectState.loaded(
-          subscriptionDetail: state.subscriptionDetail,
-          productDetailList: state.productDetailList,
+          subscriptionDetail: state.subscriptionDetail!,
+          productDetailList: state.productDetailList!,
         ));
       }
     } catch (e) {
@@ -115,8 +115,8 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
       );
 
       emit(SubscriptionSelectState.loaded(
-        subscriptionDetail: state.subscriptionDetail,
-        productDetailList: state.productDetailList,
+        subscriptionDetail: state.subscriptionDetail!,
+        productDetailList: state.productDetailList!,
       ));
     }
   }
@@ -131,8 +131,8 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
         await _iapSubscriptionHelper.completePurchase(purchaseDetails);
       }
       emit(SubscriptionSelectState.loaded(
-        subscriptionDetail: state.subscriptionDetail,
-        productDetailList: state.productDetailList,
+        subscriptionDetail: state.subscriptionDetail!,
+        productDetailList: state.productDetailList!,
       ));
     } else if(purchaseDetails.status == PurchaseStatus.purchased) {
       bool isSuccess = await _iapSubscriptionHelper.verifyEntirePurchase(purchaseDetails);
@@ -152,8 +152,8 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
         emit(SubscriptionSelectState.verifyPurchaseFail());
       }
     } else if(purchaseDetails.status == PurchaseStatus.error) {
-      print("error code: ${purchaseDetails.error.code}");
-      print("error message: ${purchaseDetails.error.message}");
+      print("error code: ${purchaseDetails.error!.code}");
+      print("error message: ${purchaseDetails.error!.message}");
       Fluttertoast.showToast(
         msg: '購買失敗，請再試一次',
         toastLength: Toast.LENGTH_SHORT,
@@ -165,8 +165,8 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
       );
 
       emit(SubscriptionSelectState.loaded(
-        subscriptionDetail: state.subscriptionDetail,
-        productDetailList: state.productDetailList,
+        subscriptionDetail: state.subscriptionDetail!,
+        productDetailList: state.productDetailList!,
       ));
     }
   }

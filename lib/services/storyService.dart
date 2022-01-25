@@ -8,6 +8,7 @@ import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/helpers/appException.dart';
 import 'package:readr_app/helpers/cacheDurationCache.dart';
 import 'package:readr_app/helpers/mMCacheManager.dart';
+import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/storyRes.dart';
 import 'package:readr_app/services/memberService.dart';
 
@@ -16,15 +17,11 @@ abstract class StoryRepos {
 }
 
 class StoryService implements StoryRepos{
-  MMCacheManager _mMCacheManager;
-  ApiBaseHelper _helper;
-  FirebaseAuth _auth;
+  MMCacheManager _mMCacheManager = MMCacheManager();
+  ApiBaseHelper _helper = ApiBaseHelper();
+  FirebaseAuth _auth= FirebaseAuth.instance;
   
-  StoryService() {
-    _mMCacheManager = MMCacheManager();
-    _helper = ApiBaseHelper();
-    _auth = FirebaseAuth.instance;
-  }
+  StoryService();
 
   String _getStoryApi(String slug, bool isMemberCheck) {
     if(isMemberCheck) {
@@ -46,12 +43,12 @@ class StoryService implements StoryRepos{
   /// If the json file is not member only, 
   /// save the file in cache.
   Future<StoryRes> fetchStory(String slug, bool isMemberCheck) async {
-    String token = await _auth?.currentUser?.getIdToken();
+    String? token = await _auth.currentUser?.getIdToken();
     String endpoint = _getStoryApi(slug, isMemberCheck);
 
     bool isCacheFileExists = await _mMCacheManager.isFileExistsAndNotExpired(endpoint);
     var jsonResponse;
-    Uint8List fileBytes;
+    Uint8List fileBytes = Uint8List(0);
     if(isCacheFileExists) {
       jsonResponse = await _helper.getByCache(endpoint);
     } else {
@@ -73,7 +70,8 @@ class StoryService implements StoryRepos{
     }
 
     StoryRes storyRes = StoryRes.fromJson(jsonResponse);
-    if(!isCacheFileExists && !storyRes.story.categories.isMemberOnly()) {
+    if(!isCacheFileExists && 
+      !Category.isMemberOnlyInCategoryList(storyRes.story.categories)) {
       // save cache file
       _mMCacheManager.putFile(
         endpoint, 

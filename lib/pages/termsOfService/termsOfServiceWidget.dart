@@ -8,7 +8,7 @@ import 'package:readr_app/models/story.dart';
 class TermsOfServiceWidget extends StatefulWidget {
   final Story story;
   TermsOfServiceWidget({
-    @required this.story,
+    required this.story,
   });
   
   @override
@@ -68,7 +68,7 @@ class _TermsOfServiceWidgetState extends State<TermsOfServiceWidget> {
               value: _isAgreeTerms,
               onChanged: (value) {
                 setState(() {
-                  _isAgreeTerms = value;
+                  _isAgreeTerms = value??false;
                 });
               },
             ),
@@ -121,8 +121,7 @@ class _TermsOfServiceWidgetState extends State<TermsOfServiceWidget> {
         itemCount: story.apiDatas.length,
         itemBuilder: (context, index) {
           Paragraph paragraph = story.apiDatas[index];
-          if (paragraph.contents != null && 
-              paragraph.contents.length > 0 &&
+          if (paragraph.contents.length > 0 &&
               paragraph.contents[0].data != '') {
             return Padding(
               padding: const EdgeInsets.only(top: 16.0),

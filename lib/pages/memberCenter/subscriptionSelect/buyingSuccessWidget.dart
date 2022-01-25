@@ -3,7 +3,7 @@ import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 
 class BuyingSuccessWidget extends StatelessWidget {
-  final String storySlug;
+  final String? storySlug;
   BuyingSuccessWidget({
     this.storySlug,
   });
@@ -57,7 +57,7 @@ class BuyingSuccessWidget extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                RouteGenerator.navigateToStory(storySlug);
+                RouteGenerator.navigateToStory(storySlug!);
               }
             ),
           ),
@@ -84,7 +84,7 @@ class BuyingSuccessWidget extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              RouteGenerator.navigatorKey.currentState.popUntil((route) => route.isFirst);
+              RouteGenerator.navigatorKey.currentState!.popUntil((route) => route.isFirst);
               RouteGenerator.navigateToLogin();
             }
           ),

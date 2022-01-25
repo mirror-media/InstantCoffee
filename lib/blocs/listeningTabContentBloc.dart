@@ -4,36 +4,32 @@ import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/models/sectionAd.dart';
 import 'package:readr_app/services/listeningTabContentService.dart';
-import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/models/record.dart';
 
 class ListeningTabContentBloc {
   String _endpoint = Environment().config.listeningWidgetApi;
   bool _isLoading = false;
   bool _needLoadingMore = true;
 
-  ListeningTabContentService _listeningTabContentService;
+  ListeningTabContentService _listeningTabContentService = ListeningTabContentService();
 
-  SectionAd _sectionAd;
-  RecordList _records;
+  late SectionAd _sectionAd;
+  List<Record> _records = [];
   SectionAd get sectionAd => _sectionAd;
-  RecordList get records => _records;
+  List<Record> get records => _records;
 
-  StreamController _listeningTabContentController;
-  StreamSink<ApiResponse<RecordList>> get listeningTabContentSink =>
+  StreamController<ApiResponse<List<Record>>> _listeningTabContentController= StreamController<ApiResponse<List<Record>>>();
+  StreamSink<ApiResponse<List<Record>>> get listeningTabContentSink =>
       _listeningTabContentController.sink;
-  Stream<ApiResponse<RecordList>> get listeningTabContentStream =>
+  Stream<ApiResponse<List<Record>>> get listeningTabContentStream =>
       _listeningTabContentController.stream;
 
   ListeningTabContentBloc(SectionAd sectionAd) {
     _sectionAd = sectionAd;
-    _records = RecordList();
-    _listeningTabContentService = ListeningTabContentService();
-    _listeningTabContentController =
-        StreamController<ApiResponse<RecordList>>();
     fetchRecordList();
   }
 
-  sinkToAdd(ApiResponse<RecordList> value) {
+  sinkToAdd(ApiResponse<List<Record>> value) {
     if (!_listeningTabContentController.isClosed) {
       listeningTabContentSink.add(value);
     }
@@ -41,14 +37,14 @@ class ListeningTabContentBloc {
 
   fetchRecordList() async {
     _isLoading = true;
-    if (_records == null || _records.length == 0) {
+    if (_records.length == 0) {
       sinkToAdd(ApiResponse.loading('Fetching Listening Tab Content'));
     } else {
       sinkToAdd(ApiResponse.loadingMore('Loading More Listening Tab Content'));
     }
 
     try {
-      RecordList latests =
+      List<Record> latests =
           await _listeningTabContentService.fetchRecordList(_endpoint);
       _needLoadingMore = latests.length != 0;
 
@@ -56,7 +52,7 @@ class ListeningTabContentBloc {
         _records.clear();
       }
 
-      latests = latests.filterDuplicatedSlugByAnother(_records);
+      latests = Record.filterDuplicatedSlugByAnother(latests, _records);
       _records.addAll(latests);
       _isLoading = false;
       sinkToAdd(ApiResponse.completed(_records));
@@ -83,6 +79,6 @@ class ListeningTabContentBloc {
   }
 
   dispose() {
-    _listeningTabContentController?.close();
+    _listeningTabContentController.close();
   }
 }

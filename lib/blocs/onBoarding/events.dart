@@ -1,5 +1,5 @@
 import 'package:readr_app/blocs/onBoarding/states.dart';
-import 'package:readr_app/models/onBoarding.dart';
+import 'package:readr_app/models/OnBoardingPosition.dart';
 
 abstract class OnBoardingEvents{}
 
@@ -12,12 +12,19 @@ class CheckOnBoarding extends OnBoardingEvents {
 
 class GoToNextHint extends OnBoardingEvents {
   final OnBoardingStatus onBoardingStatus;
-  final OnBoarding onBoarding;
+  final OnBoardingPosition onBoardingPosition;
   GoToNextHint({
-    this.onBoardingStatus,
-    this.onBoarding,
+    required this.onBoardingStatus,
+    required this.onBoardingPosition,
   });
 
   @override
   String toString() => 'GoToNextHint { onBoardingStatus: $onBoardingStatus }';
+}
+
+class CloseOnBoarding extends OnBoardingEvents {
+  CloseOnBoarding();
+
+  @override
+  String toString() => 'CloseOnBoarding';
 }

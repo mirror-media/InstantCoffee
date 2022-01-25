@@ -19,7 +19,7 @@ class LoginServices implements LoginRepos{
   @override
   Future<FirebaseLoginStatus> signInWithGoogle() async{
     // Trigger the authentication flow
-    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     if(googleUser == null) {
       return FirebaseLoginStatus(
@@ -31,7 +31,7 @@ class LoginServices implements LoginRepos{
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
     // Create a new credential
-    final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+    final OAuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
@@ -64,10 +64,10 @@ class LoginServices implements LoginRepos{
     switch (facebookUser.status) {
       case LoginStatus.success:
         // Obtain the auth details from the request
-        final AccessToken facebookAuth = facebookUser.accessToken;
+        final AccessToken facebookAuth = facebookUser.accessToken!;
 
         // Create a new credential
-        final FacebookAuthCredential credential = FacebookAuthProvider.credential(
+        final OAuthCredential credential = FacebookAuthProvider.credential(
           facebookAuth.token,
         );
 
@@ -91,14 +91,12 @@ class LoginServices implements LoginRepos{
           status: FirebaseStatus.Cancel,
           message: 'Facebook sign in cancel',
         );
-        break;
       case LoginStatus.failed:
       case LoginStatus.operationInProgress:
         return FirebaseLoginStatus(
           status: FirebaseStatus.Error,
           message: facebookUser.message,
         );
-        break;
     }
     
     return FirebaseLoginStatus(
@@ -124,13 +122,20 @@ class LoginServices implements LoginRepos{
       oauthCredential = OAuthProvider("apple.com").credential(
         idToken: appleCredential.identityToken,
       );
-    } catch (e) {
-      if(e.code == AuthorizationErrorCode.canceled) {
-        return FirebaseLoginStatus(
-          status: FirebaseStatus.Cancel,
-          message: 'Apple sign in cancel',
-        );
+    } catch (onError) {
+      if(onError is SignInWithAppleAuthorizationException) {
+        if(onError.code == AuthorizationErrorCode.canceled) {
+          return FirebaseLoginStatus(
+            status: FirebaseStatus.Cancel,
+            message: 'Apple sign in cancel',
+          );
+        }
       }
+
+      return FirebaseLoginStatus(
+        status: FirebaseStatus.Error,
+        message: onError,
+      );
     }
 
     UserCredential userCredential;
@@ -152,7 +157,7 @@ class LoginServices implements LoginRepos{
   }
 
   Future<List<String>> fetchSignInMethodsForEmail(String email) async {
-    List<String> resultList = List<String>();
+    List<String> resultList = [];
     try {
       resultList = await _auth.fetchSignInMethodsForEmail(email);
     } catch(onError) {
@@ -171,8 +176,8 @@ class LoginServices implements LoginRepos{
       return false;
     }
 
-    for(int i=0; i<auth.currentUser.providerData.length; i++) {
-      UserInfo userInfo =auth.currentUser.providerData[i];
+    for(int i=0; i<auth.currentUser!.providerData.length; i++) {
+      UserInfo userInfo =auth.currentUser!.providerData[i];
       if(userInfo.providerId == 'password') {
         return true;
       }

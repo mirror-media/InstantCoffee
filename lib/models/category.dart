@@ -7,12 +7,12 @@ class Category {
   bool isMemberOnly;
 
   Category({
-    this.id,
-    this.name,
-    this.title,
-    this.isCampaign,
-    this.isSubscribed,
-    this.isMemberOnly,
+    required this.id,
+    required this.name,
+    required this.title,
+    this.isCampaign = false,
+    this.isSubscribed = true,
+    this.isMemberOnly = false,
   });
 
   factory Category.fromJson(Map<String, dynamic> json) {
@@ -20,7 +20,7 @@ class Category {
       id: json['_id'],
       name: json['name'],
       title: json['title'],
-      isCampaign: json['isCampaign'],
+      isCampaign: json['isCampaign'] ?? false,
       isSubscribed: json['isSubscribed'] ?? true,
       isMemberOnly: json['isMemberOnly'] ?? false,
     );
@@ -48,5 +48,109 @@ class Category {
     return a.name == b.name &&
         a.title == b.title &&
         a.isCampaign == b.isCampaign;
+  }
+
+  static List<Map<dynamic, dynamic>> categoryListToJson(List<Category> categoryList) {
+    List<Map> categoryMaps = [];
+    for (Category category in categoryList) {
+      categoryMaps.add(category.toJson());
+    }
+    return categoryMaps;
+  }
+
+  static List<Category> categoryListFromJson(List<dynamic> jsonList) {
+    return jsonList.map<Category>((json) => Category.fromJson(json)).toList();
+  }
+
+  static bool isMemberOnlyInCategoryList(List<Category> categoryList) {
+    return categoryList.any((category) => category.isMemberOnly);
+  }
+
+  static List<String> getSubscriptionIdStringList(List<Category> categoryList) {
+    List<String> idStringList = [];
+    for (Category category in categoryList) {
+      if (category.isSubscribed) {
+        idStringList.add(category.id);
+      }
+    }
+    return idStringList;
+  }
+
+  static int subscriptionCountInCategoryList(List<Category> categoryList) {
+    int count = 0;
+    for(int i=0; i<categoryList.length; i++) {
+      if(categoryList[i].isSubscribed) {
+        count ++;
+      }
+    }
+    
+    return count;
+  }
+
+  static bool isTheSame(List<Category> categoryList, List<Category> other) {
+    if(categoryList.length != other.length) {
+      return false;
+    }
+    for(int i=0; i<categoryList.length; i++) {
+      if(categoryList[i].id != other[i].id || 
+        categoryList[i].name != other[i].name ||
+        categoryList[i].title != other[i].title ||
+        categoryList[i].isCampaign != other[i].isCampaign
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  static List<Category> getTheNewestCategoryList({
+    required List<Category>? localCategoryList, 
+    required List<Category> onlineCategoryList
+  }) {
+    if (localCategoryList == null) {
+      return onlineCategoryList;
+    }
+
+    if(isTheSame(localCategoryList, onlineCategoryList)) {
+      return localCategoryList;
+    }
+
+    if (onlineCategoryList.length != 0) {
+      List<Category> resultCategoryList = [];
+
+      for (int i = 0; i < onlineCategoryList.length; i++) {
+        Category onlineCategory = onlineCategoryList[i];
+        bool onlineCategoryListIsExistedInLocalCategoryList = false;
+
+        for (int j = 0; j < localCategoryList.length; j++) {
+          Category localCategory = localCategoryList[j];
+
+          // only check the Category id in operator '=='
+          if (localCategory == onlineCategory) {
+            onlineCategoryListIsExistedInLocalCategoryList = true;
+
+            if (!Category.checkOtherParameters(localCategory, onlineCategory)) {
+              resultCategoryList.add(Category(
+                id: onlineCategory.id,
+                name: onlineCategory.name,
+                title: onlineCategory.title,
+                isCampaign: onlineCategory.isCampaign,
+                isSubscribed: localCategory.isSubscribed,
+              ));
+            } else {
+              resultCategoryList.add(localCategory);
+            }
+          }
+        }
+
+        if (!onlineCategoryListIsExistedInLocalCategoryList) {
+          resultCategoryList.add(onlineCategory);
+        }
+      }
+      return resultCategoryList;
+    }
+
+    return localCategoryList;
   }
 }

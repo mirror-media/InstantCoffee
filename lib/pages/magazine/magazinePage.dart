@@ -12,7 +12,7 @@ import 'package:readr_app/services/magazineService.dart';
 class MagazinePage extends StatefulWidget {
   final SubscriptionType subscriptionType;
   MagazinePage({
-    @required this.subscriptionType,
+    required this.subscriptionType,
   });
 
   @override
@@ -93,7 +93,7 @@ class _MagazinePageState extends State<MagazinePage> {
     );
   }
 
-  Widget _buildBar(BuildContext context) {
+  PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),

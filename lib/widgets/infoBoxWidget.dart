@@ -8,8 +8,8 @@ class InfoBoxWidget extends StatelessWidget {
   final String description;
   final bool isMemberContent;
   InfoBoxWidget({
-    @required this.title,
-    @required this.description,
+    required this.title,
+    required this.description,
     this.isMemberContent = false,
   });
   @override
@@ -44,12 +44,18 @@ class InfoBoxWidget extends StatelessWidget {
                 ),
                 HtmlWidget(
                   description,
-                  hyperlinkColor: Colors.blue[900],
                   textStyle: TextStyle(
                     fontSize: 15,
                     height: 1.8,
                     color: Color.fromRGBO(0, 0, 0, 0.66),
                   ),
+                  customStylesBuilder: (element) {
+                    if (element.localName == 'a') {
+                      return {'color': 'blue'};
+                    }
+
+                    return null;
+                  },
                 ),
               ],
             ),
@@ -78,12 +84,18 @@ class InfoBoxWidget extends StatelessWidget {
                   ),
                   HtmlWidget(
                     description,
-                    hyperlinkColor: Colors.blue[900],
                     textStyle: TextStyle(
                       fontSize: 20,
                       height: 1.8,
                       //color: color,
                     ),
+                    customStylesBuilder: (element) {
+                      if (element.localName == 'a') {
+                        return {'color': 'blue'};
+                      }
+
+                      return null;
+                    },
                   ),
                 ],
               ),
@@ -107,7 +119,7 @@ class InfoBoxWidget extends StatelessWidget {
             padding: const EdgeInsets.only(top: 44.0),
             child: CustomPaint(
               painter: TrianglePainter(
-                strokeColor: Colors.grey[600],
+                strokeColor: Colors.grey.shade600,
                 strokeWidth: 10,
                 paintingStyle: PaintingStyle.fill,
               ),

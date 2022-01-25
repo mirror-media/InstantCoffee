@@ -1,14 +1,11 @@
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/category.dart';
-import 'package:readr_app/models/categoryList.dart';
-import 'package:readr_app/models/paragrpahList.dart';
-import 'package:readr_app/models/peopleList.dart';
+import 'package:readr_app/models/paragraph.dart';
+import 'package:readr_app/models/people.dart';
 import 'package:readr_app/models/record.dart';
-import 'package:readr_app/models/recordList.dart';
-import 'package:readr_app/models/sectionList.dart';
+import 'package:readr_app/models/section.dart';
 import 'package:readr_app/models/storyAd.dart';
 import 'package:readr_app/models/tag.dart';
-import 'package:readr_app/models/tagList.dart';
 
 class Story {
   String title;
@@ -18,103 +15,77 @@ class Story {
   String updatedAt;
   String createTime;
   String heroImage;
-  String heroVideo;
-  RecordList relatedStory;
-  String heroCaption;
-  String extendByline;
-  TagList tags;
-  PeopleList writers;
-  PeopleList photographers;
-  PeopleList cameraMen;
-  PeopleList designers;
-  PeopleList engineers;
-  ParagraphList brief;
-  ParagraphList apiDatas;
-  String contentHtml;
-  CategoryList categories;
-  SectionList sections;
+  String? heroVideo;
+  List<Record> relatedStory;
+  String? heroCaption;
+  String? extendByline;
+  List<Tag> tags;
+  List<People> writers;
+  List<People> photographers;
+  List<People> cameraMen;
+  List<People> designers;
+  List<People> engineers;
+  List<Paragraph> brief;
+  List<Paragraph> apiDatas;
+  List<Category> categories;
+  List<Section> sections;
   bool isAdult;
   bool isAdvertised;
   bool isTruncated;
-  String state;
+  String? state;
   List<String> imageUrlList;
 
-  StoryAd storyAd;
+  StoryAd? storyAd;
 
   Story({
-    this.title,
-    this.subtitle,
-    this.slug,
-    this.publishedDate,
-    this.updatedAt,
-    this.createTime,
-    this.heroImage,
-    this.heroVideo,
-    this.relatedStory,
-    this.heroCaption,
-    this.extendByline,
-    this.tags,
-    this.brief,
-    this.apiDatas,
-    this.contentHtml,
-    this.writers,
-    this.photographers,
-    this.cameraMen,
-    this.designers,
-    this.engineers,
-    this.categories,
-    this.sections,
-    this.isAdult,
-    this.isAdvertised,
-    this.isTruncated,
-    this.state,
-    this.imageUrlList,
+    required this.title,
+    required this.subtitle,
+    required this.slug,
+    required this.publishedDate,
+    required this.updatedAt,
+    required this.createTime,
+    required this.heroImage,
+    required this.heroVideo,
+    required this.relatedStory,
+    required this.heroCaption,
+    required this.extendByline,
+    required this.tags,
+    required this.brief,
+    required this.apiDatas,
+    required this.writers,
+    required this.photographers,
+    required this.cameraMen,
+    required this.designers,
+    required this.engineers,
+    required this.categories,
+    required this.sections,
+    required this.isAdult,
+    required this.isAdvertised,
+    required this.isTruncated,
+    required this.state,
+    required this.imageUrlList,
 
     this.storyAd,
   });
 
   factory Story.fromJson(Map<String, dynamic> json) {
-    String origTitle = json['title'];
-    PeopleList writersBuilder = PeopleList.fromJson(json["writers"]);
-    PeopleList photographersBuilder =
-        PeopleList.fromJson(json["photographers"]);
-    PeopleList cameraMenBuilder = PeopleList.fromJson(json["camera_man"]);
-    PeopleList designersBuilder = PeopleList.fromJson(json["designers"]);
-    PeopleList engineersBuilder = PeopleList.fromJson(json["engineers"]);
-    SectionList sectionBuilder = SectionList.fromJson(json["sections"]);
-    ParagraphList brief = json["brief"] == null
-        ? ParagraphList()
-        : ParagraphList.fromJson(json["brief"]["apiData"]);
-    ParagraphList apiDatas = json["content"] == null
-        ? ParagraphList()
-        : ParagraphList.fromJson(json["content"]["apiData"]);
+    final String origTitle = json['title'] ?? '';
+    final String title = origTitle.replaceAll('　', "\n");
+    
+    List<Paragraph> briefList = [];
+    if(json["brief"] != null && json["brief"]["apiData"] != null) {
+      briefList = Paragraph.paragraphListFromJson(json["brief"]["apiData"]);
+    }
+
+    List<Paragraph> apiDataList = [];
+    if(json["content"] != null && json["content"]["apiData"] != null) {
+      apiDataList = Paragraph.paragraphListFromJson(json["content"]["apiData"]);
+    }
+
     String photoUrl = Environment().config.mirrorMediaNotImageUrl;
-    String videoUrl;
-    RecordList relatedBuilder = RecordList();
-    CategoryList categoryBuilder = CategoryList();
-    TagList tagBuilder = TagList();
-    final title = origTitle.replaceAll('　', "\n");
+    String? videoUrl;
     List<String> imageUrlList = [];
 
-    if (json["relateds"] != null) {
-      for (int i = 0; i < json["relateds"].length; i++) {
-        Record record = Record.fromJson(json["relateds"][i]);
-        relatedBuilder.add(record);
-      }
-    }
-
-    if (json["categories"] != null) {
-      for (int i = 0; i < json["categories"].length; i++) {
-        Category category = Category.fromJson(json["categories"][i]);
-        categoryBuilder.add(category);
-      }
-    }
-    if (json["tags"] != null) {
-      for (int i = 0; i < json["tags"].length; i++) {
-        Tag tag = Tag.fromJson(json["tags"][i]);
-        tagBuilder.add(tag);
-      }
-    }
     if (json.containsKey('heroImage') &&
         json['heroImage'] != null &&
         (!(json["heroImage"] is String)) &&
@@ -130,16 +101,15 @@ class Story {
       }
     }
 
-    for(var paragraph in apiDatas){
-      if (paragraph.contents != null && 
-        paragraph.contents.length > 0 &&
+    for(var paragraph in apiDataList){
+      if (paragraph.contents.length > 0 &&
         paragraph.contents[0].data != ''){
         if(paragraph.type == 'image'){
-          imageUrlList.add(paragraph.contents[0].data);
+          imageUrlList.add(paragraph.contents[0].data!);
         }else if(paragraph.type == 'slideshow'){
           var contentList = paragraph.contents;
           for(var content in contentList){
-            imageUrlList.add(content.data);
+            imageUrlList.add(content.data!);
           }
         }
       }
@@ -147,39 +117,38 @@ class Story {
 
     return Story(
       title: title,
-      subtitle: json['subtitle'] == null ? '' : json["subtitle"],
-      slug: json['slug'],
-      publishedDate: json['publishedDate'],
-      updatedAt: json['updatedAt'],
-      createTime: json['createTime'],
+      subtitle: json['subtitle'] ?? '',
+      slug: json['slug'] ?? '',
+      publishedDate: json['publishedDate'] ?? '',
+      updatedAt: json['updatedAt'] ?? '',
+      createTime: json['createTime'] ?? '',
       heroImage: photoUrl,
       heroVideo: videoUrl,
-      heroCaption: json["heroCaption"] == null ? '' : json["heroCaption"],
+      heroCaption: json["heroCaption"] ?? '',
       extendByline: json["extend_byline"],
-      relatedStory: relatedBuilder,
-      brief: brief,
-      apiDatas: apiDatas,
-      contentHtml: json["content"] == null ? null : json["content"]["html"],
-      writers: writersBuilder,
-      photographers: photographersBuilder,
-      cameraMen: cameraMenBuilder,
-      designers: designersBuilder,
-      engineers: engineersBuilder,
-      categories: categoryBuilder,
-      sections: sectionBuilder,
-      tags: tagBuilder,
+      relatedStory: json["relateds"] == null ? [] : Record.recordListFromJson(json["relateds"]),
+      brief: briefList,
+      apiDatas: apiDataList,
+      writers: json["writers"] == null ? [] : People.peopleListFromJson(json["writers"]),
+      photographers: json["photographers"] == null ? [] : People.peopleListFromJson(json["photographers"]),
+      cameraMen: json["camera_man"] == null ? [] : People.peopleListFromJson(json["camera_man"]),
+      designers: json["designers"] == null ? [] : People.peopleListFromJson(json["designers"]),
+      engineers: json["engineers"] == null ? [] : People.peopleListFromJson(json["engineers"]),
+      categories: json["categories"] == null ? [] : Category.categoryListFromJson(json["categories"]),
+      sections: json["sections"] == null ? [] : Section.sectionListFromJson(json["sections"]),
+      tags: json["tags"] == null ? [] : Tag.tagListFromJson(json["tags"]),
       state: json["state"],
-      isAdult: json['isAdult'],
-      isTruncated: json['isTruncated'],
+      isAdult: json['isAdult'] ?? false,
+      isTruncated: json['isTruncated'] ?? false,
       isAdvertised: json['isAdvertised'] ?? false,
       imageUrlList: imageUrlList,
     );
   }
 
-  String getSectionName() {
-    String sectionName = '';
+  String? getSectionName() {
+    String? sectionName;
     if (sections.length > 0) {
-      sectionName = sections[0]?.name;
+      sectionName = sections[0].name;
     }
     return sectionName;
   }

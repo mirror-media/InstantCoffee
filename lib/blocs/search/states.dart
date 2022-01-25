@@ -1,57 +1,138 @@
-import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section.dart';
-import 'package:readr_app/models/sectionList.dart';
 
-abstract class SearchState {}
+enum SearchStatus { 
+  initial,
+  sectionListLoading,
+  sectionListLoaded,
+  sectionListLoadingError,
 
-class SearchPageInitState extends SearchState {}
+  searchLoading,
+  searchLoaded,
+  searchLoadingError,
+  searchLoadingMore,
+  searchLoadingMoreFail,
+}
 
-class SearchPageLoading extends SearchState {}
+class SearchState {
+  final SearchStatus status;
+  final Section? targetSection;
+  final List<Section>? sectionList;
 
-class SearchPageLoaded extends SearchState {
-  final Section targetSection;
-  final SectionList sectionList;
-  SearchPageLoaded({
+  final List<Record>? searchStoryList;
+  final int? searchListTotal;
+  final dynamic errorMessages;
+
+  SearchState({
+    required this.status,
     this.targetSection,
-    this.sectionList
+    this.sectionList,
+
+    this.searchStoryList,
+    this.searchListTotal,
+    this.errorMessages,
   });
-}
+  
+  factory SearchState.init() {
+    return SearchState(
+      status: SearchStatus.initial
+    );
+  }
 
-class SearchPageError extends SearchState {
-  final error;
-  SearchPageError({this.error});
-}
+  factory SearchState.sectionListLoading() {
+    return SearchState(
+      status: SearchStatus.sectionListLoading
+    );
+  }
 
-class SearchLoading extends SearchPageLoaded {
-  SearchLoading({
-    Section targetSection,
-    SectionList sectionList,
-  }) : super(targetSection: targetSection, sectionList: sectionList);
-}
+  factory SearchState.sectionListLoaded({
+    required Section targetSection,
+    required List<Section> sectionList,
+  }) {
+    return SearchState(
+      status: SearchStatus.sectionListLoaded,
+      targetSection: targetSection,
+      sectionList: sectionList,
+    );
+  }
 
-class SearchLoadingMore extends SearchPageLoaded {
-  final RecordList searchList;
-  SearchLoadingMore({
-    Section targetSection,
-    SectionList sectionList,
-    this.searchList
-  }) : super(targetSection: targetSection, sectionList: sectionList);
-}
+  factory SearchState.sectionListLoadingError({
+    required dynamic errorMessages
+  }) {
+    return SearchState(
+      status: SearchStatus.sectionListLoadingError,
+      errorMessages: errorMessages,
+    );
+  }
 
-class SearchLoaded extends SearchPageLoaded {
-  final RecordList searchList;
-  SearchLoaded({
-    Section targetSection,
-    SectionList sectionList,
-    this.searchList
-  }) : super(targetSection: targetSection, sectionList: sectionList);
-}
+  factory SearchState.searchLoading({
+    required Section targetSection,
+    required List<Section> sectionList,
+  }) {
+    return SearchState(
+      status: SearchStatus.searchLoading,
+      targetSection: targetSection,
+      sectionList: sectionList,
+    );
+  }
 
-class SearchError extends SearchPageLoaded {
-  final error;
-  SearchError({
-    Section targetSection,
-    SectionList sectionList,
-    this.error
-  }) : super(targetSection: targetSection, sectionList: sectionList);
+  factory SearchState.searchLoaded({
+    required Section targetSection,
+    required List<Section> sectionList,
+    required List<Record> searchStoryList,
+    required int searchListTotal,
+  }) {
+    return SearchState(
+      status: SearchStatus.searchLoaded,
+      targetSection: targetSection,
+      sectionList: sectionList,
+      searchStoryList: searchStoryList,
+      searchListTotal: searchListTotal,
+    );
+  }
+
+  factory SearchState.searchLoadingError({
+    required Section targetSection,
+    required List<Section> sectionList,
+    required dynamic errorMessages
+  }) {
+    return SearchState(
+      status: SearchStatus.searchLoadingError,
+      targetSection: targetSection,
+      sectionList: sectionList,
+      errorMessages: errorMessages,
+    );
+  }
+
+  factory SearchState.searchLoadingMore({
+    required Section targetSection,
+    required List<Section> sectionList,
+    required List<Record> searchStoryList,
+    required int searchListTotal,
+  }) {
+    return SearchState(
+      status: SearchStatus.searchLoadingMore,
+      targetSection: targetSection,
+      sectionList: sectionList,
+      searchStoryList: searchStoryList,
+      searchListTotal: searchListTotal,
+    );
+  }
+
+  factory SearchState.searchLoadingMoreFail({
+    required Section targetSection,
+    required List<Section> sectionList,
+    required List<Record> searchStoryList,
+    required int searchListTotal,
+    required dynamic errorMessages
+  }) {
+    return SearchState(
+      status: SearchStatus.searchLoadingMoreFail,
+      targetSection: targetSection,
+      sectionList: sectionList,
+      searchStoryList: searchStoryList,
+      searchListTotal: searchListTotal,
+      errorMessages: errorMessages,
+    );
+  }
 }

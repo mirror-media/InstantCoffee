@@ -10,8 +10,8 @@ class SpecialMagazineListWidget extends StatefulWidget {
   final MagazineState magazineState;
   final bool isLoadingMoreDone;
   SpecialMagazineListWidget({
-    @required this.magazineList,
-    @required this.magazineState,
+    required this.magazineList,
+    required this.magazineState,
     this.isLoadingMoreDone = false
   });
   

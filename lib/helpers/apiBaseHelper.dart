@@ -26,7 +26,7 @@ class ApiBaseHelper {
       return returnResponse(http.Response(res, 200));
     }
     
-    return returnResponse(http.Response(null, 404));
+    return returnResponse(http.Response("Can not find any cache", 404));
   }
 
   /// Get the json file from cache first.
@@ -41,8 +41,8 @@ class ApiBaseHelper {
   ) async {
     MMCacheManager mMCacheManager = MMCacheManager();
     final cacheFile = await mMCacheManager.getFileFromCache(url);
-    if ( cacheFile == null ||
-      cacheFile != null && cacheFile.validTill.isBefore(DateTime.now())
+    if ( cacheFile == null || 
+      cacheFile.validTill.isBefore(DateTime.now())
     ) {
       Uri uri = Uri.parse(url);
       var responseJson;
@@ -63,7 +63,7 @@ class ApiBaseHelper {
     }
 
     var file = cacheFile.file;
-    if (file != null && await file.exists()) {
+    if (await file.exists()) {
       var mimeStr = lookupMimeType(file.path);
       String res;
       if(mimeStr == 'application/json') {
@@ -75,7 +75,7 @@ class ApiBaseHelper {
       
       return returnResponse(http.Response(res, 200));
     }
-    return returnResponse(http.Response(null, 404));
+    return returnResponse(http.Response("Can not find any cache", 404));
   }
 
   Future<dynamic> getByUrl(
@@ -102,7 +102,7 @@ class ApiBaseHelper {
     getByUrl(baseUrl + endpoint);
   }
 
-  Future<dynamic> postByUrl(String url, dynamic body, {Map<String, String> headers}) async {
+  Future<dynamic> postByUrl(String url, dynamic body, {Map<String, String>? headers}) async {
     var responseJson;
     try {
       Uri uri = Uri.parse(url);

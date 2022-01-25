@@ -7,10 +7,10 @@ class Annotation {
   bool isExpanded;
 
   Annotation({
-    this.text,
-    this.annotation,
-    this.pureAnnotationText,
-    this.isExpanded,
+    required this.text,
+    required this.annotation,
+    required this.pureAnnotationText,
+    this.isExpanded = false,
   });
 
   factory Annotation.fromJson(Map<String, dynamic> json) {
@@ -18,13 +18,16 @@ class Annotation {
       text: json['text'],
       annotation: json['annotation'],
       pureAnnotationText: json['pureAnnotationText'],
-      isExpanded: json['isExpanded'] == null ? false : json['isExpanded'],
+      isExpanded: json['isExpanded'] ?? false,
     );
   }
 
-  factory Annotation.parseResponseBody(String body) {
-    final jsonData = json.decode(body);
+  static Annotation? parseResponseBody(String? body) {
+    if(body == null) {
+      return null;
+    }
 
+    final jsonData = json.decode(body);
     return Annotation.fromJson(jsonData);
   }
 

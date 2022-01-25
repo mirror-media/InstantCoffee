@@ -4,11 +4,11 @@ import 'package:uni_links/uni_links.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 
 class AppLinkHelper {
-  Stream<String> get getStringLinksStream => getLinksStream();
+  Stream<String?> get getStringLinksStream => linkStream;
 
   AppLinkHelper();
 
-  Future<String> getLink() async {
+  Future<String?> getLink() async {
     try {
       return await getInitialLink();
     } on PlatformException {
@@ -18,7 +18,7 @@ class AppLinkHelper {
 
   // it will trigger at the first open
   configAppLink(BuildContext context) async{
-    String link = await getLink();
+    String? link = await getLink();
     if(link != null) {
       var linkList = link.split('/');
       // navigate to storyPage
@@ -36,7 +36,7 @@ class AppLinkHelper {
 
   // it will trigger when app is running in the background
   listenAppLink(BuildContext context) async{
-    getStringLinksStream.listen((String link) { 
+    getStringLinksStream.listen((String? link) { 
       if(link != null) {
         var linkList = link.split('/');
         // navigate to storyPage
@@ -53,7 +53,7 @@ class AppLinkHelper {
     });
   }
 
-  _navigateToStoryPage(BuildContext context, String slug ,{isListeningPage = false}) {
+  _navigateToStoryPage(BuildContext context, String? slug ,{isListeningPage = false}) {
     if(slug != null && slug != '') {
       Navigator.of(context).popUntil((route) => route.isFirst);
       if(isListeningPage) {

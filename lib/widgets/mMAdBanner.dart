@@ -6,8 +6,8 @@ class MMAdBanner extends StatefulWidget {
   final AdSize adSize;
   final bool isKeepAlive;
   MMAdBanner({
-    @required this.adUnitId,
-    @required this.adSize,
+    required this.adUnitId,
+    required this.adSize,
     this.isKeepAlive = false,
   });
 
@@ -20,7 +20,7 @@ class _MMAdBannerState extends State<MMAdBanner> with AutomaticKeepAliveClientMi
   
   static final AdRequest request = AdRequest();
 
-  BannerAd _anchoredBanner;
+  BannerAd? _anchoredBanner;
 
   Future<void> _createAnchoredBanner(BuildContext context) async {
     final BannerAd banner = BannerAd(
@@ -66,9 +66,9 @@ class _MMAdBannerState extends State<MMAdBanner> with AutomaticKeepAliveClientMi
       if (_anchoredBanner != null) {
         return Container(
           color: Colors.transparent,
-          width: _anchoredBanner.size.width.toDouble(),
-          height: _anchoredBanner.size.height.toDouble(),
-          child: AdWidget(ad: _anchoredBanner),
+          width: _anchoredBanner!.size.width.toDouble(),
+          height: _anchoredBanner!.size.height.toDouble(),
+          child: AdWidget(ad: _anchoredBanner!),
         );
       }
 

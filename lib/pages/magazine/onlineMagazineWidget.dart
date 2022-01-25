@@ -84,7 +84,7 @@ class OnlineMagazineWidget extends StatelessWidget {
     String pngPath,
     String url,
     {
-      String label
+      String? label
     }
   ) {
     return InkWell(

@@ -5,7 +5,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 class MMCacheManager extends CacheManager with ImageCacheManager {
   static const key = 'mirrorMediaCache';
 
-  static MMCacheManager _instance;
+  static MMCacheManager? _instance;
 
   // singleton implementation 
   // for the custom cache manager
@@ -24,7 +24,7 @@ class MMCacheManager extends CacheManager with ImageCacheManager {
   );
 
   Future<bool> isFileExistsAndNotExpired(String url) async {
-    final cacheFile = await _instance.getFileFromCache(url);
+    final cacheFile = await _instance!.getFileFromCache(url);
     return cacheFile != null && cacheFile.validTill.isAfter(DateTime.now());
   }
 }

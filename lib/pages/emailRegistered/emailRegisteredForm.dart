@@ -16,10 +16,10 @@ class EmailRegisteredForm extends StatefulWidget {
   final TextEditingController emailEditingController;
   final TextEditingController passwordEditingController;
   EmailRegisteredForm({
-    @required this.email,
-    @required this.state,
-    @required this.emailEditingController,
-    @required this.passwordEditingController,
+    required this.email,
+    required this.state,
+    required this.emailEditingController,
+    required this.passwordEditingController,
   });
 
   @override
@@ -27,8 +27,8 @@ class EmailRegisteredForm extends StatefulWidget {
 }
 
 class _EmailRegisteredFormState extends State<EmailRegisteredForm> {
-  TextEditingController _emailEditingController;
-  TextEditingController _passwordEditingController;
+  late TextEditingController _emailEditingController;
+  late TextEditingController _passwordEditingController;
   bool _emailIsValid = false;
   bool _passwordIsValid = false;
 
@@ -62,13 +62,13 @@ class _EmailRegisteredFormState extends State<EmailRegisteredForm> {
   }
   
   bool _isEmailValid() {
-    Pattern pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
+    String pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
     RegExp regex = RegExp(pattern);
-    return _emailEditingController.text != null && regex.hasMatch(_emailEditingController.text);
+    return regex.hasMatch(_emailEditingController.text);
   }
 
   bool _isPasswordValid() {
-    return _passwordEditingController.text != null && _passwordEditingController.text.length >= 6;
+    return _passwordEditingController.text.length >= 6;
   }
 
   @override

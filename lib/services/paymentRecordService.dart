@@ -3,19 +3,112 @@ import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/models/graphqlBody.dart';
 import 'package:readr_app/models/paymentRecord.dart';
+import 'package:readr_app/services/memberService.dart';
 
 class PaymentRecordService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  static Map<String, String> getHeaders(String token) {
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-    };
-    if (token != null) {
-      headers.addAll({"Authorization": "Bearer $token"});
+  PaymentRecord _changeNewebpayPaymentJsonToPaymentRecord(
+    String paymentOrderNumber,
+    String paymentCurrency,
+    dynamic newebpayPayment,
+  ) {
+    late String productName;
+    if(newebpayPayment['frequency'] == 'monthly'){
+      productName = '月方案';
+    } else if(newebpayPayment['frequency'] == 'yearly'){
+      productName = '年方案';
+    } else {
+      productName = '單篇訂閱';
     }
 
-    return headers;
+    String creditCardInfoLastFour = newebpayPayment['cardInfoLastFour'];
+    String paymentMethod = '信用卡付款($creditCardInfoLastFour)';
+
+    DateTime paymentDate = DateTime(1990,1,1);
+    if(newebpayPayment['paymentTime'] != null){
+      paymentDate = DateTime.parse(newebpayPayment['paymentTime']).toLocal();
+    }
+
+    bool isSuccess = newebpayPayment['status'] == 'SUCCESS';
+
+    int paymentAmount = newebpayPayment['amount'];
+
+    return PaymentRecord(
+      paymentOrderNumber: paymentOrderNumber,
+      productName: productName,
+      paymentType: PaymentType.newebpay,
+      paymentMethod: paymentMethod,
+      paymentDate: paymentDate,
+      isSuccess: isSuccess,
+      
+      paymentCurrency: paymentCurrency,
+      paymentAmount: paymentAmount,
+    );
+  }
+
+  PaymentRecord _changeAppStorePaymentJsonToPaymentRecord(
+    String paymentOrderNumber,
+    dynamic appStorePayment,
+  ) {
+    // TODO: need to fix after api gateway update
+    // if(appStorePayment['productId'] == Environment().config.monthSubscriptionId){
+    //   productName = '月方案';
+    // }
+    String productName = '月方案';
+    
+    String paymentMethod = 'App Store 續扣';
+
+    DateTime paymentDate = DateTime(1990,1,1);
+    if(appStorePayment['purchaseDate'] != null){
+      paymentDate = DateTime.parse(appStorePayment['purchaseDate']).toLocal();
+    }
+
+    bool isSuccess = appStorePayment['status'] == 'SUCCESS';
+
+    return PaymentRecord(
+      paymentOrderNumber: paymentOrderNumber,
+      productName: productName,
+      paymentType: PaymentType.app_store,
+      paymentMethod: paymentMethod,
+      paymentDate: paymentDate,
+      isSuccess: isSuccess,
+    );
+  }
+
+  PaymentRecord _changeGooglePlayPaymentJsonToPaymentRecord(
+    String paymentOrderNumber,
+    String paymentCurrency,
+    dynamic googlePlayPayment,
+  ) {
+    // TODO: need to fix after api gateway update
+    // if(googlePlayPayment['productId'] == Environment().config.monthSubscriptionId){
+    //   productName = '月方案';
+    // }
+    String productName = '月方案';
+    
+    String paymentMethod = 'Google Play 續扣';
+
+    DateTime paymentDate = DateTime(1990,1,1);
+    if(googlePlayPayment['transactionDatetime'] != null){
+      paymentDate = DateTime.parse(googlePlayPayment['transactionDatetime']).toLocal();
+    }
+
+    bool isSuccess = googlePlayPayment['status'] == 'SUCCESS';
+
+    int paymentAmount = googlePlayPayment['amount'];
+
+    return PaymentRecord(
+      paymentOrderNumber: paymentOrderNumber,
+      productName: productName,
+      paymentType: PaymentType.google_play,
+      paymentMethod: paymentMethod,
+      paymentDate: paymentDate,
+      isSuccess: isSuccess,
+
+      paymentCurrency: paymentCurrency,
+      paymentAmount: paymentAmount,
+    );
   }
 
   Future<List<PaymentRecord>> fetchPaymentRecord(String firebaseId, String token) async {
@@ -62,118 +155,51 @@ class PaymentRecordService {
     final jsonResponse = await _helper.postByUrl(
       Environment().config.memberApi,
       jsonEncode(graphqlBody.toJson()),
-      headers: getHeaders(token),
+      headers: MemberService.getHeaders(token),
     );
 
     List<PaymentRecord> paymentRecords = [];
-    if (jsonResponse['data']['member']['subscription'] != null) {
-      jsonResponse['data']['member']['subscription'].forEach((subscription){
-        PaymentRecord paymentRecord;
-        String paymentCurrency = subscription['currency'] == null ? 'TWD':subscription['currency'];
-        String paymentOrderNumber = subscription['orderNumber'];
+    List subscriptionList = jsonResponse['data']['member']['subscription'] ?? [];
+    subscriptionList.forEach((subscription){
+      String paymentCurrency = subscription['currency'] == null ? 'TWD':subscription['currency'];
+      String paymentOrderNumber = subscription['orderNumber'];
 
-        int paymentAmount;
-        String paymentMethod = '';
-        DateTime paymentDate;
-        bool isSuccess = true;
-        String productName = '未知';
+      if(subscription['paymentMethod'] == PaymentType.newebpay.name) {
+        List newebpayPaymentList = subscription['newebpayPayment'] ?? [];
+        newebpayPaymentList.forEach((newebpayPayment){
+          PaymentRecord paymentRecord = _changeNewebpayPaymentJsonToPaymentRecord(
+            paymentOrderNumber,
+            paymentCurrency,
+            newebpayPayment
+          );
 
-        if(subscription['paymentMethod'] == 'newebpay' && subscription['newebpayPayment'] != null){
-          subscription['newebpayPayment'].forEach((newebpayPayment){
-            paymentAmount = newebpayPayment['amount'];
+          paymentRecords.add(paymentRecord);
+        });
+      }
+      else if(subscription['paymentMethod'] == PaymentType.app_store.name) {
+        List appStorePaymentList = subscription['appStorePayment'] ?? [];
+        appStorePaymentList.forEach((appStorePayment){
+          PaymentRecord paymentRecord = _changeAppStorePaymentJsonToPaymentRecord(
+            paymentOrderNumber,
+            appStorePayment
+          );
 
-            String creditCardInfoLastFour = newebpayPayment['cardInfoLastFour'];
-            paymentMethod = '信用卡付款($creditCardInfoLastFour)';
+          paymentRecords.add(paymentRecord);
+        });
+      }
+      else if(subscription['paymentMethod'] == PaymentType.google_play.name) {
+        List googlePlayPaymentList = subscription['googlePlayPayment'] ?? [];
+        googlePlayPaymentList.forEach((googlePlayPayment){
+          PaymentRecord paymentRecord = _changeGooglePlayPaymentJsonToPaymentRecord(
+            paymentOrderNumber,
+            paymentCurrency,
+            googlePlayPayment
+          );
 
-            if(newebpayPayment['paymentTime'] != null){
-              paymentDate = DateTime.parse(newebpayPayment['paymentTime']).toLocal();
-            }
-
-            isSuccess = newebpayPayment['status'] == 'SUCCESS';
-
-            if(newebpayPayment['frequency'] == 'monthly'){
-              productName = '月方案';
-            } else if(newebpayPayment['frequency'] == 'yearly'){
-              productName = '年方案';
-            } else {
-              productName = '單篇訂閱';
-            }
-
-            paymentRecord = PaymentRecord(
-              paymentOrderNumber: paymentOrderNumber,
-              productName: productName,
-              paymentCurrency: paymentCurrency,
-              paymentAmount: paymentAmount,
-              paymentDate: paymentDate,
-              paymentMethod: paymentMethod,
-              isSuccess: isSuccess,
-              paymentType: PaymentType.newebpay,
-            );
-
-            paymentRecords.add(paymentRecord);
-          });
-        }
-        else if(subscription['paymentMethod'] == 'app_store'){
-          paymentMethod = 'App Store 續扣';
-          if(subscription['appStorePayment'] != null){
-            subscription['appStorePayment'].forEach((appStorePayment){
-              if(appStorePayment['purchaseDate'] != null){
-                paymentDate = DateTime.parse(appStorePayment['purchaseDate']).toLocal();
-              }
-
-              // TODO: need to fix after api gateway update
-              // if(appStorePayment['productId'] == Environment().config.monthSubscriptionId){
-              //   productName = '月方案';
-              // }
-              productName = '月方案';
-
-              paymentRecord = PaymentRecord(
-                paymentOrderNumber: paymentOrderNumber,
-                paymentType: PaymentType.app_store,
-                paymentDate: paymentDate,
-                paymentMethod: paymentMethod,
-                productName: productName,
-              );
-
-              paymentRecords.add(paymentRecord);
-            });
-          }
-        }
-        else{
-          paymentAmount = subscription['amount'];
-          paymentMethod = 'Google Play 續扣';
-          if(subscription['googlePlayPayment'] != null){
-            subscription['googlePlayPayment'].forEach((googlePlayPayment){
-              if(googlePlayPayment['transactionDatetime'] != null){
-                paymentDate = DateTime.parse(googlePlayPayment['transactionDatetime']).toLocal();
-              }
-              if(googlePlayPayment['amount'] != null){
-                paymentAmount = googlePlayPayment['amount'];
-              }
-
-              // TODO: need to fix after api gateway update
-              // if(appStorePayment['productId'] == Environment().config.monthSubscriptionId){
-              //   productName = '月方案';
-              // }
-              productName = '月方案';
-
-              paymentRecord = PaymentRecord(
-                paymentOrderNumber: paymentOrderNumber,
-                paymentType: PaymentType.google_play,
-                paymentCurrency: paymentCurrency,
-                paymentAmount: paymentAmount,
-                paymentDate: paymentDate,
-                paymentMethod: paymentMethod,
-                isSuccess: isSuccess,
-                productName: productName,
-              );
-
-              paymentRecords.add(paymentRecord);
-            });
-          }
-        }
-      });
-    }
+          paymentRecords.add(paymentRecord);
+        });
+      }
+    });
     paymentRecords.sort((a,b) => b.paymentDate.compareTo(a.paymentDate));
     return paymentRecords;
   }

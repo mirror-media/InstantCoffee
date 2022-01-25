@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
-import 'package:readr_app/models/memberSubscriptionType.dart';
 
 class JoinMemberBlock extends StatelessWidget {
   final bool isMember;
   final String storySlug;
   final bool isMemberContent;
   JoinMemberBlock({ 
-    @required this.isMember,
-    @required this.storySlug,
+    required this.isMember,
+    required this.storySlug,
     this.isMemberContent = false,
   });
 

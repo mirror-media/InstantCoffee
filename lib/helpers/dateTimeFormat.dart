@@ -20,20 +20,20 @@ class DateTimeFormat {
     return DateFormat(formatType).format(gmt8Date);
   }
 
-  static DateTime changeBirthdayStringToDatetime(String data,) {
-    try{
-      DateTime parsedDate = DateFormat('yyyy-MM-dd').parse(data);
-      return parsedDate;
-    } catch(e) {
+  static DateTime? changeBirthdayStringToDatetime(String? data) {
+    if(data == null) {
       return null;
     }
+
+    DateTime parsedDate = DateFormat('yyyy-MM-dd').parse(data);
+    return parsedDate;
   }
 
   static String changeDatetimeToIso8601String(DateTime data) {
     return data.toIso8601String().split('T')[0];
   }
   /// return string of duration in hh:mm:ss form(has pending 0)
-  static String stringDuration(Duration duration) {
+  static String stringDuration(Duration? duration) {
     if (duration == null) {
       return "00:00";
     }

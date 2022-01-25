@@ -6,7 +6,7 @@ import 'package:readr_app/services/magazineService.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 
 abstract class MagazineEvents{
-  MagazineList magazineList;
+  late MagazineList magazineList;
   Stream<MagazineState> run(MagazineRepos magazineRepos);
 }
 

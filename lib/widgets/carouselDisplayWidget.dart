@@ -11,8 +11,8 @@ class CarouselDisplayWidget extends StatelessWidget {
   final double width;
   final double aspectRatio;
   CarouselDisplayWidget({
-    @required this.record,
-    @required this.width,
+    required this.record,
+    required this.width,
     this.aspectRatio = 16/9,
   });
 

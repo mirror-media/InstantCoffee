@@ -7,7 +7,7 @@ import 'package:readr_app/pages/passwordResetEmail/passwordResetEmailForm.dart';
 class PasswordResetEmailWidget extends StatefulWidget {
   final String email;
   PasswordResetEmailWidget({
-    @required this.email,
+    required this.email,
   });
 
   @override

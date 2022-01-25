@@ -3,8 +3,8 @@ class People {
   String name;
 
   People({
-    this.id,
-    this.name,
+    required this.id,
+    required this.name,
   });
 
   factory People.fromJson(Map<String, dynamic> json) {
@@ -18,4 +18,8 @@ class People {
         '_id': id,
         'name': name,
       };
+
+  static List<People> peopleListFromJson(List<dynamic> jsonList) {
+    return jsonList.map<People>((json) => People.fromJson(json)).toList();
+  }
 }

@@ -1,5 +1,5 @@
 import 'package:readr_app/models/listening.dart';
-import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/models/record.dart';
 
 abstract class ListeningStoryState {}
 
@@ -9,10 +9,10 @@ class ListeningStoryLoading extends ListeningStoryState {}
 
 class ListeningStoryLoaded extends ListeningStoryState {
   final Listening listening;
-  final RecordList recordList;
+  final List<Record> recordList;
   ListeningStoryLoaded({
-    this.listening,
-    this.recordList,
+    required this.listening,
+    required this.recordList,
   });
 }
 

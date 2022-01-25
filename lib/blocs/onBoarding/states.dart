@@ -1,7 +1,7 @@
-import 'package:readr_app/models/onBoarding.dart';
+import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/models/onBoardingHint.dart';
 
-enum OnBoardingStatus { firstPage, secondPage, thirdPage, fourthPage, close }
+enum OnBoardingStatus { firstPage, secondPage, thirdPage, fourthPage }
 
 List onBoardingHintList = [
   OnBoardingHint(
@@ -31,26 +31,28 @@ List onBoardingHintList = [
 ];
 
 class OnBoardingState {
-  final OnBoardingStatus status;
-  final OnBoarding onBoarding;
-  final OnBoardingHint onBoardingHint;
+  final bool isOnBoarding;
+  final OnBoardingStatus? status;
+  final OnBoardingPosition? onBoardingPosition;
+  final OnBoardingHint? onBoardingHint;
 
   const OnBoardingState({
+    this.isOnBoarding = false,
     this.status,
-    this.onBoarding,
+    this.onBoardingPosition,
     this.onBoardingHint,
   });
 
   OnBoardingState copyWith({
-    OnBoardingStatus status,
-    OnBoarding onBoarding,
+    required bool isOnBoarding,
+    required OnBoardingStatus status,
+    required OnBoardingPosition onBoardingPosition,
   }) {
     return OnBoardingState(
+      isOnBoarding: isOnBoarding,
       status: status,
-      onBoarding: onBoarding,
-      onBoardingHint: (status == null || status.index == 0)
-          ? null
-          : onBoardingHintList[status.index - 1],
+      onBoardingPosition: onBoardingPosition,
+      onBoardingHint: onBoardingHintList[status.index]
     );
   }
 

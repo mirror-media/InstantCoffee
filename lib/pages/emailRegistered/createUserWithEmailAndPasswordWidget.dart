@@ -8,7 +8,7 @@ import 'package:readr_app/pages/emailRegistered/emailRegisteredForm.dart';
 class CreateUserWithEmailAndPasswordWidget extends StatefulWidget {
   final String email;
   CreateUserWithEmailAndPasswordWidget({
-    @required this.email,
+    required this.email,
   });
     
   @override

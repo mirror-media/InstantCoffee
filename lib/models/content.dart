@@ -1,7 +1,7 @@
 class Content {
-  String data;
-  double aspectRatio;
-  String description;
+  String? data;
+  double? aspectRatio;
+  String? description;
 
   Content({
     this.data,
@@ -30,7 +30,7 @@ class Content {
           description: json['title'] + ';' + json['description'],
         );
       } else if (json['embeddedCode'] != null) {
-        double aspectRatio;
+        double? aspectRatio;
 
         if(json['width'] != null && 
           json['height'] != null && 
@@ -66,5 +66,9 @@ class Content {
       aspectRatio: null,
       description: null,
     );
+  }
+
+  static List<Content> contentListFromJson(List<dynamic> jsonList) {
+    return jsonList.map<Content>((json) => Content.fromJson(json)).toList();
   }
 }

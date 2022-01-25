@@ -1,14 +1,14 @@
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
-import 'package:readr_app/models/recordList.dart';
+import 'package:readr_app/models/record.dart';
 
 class NewsMarqueeService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  Future<RecordList> fetchRecordList() async {
+  Future<List<Record>> fetchRecordList() async {
     final jsonResponse = await _helper.getByUrl(Environment().config.newsMarqueeApi);
 
-    RecordList records = new RecordList.fromJson(jsonResponse["_items"]);
+    List<Record> records = Record.recordListFromJson(jsonResponse["_items"]);
     return records;
   }
 }

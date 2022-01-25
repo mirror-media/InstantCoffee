@@ -11,7 +11,7 @@ import 'package:readr_app/pages/shared/passwordValidatorWidget.dart';
 class OldPasswordConfirmForm extends StatefulWidget {
   final OldPasswordConfirm oldPasswordConfirm;
   OldPasswordConfirmForm({
-    @required this.oldPasswordConfirm,
+    required this.oldPasswordConfirm,
   });
 
   _OldPasswordConfirmFormState createState() => _OldPasswordConfirmFormState();
@@ -40,7 +40,7 @@ class _OldPasswordConfirmFormState extends State<OldPasswordConfirmForm> {
   }
 
   bool _isPasswordValid() {
-    return _passwordEditingController.text != null && _passwordEditingController.text.length >= 6;
+    return _passwordEditingController.text.length >= 6;
   }
 
   @override

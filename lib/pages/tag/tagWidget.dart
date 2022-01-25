@@ -5,9 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/tagPage/cubit.dart';
+import 'package:readr_app/blocs/tagPage/states.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
-import 'package:readr_app/models/recordList.dart';
 import 'package:readr_app/models/tag.dart';
 
 class TagWidget extends StatefulWidget {
@@ -19,9 +19,6 @@ class TagWidget extends StatefulWidget {
 }
 
 class _TagWidgetState extends State<TagWidget> {
-  bool loadingMore = false;
-  RecordList _tagRecordList = RecordList();
-
   @override
   void initState() {
     _fetchStoryListByTagId();
@@ -40,34 +37,40 @@ class _TagWidgetState extends State<TagWidget> {
   Widget build(BuildContext context) {
     return BlocBuilder<TagPageCubit, TagPageState>(
         builder: (BuildContext context, TagPageState state) {
-      if (state is TagPageError) {
-        final error = state.error;
-        print('tagRecordListError: ${error.message}');
-        if (loadingMore) {
-          _fetchNextPage();
-        } else {
-          return error.renderWidget(
-                onPressed: () => _fetchStoryListByTagId());
-        }
+      TagPageStatus status = state.status;
+      if (status == TagPageStatus.error) {
+        final error = state.errorMessages;
+        print('TagRecordListError: $error');
+        return error.renderWidget(
+          onPressed: () => _fetchStoryListByTagId());
       }
 
-      if (state is TagPageLoadingNextPage) {
-        loadingMore = true;
-        return _buildList(_tagRecordList);
+      if (status == TagPageStatus.loaded) {
+        return _buildList(
+          state.tagStoryList!,
+          state.tagListTotal!,
+        );
       }
 
-      if (state is TagPageLoadNextPageFailed) {
-        _tagRecordList = state.tagStoryList;
-        loadingMore = true;
+      if (status == TagPageStatus.loadingMore) {
+        return _buildList(
+          state.tagStoryList!,
+          state.tagListTotal!,
+          isLoadingMore: true,
+        );
+      }
+
+      if (status == TagPageStatus.loadingMoreFail) {
+        final error = state.errorMessages;
+        print('TagRecordListLoadingMoreFail: $error');
         _fetchNextPage();
-        return _buildList(_tagRecordList);
+        return _buildList(
+          state.tagStoryList!,
+          state.tagListTotal!,
+          isLoadingMore: true,
+        );
       }
 
-      if (state is TagPageLoaded) {
-        _tagRecordList = state.tagStoryList;
-        loadingMore = false;
-        return _buildList(_tagRecordList);
-      }
       // state is Init, loading, or other
       return Center(
         child: Platform.isAndroid
@@ -77,11 +80,15 @@ class _TagWidgetState extends State<TagWidget> {
     });
   }
 
-  Widget _buildList(RecordList tagRecordList) {
-    bool isAll = false;
-    if (tagRecordList.length == tagRecordList.allRecordCount) {
-      isAll = true;
+  Widget _buildList(
+    List<Record> tagRecordList,
+    int totalTagList,
+    {
+      bool isLoadingMore = false,
     }
+  ) {
+    bool isAll = tagRecordList.length == totalTagList;
+
     return ListView.separated(
       itemCount: tagRecordList.length + 1,
       padding: const EdgeInsets.only(top: 24, left: 24, right: 24),
@@ -97,12 +104,15 @@ class _TagWidgetState extends State<TagWidget> {
       },
       itemBuilder: (context, index) {
         if (index == tagRecordList.length) {
-          if (isAll) {
+          if (!isLoadingMore) {
+            if(!isAll) {
+              _fetchNextPage();
+            }
             return Container(
               padding: const EdgeInsets.only(bottom: 24),
             );
           }
-          if (!loadingMore) _fetchNextPage();
+
           return Center(
             child: Platform.isAndroid
                 ? const CircularProgressIndicator()
