@@ -30,6 +30,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.4
+  # being able to compare objects 
+  equatable: ^2.0.3
   # http ajax call
   http: ^0.13.4
   # launching a URL in the mobile platform
