@@ -149,6 +149,9 @@ dev_dependencies:
 
   # generate splash screen
   flutter_native_splash: ^1.3.3
+  # generated mock classes
+  mockito: ^5.0.17
+  build_runner: ^2.1.7
 
 flutter_icons:
   android: "launcher_icon"
