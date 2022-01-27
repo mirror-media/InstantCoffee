@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-
-import 'package:readr_app/blocs/newsMarqueeBloc.dart';
-import 'package:readr_app/helpers/apiResponse.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/newsMarquee/cubit.dart';
+import 'package:readr_app/blocs/newsMarquee/state.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/widgets/newsMarqueeWidget.dart';
 
@@ -11,45 +11,34 @@ class NewsMarquee extends StatefulWidget {
 }
 
 class _NewsMarqueeState extends State<NewsMarquee> {
-  NewsMarqueeBloc _newsMarqueeBloc = NewsMarqueeBloc();
-
-  @override
-  void dispose() {
-    _newsMarqueeBloc.dispose();
-    super.dispose();
+  _fetchMemberSubscriptionType(BuildContext context) {
+    context.read<NewsMarqueeCubit>().fetchNewsMarqueeRecordList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<ApiResponse<List<Record>>>(
-      stream: _newsMarqueeBloc.recordListStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          List<Record>? recordList = snapshot.data?.data;
-
-          switch (snapshot.data!.status) {
-            case Status.LOADING:
-              return Container();
-
-            case Status.LOADINGMORE:
-            case Status.COMPLETED:
-              if (recordList == null) {
-                return Container();
-              }
-
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: NewsMarqueeWidget(
-                  recordList: recordList,
-                ),
-              );
-
-            case Status.ERROR:
-              return Container();
+    return BlocProvider(
+      create: (BuildContext context) => NewsMarqueeCubit(),
+      child: BlocBuilder<NewsMarqueeCubit, NewsMarqueeState>(
+        builder: (context, state) {
+          if(state.status == NewsMarqueeStatus.initial) {
+            _fetchMemberSubscriptionType(context);
+          } else if(state.status == NewsMarqueeStatus.loaded) {
+            List<Record> recordList = state.recordList!;
+            
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: NewsMarqueeWidget(
+                recordList: recordList,
+              ),
+            );
+          } else if(state.status == NewsMarqueeStatus.error) {
+            print('NewsMarquee error: ${state.errorMessages}');
           }
+
+          return Container();
         }
-        return Container();
-      },
+      ),
     );
   }
 }
