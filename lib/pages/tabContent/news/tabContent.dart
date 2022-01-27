@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:readr_app/blocs/editorChoice/cubit.dart';
+import 'package:readr_app/blocs/editorChoice/state.dart';
 
 import 'package:readr_app/blocs/tabContentBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
@@ -36,7 +39,6 @@ class _TabContentState extends State<TabContent> {
       widget.section.sectionAd!,
       widget.section.key, 
       widget.section.type, 
-      widget.needCarousel
     );
     super.initState();
   }
@@ -51,8 +53,7 @@ class _TabContentState extends State<TabContent> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        _tabContentBloc.refreshTheList(
-            widget.section.key, widget.section.type, widget.needCarousel);
+        _tabContentBloc.refreshTheList(widget.section.key, widget.section.type);
       },
       child: Column(
         children: [
@@ -89,12 +90,13 @@ class _TabContentState extends State<TabContent> {
               List<Record> recordList = tabContentState == null
                   ? _tabContentBloc.records
                   : tabContentState.recordList;
-              List<Record>? editorChoiceList = tabContentState == null
-                  ? null
-                  : tabContentState.editorChoiceList;
 
-              return _buildTheRecordList(context, recordList,
-                  editorChoiceList, snapshot.data!.status, _tabContentBloc);
+              return _buildTheRecordList(
+                context, 
+                recordList,
+                snapshot.data!.status, 
+                _tabContentBloc
+              );
 
             case Status.ERROR:
               return ErrorStatelessWidget(
@@ -108,8 +110,36 @@ class _TabContentState extends State<TabContent> {
     );
   }
 
-  Widget _buildTheRecordList(BuildContext context, List<Record> recordList,
-      List<Record>? editorChoiceList, Status status, TabContentBloc tabContentBloc) {
+  Widget _buildEditorChoiceList() {
+    return BlocProvider(
+      create: (BuildContext context) => EditorChoiceCubit(),
+      child: BlocBuilder<EditorChoiceCubit, EditorChoiceState>(
+        builder: (context, state) {
+          if(state.status == EditorChoiceStatus.initial) {
+            context.read<EditorChoiceCubit>().fetchEditorChoiceRecordList();
+          } else if(state.status == EditorChoiceStatus.loaded) {
+            List<Record> editorChoiceList = state.editorChoiceList!;
+            
+            return EditorChoiceCarousel(
+              editorChoiceList: editorChoiceList,
+              aspectRatio: 16 / 10,
+            );
+          } else if(state.status == EditorChoiceStatus.error) {
+            print('NewsMarquee error: ${state.errorMessages}');
+          }
+
+          return Container();
+        }
+      ),
+    );
+  }
+
+  Widget _buildTheRecordList(
+    BuildContext context, 
+    List<Record> recordList,
+    Status status, 
+    TabContentBloc tabContentBloc
+  ) {
     
     return CustomScrollView(
       controller: widget.scrollController,
@@ -120,14 +150,11 @@ class _TabContentState extends State<TabContent> {
               tabContentBloc.loadingMore(index);
               
               if (index == 0) {
-                if(widget.needCarousel && editorChoiceList != null) {
+                if(widget.needCarousel) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      EditorChoiceCarousel(
-                        editorChoiceList: editorChoiceList,
-                        aspectRatio: 16 / 10,
-                      ),
+                      _buildEditorChoiceList(),
                       if(isTabContentAdsActivated)
                       ...[
                         SizedBox(height: 16.0,),
