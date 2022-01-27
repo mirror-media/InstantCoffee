@@ -8,6 +8,11 @@ import 'package:readr_app/helpers/appException.dart';
 import 'package:readr_app/helpers/mMCacheManager.dart';
 
 class ApiBaseHelper {
+  http.Client _client = http.Client();
+  void setClient(http.Client client) {
+    _client = client;
+  }
+
   /// get cache file by key
   /// the key is url
   Future<dynamic> getByCache(String url) async {
@@ -48,7 +53,7 @@ class ApiBaseHelper {
       var responseJson;
       try {
         final response =
-            await http.get(uri, headers: headers);
+            await _client.get(uri, headers: headers);
         responseJson = returnResponse(response);
         // save cache file
         mMCacheManager.putFile(url, response.bodyBytes, maxAge: maxAge, fileExtension: 'json');
@@ -88,7 +93,7 @@ class ApiBaseHelper {
     try {
       Uri uri = Uri.parse(url);
       final response =
-          await http.get(uri, headers: headers);
+          await _client.get(uri, headers: headers);
       responseJson = returnResponse(response);
     } on SocketException {
       print('No Internet connection');
@@ -106,7 +111,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       Uri uri = Uri.parse(url);
-      final response = await http.post(uri, headers: headers, body: body);
+      final response = await _client.post(uri, headers: headers, body: body);
       responseJson = returnResponse(response);
     } on SocketException {
       print('No Internet connection');
@@ -124,7 +129,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       Uri uri = Uri.parse(url);
-      final response = await http.put(uri, body: body);
+      final response = await _client.put(uri, body: body);
       responseJson = returnResponse(response);
     } on SocketException {
       print('No Internet connection');
@@ -142,7 +147,7 @@ class ApiBaseHelper {
     var apiResponse;
     try {
       Uri uri = Uri.parse(url);
-      final response = await http.delete(uri);
+      final response = await _client.delete(uri);
       apiResponse = returnResponse(response);
     } on SocketException {
       print('No Internet connection');
