@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/models/sectionAd.dart';
-import 'package:readr_app/services/editorChoiceService.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/services/recordService.dart';
 
@@ -12,14 +11,11 @@ class TabContentBloc {
   bool _isLoading = false;
   
   RecordService _recordService = RecordService();
-  EditorChoiceService? _editorChoiceService;
 
   late SectionAd _sectionAd;
   List<Record> _records = [];
-  List<Record>? _editorChoices;
   SectionAd get sectionAd => _sectionAd;
   List<Record> get records => _records;
-  List<Record>? get editorChoices => _editorChoices;
 
   StreamController<ApiResponse<TabContentState>> _recordListController = 
       StreamController<ApiResponse<TabContentState>>();
@@ -28,38 +24,14 @@ class TabContentBloc {
   Stream<ApiResponse<TabContentState>> get recordListStream =>
       _recordListController.stream;
 
-  TabContentBloc(SectionAd sectionAd, String id, String type, bool needCarousel) {
+  TabContentBloc(SectionAd sectionAd, String id, String type) {
     _sectionAd = sectionAd;
-
-    if (needCarousel) {
-      _editorChoices = [];
-      _editorChoiceService = EditorChoiceService();
-    }
-
-    switchTab(id, type, needCarousel: needCarousel);
+    switchTab(id, type);
   }
 
   sinkToAdd(ApiResponse<TabContentState> value) {
     if (!_recordListController.isClosed) {
       recordListSink.add(value);
-    }
-  }
-
-  fetchEditorChoiceAndRecordList() async {
-    sinkToAdd(ApiResponse.loading('Fetching Tab Content'));
-
-    try {
-      List<Record> editorChoices = await _editorChoiceService!.fetchRecordList();
-      List<Record> latests = await _recordService.fetchRecordList(_endpoint);
-      _editorChoices!.addAll(editorChoices);
-      latests = Record.filterDuplicatedSlugByAnother(latests, _records);
-      _records.addAll(latests);
-
-      sinkToAdd(ApiResponse.completed(TabContentState(
-          editorChoiceList: _editorChoices, recordList: _records)));
-    } catch (e) {
-      sinkToAdd(ApiResponse.error(e.toString()));
-      print(e);
     }
   }
 
@@ -80,8 +52,7 @@ class TabContentBloc {
       latests = Record.filterDuplicatedSlugByAnother(latests, _records);
       _records.addAll(latests);
       _isLoading = false;
-      sinkToAdd(ApiResponse.completed(TabContentState(
-          editorChoiceList: _editorChoices, recordList: _records)));
+      sinkToAdd(ApiResponse.completed(TabContentState(recordList: _records)));
     } catch (e) {
       _isLoading = false;
       sinkToAdd(ApiResponse.error(e.toString()));
@@ -89,13 +60,13 @@ class TabContentBloc {
     }
   }
 
-  refreshTheList(String id, String type, bool needCarousel) {
+  refreshTheList(String id, String type) {
     _records.clear();
     _recordService.initialPage();
-    switchTab(id, type, needCarousel: needCarousel);
+    switchTab(id, type);
   }
 
-  switchTab(String id, String type, {bool needCarousel = false}) {
+  switchTab(String id, String type) {
     _recordService.initialPage();
     if (type == 'section') {
       _endpoint = Environment().config.listingBase + '&where={"sections":{"\$in":["' + id + '"]}}';
@@ -107,11 +78,7 @@ class TabContentBloc {
       _endpoint = Environment().config.listingBaseSearchByPersonAndFoodSection;
     }
 
-    if (needCarousel) {
-      fetchEditorChoiceAndRecordList();
-    } else {
-      fetchRecordList();
-    }
+    fetchRecordList();
   }
 
   loadingMore(int index) {
@@ -128,11 +95,9 @@ class TabContentBloc {
 }
 
 class TabContentState {
-  final List<Record>? editorChoiceList;
   final List<Record> recordList;
 
   TabContentState({
-    this.editorChoiceList,
     required this.recordList,
   });
 }
