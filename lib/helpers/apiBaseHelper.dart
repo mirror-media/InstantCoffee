@@ -1,8 +1,9 @@
 import 'dart:io';
-import 'package:http/http.dart' as http;
-import 'package:mime/mime.dart';
 import 'dart:convert';
 import 'dart:async';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:http/http.dart' as http;
+import 'package:mime/mime.dart';
 
 import 'package:readr_app/helpers/appException.dart';
 import 'package:readr_app/helpers/mMCacheManager.dart';
@@ -13,11 +14,19 @@ class ApiBaseHelper {
     _client = client;
   }
 
+  BaseCacheManager? _mMCacheManager;
+  void setCacheManager(BaseCacheManager cacheManager) {
+    _mMCacheManager = cacheManager;
+  }
+
   /// get cache file by key
   /// the key is url
   Future<dynamic> getByCache(String url) async {
-    MMCacheManager mMCacheManager = MMCacheManager();
-    final cacheFile = await mMCacheManager.getFileFromCache(url);
+    if(_mMCacheManager == null) {
+      _mMCacheManager = MMCacheManager();
+    }
+    
+    final cacheFile = await _mMCacheManager!.getFileFromCache(url);
     var file = cacheFile?.file;
     if (file != null && await file.exists()) {
       var mimeStr = lookupMimeType(file.path);
@@ -41,11 +50,14 @@ class ApiBaseHelper {
     String url, 
     {
       Duration maxAge = const Duration(days: 30),
-      Map<String,String> headers = const {'Cache-control': 'no-cache'},
+      Map<String,String> headers = const {'Cache-control': 'no-cache'}
     }
   ) async {
-    MMCacheManager mMCacheManager = MMCacheManager();
-    final cacheFile = await mMCacheManager.getFileFromCache(url);
+    if(_mMCacheManager == null) {
+      _mMCacheManager = MMCacheManager();
+    }
+
+    final cacheFile = await _mMCacheManager!.getFileFromCache(url);
     if ( cacheFile == null || 
       cacheFile.validTill.isBefore(DateTime.now())
     ) {
@@ -56,7 +68,7 @@ class ApiBaseHelper {
             await _client.get(uri, headers: headers);
         responseJson = returnResponse(response);
         // save cache file
-        mMCacheManager.putFile(url, response.bodyBytes, maxAge: maxAge, fileExtension: 'json');
+        _mMCacheManager!.putFile(url, response.bodyBytes, maxAge: maxAge, fileExtension: 'json');
       } on SocketException {
         print('No Internet connection');
         throw FetchDataException('No Internet connection');
