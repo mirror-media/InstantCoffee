@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
 import 'package:readr_app/blocs/onBoarding/events.dart';
 import 'package:readr_app/blocs/onBoarding/states.dart';
+import 'package:readr_app/blocs/section/cubit.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/pages/homePage.dart';
@@ -40,9 +41,13 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
           type: MaterialType.transparency,
           child: Stack(
             children: [
-              HomePage(
-                settingKey: _settingKey,
+              BlocProvider(
+                create: (context) => SectionCubit(),
+                child: HomePage(
+                  settingKey: _settingKey,
+                ),
               ),
+
               if(isOnBoarding && onBoardingPosition != null)
                 GestureDetector(
                   onTap: () async{

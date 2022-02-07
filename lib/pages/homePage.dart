@@ -7,9 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
 import 'package:readr_app/blocs/onBoarding/events.dart';
 import 'package:readr_app/blocs/onBoarding/states.dart';
-import 'package:readr_app/blocs/sectionBloc.dart';
+import 'package:readr_app/blocs/section/cubit.dart';
+import 'package:readr_app/blocs/section/states.dart';
 import 'package:readr_app/helpers/environment.dart';
-import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/appLinkHelper.dart';
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -38,7 +38,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
   FirebaseMessangingHelper _firebaseMessangingHelper = FirebaseMessangingHelper();
 
   late OnBoardingBloc _onBoardingBloc;
-  SectionBloc _sectionBloc = SectionBloc();
 
   /// tab controller
   int _initialTabIndex = 0;
@@ -50,8 +49,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
   List<Widget> _tabWidgets = [];
   List<ScrollController> _scrollControllerList = [];
 
+  _fetchSectionList() {
+    context.read<SectionCubit>().fetchSectionList();
+  }
+
   @override
   void initState() {
+    _fetchSectionList();
     WidgetsBinding.instance!.addObserver(this);
     SchedulerBinding.instance!.addPostFrameCallback((_) {
       _appLinkHelper.configAppLink(context);
@@ -181,8 +185,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
     _scrollControllerList.forEach((scrollController) {
       scrollController.dispose();
     });
-
-    _sectionBloc.dispose();
     super.dispose();
   }
 
@@ -190,27 +192,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      body: StreamBuilder<ApiResponse<List<Section>>>(
-        stream: _sectionBloc.sectionListStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            switch (snapshot.data!.status) {
-              case Status.LOADING:
-                return Center(child: CircularProgressIndicator());
-
-              case Status.LOADINGMORE:
-              case Status.COMPLETED:
-                List<Section> sectionList = snapshot.data!.data!;
-                _initializeTabController(sectionList);
-
-                return _buildTabs(_tabs, _tabWidgets, _tabController!);
-
-              case Status.ERROR:
-                return Container();
-            }
+      body: BlocBuilder<SectionCubit, SectionState>(
+        builder: (BuildContext context, SectionState state) {
+          SectionStatus status = state.status;
+          if(status == SectionStatus.error) {
+            print('HomePageSectionError: ${state.errorMessages}');
+            return Container();
+          } else if(status == SectionStatus.loaded) {
+            _initializeTabController(state.sectionList!);
+            return _buildTabs(_tabs, _tabWidgets, _tabController!);
           }
-          return Container();
-        },
+
+          // init or loading
+          return Center(child: CircularProgressIndicator());
+        }
       ),
     );
   }
