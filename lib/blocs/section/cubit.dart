@@ -1,35 +1,21 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/section/states.dart';
 import 'package:readr_app/helpers/environment.dart';
-import 'package:readr_app/helpers/apiResponse.dart';
-import 'package:readr_app/models/sectionAd.dart';
 import 'package:readr_app/models/section.dart';
+import 'package:readr_app/models/sectionAd.dart';
 import 'package:readr_app/services/sectionService.dart';
 
-class SectionBloc {
+class SectionCubit extends Cubit<SectionState> {
+  SectionCubit() : super(SectionState.init());
   SectionService _sectionService = SectionService();
-
-  StreamController<ApiResponse<List<Section>>> _sectionListController = StreamController<ApiResponse<List<Section>>>();
-  StreamSink<ApiResponse<List<Section>>> get sectionListSink =>
-      _sectionListController.sink;
-  Stream<ApiResponse<List<Section>>> get sectionListStream =>
-      _sectionListController.stream;
-
-  SectionBloc() {
-    fetchSectionList();
-  }
-
-  sinkToAdd(ApiResponse<List<Section>> value) {
-    if (!_sectionListController.isClosed) {
-      sectionListSink.add(value);
-    }
-  }
-
+  
   fetchSectionList() async {
-    sinkToAdd(ApiResponse.loading('Fetching Tab Content'));
+    print('Fetch section list');
+    emit(SectionState.loading());
 
     try {
       List<Section> sectionList = await _sectionService.fetchSectionList();
@@ -37,9 +23,7 @@ class SectionBloc {
       String sectionAdJsonFileLocation = Platform.isIOS
       ? Environment().config.iOSSectionAdJsonLocation
       : Environment().config.androidSectionAdJsonLocation;
-      // String sectionAdJsonFileLocation = Platform.isIOS
-      // ? 'assets/data/iOSTestSectionAd.json'
-      // : 'assets/data/androidTestSectionAd.json';
+
       String sectionAdString = await rootBundle.loadString(sectionAdJsonFileLocation);
       final sectionAdMaps = json.decode(sectionAdString);
       for(int i=0; i<sectionList.length; i++) {
@@ -50,14 +34,10 @@ class SectionBloc {
         }
       }
 
-      sinkToAdd(ApiResponse.completed(sectionList));
+      emit(SectionState.loaded(sectionList: sectionList));
     } catch (e) {
-      sinkToAdd(ApiResponse.error(e.toString()));
+      emit(SectionState.error(errorMessages: e));
       print(e);
     }
-  }
-
-  dispose() {
-    _sectionListController.close();
   }
 }
