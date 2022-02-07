@@ -139,6 +139,8 @@ dependencies:
   # svg loader
   flutter_svg: ^1.0.1
 
+  file: ^6.1.2
+  
   intl: ^0.17.0
 
 dependency_overrides:
