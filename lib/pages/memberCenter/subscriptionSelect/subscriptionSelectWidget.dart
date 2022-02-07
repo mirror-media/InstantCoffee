@@ -78,7 +78,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
             SubscriptionDetail subscriptionDetail = state.subscriptionDetail!;
             List<ProductDetails> productDetailList = state.productDetailList!;
 
-            Widget body = HintToOtherPlatform(paymentType: subscriptionDetail.paymentType);
+            Widget? body;
 
             if(_isTheSamePlatfrom(subscriptionDetail.paymentType)) {
               body = ListView(
@@ -99,6 +99,8 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                   SizedBox(height: 48),
                 ],
               );
+            } else {
+              body = HintToOtherPlatform(paymentType: subscriptionDetail.paymentType!);
             }
 
             return Scaffold(
