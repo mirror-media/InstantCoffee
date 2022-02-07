@@ -4,10 +4,10 @@ import 'package:readr_app/helpers/cacheDurationCache.dart';
 import 'package:readr_app/models/record.dart';
 
 class EditorChoiceService {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper helper = ApiBaseHelper();
 
   Future<List<Record>> fetchRecordList() async {
-    final jsonResponse = await _helper.getByCacheAndAutoCache(Environment().config.editorChoiceApi, maxAge: editorChoiceCacheDuration);
+    final jsonResponse = await helper.getByCacheAndAutoCache(Environment().config.editorChoiceApi, maxAge: editorChoiceCacheDuration);
 
     List<Record> records =  Record.recordListFromJson(jsonResponse["choices"]);
     return records;
