@@ -6,10 +6,10 @@ import 'package:readr_app/models/section.dart';
 import 'dart:convert';
 
 class SectionService {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  ApiBaseHelper helper = ApiBaseHelper();
 
   Future<List<Section>> fetchSectionList({bool needMenu = true}) async {
-    final jsonResponse = await _helper.getByCacheAndAutoCache(Environment().config.sectionApi, maxAge: sectionCacheDuration);
+    final jsonResponse = await helper.getByCacheAndAutoCache(Environment().config.sectionApi, maxAge: sectionCacheDuration);
 
     List<Section> sectionList = Section.sectionListFromJson(jsonResponse["_items"]);
     if(needMenu) {
