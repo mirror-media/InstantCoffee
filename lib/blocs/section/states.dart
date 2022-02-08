@@ -1,8 +1,9 @@
+import 'package:equatable/equatable.dart';
 import 'package:readr_app/models/section.dart';
 
 enum SectionStatus { initial, loading, loaded, error }
 
-class SectionState {
+class SectionState extends Equatable {
   final SectionStatus status;
   final List<Section>? sectionList;
   final dynamic errorMessages;
@@ -47,4 +48,11 @@ class SectionState {
   String toString() {
     return 'SectoinState { status: $status }';
   }
+
+  @override
+  List<Object?> get props => [
+    status, 
+    sectionList, 
+    errorMessages
+  ];
 }
