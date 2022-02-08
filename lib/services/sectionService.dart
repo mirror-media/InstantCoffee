@@ -5,7 +5,11 @@ import 'package:readr_app/helpers/cacheDurationCache.dart';
 import 'package:readr_app/models/section.dart';
 import 'dart:convert';
 
-class SectionService {
+abstract class SectionRepos {
+  Future<List<Section>> fetchSectionList({bool needMenu = true});
+}
+
+class SectionService implements SectionRepos {
   ApiBaseHelper helper = ApiBaseHelper();
 
   Future<List<Section>> fetchSectionList({bool needMenu = true}) async {
