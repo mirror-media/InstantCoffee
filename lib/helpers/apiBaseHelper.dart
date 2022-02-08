@@ -185,7 +185,7 @@ dynamic returnResponse(http.Response response) {
         // properties responded by popular tab content api
         (responseJson.containsKey('report') && responseJson['report'].length > 0) || 
         // properties responded by editor choice api
-        (responseJson.containsKey('choices') && responseJson['choices'].length > 0) || 
+        (responseJson.containsKey('choices') && responseJson['choices'] is List) || 
         // properties responded by search api
         (responseJson.containsKey('hits') && responseJson['hits'].containsKey('hits')) ||
         // properties responded by member graphql
