@@ -14,24 +14,26 @@ class SectionCubit extends Cubit<SectionState> {
   SectionCubit({required this.sectionRepos}) 
       : super(SectionState.init());
   
-  fetchSectionList() async {
+  fetchSectionList({bool loadingSectionAds = true}) async {
     print('Fetch section list');
     emit(SectionState.loading());
 
     try {
       List<Section> sectionList = await sectionRepos.fetchSectionList();
       
-      String sectionAdJsonFileLocation = Platform.isIOS
-      ? Environment().config.iOSSectionAdJsonLocation
-      : Environment().config.androidSectionAdJsonLocation;
+      if(loadingSectionAds) {
+        String sectionAdJsonFileLocation = Platform.isIOS
+        ? Environment().config.iOSSectionAdJsonLocation
+        : Environment().config.androidSectionAdJsonLocation;
 
-      String sectionAdString = await rootBundle.loadString(sectionAdJsonFileLocation);
-      final sectionAdMaps = json.decode(sectionAdString);
-      for(int i=0; i<sectionList.length; i++) {
-        if(sectionAdMaps[sectionList[i].key] != null) {
-          sectionList[i].sectionAd = SectionAd.fromJson(sectionAdMaps[sectionList[i].key]);
-        } else {
-          sectionList[i].sectionAd = SectionAd.fromJson(sectionAdMaps['other']);
+        String sectionAdString = await rootBundle.loadString(sectionAdJsonFileLocation);
+        final sectionAdMaps = json.decode(sectionAdString);
+        for(int i=0; i<sectionList.length; i++) {
+          if(sectionAdMaps[sectionList[i].key] != null) {
+            sectionList[i].sectionAd = SectionAd.fromJson(sectionAdMaps[sectionList[i].key]);
+          } else {
+            sectionList[i].sectionAd = SectionAd.fromJson(sectionAdMaps['other']);
+          }
         }
       }
 
