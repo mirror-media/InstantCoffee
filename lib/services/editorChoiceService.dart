@@ -3,7 +3,11 @@ import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/helpers/cacheDurationCache.dart';
 import 'package:readr_app/models/record.dart';
 
-class EditorChoiceService {
+abstract class EditorChoiceRepos {
+  Future<List<Record>> fetchRecordList();
+}
+
+class EditorChoiceService implements EditorChoiceRepos {
   ApiBaseHelper helper = ApiBaseHelper();
 
   Future<List<Record>> fetchRecordList() async {
