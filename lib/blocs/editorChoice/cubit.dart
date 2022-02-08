@@ -4,14 +4,15 @@ import 'package:readr_app/models/record.dart';
 import 'package:readr_app/services/editorChoiceService.dart';
 
 class EditorChoiceCubit extends Cubit<EditorChoiceState> {
-  EditorChoiceCubit() : super(EditorChoiceState.init());
+  final EditorChoiceRepos editorChoiceRepos;
+  EditorChoiceCubit({required this.editorChoiceRepos}) 
+      : super(EditorChoiceState.init());
 
   void fetchEditorChoiceRecordList() async {
     print('Fetch editor choice record list');
     emit(EditorChoiceState.loading());
     try {
-      EditorChoiceService editorChoiceService = EditorChoiceService();
-      List<Record> editorChoiceList = await editorChoiceService.fetchRecordList();
+      List<Record> editorChoiceList = await editorChoiceRepos.fetchRecordList();
       emit(EditorChoiceState.loaded(editorChoiceList: editorChoiceList));
     } catch(e) {
       // fetch member subscription type fail

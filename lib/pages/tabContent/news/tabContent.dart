@@ -12,6 +12,7 @@ import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section.dart';
+import 'package:readr_app/services/editorChoiceService.dart';
 import 'package:readr_app/widgets/editorChoiceCarousel.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
@@ -112,7 +113,7 @@ class _TabContentState extends State<TabContent> {
 
   Widget _buildEditorChoiceList() {
     return BlocProvider(
-      create: (BuildContext context) => EditorChoiceCubit(),
+      create: (BuildContext context) => EditorChoiceCubit(editorChoiceRepos: EditorChoiceService()),
       child: BlocBuilder<EditorChoiceCubit, EditorChoiceState>(
         builder: (context, state) {
           if(state.status == EditorChoiceStatus.initial) {

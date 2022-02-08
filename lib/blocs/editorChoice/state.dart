@@ -1,8 +1,9 @@
+import 'package:equatable/equatable.dart';
 import 'package:readr_app/models/record.dart';
 
 enum EditorChoiceStatus { initial, loading, loaded, error }
 
-class EditorChoiceState {
+class EditorChoiceState extends Equatable {
   final EditorChoiceStatus status;
   final List<Record>? editorChoiceList;
   final dynamic errorMessages;
@@ -47,4 +48,11 @@ class EditorChoiceState {
   String toString() {
     return 'EditorChoiceState { status: $status }';
   }
+
+  @override
+  List<Object?> get props => [
+    status, 
+    editorChoiceList, 
+    errorMessages
+  ];
 }
