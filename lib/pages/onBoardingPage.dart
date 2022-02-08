@@ -7,6 +7,7 @@ import 'package:readr_app/blocs/section/cubit.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/pages/homePage.dart';
+import 'package:readr_app/services/sectionService.dart';
 
 class OnBoardingPage extends StatefulWidget {
   @override
@@ -42,7 +43,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
           child: Stack(
             children: [
               BlocProvider(
-                create: (context) => SectionCubit(),
+                create: (context) => SectionCubit(sectionRepos: SectionService()),
                 child: HomePage(
                   settingKey: _settingKey,
                 ),

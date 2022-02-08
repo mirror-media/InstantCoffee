@@ -10,15 +10,16 @@ import 'package:readr_app/models/sectionAd.dart';
 import 'package:readr_app/services/sectionService.dart';
 
 class SectionCubit extends Cubit<SectionState> {
-  SectionCubit() : super(SectionState.init());
-  SectionService _sectionService = SectionService();
+  final SectionRepos sectionRepos;
+  SectionCubit({required this.sectionRepos}) 
+      : super(SectionState.init());
   
   fetchSectionList() async {
     print('Fetch section list');
     emit(SectionState.loading());
 
     try {
-      List<Section> sectionList = await _sectionService.fetchSectionList();
+      List<Section> sectionList = await sectionRepos.fetchSectionList();
       
       String sectionAdJsonFileLocation = Platform.isIOS
       ? Environment().config.iOSSectionAdJsonLocation
