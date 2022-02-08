@@ -1,8 +1,9 @@
+import 'package:equatable/equatable.dart';
 import 'package:readr_app/models/record.dart';
 
 enum NewsMarqueeStatus { initial, loading, loaded, error }
 
-class NewsMarqueeState {
+class NewsMarqueeState extends Equatable {
   final NewsMarqueeStatus status;
   final List<Record>? recordList;
   final dynamic errorMessages;
@@ -47,4 +48,11 @@ class NewsMarqueeState {
   String toString() {
     return 'NewsMarqueeState { status: $status }';
   }
+
+  @override
+  List<Object?> get props => [
+    status, 
+    recordList, 
+    errorMessages
+  ];
 }
