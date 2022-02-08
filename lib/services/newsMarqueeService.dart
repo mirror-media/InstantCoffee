@@ -2,7 +2,11 @@ import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/models/record.dart';
 
-class NewsMarqueeService {
+abstract class NewsMarqueeRepos {
+  Future<List<Record>> fetchRecordList();
+}
+
+class NewsMarqueeService implements NewsMarqueeRepos{
   ApiBaseHelper helper = ApiBaseHelper();
 
   Future<List<Record>> fetchRecordList() async {
