@@ -4,7 +4,7 @@ import 'package:readr_app/blocs/newsMarquee/cubit.dart';
 import 'package:readr_app/blocs/newsMarquee/state.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/services/newsMarqueeService.dart';
-import 'package:readr_app/widgets/newsMarqueeWidget.dart';
+import 'package:readr_app/widgets/newsMarquee/newsMarqueeWidget.dart';
 
 class NewsMarquee extends StatefulWidget {
   @override

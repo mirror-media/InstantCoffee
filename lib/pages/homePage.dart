@@ -17,7 +17,7 @@ import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/termsOfService/mMTermsOfServicePage.dart';
 import 'package:readr_app/pages/tabContent/listening/listeningTabContent.dart';
-import 'package:readr_app/widgets/newsMarquee.dart';
+import 'package:readr_app/widgets/newsMarquee/newsMarquee.dart';
 import 'package:readr_app/pages/tabContent/personal/personalTabContent.dart';
 import 'package:readr_app/pages/tabContent/news/tabContent.dart';
 import 'package:readr_app/helpers/dataConstants.dart';

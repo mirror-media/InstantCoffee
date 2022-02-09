@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
-import 'package:readr_app/widgets/marqueeWidget.dart';
+import 'package:readr_app/widgets/newsMarquee/marqueeWidget.dart';
 
 class NewsMarqueeWidget extends StatefulWidget {
   final List<Record> recordList;
