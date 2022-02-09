@@ -12,6 +12,7 @@ import 'package:readr_app/blocs/section/states.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/appLinkHelper.dart';
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
+import 'package:readr_app/helpers/remoteConfigHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/models/section.dart';
@@ -33,6 +34,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin, WidgetsBindingObserver {
+  RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
+
   final LocalStorage _storage = LocalStorage('setting');
   AppLinkHelper _appLinkHelper = AppLinkHelper();
   FirebaseMessangingHelper _firebaseMessangingHelper = FirebaseMessangingHelper();
@@ -270,7 +273,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
             ),
           ),
         ),
-        NewsMarquee(),
+        if(_remoteConfigHelper.isNewsMarqueePin)
+          NewsMarquee(),
         Expanded(
           child: TabBarView(
             controller: tabController,
