@@ -27,11 +27,8 @@ class _NewsMarqueeState extends State<NewsMarquee> {
           } else if(state.status == NewsMarqueeStatus.loaded) {
             List<Record> recordList = state.recordList!;
             
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: NewsMarqueeWidget(
-                recordList: recordList,
-              ),
+            return NewsMarqueeWidget(
+              recordList: recordList,
             );
           } else if(state.status == NewsMarqueeStatus.error) {
             print('NewsMarquee error: ${state.errorMessages}');
