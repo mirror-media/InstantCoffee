@@ -14,18 +14,18 @@ class MirrorMediaApp extends StatefulWidget {
 
 class _MirrorMediaAppState extends State<MirrorMediaApp> {
   RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
-  IAPSubscriptionHelper iapSubscriptionHelper = IAPSubscriptionHelper();
+  IAPSubscriptionHelper _iapSubscriptionHelper = IAPSubscriptionHelper();
 
   @override
   void initState() {
     _remoteConfigHelper.initialize();
-    iapSubscriptionHelper.setSubscription();
+    _iapSubscriptionHelper.setSubscription();
     super.initState();
   }
 
   @override
   void dispose() {
-    iapSubscriptionHelper.cancelSubscriptionStream();
+    _iapSubscriptionHelper.cancelSubscriptionStream();
     super.dispose();
   }
 
