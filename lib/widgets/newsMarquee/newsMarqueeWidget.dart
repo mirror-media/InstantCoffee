@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:readr_app/helpers/firebaseAnalyticsHelper.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
@@ -65,11 +66,17 @@ class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
             ),
           ),
         ),
-        onTap: () => RouteGenerator.navigateToStory(
-          recordList[i].slug, 
-          isMemberCheck: recordList[i].isMemberCheck,
-          isMemberContent: recordList[i].isMemberContent,
-          ),
+        onTap: () {
+          FirebaseAnalyticsHelper.logNewsMarqueeOpen(
+            slug: recordList[i].slug, 
+            title: recordList[i].title
+          );
+          RouteGenerator.navigateToStory(
+            recordList[i].slug, 
+            isMemberCheck: recordList[i].isMemberCheck,
+            isMemberContent: recordList[i].isMemberContent,
+          );
+        }
       ));
     }
 
