@@ -140,7 +140,7 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveCl
                           ? 0.0
                           : snapshot.data!.inMilliseconds.toDouble();
                       String position =
-                          DateTimeFormat.stringDuration(snapshot.data!);
+                          DateTimeFormat.stringDuration(snapshot.data);
                       String duration = DateTimeFormat.stringDuration(
                           Duration(milliseconds: _duration));
                       return Column(
