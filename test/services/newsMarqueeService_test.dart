@@ -5,6 +5,7 @@ import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/services/newsMarqueeService.dart';
 
+import 'mockCacheManager.dart';
 import 'service_test.mocks.dart';
 
 void main() {
@@ -41,6 +42,7 @@ void main() {
 
       NewsMarqueeService newsMarqueeService = NewsMarqueeService();
       newsMarqueeService.helper.setClient(client);
+      newsMarqueeService.helper.setCacheManager(MockCacheManager());
 
       expect(await newsMarqueeService.fetchRecordList(), isA<List<Record>>());
     });
