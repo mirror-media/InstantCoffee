@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/firebaseAnalyticsHelper.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/widgets/popupRoute/easyPopup.dart';
 
@@ -176,6 +177,12 @@ class _SectionDropDownMenuState extends State<SectionDropDownMenu>
       labelPadding: EdgeInsets.zero,
       padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
       onPressed: () {
+        if(targetIndex >= 5) {
+          FirebaseAnalyticsHelper.logTabBarAfterTheSixthClick(
+            sectiontitle: section.title
+          );
+        }
+        
         widget.tabController.animateTo(targetIndex);
         EasyPopup.pop(context);
       },

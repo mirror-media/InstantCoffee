@@ -9,6 +9,7 @@ import 'package:readr_app/blocs/onBoarding/events.dart';
 import 'package:readr_app/blocs/onBoarding/states.dart';
 import 'package:readr_app/blocs/section/cubit.dart';
 import 'package:readr_app/blocs/section/states.dart';
+import 'package:readr_app/helpers/firebaseAnalyticsHelper.dart';
 import 'package:readr_app/widgets/popupRoute/sectionDropDownMenu.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/appLinkHelper.dart';
@@ -276,6 +277,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
                   tabs: tabs.toList(),
                   controller: tabController,
                   onTap: (int index) {
+                    if(index >= 5) {
+                      FirebaseAnalyticsHelper.logTabBarAfterTheSixthClick(
+                        sectiontitle: sections[index].title
+                      );
+                    }
+
                     if (_initialTabIndex == index) {
                       _scrollToTop(index);
                     }
