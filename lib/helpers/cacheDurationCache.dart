@@ -9,4 +9,5 @@ const Duration listeningTabContentCacheDuration = Duration(minutes: 5);
 const Duration storyCacheDuration = Duration(minutes: 30);
 const Duration listeningWidgetCacheDuration = Duration(minutes: 30);
 
+const Duration newsMarqueeCacheDuration = Duration(minutes: 5);
 const Duration editorChoiceCacheDuration = Duration(minutes: 15);

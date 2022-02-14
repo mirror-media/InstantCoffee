@@ -9,6 +9,7 @@ import 'package:readr_app/blocs/editorChoice/state.dart';
 import 'package:readr_app/blocs/tabContentBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/remoteConfigHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section.dart';
@@ -16,6 +17,7 @@ import 'package:readr_app/services/editorChoiceService.dart';
 import 'package:readr_app/widgets/editorChoiceCarousel.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
+import 'package:readr_app/widgets/newsMarquee/newsMarqueePersistentHeaderDelegate.dart';
 
 class TabContent extends StatefulWidget {
   final Section section;
@@ -32,6 +34,7 @@ class TabContent extends StatefulWidget {
 }
 
 class _TabContentState extends State<TabContent> {
+  RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
   late TabContentBloc _tabContentBloc;
 
   @override
@@ -145,6 +148,11 @@ class _TabContentState extends State<TabContent> {
     return CustomScrollView(
       controller: widget.scrollController,
       slivers: [
+        if(!_remoteConfigHelper.isNewsMarqueePin)
+          SliverPersistentHeader(
+            delegate: NewsMarqueePersistentHeaderDelegate(),
+            floating: true,
+          ),
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {

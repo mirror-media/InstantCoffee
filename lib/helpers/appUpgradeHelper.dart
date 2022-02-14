@@ -1,24 +1,19 @@
 import 'dart:io';
 
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:readr_app/helpers/remoteConfigHelper.dart';
 import 'package:upgrader/upgrader.dart';
 import 'package:version/version.dart';
 
 class AppUpgradeHelper {
-  RemoteConfig _remoteConfig = RemoteConfig.instance;
+  RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
   bool needToUpdate = false;
   String updateMessage = '';
 
   Future<bool> isUpdateAvailable() async{
     try {
-      await _remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: Duration(seconds: 10),
-        minimumFetchInterval: Duration(seconds: 1),
-      ));
-      await _remoteConfig.fetchAndActivate();
-      String minAppVersion = _remoteConfig.getString('min_version_number');
-      updateMessage = _remoteConfig.getString('update_message');
+      String minAppVersion = _remoteConfigHelper.minAppVersion;
+      updateMessage = _remoteConfigHelper.updateMessage;
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
       String version = packageInfo.version.toLowerCase();

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/iAPSubscriptionHelper.dart';
+import 'package:readr_app/helpers/remoteConfigHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 
 class MirrorMediaApp extends StatefulWidget {
@@ -12,17 +13,19 @@ class MirrorMediaApp extends StatefulWidget {
 }
 
 class _MirrorMediaAppState extends State<MirrorMediaApp> {
-  IAPSubscriptionHelper iapSubscriptionHelper = IAPSubscriptionHelper();
+  RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
+  IAPSubscriptionHelper _iapSubscriptionHelper = IAPSubscriptionHelper();
 
   @override
   void initState() {
-    iapSubscriptionHelper.setSubscription();
+    _remoteConfigHelper.initialize();
+    _iapSubscriptionHelper.setSubscription();
     super.initState();
   }
 
   @override
   void dispose() {
-    iapSubscriptionHelper.cancelSubscriptionStream();
+    _iapSubscriptionHelper.cancelSubscriptionStream();
     super.dispose();
   }
 

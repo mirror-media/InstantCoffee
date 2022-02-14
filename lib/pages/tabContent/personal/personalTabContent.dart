@@ -11,11 +11,13 @@ import 'package:readr_app/blocs/personalPageBloc.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/remoteConfigHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/pages/tabContent/personal/memberSubscriptionTypeBlock.dart';
+import 'package:readr_app/widgets/newsMarquee/newsMarqueePersistentHeaderDelegate.dart';
 import 'package:readr_app/widgets/unsubscriptionCategoryList.dart';
 
 class PersonalTabContent extends StatefulWidget {
@@ -29,6 +31,7 @@ class PersonalTabContent extends StatefulWidget {
 }
 
 class _PersonalTabContentState extends State<PersonalTabContent> {
+  RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
   GlobalKey _categoryKey = GlobalKey();
   PersonalPageBloc _personalPageBloc = PersonalPageBloc();
 
@@ -85,6 +88,11 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
     return CustomScrollView(
       controller: scrollController,
       slivers: [
+        if(!_remoteConfigHelper.isNewsMarqueePin)
+          SliverPersistentHeader(
+            delegate: NewsMarqueePersistentHeaderDelegate(),
+            floating: true,
+          ),
         SliverToBoxAdapter(
           child: BlocProvider(
             create: (BuildContext context) => MemberSubscriptionTypeCubit(),

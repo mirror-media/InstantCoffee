@@ -5,11 +5,13 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/listeningTabContentBloc.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/remoteConfigHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
+import 'package:readr_app/widgets/newsMarquee/newsMarqueePersistentHeaderDelegate.dart';
 
 class ListeningTabContent extends StatefulWidget {
   final Section section;
@@ -24,6 +26,7 @@ class ListeningTabContent extends StatefulWidget {
 }
 
 class _ListeningTabContentState extends State<ListeningTabContent> {
+  RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
   late ListeningTabContentBloc _listeningTabContentBloc;
 
   @override
@@ -96,6 +99,11 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
     return CustomScrollView(
       controller: widget.scrollController,
       slivers: [
+        if(!_remoteConfigHelper.isNewsMarqueePin)
+          SliverPersistentHeader(
+            delegate: NewsMarqueePersistentHeaderDelegate(),
+            floating: true,
+          ),
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {

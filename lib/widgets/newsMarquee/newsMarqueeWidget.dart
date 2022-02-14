@@ -1,9 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:readr_app/helpers/firebaseAnalyticsHelper.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
-import 'package:readr_app/widgets/marqueeWidget.dart';
+import 'package:readr_app/widgets/newsMarquee/marqueeWidget.dart';
 
 class NewsMarqueeWidget extends StatefulWidget {
   final List<Record> recordList;
@@ -26,7 +27,7 @@ class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
   CarouselController _carouselController= CarouselController();
   CarouselOptions _options= CarouselOptions(
     scrollPhysics: NeverScrollableScrollPhysics(),
-    height: 32,
+    height: 48,
     viewportFraction: 1,
     scrollDirection: Axis.vertical,
     initialPage: 0,
@@ -54,19 +55,28 @@ class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
       resultList.add(InkWell(
         child: SizedBox(
           width: width,
-          child: MarqueeWidget(
-            child: Text(
-              recordList[i].title,
-              style: TextStyle(fontSize: 18, color: appColor),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: MarqueeWidget(
+              child: Text(
+                recordList[i].title,
+                style: TextStyle(fontSize: 18, color: appColor),
+              ),
+              animationDuration: Duration(milliseconds: 4000),
             ),
-            animationDuration: Duration(milliseconds: 4000),
           ),
         ),
-        onTap: () => RouteGenerator.navigateToStory(
-          recordList[i].slug, 
-          isMemberCheck: recordList[i].isMemberCheck,
-          isMemberContent: recordList[i].isMemberContent,
-          ),
+        onTap: () {
+          FirebaseAnalyticsHelper.logNewsMarqueeOpen(
+            slug: recordList[i].slug, 
+            title: recordList[i].title
+          );
+          RouteGenerator.navigateToStory(
+            recordList[i].slug, 
+            isMemberCheck: recordList[i].isMemberCheck,
+            isMemberContent: recordList[i].isMemberContent,
+          );
+        }
       ));
     }
 
