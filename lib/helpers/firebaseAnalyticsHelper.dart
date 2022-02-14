@@ -16,4 +16,12 @@ class FirebaseAnalyticsHelper {
       'title': title
     });
   }
+
+  static logTabBarAfterTheSixthClick({
+    required String sectiontitle,
+  }) async {
+    await analytics.logEvent(name: 'tab_bar_after_the_sixth_click', parameters: {
+      'title': sectiontitle
+    });
+  }
 }
