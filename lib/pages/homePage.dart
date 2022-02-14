@@ -9,6 +9,7 @@ import 'package:readr_app/blocs/onBoarding/events.dart';
 import 'package:readr_app/blocs/onBoarding/states.dart';
 import 'package:readr_app/blocs/section/cubit.dart';
 import 'package:readr_app/blocs/section/states.dart';
+import 'package:readr_app/widgets/popupRoute/sectionDropDownMenu.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/appLinkHelper.dart';
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
@@ -18,6 +19,7 @@ import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/termsOfService/mMTermsOfServicePage.dart';
 import 'package:readr_app/pages/tabContent/listening/listeningTabContent.dart';
+import 'package:readr_app/widgets/popupRoute/easyPopup.dart';
 import 'package:readr_app/widgets/newsMarquee/newsMarquee.dart';
 import 'package:readr_app/pages/tabContent/personal/personalTabContent.dart';
 import 'package:readr_app/pages/tabContent/news/tabContent.dart';
@@ -41,6 +43,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
   FirebaseMessangingHelper _firebaseMessangingHelper = FirebaseMessangingHelper();
 
   late OnBoardingBloc _onBoardingBloc;
+
+  double _deviceTopPadding = 0.0;
 
   /// tab controller
   int _initialTabIndex = 0;
@@ -193,6 +197,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
 
   @override
   Widget build(BuildContext context) {
+    _deviceTopPadding = MediaQuery.of(context).padding.top;
     return Scaffold(
       appBar: _buildBar(context),
       body: BlocBuilder<SectionCubit, SectionState>(
@@ -203,7 +208,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
             return Container();
           } else if(status == SectionStatus.loaded) {
             _initializeTabController(state.sectionList!);
-            return _buildTabs(_tabs, _tabWidgets, _tabController!);
+            return _buildTabs(
+              state.sectionList!,
+              _tabs, 
+              _tabWidgets, 
+              _tabController!
+            );
           }
 
           // init or loading
@@ -242,7 +252,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
   }
 
   Widget _buildTabs(
-      List<Tab> tabs, List<Widget> tabWidgets, TabController tabController) {
+    List<Section> sections,
+    List<Tab> tabs, 
+    List<Widget> tabWidgets, 
+    TabController tabController
+  ) {
     return Column(
       children: [
         Container(
@@ -254,8 +268,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
               stream: _tabColorController!.stream,
               builder: (context, snapshot) {
                 Color tabBarColor = snapshot.data!;
-
-                return TabBar(
+                TabBar tabBar = TabBar(
                   isScrollable: true,
                   indicatorColor: tabBarColor,
                   unselectedLabelColor: Colors.grey,
@@ -268,6 +281,54 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
                     }
                     _initialTabIndex = index;
                   },
+                );
+
+                return Row(
+                  children: [
+                    Expanded(
+                      child: tabBar,
+                    ),
+                    
+                    if(_remoteConfigHelper.hasTabSectionButton)...[
+                      Container(
+                        height: tabBar.preferredSize.height,
+                        child: VerticalDivider(
+                          color: Colors.black12,
+                          thickness: 1,
+                          indent: 12,
+                          endIndent: 12,
+                          width: 8,
+                        ),
+                      ),
+                      InkWell(
+                        child: Container(
+                          height: tabBar.preferredSize.height,
+                          width: tabBar.preferredSize.height-8,
+                          child: Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 24,
+                            color: Colors.black54,
+                          ),
+                        ),
+                        onTap: () {
+                          EasyPopup.show(
+                            context, 
+                            SectionDropDownMenu(
+                              tabBarHeight: tabBar.preferredSize.height,
+                              tabController: _tabController!,
+                              sectionList: sections,
+                            ),
+                            offsetLT: Offset(
+                              0, 
+                              _deviceTopPadding + kToolbarHeight,
+                            ),
+                            cancelable: true,
+                            outsideTouchCancelable: false,
+                          );
+                        }
+                      )
+                    ]
+                  ],
                 );
               }
             ),
