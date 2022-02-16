@@ -321,6 +321,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Widg
                           EasyPopup.show(
                             context, 
                             SectionDropDownMenu(
+                              topPadding: kToolbarHeight,
                               tabBarHeight: tabBar.preferredSize.height,
                               tabController: _tabController!,
                               sectionList: sections,

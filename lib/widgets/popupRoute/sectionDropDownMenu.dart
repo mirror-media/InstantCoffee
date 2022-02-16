@@ -5,10 +5,12 @@ import 'package:readr_app/models/section.dart';
 import 'package:readr_app/widgets/popupRoute/easyPopup.dart';
 
 class SectionDropDownMenu extends StatefulWidget with EasyPopupChild {
+  final double topPadding;
   final double tabBarHeight;
   final TabController tabController;
   final List<Section> sectionList;
   SectionDropDownMenu({
+    this.topPadding = 0.0,
     required this.tabBarHeight,
     required this.tabController,
     required this.sectionList,
@@ -58,7 +60,7 @@ class _SectionDropDownMenuState extends State<SectionDropDownMenu>
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Padding(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + kToolbarHeight),
+        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + widget.topPadding),
         child: ClipRect(
           child: SlideTransition(
             position: _animation,
