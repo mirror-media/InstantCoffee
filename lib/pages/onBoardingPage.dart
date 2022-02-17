@@ -6,7 +6,7 @@ import 'package:readr_app/blocs/onBoarding/states.dart';
 import 'package:readr_app/blocs/section/cubit.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/OnBoardingPosition.dart';
-import 'package:readr_app/pages/home/homePage.dart';
+import 'package:readr_app/pages/home/default/homePage.dart';
 import 'package:readr_app/services/sectionService.dart';
 
 class OnBoardingPage extends StatefulWidget {

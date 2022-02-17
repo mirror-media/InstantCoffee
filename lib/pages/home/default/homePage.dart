@@ -5,7 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
-import 'package:readr_app/pages/home/homeWidget.dart';
+import 'package:readr_app/pages/home/default/homeWidget.dart';
 import 'package:readr_app/helpers/appLinkHelper.dart';
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
