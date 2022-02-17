@@ -9,6 +9,7 @@ import 'package:readr_app/helpers/remoteConfigHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section.dart';
+import 'package:readr_app/pages/tabContent/shared/listItem.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
 import 'package:readr_app/widgets/newsMarquee/newsMarqueePersistentHeaderDelegate.dart';
@@ -120,7 +121,18 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
                       adUnitId: _listeningTabContentBloc.sectionAd.aT1UnitId,
                       adSize: AdSize.mediumRectangle,
                     ),
-                  _buildListItem(context, recordList[index]),
+                  ListItem(
+                    record: recordList[index],
+                    onTap: () => RouteGenerator.navigateToListeningStory(
+                        recordList[index].slug),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                    child: Divider(
+                      thickness: 1,
+                      color: Colors.grey,
+                    ),
+                  ),
                   if(isListeningTabContentAdsActivated && index == noCarouselAT2AdIndex)
                     MMAdBanner(
                       adUnitId: _listeningTabContentBloc.sectionAd.aT2UnitId,
@@ -179,58 +191,6 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
             color: Colors.black,
           ),
         ],
-      ),
-      onTap: () => RouteGenerator.navigateToListeningStory(record.slug),
-    );
-  }
-
-  Widget _buildListItem(BuildContext context, Record record) {
-    var width = MediaQuery.of(context).size.width;
-    double imageSize = 25 * (width - 32) / 100;
-
-    return InkWell(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
-        child: Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Text(
-                    record.title,
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-                SizedBox(
-                  width: 16,
-                ),
-                CachedNetworkImage(
-                  height: imageSize,
-                  width: imageSize,
-                  imageUrl: record.photoUrl,
-                  placeholder: (context, url) => Container(
-                    height: imageSize,
-                    width: imageSize,
-                    color: Colors.grey,
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    height: imageSize,
-                    width: imageSize,
-                    color: Colors.grey,
-                    child: Icon(Icons.error),
-                  ),
-                  fit: BoxFit.cover,
-                ),
-              ],
-            ),
-            SizedBox(height: 8,),
-            Divider(
-              thickness: 1,
-              color: Colors.grey,
-            ),
-          ],
-        ),
       ),
       onTap: () => RouteGenerator.navigateToListeningStory(record.slug),
     );

@@ -13,6 +13,7 @@ import 'package:readr_app/helpers/remoteConfigHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section.dart';
+import 'package:readr_app/pages/tabContent/shared/listItem.dart';
 import 'package:readr_app/services/editorChoiceService.dart';
 import 'package:readr_app/widgets/editorChoiceCarousel.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
@@ -182,7 +183,20 @@ class _TabContentState extends State<TabContent> {
                         child: _buildTagText(),
                       ),
                       SizedBox(height: 8.0,),
-                      _buildListItem(context, recordList[index]),
+                      ListItem(
+                        record: recordList[index],
+                        onTap: () => RouteGenerator.navigateToStory(
+                            recordList[index].slug, 
+                            isMemberCheck: recordList[index].isMemberCheck, 
+                            isMemberContent: recordList[index].isMemberContent),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                        child: Divider(
+                          thickness: 1,
+                          color: Colors.grey,
+                        ),
+                      ),
                     ]
                   );
                 }
@@ -198,7 +212,20 @@ class _TabContentState extends State<TabContent> {
                       adUnitId: _tabContentBloc.sectionAd!.aT1UnitId,
                       adSize: AdSize.mediumRectangle,
                     ),
-                  _buildListItem(context, recordList[index]),
+                  ListItem(
+                    record: recordList[index],
+                    onTap: () => RouteGenerator.navigateToStory(
+                        recordList[index].slug, 
+                        isMemberCheck: recordList[index].isMemberCheck, 
+                        isMemberContent: recordList[index].isMemberContent),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                    child: Divider(
+                      thickness: 1,
+                      color: Colors.grey,
+                    ),
+                  ),
                   if(isTabContentAdsActivated && _tabContentBloc.sectionAd != null &&
                     index == carouselAT2AdIndex && widget.needCarousel) 
                     MMAdBanner(
@@ -297,61 +324,6 @@ class _TabContentState extends State<TabContent> {
             color: Colors.black,
           ),
         ],
-      ),
-      onTap: () => RouteGenerator.navigateToStory(
-        record.slug, 
-        isMemberCheck: record.isMemberCheck, 
-        isMemberContent: record.isMemberContent),
-    );
-  }
-
-  Widget _buildListItem(BuildContext context, Record record) {
-    var width = MediaQuery.of(context).size.width;
-    double imageSize = 25 * (width - 32) / 100;
-
-    return InkWell(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
-        child: Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Text(
-                    record.title,
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-                SizedBox(
-                  width: 16,
-                ),
-                CachedNetworkImage(
-                  height: imageSize,
-                  width: imageSize,
-                  imageUrl: record.photoUrl,
-                  placeholder: (context, url) => Container(
-                    height: imageSize,
-                    width: imageSize,
-                    color: Colors.grey,
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    height: imageSize,
-                    width: imageSize,
-                    color: Colors.grey,
-                    child: Icon(Icons.error),
-                  ),
-                  fit: BoxFit.cover,
-                ),
-              ],
-            ),
-            SizedBox(height: 8,),
-            Divider(
-              thickness: 1,
-              color: Colors.grey,
-            ),
-          ],
-        ),
       ),
       onTap: () => RouteGenerator.navigateToStory(
         record.slug, 
