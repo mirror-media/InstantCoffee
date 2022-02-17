@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +13,7 @@ import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/tabContent/shared/listItem.dart';
+import 'package:readr_app/pages/tabContent/shared/theFirstItem.dart';
 import 'package:readr_app/services/editorChoiceService.dart';
 import 'package:readr_app/widgets/editorChoiceCarousel.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
@@ -201,7 +201,13 @@ class _TabContentState extends State<TabContent> {
                   );
                 }
                 // if(!widget.needCarousel)
-                return _buildTheFirstItem(context, recordList[index]);
+                return TheFirstItem(
+                  record: recordList[index],
+                  onTap: () => RouteGenerator.navigateToStory(
+                      recordList[index].slug, 
+                      isMemberCheck: recordList[index].isMemberCheck, 
+                      isMemberContent: recordList[index].isMemberContent),
+                );
               }
 
               return Column(
@@ -286,49 +292,6 @@ class _TabContentState extends State<TabContent> {
         fontWeight: FontWeight.bold,
         color: appColor,
       ),
-    );
-  }
-
-  Widget _buildTheFirstItem(BuildContext context, Record record) {
-    var width = MediaQuery.of(context).size.width;
-
-    return InkWell(
-      child: Column(
-        children: [
-          CachedNetworkImage(
-            height: width / 16 * 9,
-            width: width,
-            imageUrl: record.photoUrl,
-            placeholder: (context, url) => Container(
-              height: width / 16 * 9,
-              width: width,
-              color: Colors.grey,
-            ),
-            errorWidget: (context, url, error) => Container(
-              height: width / 16 * 9,
-              width: width,
-              color: Colors.grey,
-              child: Icon(Icons.error),
-            ),
-            fit: BoxFit.cover,
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
-            child: Text(
-              record.title,
-              style: TextStyle(fontSize: 20),
-            ),
-          ),
-          Divider(
-            thickness: 1,
-            color: Colors.black,
-          ),
-        ],
-      ),
-      onTap: () => RouteGenerator.navigateToStory(
-        record.slug, 
-        isMemberCheck: record.isMemberCheck, 
-        isMemberContent: record.isMemberContent),
     );
   }
 }

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -10,6 +9,7 @@ import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/tabContent/shared/listItem.dart';
+import 'package:readr_app/pages/tabContent/shared/theFirstItem.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
 import 'package:readr_app/widgets/newsMarquee/newsMarqueePersistentHeaderDelegate.dart';
@@ -111,7 +111,11 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
               listeningTabContentBloc.loadingMore(index);
 
               if (index == 0) {
-                return _buildTheFirstItem(context, recordList[index]);
+                return TheFirstItem(
+                  record: recordList[index],
+                  onTap: () => RouteGenerator.navigateToListeningStory(
+                      recordList[index].slug),
+                );
               }
 
               return Column(
@@ -153,46 +157,6 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildTheFirstItem(BuildContext context, Record record) {
-    var width = MediaQuery.of(context).size.width;
-
-    return InkWell(
-      child: Column(
-        children: [
-          CachedNetworkImage(
-            height: width / 16 * 9,
-            width: width,
-            imageUrl: record.photoUrl,
-            placeholder: (context, url) => Container(
-              height: width / 16 * 9,
-              width: width,
-              color: Colors.grey,
-            ),
-            errorWidget: (context, url, error) => Container(
-              height: width / 16 * 9,
-              width: width,
-              color: Colors.grey,
-              child: Icon(Icons.error),
-            ),
-            fit: BoxFit.cover,
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
-            child: Text(
-              record.title,
-              style: TextStyle(fontSize: 20),
-            ),
-          ),
-          Divider(
-            thickness: 1,
-            color: Colors.black,
-          ),
-        ],
-      ),
-      onTap: () => RouteGenerator.navigateToListeningStory(record.slug),
     );
   }
 }
