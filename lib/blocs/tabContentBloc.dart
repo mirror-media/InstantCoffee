@@ -12,9 +12,9 @@ class TabContentBloc {
   
   RecordService _recordService = RecordService();
 
-  late SectionAd _sectionAd;
+  SectionAd? _sectionAd;
   List<Record> _records = [];
-  SectionAd get sectionAd => _sectionAd;
+  SectionAd? get sectionAd => _sectionAd;
   List<Record> get records => _records;
 
   StreamController<ApiResponse<TabContentState>> _recordListController = 
@@ -24,7 +24,7 @@ class TabContentBloc {
   Stream<ApiResponse<TabContentState>> get recordListStream =>
       _recordListController.stream;
 
-  TabContentBloc(SectionAd sectionAd, String id, String type) {
+  TabContentBloc(SectionAd? sectionAd, String id, String type) {
     _sectionAd = sectionAd;
     switchTab(id, type);
   }

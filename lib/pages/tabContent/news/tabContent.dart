@@ -40,7 +40,7 @@ class _TabContentState extends State<TabContent> {
   @override
   void initState() {
     _tabContentBloc = TabContentBloc(
-      widget.section.sectionAd!,
+      widget.section.sectionAd,
       widget.section.key, 
       widget.section.type, 
     );
@@ -68,9 +68,10 @@ class _TabContentState extends State<TabContent> {
           Expanded(
             child: _buildTabContentBody(),
           ),
-          if(isTabContentAdsActivated && _tabContentBloc.sectionAd.stUnitId != '')
+          if(isTabContentAdsActivated && 
+            _tabContentBloc.sectionAd != null)
             MMAdBanner(
-              adUnitId: _tabContentBloc.sectionAd.stUnitId,
+              adUnitId: _tabContentBloc.sectionAd!.stUnitId,
               adSize: AdSize.banner,
             ),
         ],
@@ -164,13 +165,13 @@ class _TabContentState extends State<TabContent> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildEditorChoiceList(),
-                      if(isTabContentAdsActivated)
+                      if(isTabContentAdsActivated && _tabContentBloc.sectionAd != null)
                       ...[
                         SizedBox(height: 16.0,),
                         // carouselAT1AdIndex
                         Center(
                           child: MMAdBanner(
-                            adUnitId: _tabContentBloc.sectionAd.aT1UnitId,
+                            adUnitId: _tabContentBloc.sectionAd!.aT1UnitId,
                             adSize: AdSize.mediumRectangle,
                           ),
                         ),
@@ -191,31 +192,36 @@ class _TabContentState extends State<TabContent> {
 
               return Column(
                 children: [
-                  if(isTabContentAdsActivated && index == noCarouselAT1AdIndex && !widget.needCarousel)
+                  if(isTabContentAdsActivated && _tabContentBloc.sectionAd != null &&
+                    index == noCarouselAT1AdIndex && !widget.needCarousel)
                     MMAdBanner(
-                      adUnitId: _tabContentBloc.sectionAd.aT1UnitId,
+                      adUnitId: _tabContentBloc.sectionAd!.aT1UnitId,
                       adSize: AdSize.mediumRectangle,
                     ),
                   _buildListItem(context, recordList[index]),
-                  if(isTabContentAdsActivated && index == carouselAT2AdIndex && widget.needCarousel) 
+                  if(isTabContentAdsActivated && _tabContentBloc.sectionAd != null &&
+                    index == carouselAT2AdIndex && widget.needCarousel) 
                     MMAdBanner(
-                      adUnitId: _tabContentBloc.sectionAd.aT2UnitId,
+                      adUnitId: _tabContentBloc.sectionAd!.aT2UnitId,
                       adSize: AdSize.mediumRectangle,
                     ),
-                  if(isTabContentAdsActivated && index == noCarouselAT2AdIndex && !widget.needCarousel) 
+                  if(isTabContentAdsActivated && _tabContentBloc.sectionAd != null &&
+                    index == noCarouselAT2AdIndex && !widget.needCarousel) 
                     MMAdBanner(
-                      adUnitId: _tabContentBloc.sectionAd.aT2UnitId,
+                      adUnitId: _tabContentBloc.sectionAd!.aT2UnitId,
                       adSize: AdSize.mediumRectangle,
                     ),
                     
-                  if(isTabContentAdsActivated && index == carouselAT3AdIndex && widget.needCarousel) 
+                  if(isTabContentAdsActivated && _tabContentBloc.sectionAd != null &&
+                    index == carouselAT3AdIndex && widget.needCarousel) 
                     MMAdBanner(
-                      adUnitId: _tabContentBloc.sectionAd.aT3UnitId,
+                      adUnitId: _tabContentBloc.sectionAd!.aT3UnitId,
                       adSize: AdSize.mediumRectangle,
                     ),
-                  if(isTabContentAdsActivated && index == noCarouselAT3AdIndex && !widget.needCarousel) 
+                  if(isTabContentAdsActivated && _tabContentBloc.sectionAd != null &&
+                    index == noCarouselAT3AdIndex && !widget.needCarousel) 
                     MMAdBanner(
-                      adUnitId: _tabContentBloc.sectionAd.aT3UnitId,
+                      adUnitId: _tabContentBloc.sectionAd!.aT3UnitId,
                       adSize: AdSize.mediumRectangle,
                     ),
                   // if((((index + 1) % 5 == 0 && widget.needCarousel) || (index % 5 == 0 && !widget.needCarousel)) && index < 11) 
