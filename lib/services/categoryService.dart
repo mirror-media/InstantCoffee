@@ -3,7 +3,11 @@ import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/helpers/cacheDurationCache.dart';
 import 'package:readr_app/models/category.dart';
 
-class CategoryService {
+abstract class CategoryRepos {
+  Future<List<Category>> fetchCategoryList();
+}
+
+class CategoryService implements CategoryRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<List<Category>> fetchCategoryList() async {
