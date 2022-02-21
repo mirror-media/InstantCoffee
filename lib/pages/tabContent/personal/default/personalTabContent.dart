@@ -1,24 +1,28 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:readr_app/blocs/onBoarding/bloc.dart';
-import 'package:readr_app/blocs/onBoarding/events.dart';
-import 'package:readr_app/blocs/onBoarding/states.dart';
-import 'package:readr_app/blocs/personalPageBloc.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
-import 'package:readr_app/helpers/apiResponse.dart';
+
+import 'package:readr_app/blocs/personalPage/category/bloc.dart';
+import 'package:readr_app/blocs/personalPage/category/events.dart';
+import 'package:readr_app/blocs/personalPage/category/states.dart';
+
+import 'package:readr_app/blocs/personalPage/article/bloc.dart';
+import 'package:readr_app/blocs/personalPage/article/events.dart';
+import 'package:readr_app/blocs/personalPage/article/states.dart';
+import 'package:readr_app/pages/tabContent/personal/default/unsubscriptionCategoryList.dart';
+
+import 'package:readr_app/services/categoryService.dart';
+import 'package:readr_app/services/personalSubscriptionService.dart';
+
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/remoteConfigHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/category.dart';
-import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/pages/tabContent/personal/default/memberSubscriptionTypeBlock.dart';
 import 'package:readr_app/pages/tabContent/shared/listItem.dart';
 import 'package:readr_app/widgets/newsMarquee/newsMarqueePersistentHeaderDelegate.dart';
-import 'package:readr_app/pages/tabContent/personal/default/unsubscriptionCategoryList.dart';
 
 class PersonalTabContent extends StatefulWidget {
   final ScrollController scrollController;
@@ -33,153 +37,129 @@ class PersonalTabContent extends StatefulWidget {
 class _PersonalTabContentState extends State<PersonalTabContent> {
   RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
   GlobalKey _categoryKey = GlobalKey();
-  PersonalPageBloc _personalPageBloc = PersonalPageBloc();
 
-  @override
-  void dispose() {
-    _personalPageBloc.dispose();
-    super.dispose();
-  }
+  List<Category> _subscribedCategoryList = [];
+  PersonalCategoryBloc _personalCategoryBloc = PersonalCategoryBloc(
+    categoryRepos: CategoryService(),
+  );
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<ApiResponse<List<Category>>>(
-      stream: _personalPageBloc.categoryStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data!.status) {
-            case Status.LOADING:
-              return Center(child: CircularProgressIndicator());
-
-            case Status.LOADINGMORE:
-            case Status.COMPLETED:
-              List<Category> categoryList = snapshot.data!.data!;
-              WidgetsBinding.instance!.addPostFrameCallback((_) async{
-                OnBoardingBloc onBoardingBloc = context.read<OnBoardingBloc>();
-                if(onBoardingBloc.state.status == OnBoardingStatus.firstPage) {
-                  OnBoardingPosition onBoardingPosition = await onBoardingBloc.getSizeAndPosition(_categoryKey);
-                  onBoardingPosition.left = 0;
-                  onBoardingPosition.height += 16;
-                  
-                  onBoardingBloc.add(
-                    GoToNextHint(
-                      onBoardingStatus: OnBoardingStatus.secondPage,
-                      onBoardingPosition: onBoardingPosition,
-                    )
-                  );
-                }
-              });
-              return _buildPersonalTabContent(widget.scrollController, context, categoryList, _personalPageBloc);
-
-            case Status.ERROR:
-              return Container();
-          }
-        }
-        return Container();
-      },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => _personalCategoryBloc
+        ),
+        BlocProvider(
+          create: (context) => PersonalArticleBloc(
+            personalSubscriptionRepos: PersonalSubscriptionService(),
+          ),
+        ),
+      ],
+      child: CustomScrollView(
+        controller: widget.scrollController,
+        slivers: [
+          if(!_remoteConfigHelper.isNewsMarqueePin)
+            SliverPersistentHeader(
+              delegate: NewsMarqueePersistentHeaderDelegate(),
+              floating: true,
+            ),
+          SliverToBoxAdapter(
+            child: BlocProvider(
+              create: (BuildContext context) => MemberSubscriptionTypeCubit(),
+              child: MemberSubscriptionTypeBlock(),
+            ),
+          ),
+          
+          _buildSubscribedCategoryList(),
+          _buildTabContent(),
+        ],
+      ),
     );
   }
 
-  Widget _buildPersonalTabContent(
-      ScrollController scrollController, 
-      BuildContext context, 
-      List<Category> categoryList, 
-      PersonalPageBloc personalPageBloc) {
-    return CustomScrollView(
-      controller: scrollController,
-      slivers: [
-        if(!_remoteConfigHelper.isNewsMarqueePin)
-          SliverPersistentHeader(
-            delegate: NewsMarqueePersistentHeaderDelegate(),
-            floating: true,
-          ),
-        SliverToBoxAdapter(
-          child: BlocProvider(
-            create: (BuildContext context) => MemberSubscriptionTypeCubit(),
-            child: MemberSubscriptionTypeBlock(),
-          ),
-        ),
-        SliverToBoxAdapter(
-          child: _buildCategoryList(context, categoryList, _personalPageBloc),
-        ),
-        SliverToBoxAdapter(
-          child: Divider(
-            height: 32,
-            thickness: 1.5,
-            color: Colors.black,
-          ),
-        ),
-        StreamBuilder<ApiResponse<List<Record>>>(
-          stream: _personalPageBloc.personalSubscriptionStream,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              switch (snapshot.data!.status) {
-                case Status.LOADING:
-                  return SliverToBoxAdapter(
-                    child: Center(child: CircularProgressIndicator()),
-                  );
+  _buildSubscribedCategoryList() {
+    return BlocBuilder<PersonalCategoryBloc, PersonalCategoryState>(
+      builder: (BuildContext context, PersonalCategoryState state) {
+        PersonalCategoryStatus status = state.status;
+        if(status == PersonalCategoryStatus.initial) {
+          context.read<PersonalCategoryBloc>().add(FetchSubscribedCategoryList());
+        }
 
-                case Status.LOADINGMORE:
-                case Status.COMPLETED:
-                  List<Record> recordList = snapshot.data!.data == null
-                      ? _personalPageBloc.recordList
-                      : snapshot.data!.data!;
-                  Status status = snapshot.data!.status;
-                  if(recordList.length == 0) {
-                    return SliverList(
-                      delegate: SliverChildListDelegate(
-                        [
-                          Center(
-                            child: Text(
-                              '目前沒有訂閱的新聞類別',
-                              style: TextStyle(
-                                color: appColor,
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                          Center(
-                            child: Text(
-                              '點上方按鈕進行訂閱！',
-                              style: TextStyle(
-                                color: appColor,
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
+        if(status == PersonalCategoryStatus.subscribedCategoryListLoading) {
+          return SliverToBoxAdapter(
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-                  return SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        _personalPageBloc.loadingMore(index);
+        if(status == PersonalCategoryStatus.subscribedCategoryListLoaded) {
+          _subscribedCategoryList = state.subscribedCategoryList!;
+          context.read<PersonalArticleBloc>().add(FetchSubscribedArticleList(
+            _subscribedCategoryList
+          ));
 
-                        return _buildSubscribtoinList(context, recordList, index, status);
-                      },
-                      childCount: recordList.length,
-                    ),
-                  );
+          return SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                _buildCategoryList(context, _subscribedCategoryList),
+                Divider(
+                  height: 32,
+                  thickness: 1.5,
+                  color: Colors.black,
+                ),
+              ],
+            ),
+          );
+        }
 
-                case Status.ERROR:
-                  return SliverToBoxAdapter(
-                    child: Container(),
-                  );
-              }
-            }
-            return SliverToBoxAdapter(
-              child: Container(),
-            );
-          },
-        ),
-      ],
+        if(status == PersonalCategoryStatus.subscribedCategoryListLoadingError) {
+          return SliverToBoxAdapter(
+            child: Text('error')
+          );      
+        }
+
+        return SliverToBoxAdapter(
+          child: Container()
+        );
+      }
+    );
+  }
+
+  _showUnsubscriptionDialog(){
+    var contentHeight = MediaQuery.of(context).size.height/3;
+
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            title: Text('新增訂閱項目'),
+            content: Container(
+              width: double.maxFinite,
+              height: contentHeight,
+              child: UnsubscriptionCategoryList(
+                personalCategoryBloc: _personalCategoryBloc
+              ),
+            ),
+            actions: [
+              TextButton(
+                child: Text("完成", style: TextStyle(color: Colors.black),),
+                onPressed:() {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+      }
     );
   }
 
   Widget _buildCategoryList(
-      BuildContext context, List<Category> categoryList, PersonalPageBloc personalPageBloc) {
+    BuildContext context, 
+    List<Category> categoryList
+  ) {
     return Column(
       key: _categoryKey,
       children: [
@@ -198,7 +178,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
             IconButton(
               icon: Icon(Icons.add_circle_outline, color: appColor,), 
               onPressed: () {
-                _showUnsubscriptionDialog(context, categoryList, personalPageBloc);
+                _showUnsubscriptionDialog();
               }
             ),
           ],
@@ -243,8 +223,9 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
                             onTap: () {
                               categoryList[index].isSubscribed =
                                   !categoryList[index].isSubscribed;
-                              personalPageBloc
-                                  .setCategoryListInStorage(categoryList);
+                              context.read<PersonalCategoryBloc>().add(
+                                SetCategoryListInStorage(categoryList)
+                              );
                             },
                           ),
                         ),
@@ -256,41 +237,102 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
     );
   }
 
-  _showUnsubscriptionDialog(BuildContext context, List<Category> categoryList, PersonalPageBloc personalPageBloc){
-    var contentHeight = MediaQuery.of(context).size.height/3;
+  _buildTabContent() {
+    return BlocBuilder<PersonalArticleBloc, PersonalArticleState>(
+      builder: (BuildContext context, PersonalArticleState state) {
+        PersonalArticleStatus status = state.status;
+        if(status == PersonalArticleStatus.subscribedArticleListLoadingError) {
+          return SliverToBoxAdapter(
+            child: Text('error')
+          );
+        }
 
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        StreamController<List<Category>> controller = StreamController<List<Category>>();
-        return AlertDialog(
-          title: Text('新增訂閱項目'),
-          content: Container(
-            width: double.maxFinite,
-            height: contentHeight,
-            child: UnsubscriptionCategoryList(
-              controller: controller,
-              categoryList: categoryList,
-              personalPageBloc: personalPageBloc,
-            ),
-          ),
-          actions: [
-            TextButton(
-              child: Text("完成", style: TextStyle(color: Colors.black),),
-              onPressed:(){
-                controller.close();
-                Navigator.of(context).pop();
+        if(status == PersonalArticleStatus.subscribedArticleListLoading) {
+          return SliverToBoxAdapter(
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if(status == PersonalArticleStatus.subscribedArticleListLoaded) {
+          List<Record> subscribedArticleList = state.subscribedArticleList!;
+          if(subscribedArticleList.length == 0) {
+            return SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Center(
+                    child: Text(
+                      '目前沒有訂閱的新聞類別',
+                      style: TextStyle(
+                        color: appColor,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      '點上方按鈕進行訂閱！',
+                      style: TextStyle(
+                        color: appColor,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+          return SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                if(!context.read<PersonalArticleBloc>().isNextPageEmpty &&
+                  index == subscribedArticleList.length - 5) {
+                  context.read<PersonalArticleBloc>().add(FetchNextPageSubscribedArticleList(
+                    _subscribedCategoryList
+                  ));
+                }
+
+                return _buildSubscribtoinList(context, subscribedArticleList, index);
               },
+              childCount: subscribedArticleList.length,
             ),
-          ],
+          );
+        }
+
+        if(status == PersonalArticleStatus.subscribedArticleListLoadingMore) {
+          List<Record> subscribedArticleList = state.subscribedArticleList!;
+
+          return SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                if(index == subscribedArticleList.length -1) {
+                  return Column(
+                    children: [
+                      _buildSubscribtoinList(context, subscribedArticleList, index),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                        child:  Center(child: CupertinoActivityIndicator()),
+                      ),
+                    ]
+                  );
+                }
+                
+                return _buildSubscribtoinList(context, subscribedArticleList, index);
+              },
+              childCount: subscribedArticleList.length,
+            ),
+          );
+        }
+
+        // initial
+        return SliverToBoxAdapter(
+          child: Container()
         );
-      },
+      }
     );
   }
 
   _buildSubscribtoinList(
-      BuildContext context, List<Record> recordList, int index, Status status) {
+      BuildContext context, List<Record> recordList, int index) {
     Record record = recordList[index];
 
     // VerticalDivider is broken? so use Container
@@ -331,9 +373,6 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
             color: Colors.grey,
           ),
         ),
-        if (index == recordList.length - 1 &&
-            status == Status.LOADINGMORE)
-          CupertinoActivityIndicator(),
       ],
     );
   }
