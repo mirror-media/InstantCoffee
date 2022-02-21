@@ -2,7 +2,12 @@ import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/models/record.dart';
 
-class PersonalSubscriptionService {
+abstract class PersonalSubscriptionRepos {
+  Future<List<Record>> fetchRecordList(String categoryListJson, {int page = 1});
+  Future<List<Record>> fetchNextRecordList(String categoryListJson);
+}
+
+class PersonalSubscriptionService implements PersonalSubscriptionRepos{
   ApiBaseHelper _helper = ApiBaseHelper();
 
   int page = 1;
@@ -15,6 +20,11 @@ class PersonalSubscriptionService {
     final jsonResponse = await _helper.getByUrl(url);
     List<Record> records = Record.recordListFromJson(jsonResponse['_items']);
     return records;
+  }
+
+  Future<List<Record>> fetchNextRecordList(String categoryListJson) async {
+    nextPage();
+    return await fetchRecordList(categoryListJson, page: this.page);
   }
 
   int initialPage() {
