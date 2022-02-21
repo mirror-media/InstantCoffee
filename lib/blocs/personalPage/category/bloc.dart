@@ -52,6 +52,7 @@ class PersonalCategoryBloc extends Bloc<PersonalCategoryEvents, PersonalCategory
     Emitter<PersonalCategoryState> emit,
   ) {
     print(event.toString());
+    _storage.setItem("categoryList", Category.categoryListToJson(event.categoryList));
     emit(PersonalCategoryState.subscribedCategoryListLoaded(
       subscribedCategoryList: event.categoryList,
     ));
