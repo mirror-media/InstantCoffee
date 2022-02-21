@@ -15,7 +15,7 @@ import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/models/record.dart';
-import 'package:readr_app/pages/tabContent/personal/memberSubscriptionTypeBlock.dart';
+import 'package:readr_app/pages/tabContent/personal/default/memberSubscriptionTypeBlock.dart';
 import 'package:readr_app/pages/tabContent/shared/listItem.dart';
 import 'package:readr_app/widgets/newsMarquee/newsMarqueePersistentHeaderDelegate.dart';
 import 'package:readr_app/pages/tabContent/personal/default/unsubscriptionCategoryList.dart';
