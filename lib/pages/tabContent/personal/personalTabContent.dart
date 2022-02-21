@@ -18,7 +18,7 @@ import 'package:readr_app/models/record.dart';
 import 'package:readr_app/pages/tabContent/personal/memberSubscriptionTypeBlock.dart';
 import 'package:readr_app/pages/tabContent/shared/listItem.dart';
 import 'package:readr_app/widgets/newsMarquee/newsMarqueePersistentHeaderDelegate.dart';
-import 'package:readr_app/widgets/unsubscriptionCategoryList.dart';
+import 'package:readr_app/pages/tabContent/personal/default/unsubscriptionCategoryList.dart';
 
 class PersonalTabContent extends StatefulWidget {
   final ScrollController scrollController;
