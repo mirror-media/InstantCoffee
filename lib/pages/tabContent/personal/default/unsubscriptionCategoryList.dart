@@ -87,7 +87,7 @@ class _UnsubscriptionCategoryListState extends State<UnsubscriptionCategoryList>
 
           if(status == PersonalCategoryStatus.subscribedCategoryListLoadingError) {
             return SliverToBoxAdapter(
-              child: Text('error')
+              child: Container()
             );      
           }
 
