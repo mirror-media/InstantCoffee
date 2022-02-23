@@ -114,7 +114,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
 
         if(status == PersonalCategoryStatus.subscribedCategoryListLoadingError) {
           return SliverToBoxAdapter(
-            child: Text('error')
+            child: Container()
           );      
         }
 
@@ -243,7 +243,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
         PersonalArticleStatus status = state.status;
         if(status == PersonalArticleStatus.subscribedArticleListLoadingError) {
           return SliverToBoxAdapter(
-            child: Text('error')
+            child: Container()
           );
         }
 
