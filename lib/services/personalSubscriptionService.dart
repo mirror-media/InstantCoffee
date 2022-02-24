@@ -3,6 +3,10 @@ import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/models/record.dart';
 
 abstract class PersonalSubscriptionRepos {
+  int initialPage();
+  int nextPage();
+  int previousPage();
+
   Future<List<Record>> fetchRecordList(String categoryListJson, {int page = 1});
   Future<List<Record>> fetchNextRecordList(String categoryListJson);
 }
@@ -11,6 +15,22 @@ class PersonalSubscriptionService implements PersonalSubscriptionRepos{
   ApiBaseHelper _helper = ApiBaseHelper();
 
   int page = 1;
+
+  int initialPage() {
+    return this.page = 1;
+  }
+
+  int nextPage() {
+    return this.page = this.page+1;
+  }
+
+  int previousPage() {
+    if(this.page == 1) {
+      return 1;
+    }
+
+    return this.page = this.page-1;
+  }
 
   Future<List<Record>> fetchRecordList(String categoryListJson, {int page = 1}) async {
     String url = Environment().config.apiBase +
@@ -25,13 +45,5 @@ class PersonalSubscriptionService implements PersonalSubscriptionRepos{
   Future<List<Record>> fetchNextRecordList(String categoryListJson) async {
     nextPage();
     return await fetchRecordList(categoryListJson, page: this.page);
-  }
-
-  int initialPage() {
-    return this.page = 1;
-  }
-
-  int nextPage() {
-    return ++ this.page;
   }
 }
