@@ -66,6 +66,7 @@ class PersonalArticleBloc extends Bloc<PersonalArticleEvents, PersonalArticleSta
         subscribedArticleList: subscribedArticleList,
       ));
     } catch (e) {
+      personalSubscriptionRepos.previousPage();
       emit(PersonalArticleState.subscribedArticleListLoadingMoreFail(
         subscribedArticleList: subscribedArticleList,
         errorMessages: e,
