@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
 
 import 'package:readr_app/blocs/personalPage/category/bloc.dart';
@@ -238,7 +239,16 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
   }
 
   _buildTabContent() {
-    return BlocBuilder<PersonalArticleBloc, PersonalArticleState>(
+    return BlocConsumer<PersonalArticleBloc, PersonalArticleState>(
+      listener: (BuildContext context, PersonalArticleState state) async{
+        PersonalArticleStatus status = state.status;
+        if(status == PersonalArticleStatus.subscribedArticleListLoadingMoreFail) {
+          await Future.delayed(Duration(seconds: 3));
+          context.read<PersonalArticleBloc>().add(FetchNextPageSubscribedArticleList(
+            _subscribedCategoryList
+          ));
+        }
+      },
       builder: (BuildContext context, PersonalArticleState state) {
         PersonalArticleStatus status = state.status;
         if(status == PersonalArticleStatus.subscribedArticleListLoadingError) {
@@ -316,6 +326,29 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
                   );
                 }
                 
+                return _buildSubscribtoinList(context, subscribedArticleList, index);
+              },
+              childCount: subscribedArticleList.length,
+            ),
+          );
+        }
+
+        if(status == PersonalArticleStatus.subscribedArticleListLoadingMoreFail) {
+          Fluttertoast.showToast(
+            msg: '加載更多失敗',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+          );
+          
+          List<Record> subscribedArticleList = state.subscribedArticleList!;
+
+          return SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {                
                 return _buildSubscribtoinList(context, subscribedArticleList, index);
               },
               childCount: subscribedArticleList.length,
