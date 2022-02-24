@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
+import 'package:readr_app/blocs/onBoarding/bloc.dart';
+import 'package:readr_app/blocs/onBoarding/events.dart';
+import 'package:readr_app/blocs/onBoarding/states.dart';
 
 import 'package:readr_app/blocs/personalPage/category/bloc.dart';
 import 'package:readr_app/blocs/personalPage/category/events.dart';
@@ -11,6 +14,7 @@ import 'package:readr_app/blocs/personalPage/category/states.dart';
 import 'package:readr_app/blocs/personalPage/article/bloc.dart';
 import 'package:readr_app/blocs/personalPage/article/events.dart';
 import 'package:readr_app/blocs/personalPage/article/states.dart';
+import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/pages/tabContent/personal/default/unsubscriptionCategoryList.dart';
 
 import 'package:readr_app/services/categoryService.dart';
@@ -80,7 +84,27 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
   }
 
   _buildSubscribedCategoryList() {
-    return BlocBuilder<PersonalCategoryBloc, PersonalCategoryState>(
+    return BlocConsumer<PersonalCategoryBloc, PersonalCategoryState>(
+      listener: (BuildContext context, PersonalCategoryState state) {
+        PersonalCategoryStatus status = state.status;
+        if(status == PersonalCategoryStatus.subscribedCategoryListLoaded) {
+          WidgetsBinding.instance!.addPostFrameCallback((_) async{
+            OnBoardingBloc onBoardingBloc = context.read<OnBoardingBloc>();
+            if(onBoardingBloc.state.status == OnBoardingStatus.firstPage) {
+              OnBoardingPosition onBoardingPosition = await onBoardingBloc.getSizeAndPosition(_categoryKey);
+              onBoardingPosition.left = 0;
+              onBoardingPosition.height += 16;
+              
+              onBoardingBloc.add(
+                GoToNextHint(
+                  onBoardingStatus: OnBoardingStatus.secondPage,
+                  onBoardingPosition: onBoardingPosition,
+                )
+              );
+            }
+          });
+        }
+      },
       builder: (BuildContext context, PersonalCategoryState state) {
         PersonalCategoryStatus status = state.status;
         if(status == PersonalCategoryStatus.initial) {
