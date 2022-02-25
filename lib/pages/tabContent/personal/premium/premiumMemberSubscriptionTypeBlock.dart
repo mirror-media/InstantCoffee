@@ -36,23 +36,23 @@ class _PremiumMemberSubscriptionTypeBlockState extends State<PremiumMemberSubscr
         }
         
         // state is member subscription type init or loading
-        return _loadingWidget();
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: _loadingWidget(),
+        );
       }
     );
   }
 
   Widget _loadingWidget() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Card(
-        elevation: 10,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Center(
-            child: SpinKitWave(color: appColor, size: 48)
-          )
+    return Container(
+      color: appColor,
+      child:  Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: SpinKitWave(color: Colors.white, size: 51)
         ),
-      ),
+      )
     );
   }
 
