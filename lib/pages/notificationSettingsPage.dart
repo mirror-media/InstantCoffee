@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
 import 'package:readr_app/blocs/onBoarding/events.dart';
 import 'package:readr_app/blocs/onBoarding/states.dart';
+import 'package:readr_app/pages/shared/appVersionWidget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:localstorage/localstorage.dart';
 
@@ -31,22 +31,13 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   final LocalStorage _storage = LocalStorage('setting');
   FirebaseMessangingHelper _firebaseMessangingHelper = FirebaseMessangingHelper();
   List<NotificationSetting>? _notificationSettingList;
-  String _version = "";
-  String _buildNumber = "";
 
   @override
   void initState() {
     _onBoardingBloc = context.read<OnBoardingBloc>();
 
     _setNotificationSettingList();
-    _loadPackageInfo();
     super.initState();
-  }
-
-  _loadPackageInfo() async{
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    _version = packageInfo.version;
-    _buildNumber = packageInfo.buildNumber;
   }
 
   _setNotificationSettingList() async {
@@ -204,7 +195,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                         hasScrollBody: false,
                         child: Align(
                           alignment: Alignment.bottomCenter,
-                          child: Container(height: 150, child: _contactInfo(width))
+                          child: Container(height: 180, child: _contactInfo(width))
                         ),
                       ),
                     ]
@@ -457,7 +448,10 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
           }
         ),
         SizedBox(height: 16),
-        Center(child: Text('v' + _version + ' ($_buildNumber)'),),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+          child: AppVersionWidget(),
+        ),
       ]
     );
   }
