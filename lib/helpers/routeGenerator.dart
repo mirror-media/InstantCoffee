@@ -16,7 +16,7 @@ import 'package:readr_app/pages/magazine/magazinePage.dart';
 import 'package:readr_app/pages/memberCenter/deleteMember/deleteMemberPage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/newebpayChangePlanPage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectPage.dart';
-import 'package:readr_app/pages/notificationSettingsPage.dart';
+import 'package:readr_app/pages/settingPage/notificationSettingsPage.dart';
 import 'package:readr_app/pages/passwordReset/passwordResetPage.dart';
 import 'package:readr_app/pages/passwordResetEmail/passwordResetEmailPage.dart';
 import 'package:readr_app/pages/passwordResetPrompt/passwordResetPromptPage.dart';
