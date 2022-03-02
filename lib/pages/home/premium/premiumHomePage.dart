@@ -29,6 +29,7 @@ class PremiumHomePage extends StatefulWidget {
 
 class _PremiumHomePageState extends State<PremiumHomePage> with WidgetsBindingObserver {
   int _selectedIndex = 0;
+  late PageController _pageController;
   ScrollController _premeniumArticleBarScrollController = ScrollController();
 
   final LocalStorage _storage = LocalStorage('setting');
@@ -43,7 +44,7 @@ class _PremiumHomePageState extends State<PremiumHomePage> with WidgetsBindingOb
       _appLinkHelper.listenAppLink(context);
       _firebaseMessangingHelper.configFirebaseMessaging(context);
     });
-
+    _pageController = PageController(initialPage: _selectedIndex);
     _showTermsOfService();
     super.initState();
   }
@@ -60,7 +61,6 @@ class _PremiumHomePageState extends State<PremiumHomePage> with WidgetsBindingOb
           child: SearchWidget()
         ),
       ),
-      //LoginPage(),
       ColoredBox(
         color: Colors.white,
         child: PremiumTabContent(
@@ -111,6 +111,7 @@ class _PremiumHomePageState extends State<PremiumHomePage> with WidgetsBindingOb
         _selectedIndex = index;
       });
     }
+    _pageController.jumpToPage(index);
   }
 
   @override
@@ -126,10 +127,11 @@ class _PremiumHomePageState extends State<PremiumHomePage> with WidgetsBindingOb
       backgroundColor: appColor,
       body: SafeArea(
         bottom: false,
-        child: IndexedStack(
-          index: _selectedIndex,
+        child: PageView(
+          controller: _pageController,
+          physics: NeverScrollableScrollPhysics(),
           children: _getPages(_premeniumArticleBarScrollController),
-        )
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
