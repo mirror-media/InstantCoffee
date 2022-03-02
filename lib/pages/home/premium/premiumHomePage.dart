@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/search/bloc.dart';
 import 'package:readr_app/helpers/appLinkHelper.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/home/premium/premiumHomeWidget.dart';
-import 'package:readr_app/pages/login/loginPage.dart';
+import 'package:readr_app/pages/login/premiumMemberWidget.dart';
 import 'package:readr_app/pages/search/searchWidget.dart';
 import 'package:readr_app/pages/tabContent/news/premiumTabContent.dart';
 import 'package:readr_app/pages/termsOfService/mMTermsOfServicePage.dart';
@@ -76,7 +77,10 @@ class _PremiumHomePageState extends State<PremiumHomePage> with WidgetsBindingOb
           scrollController: premeniumArticleBarScrollController,
         ),
       ),
-      LoginPage()
+      PremiumMemberWidget(
+        israfelId: context.read<MemberBloc>().state.israfelId!,
+        subscriptionType: context.read<MemberBloc>().state.subscriptionType!
+      )
     ];
   }
 
