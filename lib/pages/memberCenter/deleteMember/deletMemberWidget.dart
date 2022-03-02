@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/deleteMember/cubit.dart';
 import 'package:readr_app/blocs/memberCenter/deleteMember/state.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
@@ -25,7 +26,16 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DeleteMemberCubit, DeleteMemberState>(
+    return BlocConsumer<DeleteMemberCubit, DeleteMemberState>(
+      listener: (context, state) {
+        if(state is DeleteMemberSuccess) {
+          context.read<MemberBloc>().add(UpdateSubscriptionType(
+            isLogin: false,
+            israfelId: null,
+            subscriptionType: null
+          ));
+        }
+      },
       builder: (context, state) {
         if(state is DeleteMemberInitState) {
           return Scaffold(
