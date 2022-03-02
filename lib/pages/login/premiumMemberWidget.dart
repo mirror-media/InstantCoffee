@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/memberDetail/memberDetailCubit.dart';
 import 'package:readr_app/blocs/memberCenter/paymentRecord/paymentRecordBloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
@@ -29,6 +30,11 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
   
   _signOut() async {
     await _auth.signOut();
+    context.read<MemberBloc>().add(UpdateSubscriptionType(
+      isLogin: false,
+      israfelId: null,
+      subscriptionType: null
+    ));
   }
   
   @override
