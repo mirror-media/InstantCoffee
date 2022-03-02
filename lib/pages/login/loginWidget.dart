@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/login/states.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/pages/login/loginErrorWidget.dart';
 import 'package:readr_app/pages/login/loginForm.dart';
@@ -28,7 +29,16 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(
+    return BlocConsumer<LoginBloc, LoginState>(
+      listener: (BuildContext context, LoginState state) {
+        if (state is LoginSuccess) {
+          context.read<MemberBloc>().add(UpdateSubscriptionType(
+            isLogin: true,
+            israfelId: state.israfelId,
+            subscriptionType: state.subscriptionType
+          ));
+        }
+      },
       builder: (BuildContext context, LoginState state) {
         if(state is LoadingUI) {
           return Center(child: CircularProgressIndicator());
