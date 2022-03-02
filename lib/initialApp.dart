@@ -4,8 +4,10 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
+import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/firebaseLoginStatus.dart';
 import 'package:readr_app/pages/emailVerification/emailVerificationSuccessPage.dart';
@@ -113,6 +115,10 @@ class _InitialAppState extends State<InitialApp> {
     }
   }
 
+  void _fetchMemberSubscriptionType() {
+    context.read<MemberBloc>().add(FetchMemberSubscriptionType());
+  }
+
   @override
   void initState() {
     _waiting();
@@ -141,26 +147,94 @@ class _InitialAppState extends State<InitialApp> {
       stream: _configController.stream,
       builder: (context, snapshot) {
         if(!snapshot.data!) {
-          return Scaffold(body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text('Loading...'),
-              SizedBox(height: 16),
-              Center(child: CircularProgressIndicator()),
-            ],
-          ));
+          return Scaffold(
+            backgroundColor: appColor,
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    splashIconPng,
+                    width: 100,
+                    height: 100,
+                  ),
+                  SizedBox(height: 16),
+                  Text('Loading...'),
+                ]
+              ),
+            ),
+          );
         }
 
         if(_appUpgradeHelper.needToUpdate) {
           return AppUpdatePage(appUpgradeHelper: _appUpgradeHelper);
         }
 
-        return BlocProvider(
-          create: (context) => OnBoardingBloc(),
-          child: OnBoardingPage(),
-        );
+        _fetchMemberSubscriptionType();
+        return _buildPage();
       }
+    );
+  }
+
+  Widget _buildPage() {
+    return BlocConsumer<MemberBloc, MemberState>(
+      listener: (BuildContext context, MemberState state) {
+        MemberStatus status = state.status;
+        print(status);
+      },
+      builder: (BuildContext context, MemberState state) {
+        MemberStatus status = state.status;
+        switch (status) {
+          case MemberStatus.initial:
+            return Scaffold(
+              backgroundColor: appColor,
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      splashIconPng,
+                      width: 100,
+                      height: 100,
+                    ),
+                    SizedBox(height: 16),
+                    Text('Loading...'),
+                  ]
+                ),
+              ),
+            );
+          case MemberStatus.loading:
+            return Scaffold(
+              backgroundColor: appColor,
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      splashIconPng,
+                      width: 100,
+                      height: 100,
+                    ),
+                    SizedBox(height: 16),
+                    Text('Loading...'),
+                  ]
+                ),
+              ),
+            );
+          case MemberStatus.loaded:
+            bool isPremium = state.isPremium;
+            
+            return BlocProvider(
+              create: (context) => OnBoardingBloc(),
+              child: OnBoardingPage(isPremium: isPremium),
+            );
+          case MemberStatus.error:
+            return BlocProvider(
+              create: (context) => OnBoardingBloc(),
+              child: OnBoardingPage(isPremium: false),
+            );
+        }
+      },
     );
   }
 }

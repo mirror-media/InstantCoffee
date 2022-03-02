@@ -7,9 +7,15 @@ import 'package:readr_app/blocs/section/cubit.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/pages/home/default/homePage.dart';
+import 'package:readr_app/pages/home/premium/premiumHomePage.dart';
 import 'package:readr_app/services/sectionService.dart';
 
 class OnBoardingPage extends StatefulWidget {
+  final bool isPremium;
+  OnBoardingPage({
+    required this.isPremium
+  });
+
   @override
   _OnBoardingPageState createState() => _OnBoardingPageState();
 }
@@ -33,6 +39,15 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 
   @override
   Widget build(BuildContext context) {
+    if(widget.isPremium) {
+      return BlocProvider(
+        create: (context) => SectionCubit(sectionRepos: SectionService()),
+        child: PremiumHomePage(
+          settingKey: _settingKey,
+        ),
+      );
+    }
+
     return BlocBuilder<OnBoardingBloc, OnBoardingState>(
       builder: (BuildContext context, OnBoardingState state) {
         bool isOnBoarding = state.isOnBoarding;
