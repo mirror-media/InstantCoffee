@@ -31,15 +31,14 @@ class _PasswordUpdateWidgetState extends State<PasswordUpdateWidget> {
           if(widget.isPremium) {
             FirebaseAuth auth = FirebaseAuth.instance;
             await auth.signOut();
+            context.read<MemberBloc>().add(UpdateSubscriptionType(
+              isLogin: false,
+              israfelId: null,
+              subscriptionType: null
+            ));
           } else {
             context.read<LoginBloc>().add(SignOut());
           }
-          
-          context.read<MemberBloc>().add(UpdateSubscriptionType(
-            isLogin: false,
-            israfelId: null,
-            subscriptionType: null
-          ));
         }
       },
       builder: (BuildContext context, PasswordUpdateState state) {

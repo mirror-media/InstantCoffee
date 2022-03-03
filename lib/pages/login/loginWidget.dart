@@ -29,16 +29,7 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LoginBloc, LoginState>(
-      listener: (BuildContext context, LoginState state) {
-        if (state is LoginSuccess) {
-          context.read<MemberBloc>().add(UpdateSubscriptionType(
-            isLogin: true,
-            israfelId: state.israfelId,
-            subscriptionType: state.subscriptionType
-          ));
-        }
-      },
+    return BlocBuilder<LoginBloc, LoginState>(
       builder: (BuildContext context, LoginState state) {
         if(state is LoadingUI) {
           return Center(child: CircularProgressIndicator());

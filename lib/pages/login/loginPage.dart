@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/pages/login/loginWidget.dart';
@@ -21,7 +22,8 @@ class LoginPage extends StatelessWidget {
       body: BlocProvider(
         create: (context) => LoginBloc(
           loginRepos: LoginServices(),
-          
+          memberBloc: context.read<MemberBloc>(),
+
           routeName: routeName,
           routeArguments: routeArguments,
         ),
