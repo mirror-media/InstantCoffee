@@ -4,11 +4,13 @@ import 'package:readr_app/models/memberSubscriptionType.dart';
 
 class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
   final SubscriptionType subscriptionType;
+  final bool isCenter;
   final double? fontSize;
   final Color? color;
   final FontWeight? fontWeight;
   MemberSubscriptionTypeTitleWiget({
     required this.subscriptionType,
+    this.isCenter = false,
     this.fontSize,
     this.color,
     this.fontWeight,
@@ -33,6 +35,8 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
       subscriptionType == SubscriptionType.subscribe_yearly
     ) {
       return Row(
+        mainAxisAlignment: isCenter
+            ? MainAxisAlignment.center : MainAxisAlignment.start,
         children: [
           Text(
             'Premium 會員',

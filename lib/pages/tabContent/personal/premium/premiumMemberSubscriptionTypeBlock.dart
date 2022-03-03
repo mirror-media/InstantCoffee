@@ -94,6 +94,7 @@ class _PremiumMemberSubscriptionTypeBlockState extends State<PremiumMemberSubscr
         SizedBox(height: 4),
         MemberSubscriptionTypeTitleWiget(
           subscriptionType: subscriptionType,
+          isCenter: true,
           fontSize: 24,
           fontWeight: FontWeight.w500,
           color: Colors.white,
