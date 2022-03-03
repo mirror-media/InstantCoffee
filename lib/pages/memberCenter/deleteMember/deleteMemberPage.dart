@@ -14,7 +14,7 @@ class DeleteMemberPage extends StatelessWidget {
   });
 
   bool _isPremiumOrVip() {
-    return subscriptionType == SubscriptionType.marketing ||
+    return subscriptionType == SubscriptionType.subscribe_group ||
         subscriptionType == SubscriptionType.subscribe_monthly ||
         subscriptionType == SubscriptionType.subscribe_yearly;
   }

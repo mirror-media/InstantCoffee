@@ -16,12 +16,13 @@ import 'package:readr_app/pages/magazine/magazinePage.dart';
 import 'package:readr_app/pages/memberCenter/deleteMember/deleteMemberPage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/newebpayChangePlanPage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectPage.dart';
-import 'package:readr_app/pages/notificationSettingsPage.dart';
+import 'package:readr_app/pages/settingPage/notificationSettingsPage.dart';
 import 'package:readr_app/pages/passwordReset/passwordResetPage.dart';
 import 'package:readr_app/pages/passwordResetEmail/passwordResetEmailPage.dart';
 import 'package:readr_app/pages/passwordResetPrompt/passwordResetPromptPage.dart';
 import 'package:readr_app/pages/passwordUpdate/passwordUpdatePage.dart';
 import 'package:readr_app/pages/search/searchPage.dart';
+import 'package:readr_app/pages/settingPage/premiumSettingPage.dart';
 import 'package:readr_app/pages/storyPage/listening/listeningStoryPage.dart';
 import 'package:readr_app/pages/storyPage/news/storyPage.dart';
 
@@ -48,6 +49,7 @@ class RouteGenerator {
   static const String deleteMember = '/deleteMember';
   static const String emailVerification = '/emailVerification';
   static const String notificationSettings = '/notificationSettings';
+  static const String premiumSettings = '/premiumSettings';
   static const String story = '/story';
   static const String listeningStory = '/listeningStory';
   static const String magazine = '/magazine';
@@ -175,6 +177,12 @@ class RouteGenerator {
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
         return _errorRoute(settings);
+      case premiumSettings:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => PremiumSettingPage(),
+          fullscreenDialog: true,
+        );
       case story:
         Map args = settings.arguments as Map;
         // Validation of correct data type
@@ -378,6 +386,10 @@ class RouteGenerator {
       notificationSettings,
       arguments: onBoardingBloc,
     );
+  }
+
+  static void navigateToPremiumSettingPage() {
+    navigatorKey.currentState!.pushNamed(premiumSettings);
   }
 
   static void navigateToStory(

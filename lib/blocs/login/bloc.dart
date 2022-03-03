@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/login/states.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/helpers/errorLogHelper.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -16,12 +17,14 @@ import 'package:readr_app/services/memberService.dart';
 
 class LoginBloc extends Bloc<LoginEvents, LoginState> {
   final LoginRepos loginRepos;
+  final MemberBloc memberBloc;
 
   final String routeName;
   final Map? routeArguments;
 
   LoginBloc({
     required this.loginRepos,
+    required this.memberBloc,
 
     required this.routeName,
     this.routeArguments,
@@ -179,6 +182,13 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
           isNewebpay: memberIdAndSubscriptionType.isNewebpay,
         )
       );
+
+      memberBloc.add(UpdateSubscriptionType(
+        isLogin: true,
+        israfelId: memberIdAndSubscriptionType.israfelId,
+        subscriptionType: memberIdAndSubscriptionType.subscriptionType
+      ));
+
       Fluttertoast.showToast(
         msg: '登入成功',
         toastLength: Toast.LENGTH_SHORT,
@@ -244,6 +254,12 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
             isNewebpay: memberIdAndSubscriptionType.isNewebpay,
           )
         );
+        
+        memberBloc.add(UpdateSubscriptionType(
+          isLogin: true,
+          israfelId: memberIdAndSubscriptionType.israfelId,
+          subscriptionType: memberIdAndSubscriptionType.subscriptionType
+        ));
       } catch(e) {
         // there is no member in israfel
         if(e.toString() == "Invalid Request: $memberStateTypeIsNotFound") {
@@ -458,6 +474,11 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
       emit(LoadingUI());
       await loginRepos.signOut();
       emit(LoginInitState());
+      memberBloc.add(UpdateSubscriptionType(
+        isLogin: false,
+        israfelId: null,
+        subscriptionType: null
+      ));
     } on SocketException {
       emit(
         LoginFail(error: NoInternetException('No Internet')),

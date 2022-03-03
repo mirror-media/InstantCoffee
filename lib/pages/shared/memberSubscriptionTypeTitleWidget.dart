@@ -4,10 +4,16 @@ import 'package:readr_app/models/memberSubscriptionType.dart';
 
 class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
   final SubscriptionType subscriptionType;
-  final double fontSize;
+  final bool isCenter;
+  final double? fontSize;
+  final Color? color;
+  final FontWeight? fontWeight;
   MemberSubscriptionTypeTitleWiget({
     required this.subscriptionType,
-    required this.fontSize,
+    this.isCenter = false,
+    this.fontSize,
+    this.color,
+    this.fontWeight,
   });
 
   @override
@@ -19,6 +25,8 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
         'Basic 會員',
         style: TextStyle(
           fontSize: fontSize,
+          color: color,
+          fontWeight: fontWeight
         ),
       );
     }
@@ -27,11 +35,15 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
       subscriptionType == SubscriptionType.subscribe_yearly
     ) {
       return Row(
+        mainAxisAlignment: isCenter
+            ? MainAxisAlignment.center : MainAxisAlignment.start,
         children: [
           Text(
             'Premium 會員',
             style: TextStyle(
               fontSize: fontSize,
+              color: color,
+              fontWeight: fontWeight
             ),
           ),
           SizedBox(width: 4),
@@ -49,6 +61,8 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
         '鏡集團員工',
         style: TextStyle(
           fontSize: fontSize,
+          color: color,
+          fontWeight: fontWeight
         ),
       );
     }
@@ -58,6 +72,8 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
         '團體訂閱',
         style: TextStyle(
           fontSize: fontSize,
+          color: color,
+          fontWeight: fontWeight
         ),
       );
     }
@@ -67,6 +83,8 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
       'VIP',
       style: TextStyle(
         fontSize: fontSize,
+        color: color,
+        fontWeight: fontWeight
       ),
     );
   }
