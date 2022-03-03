@@ -6,13 +6,18 @@ import 'package:readr_app/pages/passwordUpdate/PasswordUpdateWidget.dart';
 import 'package:readr_app/services/emailSignInService.dart';
 
 class PasswordUpdatePage extends StatelessWidget {
+  final bool isPremium;
+  PasswordUpdatePage({
+    this.isPremium = false
+  });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
       body: BlocProvider(
         create: (context) => PasswordUpdateBloc(emailSignInRepos: EmailSignInServices()),
-        child: PasswordUpdateWidget(),
+        child: PasswordUpdateWidget(isPremium: isPremium),
       ),
     );
   }

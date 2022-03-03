@@ -9,8 +9,10 @@ import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/pages/memberCenter/paymentRecord/memberPaymentRecordPage.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionDetail/memberSubscriptionDetailPage.dart';
+import 'package:readr_app/pages/passwordUpdate/passwordUpdatePage.dart';
 import 'package:readr_app/pages/shared/appVersionWidget.dart';
 import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
+import 'package:readr_app/services/loginService.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PremiumMemberWidget extends StatefulWidget {
@@ -80,10 +82,10 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
                 _horizontalDivider(width),
                 _memberProfileButton(),
                 _horizontalDivider(width),
-                // if (LoginServices.checkIsEmailAndPasswordLogin()) ...[
-                //   _changePasswordButton(),
-                //   _horizontalDivider(width),
-                // ],
+                if (LoginServices.checkIsEmailAndPasswordLogin()) ...[
+                  _changePasswordButton(),
+                  _horizontalDivider(width),
+                ],
                 _memberContactInfoButton(),
                 _horizontalDivider(width),
                 _settingButton(),
@@ -183,22 +185,18 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
     );
   }
 
-  // TODO: fixes changing password feature in premium mode
-  // Widget _changePasswordButton() {
-  //   return _navigateButton(
-  //     '修改密碼',
-  //     () {
-  //       Navigator.of(context).push(
-  //         MaterialPageRoute(
-  //           builder: (_) => BlocProvider.value(
-  //             value: BlocProvider.of<LoginBloc>(context),
-  //             child: PasswordUpdatePage(),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+  Widget _changePasswordButton() {
+    return _navigateButton(
+      '修改密碼',
+      () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => PasswordUpdatePage(isPremium: true),
+          )
+        );
+      },
+    );
+  }
 
   Widget _memberContactInfoButton() {
     return _navigateButton(
