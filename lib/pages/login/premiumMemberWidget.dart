@@ -208,7 +208,7 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
   Widget _settingButton() {
     return _navigateButton(
       '設定',
-      () {}
+      () => RouteGenerator.navigateToPremiumSettingPage(),
     );
   }
 
