@@ -125,7 +125,7 @@ class _MemberSubscriptionTypeBlockState extends State<MemberSubscriptionTypeBloc
         SizedBox(height: 4),
         MemberSubscriptionTypeTitleWiget(
           subscriptionType: subscriptionType,
-          fontSize: 17,
+          textStyle: TextStyle(fontSize: 17),
         ),
       ],
     );

@@ -5,15 +5,11 @@ import 'package:readr_app/models/memberSubscriptionType.dart';
 class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
   final SubscriptionType subscriptionType;
   final bool isCenter;
-  final double? fontSize;
-  final Color? color;
-  final FontWeight? fontWeight;
+  final TextStyle? textStyle;
   MemberSubscriptionTypeTitleWiget({
     required this.subscriptionType,
     this.isCenter = false,
-    this.fontSize,
-    this.color,
-    this.fontWeight,
+    this.textStyle,
   });
 
   @override
@@ -23,11 +19,7 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
     ) {
       return Text(
         'Basic 會員',
-        style: TextStyle(
-          fontSize: fontSize,
-          color: color,
-          fontWeight: fontWeight
-        ),
+        style: textStyle
       );
     }
 
@@ -40,17 +32,13 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
         children: [
           Text(
             'Premium 會員',
-            style: TextStyle(
-              fontSize: fontSize,
-              color: color,
-              fontWeight: fontWeight
-            ),
+            style: textStyle
           ),
           SizedBox(width: 4),
           Image.asset(
             subscriptionIconPng,
-            width: fontSize,
-            height:fontSize,
+            width: textStyle?.fontSize ?? 14,
+            height: textStyle?.fontSize ?? 14,
           ),
         ],
       );
@@ -59,33 +47,21 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
     if(subscriptionType == SubscriptionType.staff){
       return Text(
         '鏡集團員工',
-        style: TextStyle(
-          fontSize: fontSize,
-          color: color,
-          fontWeight: fontWeight
-        ),
+        style: textStyle
       );
     }
 
     if(subscriptionType == SubscriptionType.subscribe_group){
       return Text(
         '團體訂閱',
-        style: TextStyle(
-          fontSize: fontSize,
-          color: color,
-          fontWeight: fontWeight
-        ),
+        style: textStyle
       );
     }
 
     // subscriptionType == SubscriptionType.marketing
     return Text(
       'VIP',
-      style: TextStyle(
-        fontSize: fontSize,
-        color: color,
-        fontWeight: fontWeight
-      ),
+      style: textStyle
     );
   }
 }
