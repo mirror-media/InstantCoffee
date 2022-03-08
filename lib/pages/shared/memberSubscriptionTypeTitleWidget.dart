@@ -6,10 +6,12 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
   final SubscriptionType subscriptionType;
   final bool isCenter;
   final TextStyle? textStyle;
+  final Color? premiumIconColor;
   MemberSubscriptionTypeTitleWiget({
     required this.subscriptionType,
     this.isCenter = false,
     this.textStyle,
+    this.premiumIconColor
   });
 
   @override
@@ -39,6 +41,7 @@ class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
             subscriptionIconPng,
             width: textStyle?.fontSize ?? 14,
             height: textStyle?.fontSize ?? 14,
+            color: premiumIconColor,
           ),
         ],
       );

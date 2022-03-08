@@ -100,6 +100,7 @@ class _PremiumMemberSubscriptionTypeBlockState extends State<PremiumMemberSubscr
             fontWeight: FontWeight.w500,
             color: Colors.white,
           ),
+          premiumIconColor: Color(0xffFFFB90),
         ),
       ],
     );
