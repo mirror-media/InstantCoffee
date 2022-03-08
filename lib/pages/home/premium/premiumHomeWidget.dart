@@ -54,16 +54,21 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget> with TickerProvid
     for (int i = 0; i < sectionItems.length; i++) {
       _tabKeys.add(GlobalKey());
       Section section = sectionItems[i];
+      String title = section.title;
+      Color? color;
+      if(section.name == 'member') {
+        title = 'Premium文章';
+        color = Color(0xff707070);
+      }
+
       _tabs.add(
         Tab(
           key: _tabKeys[i],
           child: Text(
-            section.title,
+            title,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: section.name == 'member'
-              ? Color(0xffDB1730)
-              : null,
+              color: color,
             ),
           ),
         ),
@@ -77,7 +82,6 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget> with TickerProvid
         ));
       } else if (section.key == Environment().config.personalSectionKey){
         _tabWidgets.add(PremiumPersonalTabContent(
-          //onBoardingBloc: widget.onBoardingBloc,
           scrollController: _scrollControllerList[i],
         ));
       } else {
@@ -99,11 +103,11 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget> with TickerProvid
           _tabController == null ? _initialTabIndex : _tabController!.index,
     )..addListener(() { 
       // when index is member
-      if (_tabController!.index == 3) {
-        _tabColorController!.sink.add(Color(0xffDB1730));
-      } else {
-        _tabColorController!.sink.add(appColor);
-      }
+      // if (_tabController!.index == 3) {
+      //   _tabColorController!.sink.add(Color(0xffDB1730));
+      // } else {
+      //   _tabColorController!.sink.add(appColor);
+      // }
     });
   }
 
@@ -175,7 +179,7 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget> with TickerProvid
                 TabBar tabBar = TabBar(
                   isScrollable: true,
                   indicatorColor: tabBarColor,
-                  unselectedLabelColor: Colors.grey,
+                  unselectedLabelColor: Color(0xffA3A3A3),
                   labelColor: appColor,
                   tabs: tabs.toList(),
                   controller: tabController,

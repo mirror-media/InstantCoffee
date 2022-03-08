@@ -61,16 +61,21 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
     for (int i = 0; i < sectionItems.length; i++) {
       _tabKeys.add(GlobalKey());
       Section section = sectionItems[i];
+      String title = section.title;
+      Color? color;
+      if(section.name == 'member') {
+        title = 'Premium文章';
+        color = Color(0xff707070);
+      }
+
       _tabs.add(
         Tab(
           key: _tabKeys[i],
           child: Text(
-            section.title,
+            title,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: section.name == 'member'
-              ? Color(0xffDB1730)
-              : null,
+              color: color
             ),
           ),
         ),
@@ -106,11 +111,11 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
           _tabController == null ? _initialTabIndex : _tabController!.index,
     )..addListener(() { 
       // when index is member
-      if (_tabController!.index == 3) {
-        _tabColorController!.sink.add(Color(0xffDB1730));
-      } else {
-        _tabColorController!.sink.add(appColor);
-      }
+      // if (_tabController!.index == 3) {
+      //   _tabColorController!.sink.add(Color(0xffDB1730));
+      // } else {
+      //   _tabColorController!.sink.add(appColor);
+      // }
     });
 
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async{  
@@ -198,7 +203,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                 TabBar tabBar = TabBar(
                   isScrollable: true,
                   indicatorColor: tabBarColor,
-                  unselectedLabelColor: Colors.grey,
+                  unselectedLabelColor: Color(0xffA3A3A3),
                   labelColor: appColor,
                   tabs: tabs.toList(),
                   controller: tabController,
