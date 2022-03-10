@@ -144,31 +144,28 @@ class _SectionDropDownMenuState extends State<SectionDropDownMenu>
   Widget _buildChip(
     Section section, 
     {
-      Color labelColor = Colors.black54,
+      Color labelColor = const Color(0xffA3A3A3),
       Color backgroundColor = Colors.white,
     }
   ) {
+    String title = section.title;
     if(section.name == 'member') {
-      labelColor = Color(0xffDB1730);
+      title = 'Premium文章';
+      labelColor = Colors.black87;
     }
 
     int targetIndex = widget.sectionList.indexOf(section);
     if(widget.tabController.index == targetIndex) {
-      if(section.name == 'member') {
-        labelColor = Colors.white;
-        backgroundColor = Color(0xffDB1730);
-      } else {
-        labelColor = Colors.white;
-        backgroundColor = appColor;
-      }
+      labelColor = Colors.white;
+      backgroundColor = appColor;
     }
 
     return ActionChip(
       side: BorderSide(
-        color: Colors.black12,
+        color: labelColor,
       ),
       label: Text(
-        section.title,
+        title,
         style: TextStyle(
           color: labelColor,
           fontSize: 16,
