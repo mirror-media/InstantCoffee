@@ -34,7 +34,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   /// tab controller
   int _initialTabIndex = 0;
   TabController? _tabController;
-  StreamController<Color>? _tabColorController;
+  StreamController<List<Tab>>? _tabBarController;
 
   List<GlobalKey> _tabKeys = [];
   List<Tab> _tabs = [];
@@ -61,16 +61,21 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
     for (int i = 0; i < sectionItems.length; i++) {
       _tabKeys.add(GlobalKey());
       Section section = sectionItems[i];
+      String title = section.title;
+      Color? color;
+      if(section.name == 'member') {
+        title = 'Premium文章';
+        color = Color(0xff707070);
+      }
+
       _tabs.add(
         Tab(
           key: _tabKeys[i],
           child: Text(
-            section.title,
+            title,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: section.name == 'member'
-              ? Color(0xffDB1730)
-              : null,
+              color: color
             ),
           ),
         ),
@@ -96,7 +101,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
       }
     }
 
-    _tabColorController = StreamController<Color>();
+    _tabBarController = StreamController<List<Tab>>();
 
     // set controller
     _tabController = TabController(
@@ -105,12 +110,35 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
       initialIndex:
           _tabController == null ? _initialTabIndex : _tabController!.index,
     )..addListener(() { 
-      // when index is member
-      if (_tabController!.index == 3) {
-        _tabColorController!.sink.add(Color(0xffDB1730));
-      } else {
-        _tabColorController!.sink.add(appColor);
+      _tabs.clear();
+      for (int i = 0; i < sectionItems.length; i++) {
+        Section section = sectionItems[i];
+        String title = section.title;
+        Color? color;
+        if(section.name == 'member') {
+          title = 'Premium文章';
+          // when index is member
+          if (_tabController!.index == 3) {
+            color = appColor;
+          } else {
+            color = Color(0xff707070);
+          }
+        }
+
+        _tabs.add(
+          Tab(
+            key: _tabKeys[i],
+            child: Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: color
+              ),
+            ),
+          ),
+        );
       }
+      _tabBarController!.sink.add(_tabs);
     });
 
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async{  
@@ -145,7 +173,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   @override
   void dispose() {
     _tabController?.dispose();
-    _tabColorController?.close();
+    _tabBarController?.close();
 
     _scrollControllerList.forEach((scrollController) {
       scrollController.dispose();
@@ -190,15 +218,15 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
           constraints: BoxConstraints(maxHeight: 150.0),
           child: Material(
             color: Color.fromARGB(255, 229, 229, 229),
-            child: StreamBuilder<Color>(
-              initialData: appColor,
-              stream: _tabColorController!.stream,
+            child: StreamBuilder<List<Tab>>(
+              initialData: tabs,
+              stream: _tabBarController!.stream,
               builder: (context, snapshot) {
-                Color tabBarColor = snapshot.data!;
+                List<Tab> tabs = snapshot.data!;
                 TabBar tabBar = TabBar(
                   isScrollable: true,
-                  indicatorColor: tabBarColor,
-                  unselectedLabelColor: Colors.grey,
+                  indicatorColor: appColor,
+                  unselectedLabelColor: Color(0xffA3A3A3),
                   labelColor: appColor,
                   tabs: tabs.toList(),
                   controller: tabController,

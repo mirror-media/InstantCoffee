@@ -156,7 +156,7 @@ class _PremiumHomePageState extends State<PremiumHomePage> with WidgetsBindingOb
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.star),
-            label: '會員文章'
+            label: 'Premium文章'
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

@@ -130,9 +130,11 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
           padding: const EdgeInsets.only(left: 24.0, right: 24.0),
           child: MemberSubscriptionTypeTitleWiget(
             subscriptionType: subscriptionType,
-            fontSize: 24,
-            fontWeight: FontWeight.w500,
-            color: appColor,
+            textStyle: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w500,
+              color: appColor,
+            ),
           ),
         ),
       ]

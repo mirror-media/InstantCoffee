@@ -270,8 +270,8 @@ class _MemberSubscriptionDetailPageState
       ),
       MemberSubscriptionTypeTitleWiget(
         subscriptionType: subscriptionType,
-        fontSize: 17,
-        ),
+        textStyle: TextStyle(fontSize: 17),
+      ),
     ]);
   }
 }
