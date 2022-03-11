@@ -56,6 +56,7 @@ class TabContentBloc {
     } catch (e) {
       _isLoading = false;
       sinkToAdd(ApiResponse.error(e.toString()));
+      print('$_endpoint error');
       print(e);
     }
   }
