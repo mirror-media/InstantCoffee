@@ -75,7 +75,9 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> {
     }
   }
 
+  String get currentStorySlug => state.storySlug;
+
   String getShareUrlFromSlug() {
-    return '${Environment().config.mirrorMediaDomain}/story/${state.storySlug}/?utm_source=app&utm_medium=mmapp';
+    return '${Environment().config.mirrorMediaDomain}/story/$currentStorySlug/?utm_source=app&utm_medium=mmapp';
   }
 }
