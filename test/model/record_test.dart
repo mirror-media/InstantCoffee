@@ -25,8 +25,7 @@ void main() {
         slug: "slug",
         publishedDate: "19110101",
         photoUrl: "dummy_url",
-        isMemberCheck: false,
-        isMemberContent: false,
+        isMemberCheck: false
       ),
     ),
     JsonAndObject<Record>(
@@ -48,8 +47,7 @@ void main() {
         slug: "slug",
         publishedDate: "19110101",
         photoUrl: "dummy_url",
-        isMemberCheck: false,
-        isMemberContent: false,
+        isMemberCheck: false
       ),
     ),
     JsonAndObject<Record>(
@@ -71,8 +69,7 @@ void main() {
         slug: "videoId",
         publishedDate: "19110101",
         photoUrl: "dummy_url",
-        isMemberCheck: false,
-        isMemberContent: false,
+        isMemberCheck: false
       ),
     ),
      JsonAndObject<Record>(
@@ -92,8 +89,7 @@ void main() {
         slug: "slug",
         publishedDate: "19110101",
         photoUrl: "dummy_url",
-        isMemberCheck: false,
-        isMemberContent: false,
+        isMemberCheck: false
       ),
     ),
     JsonAndObject<Record>(
@@ -121,8 +117,7 @@ void main() {
         slug: "slug",
         publishedDate: "19110101",
         photoUrl: "dummy_url",
-        isMemberCheck: false,
-        isMemberContent: false,
+        isMemberCheck: false
       ),
     ),
     JsonAndObject<Record>(
@@ -148,8 +143,7 @@ void main() {
         slug: "slug",
         publishedDate: "19110101",
         photoUrl: "dummy_url",
-        isMemberCheck: false,
-        isMemberContent: false,
+        isMemberCheck: false
       ),
     ),
     JsonAndObject<Record>(
@@ -176,8 +170,7 @@ void main() {
         slug: "slug",
         publishedDate: "19110101",
         photoUrl: "dummy_url",
-        isMemberCheck: true,
-        isMemberContent: false,
+        isMemberCheck: true
       ),
     ),
     JsonAndObject<Record>(
@@ -201,8 +194,7 @@ void main() {
         slug: "slug",
         publishedDate: "19110101",
         photoUrl: "dummy_url",
-        isMemberCheck: false,
-        isMemberContent: true,
+        isMemberCheck: false
       ),
     ),
   ];
@@ -246,16 +238,14 @@ void main() {
           slug: "slug1",
           publishedDate: "19110101",
           photoUrl: "dummy_url",
-          isMemberCheck: false,
-          isMemberContent: true,
+          isMemberCheck: false
         ),
         Record(
           title: "title2",
           slug: "slug2",
           publishedDate: "19110101",
           photoUrl: "dummy_url",
-          isMemberCheck: false,
-          isMemberContent: true,
+          isMemberCheck: false
         ),
       ];
       List<Record> anotherList = [
@@ -264,8 +254,7 @@ void main() {
           slug: "slug1",
           publishedDate: "19110101",
           photoUrl: "dummy_url",
-          isMemberCheck: false,
-          isMemberContent: true,
+          isMemberCheck: false
         ),
       ];
       List<Record> expectedList = [
@@ -274,8 +263,7 @@ void main() {
           slug: "slug2",
           publishedDate: "19110101",
           photoUrl: "dummy_url",
-          isMemberCheck: false,
-          isMemberContent: true,
+          isMemberCheck: false
         ),
       ];
       List<Record> recordList = Record.filterDuplicatedSlugByAnother(baseList, anotherList);

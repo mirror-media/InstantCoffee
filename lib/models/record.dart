@@ -8,7 +8,6 @@ class Record extends Equatable {
   final String publishedDate;
   final String photoUrl;
   final bool isMemberCheck;
-  final bool isMemberContent;
 
   Record({
     required this.title,
@@ -16,7 +15,6 @@ class Record extends Equatable {
     required this.publishedDate,
     required this.photoUrl,
     this.isMemberCheck = true,
-    this.isMemberContent = false,
   });
 
   factory Record.fromJson(Map<String, dynamic> json) {
@@ -59,22 +57,12 @@ class Record extends Equatable {
     ? []
     : Category.categoryListFromJson(json["categories"]);
 
-    bool isMemberContent = false;
-    if(json["sections"] != null){
-      for (int i = 0; i < json["sections"].length; i++){
-        if(json["sections"][i]["name"] == 'member'){
-          isMemberContent = true;
-        }
-      }
-    }
-
     return Record(
       title: origTitle,
       slug: origSlug,
       publishedDate: origPublishedDate,
       photoUrl: photoUrl,
       isMemberCheck: Category.isMemberOnlyInCategoryList(categoryBuilder),
-      isMemberContent: isMemberContent,
     );
   }
 
@@ -108,7 +96,6 @@ class Record extends Equatable {
     slug, 
     publishedDate, 
     photoUrl, 
-    isMemberCheck, 
-    isMemberContent
+    isMemberCheck
   ];
 }
