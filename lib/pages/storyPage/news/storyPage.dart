@@ -44,8 +44,8 @@ class StoryPage extends StatelessWidget {
       body: BlocProvider(
         create: (context) => _storyBloc,
         child: isMemberContent 
-                ? MemberStoryWidget(slug: slug, isMemberCheck: isMemberCheck)
-                : StoryWidget(isMemberCheck: isMemberCheck),
+            ? MemberStoryWidget(slug: slug, isMemberCheck: isMemberCheck)
+            : StoryWidget(isMemberCheck: isMemberCheck),
       ),
     );
   }

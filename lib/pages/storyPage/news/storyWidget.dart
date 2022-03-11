@@ -46,7 +46,7 @@ class _StoryWidget extends State<StoryWidget> {
   @override
   void initState() {
     _storyBloc = context.read<StoryBloc>();
-    _fetchPublishedStoryBySlug(_storyBloc.storySlug, widget.isMemberCheck);
+    _fetchPublishedStoryBySlug(_storyBloc.currentStorySlug, widget.isMemberCheck);
     super.initState();
   }
 
@@ -522,7 +522,7 @@ class _StoryWidget extends State<StoryWidget> {
       padding: const EdgeInsets.only(left: 24.0, right: 24.0),
       child: JoinMemberBlock(
         isMember: isMember,
-        storySlug: _storyBloc.storySlug,
+        storySlug: _storyBloc.currentStorySlug,
       ),
     );
   }
