@@ -23,7 +23,6 @@ class PremiumHomeWidget extends StatefulWidget {
 
 class _PremiumHomeWidgetState extends State<PremiumHomeWidget> with TickerProviderStateMixin{
   RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
-  double _deviceTopPadding = 0.0;
 
   /// tab controller
   int _initialTabIndex = 0;
@@ -151,7 +150,6 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget> with TickerProvid
 
   @override
   Widget build(BuildContext context) {
-    _deviceTopPadding = MediaQuery.of(context).padding.top;
     return ColoredBox(
       color: Colors.white,
       child: BlocBuilder<SectionCubit, SectionState>(
@@ -250,10 +248,7 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget> with TickerProvid
                               tabController: _tabController!,
                               sectionList: sections,
                             ),
-                            offsetLT: Offset(
-                              0, 
-                              _deviceTopPadding + kToolbarHeight,
-                            ),
+                            hasPaddingTop: true,
                             cancelable: true,
                             outsideTouchCancelable: false,
                           );

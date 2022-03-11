@@ -27,7 +27,6 @@ class HomeWidget extends StatefulWidget {
 
 class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
-  double _deviceTopPadding = 0.0;
 
   late OnBoardingBloc _onBoardingBloc;
 
@@ -183,7 +182,6 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    _deviceTopPadding = MediaQuery.of(context).padding.top;
     return BlocBuilder<SectionCubit, SectionState>(
       builder: (BuildContext context, SectionState state) {
         SectionStatus status = state.status;
@@ -280,9 +278,10 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                               tabController: _tabController!,
                               sectionList: sections,
                             ),
+                            hasPaddingTop: true,
                             offsetLT: Offset(
                               0, 
-                              _deviceTopPadding + kToolbarHeight,
+                              kToolbarHeight,
                             ),
                             cancelable: true,
                             outsideTouchCancelable: false,

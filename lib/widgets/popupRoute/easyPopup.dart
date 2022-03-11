@@ -10,6 +10,7 @@ class EasyPopup {
   static show(
     BuildContext context,
     EasyPopupChild child, {
+    bool hasPaddingTop = true,
     Offset offsetLT = const Offset(0,0),
     Offset offsetRB = const Offset(0,0),
     bool cancelable = true,
@@ -44,6 +45,7 @@ mixin EasyPopupChild implements Widget {
 
 class EasyPopupRoute extends PopupRoute {
   final EasyPopupChild child;
+  final bool hasPaddingTop;
   final Offset offsetLT, offsetRB;
   final Duration duration;
   final bool cancelable;
@@ -53,6 +55,7 @@ class EasyPopupRoute extends PopupRoute {
 
   EasyPopupRoute({
     required this.child,
+    this.hasPaddingTop = true,
     this.offsetLT = const Offset(0,0),
     this.offsetRB = const Offset(0,0),
     this.cancelable = true,
@@ -76,6 +79,7 @@ class EasyPopupRoute extends PopupRoute {
       Animation<double> secondaryAnimation) {
     return _PopRouteWidget(
       child: child,
+      hasPaddingTop: hasPaddingTop,
       offsetLT: offsetLT,
       offsetRB: offsetRB,
       duration: duration,
@@ -101,6 +105,7 @@ class EasyPopupRoute extends PopupRoute {
 
 class _PopRouteWidget extends StatefulWidget {
   final EasyPopupChild child;
+  final bool hasPaddingTop;
   final Offset offsetLT, offsetRB;
   final Duration duration;
   final bool cancelable;
@@ -110,6 +115,7 @@ class _PopRouteWidget extends StatefulWidget {
 
   _PopRouteWidget({
     required this.child,
+    required this.hasPaddingTop,
     required this.offsetLT,
     required this.offsetRB,
     required this.duration,
@@ -125,6 +131,7 @@ class _PopRouteWidget extends StatefulWidget {
 
 class __PopRouteWidgetState extends State<_PopRouteWidget>
     with SingleTickerProviderStateMixin {
+  double _devicePaddingTop = 0.0;
   late Animation<double> alphaAnim;
   late AnimationController alphaController;
   List<RRect> _highlights = [];
@@ -164,6 +171,10 @@ class __PopRouteWidgetState extends State<_PopRouteWidget>
 
   @override
   Widget build(BuildContext context) {
+    if(widget.hasPaddingTop) {
+      _devicePaddingTop = MediaQuery.of(context).padding.top;
+    }
+
     return WillPopScope(
       onWillPop: () async {
         if (widget.cancelable) {
@@ -188,7 +199,7 @@ class __PopRouteWidgetState extends State<_PopRouteWidget>
                       return Padding(
                         padding: EdgeInsets.only(
                           left: widget.offsetLT.dx,
-                          top: widget.offsetLT.dy,
+                          top: _devicePaddingTop + widget.offsetLT.dy,
                           right: widget.offsetRB.dx,
                           bottom: widget.offsetRB.dy,
                         ),
