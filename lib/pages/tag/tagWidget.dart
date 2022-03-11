@@ -163,8 +163,7 @@ class _TagWidgetState extends State<TagWidget> {
       onTap: () {
         RouteGenerator.navigateToStory(
           record.slug,
-          isMemberCheck: record.isMemberCheck, 
-          isMemberContent: record.isMemberContent,
+          isMemberCheck: record.isMemberCheck
         );
       },
     );

@@ -154,8 +154,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
                           record: recordList[index],
                           onTap: () => RouteGenerator.navigateToStory(
                               recordList[index].slug, 
-                              isMemberCheck: recordList[index].isMemberCheck, 
-                              isMemberContent: recordList[index].isMemberContent),
+                              isMemberCheck: recordList[index].isMemberCheck),
                         )
                       ),
                       Divider(
@@ -170,8 +169,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
                   record: recordList[index],
                   onTap: () => RouteGenerator.navigateToStory(
                       recordList[index].slug, 
-                      isMemberCheck: recordList[index].isMemberCheck, 
-                      isMemberContent: recordList[index].isMemberContent),
+                      isMemberCheck: recordList[index].isMemberCheck),
                 );
               }
 
@@ -183,8 +181,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
                       record: recordList[index],
                       onTap: () => RouteGenerator.navigateToStory(
                           recordList[index].slug, 
-                          isMemberCheck: recordList[index].isMemberCheck, 
-                          isMemberContent: recordList[index].isMemberContent),
+                          isMemberCheck: recordList[index].isMemberCheck),
                     )
                   ),
                   Divider(

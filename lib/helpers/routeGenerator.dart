@@ -190,8 +190,7 @@ class RouteGenerator {
           return MaterialPageRoute(
             builder: (context) => StoryPage(
               slug: args['slug'],
-              isMemberCheck: args['isMemberCheck'],
-              isMemberContent: args['isMemberContent'] ?? false, 
+              isMemberCheck: args['isMemberCheck']
             )
           );
         }
@@ -394,16 +393,13 @@ class RouteGenerator {
 
   static void navigateToStory(
     String slug,
-    {bool isMemberCheck = true,
-     bool isMemberContent = false,
-    }
+    {bool isMemberCheck = true}
   ) {
     navigatorKey.currentState!.pushNamed(
       story,
       arguments: {
         'slug': slug,
         'isMemberCheck': isMemberCheck,
-        'isMemberContent': isMemberContent,
       },
     );
   }

@@ -435,8 +435,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
             record: record,
             onTap: () => RouteGenerator.navigateToStory(
                 record.slug, 
-                isMemberCheck: record.isMemberCheck, 
-                isMemberContent: record.isMemberContent),
+                isMemberCheck: record.isMemberCheck),
           ),
         ),
         Divider(

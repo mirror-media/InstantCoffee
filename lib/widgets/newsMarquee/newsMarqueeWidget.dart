@@ -73,8 +73,7 @@ class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
           );
           RouteGenerator.navigateToStory(
             recordList[i].slug, 
-            isMemberCheck: recordList[i].isMemberCheck,
-            isMemberContent: recordList[i].isMemberContent,
+            isMemberCheck: recordList[i].isMemberCheck
           );
         }
       ));

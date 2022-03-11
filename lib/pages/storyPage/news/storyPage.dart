@@ -2,17 +2,15 @@ import "package:flutter/material.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/storyPage/news/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/pages/storyPage/news/memberStoryWidget.dart';
+import 'package:readr_app/pages/storyPage/news/buildStoryPage.dart';
 import 'package:readr_app/services/storyService.dart';
-import 'package:readr_app/pages/storyPage/news/storyWidget.dart';
 import 'package:share/share.dart';
 
 class StoryPage extends StatelessWidget {
   final String slug;
   final bool isMemberCheck;
-  final bool isMemberContent;
   const StoryPage(
-      {Key? key, required this.slug, required this.isMemberCheck, this.isMemberContent = false})
+      {Key? key, required this.slug, required this.isMemberCheck})
       : super(key: key);
 
   @override
@@ -43,9 +41,7 @@ class StoryPage extends StatelessWidget {
       ),
       body: BlocProvider(
         create: (context) => _storyBloc,
-        child: isMemberContent 
-            ? MemberStoryWidget(slug: slug, isMemberCheck: isMemberCheck)
-            : StoryWidget(isMemberCheck: isMemberCheck),
+        child: BuildStoryPage(isMemberCheck: isMemberCheck)
       ),
     );
   }

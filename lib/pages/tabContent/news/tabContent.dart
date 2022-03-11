@@ -187,8 +187,7 @@ class _TabContentState extends State<TabContent> {
                         record: recordList[index],
                         onTap: () => RouteGenerator.navigateToStory(
                             recordList[index].slug, 
-                            isMemberCheck: recordList[index].isMemberCheck, 
-                            isMemberContent: recordList[index].isMemberContent),
+                            isMemberCheck: recordList[index].isMemberCheck),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
@@ -205,8 +204,7 @@ class _TabContentState extends State<TabContent> {
                   record: recordList[index],
                   onTap: () => RouteGenerator.navigateToStory(
                       recordList[index].slug, 
-                      isMemberCheck: recordList[index].isMemberCheck, 
-                      isMemberContent: recordList[index].isMemberContent),
+                      isMemberCheck: recordList[index].isMemberCheck),
                 );
               }
 
@@ -222,8 +220,7 @@ class _TabContentState extends State<TabContent> {
                     record: recordList[index],
                     onTap: () => RouteGenerator.navigateToStory(
                         recordList[index].slug, 
-                        isMemberCheck: recordList[index].isMemberCheck, 
-                        isMemberContent: recordList[index].isMemberContent),
+                        isMemberCheck: recordList[index].isMemberCheck),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 16.0, right: 16.0),

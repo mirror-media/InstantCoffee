@@ -420,8 +420,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
           record: record,
           onTap: () => RouteGenerator.navigateToStory(
               record.slug, 
-              isMemberCheck: record.isMemberCheck, 
-              isMemberContent: record.isMemberContent),
+              isMemberCheck: record.isMemberCheck),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16.0),
