@@ -23,8 +23,6 @@ import 'package:readr_app/widgets/fadingEffectPainter.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
 import 'package:readr_app/blocs/storyPage/news/bloc.dart';
-import 'package:readr_app/blocs/storyPage/news/events.dart';
-import 'package:readr_app/blocs/storyPage/news/states.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 

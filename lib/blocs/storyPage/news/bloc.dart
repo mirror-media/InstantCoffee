@@ -13,6 +13,9 @@ import 'package:readr_app/models/storyAd.dart';
 import 'package:readr_app/models/storyRes.dart';
 import 'package:readr_app/services/storyService.dart';
 
+export 'events.dart';
+export 'states.dart';
+
 class StoryBloc extends Bloc<StoryEvents, StoryState> {
   final StoryRepos storyRepos;
   StoryBloc({
