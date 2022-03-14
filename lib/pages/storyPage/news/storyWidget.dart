@@ -4,6 +4,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
+import 'package:readr_app/blocs/storyPage/news/bloc.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
@@ -15,39 +16,23 @@ import 'package:readr_app/models/people.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/story.dart';
 import 'package:readr_app/models/storyAd.dart';
-import 'package:readr_app/models/storyRes.dart';
 import 'package:readr_app/models/tag.dart';
 import 'package:readr_app/pages/storyPage/news/shared/downloadMagazineWidget.dart';
 import 'package:readr_app/pages/storyPage/news/shared/joinMemberBlock.dart';
-import 'package:readr_app/widgets/fadingEffectPainter.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
-import 'package:readr_app/blocs/storyPage/news/bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class StoryWidget extends StatefulWidget {
-  final bool isMemberCheck;
-  const StoryWidget(
-      {key, required this.isMemberCheck}) 
-      : super(key: key);
-
-  @override
-  _StoryWidget createState() {
-    return _StoryWidget();
-  }
-}
-
-class _StoryWidget extends State<StoryWidget> {
-  late StoryBloc _storyBloc;
-
-  @override
-  void initState() {
-    _storyBloc = context.read<StoryBloc>();
-    _fetchPublishedStoryBySlug(_storyBloc.currentStorySlug, widget.isMemberCheck);
-    super.initState();
-  }
-
+class StoryWidget extends StatelessWidget {
+  final bool isLogin;
+  final Story story;
+  StoryWidget({
+    required this.isLogin,
+    required this.story,
+  });
+  
+  late final StoryBloc _storyBloc;
   _fetchPublishedStoryBySlug(String storySlug, bool isMemberCheck) {
     _storyBloc.add(
       FetchPublishedStoryBySlug(storySlug, isMemberCheck)
@@ -67,43 +52,21 @@ class _StoryWidget extends State<StoryWidget> {
     return appColor;
   }
 
-  Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = width / 16 * 9;
-    return BlocBuilder<StoryBloc, StoryState>(
-      builder: (BuildContext context, StoryState state) {
-        switch (state.status) {
-          case StoryStatus.error:
-            final error = state.errorMessages;
-            print('StoryError: ${error.message}');
-            return Container();
-          case StoryStatus.loaded:
-            StoryRes storyRes = state.storyRes!;
-
-            return _buildStoryWidget(storyRes, width, height);
-          default:
-            // state is Init, Loading
-            return _loadingWidget();
-        }
-      }
+  bool _isWineCategory(List<Category> categories) {
+    return categories.any((category) =>
+      (category.id == Environment().config.wineSectionKey || category.id == Environment().config.wine1SectionKey)
     );
   }
 
-  Widget _loadingWidget() {
-    return Center(child: CircularProgressIndicator(),);
-  }
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = width / 16 * 9;
 
-  Widget _buildStoryWidget(
-    StoryRes storyRes,
-    double width, 
-    double height,
-  ) {
-    bool isMember = storyRes.isMember;
-    Story story = storyRes.story;
+    _storyBloc = context.read<StoryBloc>();
+    bool isAdsActivated = isStoryWidgetAdsActivated;
+    bool isWineCategory = _isWineCategory(story.categories);
     StoryAd storyAd = story.storyAd!;
-    bool isTruncated = story.isTruncated;
-    bool isAdsActivated = isStoryWidgetAdsActivated && 
-        (isTruncated || !Category.isMemberOnlyInCategoryList(story.categories));
     Color sectionColor = _getSectionColor(story);
 
     return Column(
@@ -122,20 +85,17 @@ class _StoryWidget extends State<StoryWidget> {
             ],
             _buildHeroWidget(width, height, story),
             SizedBox(height: 32),
-            _buildCategoryAndPublishedDate(context, story, sectionColor),
+            _buildCategoryAndPublishedDate(story, sectionColor),
             SizedBox(height: 8),
             _buildStoryTitle(story.title),
             SizedBox(height: 8),
             _buildAuthors(context, story),
             SizedBox(height: 16),
             _buildBrief(story, sectionColor),
-            _buildContent(story, isAdsActivated, isTruncated),
+            _buildContent(story, isAdsActivated),
             SizedBox(height: 16),
-            if(isTruncated)
-            ...[
-              _joinMemberBlock(isMember),
-              SizedBox(height: 16),
-            ],
+            _joinMemberBlock(isLogin, story.slug),
+            SizedBox(height: 16),
             if(isAdsActivated)
               MMAdBanner(
                 adUnitId: storyAd.aT3UnitId,
@@ -152,11 +112,6 @@ class _StoryWidget extends State<StoryWidget> {
             SizedBox(height: 16),
             _buildMoreContentWidget(),
             SizedBox(height: 24),
-            if(!isTruncated)
-            ...[
-              _buildQuoteWarningText(),
-              SizedBox(height: 24),
-            ],
             _downloadMagazinesWidget(),
             SizedBox(height: 24),
             if(isAdsActivated)
@@ -182,12 +137,13 @@ class _StoryWidget extends State<StoryWidget> {
             ],
           ]),
         ),
-        if(_isWineCategory(story.categories))
+
+        if(isWineCategory)
           Image.asset(
             "assets/image/wine_warning.png",
             height: 50.0,
           ),
-        if(isAdsActivated && !_isWineCategory(story.categories))
+        if(isAdsActivated && !isWineCategory)
           MMAdBanner(
             adUnitId: storyAd.stUnitId,
             adSize: AdSize.banner,
@@ -244,40 +200,7 @@ class _StoryWidget extends State<StoryWidget> {
     );
   }
 
-  Widget _buildCategoryAndPublishedDate(
-      BuildContext context, Story story, Color sectionColor) {
-    DateTimeFormat dateTimeFormat = DateTimeFormat();
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildCategory(context, story, sectionColor),
-          Text(
-            dateTimeFormat.changeDatabaseStringToDisplayString(
-                story.publishedDate, 'yyyy.MM.dd HH:mm'),
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600], /*fontStyle: FontStyle.italic,*/
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  bool _isWineCategory(List<Category> categories) {
-    for(Category category in categories) {
-      if(category.id == Environment().config.wineSectionKey ||
-      category.id == Environment().config.wine1SectionKey) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  Widget _buildCategory(BuildContext context, Story story, Color sectionColor) {
+  Widget _buildCategory(Story story, Color sectionColor) {
     List<Category> categories= story.categories;
 
     if(story.isAdvertised) {
@@ -300,6 +223,28 @@ class _StoryWidget extends State<StoryWidget> {
         ],
       ),
       onTap: categories.length > 0 ? () {} : null,
+    );
+  }
+
+  Widget _buildCategoryAndPublishedDate(Story story, Color sectionColor) {
+    DateTimeFormat dateTimeFormat = DateTimeFormat();
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildCategory(story, sectionColor),
+          Text(
+            dateTimeFormat.changeDatabaseStringToDisplayString(
+                story.publishedDate, 'yyyy.MM.dd HH:mm'),
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[600], /*fontStyle: FontStyle.italic,*/
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -451,7 +396,7 @@ class _StoryWidget extends State<StoryWidget> {
     return Container();
   }
 
-  _buildContent(Story story, bool isAdsActivated, bool isNeedFadding) {
+  _buildContent(Story story, bool isAdsActivated) {
     ParagraphFormat paragraphFormat = ParagraphFormat();
     int unStyleParagraphCount = 0;
     bool aT1IsActivated = false;
@@ -482,12 +427,7 @@ class _StoryWidget extends State<StoryWidget> {
                 padding: const EdgeInsets.only(top: 16.0),
                 child: Column(
                   children: [
-                    CustomPaint(
-                      foregroundPainter: (isNeedFadding && index == story.apiDatas.length-1)
-                      ? FadingEffect()
-                      : null,
-                      child: paragraphFormat.parseTheParagraph(paragraph, context, story.imageUrlList),
-                    ),
+                    paragraphFormat.parseTheParagraph(paragraph, context, story.imageUrlList),
                     if(isAdsActivated && (!aT1IsActivated && unStyleParagraphCount == storyAT1AdIndex)) 
                     ...[
                       SizedBox(height: 16),
@@ -515,12 +455,12 @@ class _StoryWidget extends State<StoryWidget> {
     );
   }
 
-  Widget _joinMemberBlock(bool isMember) {
+  Widget _joinMemberBlock(bool isLogin, String storySlug) {
     return Padding(
       padding: const EdgeInsets.only(left: 24.0, right: 24.0),
       child: JoinMemberBlock(
-        isMember: isMember,
-        storySlug: _storyBloc.currentStorySlug,
+        isMember: isLogin,
+        storySlug: storySlug,
       ),
     );
   }
@@ -620,19 +560,6 @@ class _StoryWidget extends State<StoryWidget> {
     );
   }
 
-  Widget _buildQuoteWarningText() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-      child: Text(
-        '本新聞文字、照片、影片專供鏡週刊會員閱覽，未經鏡週刊授權，任何媒體、社群網站、論壇等均不得引用、改寫、轉貼，以免訟累。',
-        style: TextStyle(
-          color: Colors.grey[600],
-          fontSize: 14,
-        ),
-      ),
-    );
-  }
-
   Widget _buildRelatedWidget(BuildContext context, List<Record> relateds) {
     List<Widget> relatedList = [];
     // VerticalDivider is broken? so use Container
@@ -712,7 +639,7 @@ class _StoryWidget extends State<StoryWidget> {
         ),
       ),
       onTap: () {
-        _fetchPublishedStoryBySlug(relatedItem.slug, widget.isMemberCheck);
+        _fetchPublishedStoryBySlug(relatedItem.slug, relatedItem.isMemberCheck);
       },
     );
   }
