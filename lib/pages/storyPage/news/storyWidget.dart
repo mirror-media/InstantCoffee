@@ -18,11 +18,11 @@ import 'package:readr_app/models/story.dart';
 import 'package:readr_app/models/storyAd.dart';
 import 'package:readr_app/models/tag.dart';
 import 'package:readr_app/pages/storyPage/news/shared/downloadMagazineWidget.dart';
+import 'package:readr_app/pages/storyPage/news/shared/facebookIframeWidget.dart';
 import 'package:readr_app/pages/storyPage/news/shared/joinMemberBlock.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class StoryWidget extends StatelessWidget {
   final bool isLogin;
@@ -105,7 +105,7 @@ class StoryWidget extends StatelessWidget {
             SizedBox(height: 16),
             _buildUpdateDateWidget(story),
             SizedBox(height: 24),
-            _fbIframeWidget(),
+            FacebookIframeWidget(),
             SizedBox(height: 16),
             _socialButtons(),
             _buildRelatedWidget(context, story.relatedStory),
@@ -650,19 +650,6 @@ class StoryWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         child: DownloadMagazineWidget(),
-      ),
-    );
-  }
-
-  Widget _fbIframeWidget() {
-    const String iframe = '<html><body><iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fmirrormediamg&tabs&width=340&height=130&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=2138298816406811" width="340" height="130" style="border:none;overflow:hidden;transform: scale(2.85);transform-origin:0 0;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe></body></html>';
-    return Container(
-      padding: const EdgeInsets.only(right: 16, left: 14),
-      height: 160,
-      child: WebView(
-        initialUrl: Uri.dataFromString(iframe, mimeType: 'text/html').toString(),
-        javascriptMode: JavascriptMode.unrestricted,
-        debuggingEnabled: true,
       ),
     );
   }
