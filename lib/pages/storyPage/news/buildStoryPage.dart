@@ -4,6 +4,8 @@ import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/storyPage/news/bloc.dart';
 import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/storyRes.dart';
+import 'package:readr_app/pages/storyPage/news/premiumStoryWidget.dart';
+import 'package:readr_app/pages/storyPage/news/storyWidget.dart';
 
 class BuildStoryPage extends StatefulWidget {
   final bool isMemberCheck;
@@ -49,9 +51,15 @@ class _BuildStoryPageState extends State<BuildStoryPage> {
 
             if(context.read<MemberBloc>().state.isPremium || 
                 isMemberOnlyStory) {
-              return _premiumStoryWidget();
+              return PremiumStoryWidget(
+                isLogin: storyRes.isMember,
+                story: storyRes.story,
+              );
             } 
-            return _storyWidget();
+            return StoryWidget(
+              isLogin: storyRes.isMember,
+              story: storyRes.story,
+            );
           default:
             // state is Init, Loading
             return _loadingWidget();
@@ -63,12 +71,4 @@ class _BuildStoryPageState extends State<BuildStoryPage> {
   Widget _loadingWidget() {
     return Center(child: CircularProgressIndicator(),);
   }
-
-  Widget _storyWidget() {
-    return Container();
-  } 
-
-  Widget _premiumStoryWidget() {
-    return Container();
-  } 
 }
