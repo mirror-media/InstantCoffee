@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
 import 'package:readr_app/blocs/storyPage/news/bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/helpers/environment.dart';
@@ -12,90 +12,88 @@ import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/paragraph.dart';
 import 'package:readr_app/models/people.dart';
 import 'package:readr_app/models/record.dart';
+import 'package:readr_app/models/section.dart';
 import 'package:readr_app/models/story.dart';
-import 'package:readr_app/models/storyRes.dart';
 import 'package:readr_app/models/tag.dart';
 import 'package:readr_app/pages/storyPage/news/shared/downloadMagazineWidget.dart';
 import 'package:readr_app/pages/storyPage/news/shared/joinMemberBlock.dart';
 import 'package:readr_app/widgets/fadingEffectPainter.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
 
-class MemberStoryWidget extends StatefulWidget{
-  final bool isMemberCheck;
-  final String slug;
-  const MemberStoryWidget(
-      {key, required this.slug, required this.isMemberCheck}) 
-      : super(key: key);
-    
-  @override
-  _MemberStoryWidgetState createState() => _MemberStoryWidgetState();
-}
-
-class _MemberStoryWidgetState extends State<MemberStoryWidget>{
-
-  @override
-  void initState() {
-    _fetchPublishedStoryBySlug(widget.slug, widget.isMemberCheck);
-    super.initState();
-  }
-
+class PremiumStoryWidget extends StatelessWidget {
+  final bool isLogin;
+  final Story story;
+  PremiumStoryWidget({
+    required this.isLogin,
+    required this.story,
+  });
+  
+  late final StoryBloc _storyBloc;
   _fetchPublishedStoryBySlug(String storySlug, bool isMemberCheck) {
-    context.read<StoryBloc>().add(
+    _storyBloc.add(
       FetchPublishedStoryBySlug(storySlug, isMemberCheck)
     );
   }
 
-  Widget build(BuildContext context){
-    return BlocBuilder<StoryBloc, StoryState>(
-      builder: (BuildContext context, StoryState state) {
-        switch (state.status) {
-          case StoryStatus.error:
-            final error = state.errorMessages;
-            print('StoryError: ${error.message}');
-            return Container();
-          case StoryStatus.loaded:
-            StoryRes storyRes = state.storyRes!;
-
-            if(_isWineCategory(storyRes.story.categories)){
-              return Column(
-                children: [
-                  Expanded(
-                    child: _buildStoryWidget(storyRes),
-                  ),
-                  Container(
-                    color: Colors.black,
-                    height: 90,
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 31, vertical: 22),
-                    child: Image.asset(
-                    "assets/image/wine_warning.png",
-                  ),
-                  ),
-                ],
-              );
-            }
-            return _buildStoryWidget(storyRes);
-          default:
-            // state is Init, Loading
-            return _loadingWidget();
-        }
-      }
+  bool _isWineCategory(List<Category> categories) {
+    return categories.any((category) =>
+      (category.id == Environment().config.wineSectionKey || category.id == Environment().config.wine1SectionKey)
     );
   }
 
-  Widget _loadingWidget() {
-    return Center(child: CircularProgressIndicator(),);
+  Color _getSectionColor(Story? story) {
+    String? sectionName;
+    if (story != null) {
+      sectionName = story.getSectionName();
+    }
+
+    if (sectionName != null && sectionColorMaps.containsKey(sectionName)) {
+      return Color(sectionColorMaps[sectionName]!);
+    }
+
+    return appColor;
   }
 
-  Widget _buildStoryWidget(StoryRes storyRes){
-    bool isMember = storyRes.isMember;
-    Story story = storyRes.story;
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = width / 16 * 9;
+    _storyBloc = context.read<StoryBloc>();
+    bool isWineCategory = _isWineCategory(story.categories);
+
+    if(isWineCategory){
+      return Column(
+        children: [
+          Expanded(
+            child: _buildStoryWidget(width, height, story),
+          ),
+          Container(
+            color: Colors.black,
+            height: 90,
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 31, vertical: 22),
+            child: Image.asset(
+              "assets/image/wine_warning.png",
+            ),
+          ),
+        ],
+      );
+    }
+    return _buildStoryWidget(width, height, story);
+  }
+  
+  Widget _buildStoryWidget(
+    double width,
+    double height,
+    Story story
+  ){
     bool isTruncated = story.isTruncated;
+    Color sectionColor = _getSectionColor(story);
     
     return ListView(
       padding: const EdgeInsets.only(top: 24),
       children: [
-        _buildCategoryText(story.categories),
+        _buildCategoryText(story.sections, story.categories),
         const SizedBox(
           height: 8,
         ),
@@ -103,7 +101,7 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
         const SizedBox(
           height: 32,
         ),
-        _buildHeroWidget(story),
+        _buildHeroWidget(width, height, story),
         const SizedBox(
           height: 32,
         ),
@@ -137,13 +135,17 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
         const SizedBox(
           height: 24,
         ),
-        _buildBrief(story.brief),
+        _buildBrief(
+          story.brief, 
+          Category.isMemberOnlyInCategoryList(story.categories),
+          sectionColor
+        ),
         const SizedBox(
           height: 32,
         ),
         _buildContent(story, isTruncated),
         if(isTruncated)...[
-          _joinMemberBlock(isMember),
+          _joinMemberBlock(isLogin, story.slug),
         ],
         if(!isTruncated)...[
           const SizedBox(height: 32),
@@ -159,11 +161,20 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
     );
   }
 
-  Widget _buildCategoryText(List<Category> categories){
+  Widget _buildCategoryText(
+    List<Section> sections,
+    List<Category> categories
+  ) {
+    bool hasMemberSectoin = sections.any((section) => section.name == 'member');
+    String sectionTitle = '會員專區';
+    if(!hasMemberSectoin && sections.length > 0) {
+      sectionTitle = sections[0].title;
+    }
+
     List<Widget> categoriesName = [];
     categoriesName.add(
-      const Text(
-        '會員專區',
+      Text(
+        sectionTitle,
         style: TextStyle(fontSize: 16, color: appColor),
       )
     );
@@ -219,9 +230,11 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
     );
   }
 
-  Widget _buildHeroWidget(Story story) {
-    double width = MediaQuery.of(context).size.width;
-    double height = width / 16 * 9;
+  Widget _buildHeroWidget(
+    double width,
+    double height,
+    Story story
+  ) {
     return Column(
       children: [
         if (story.heroVideo != null)
@@ -447,8 +460,11 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
     }
   }
 
-  Widget _buildBrief(List<Paragraph> articles) {
-
+  Widget _buildBrief(
+    List<Paragraph> articles,
+    bool isPremiumMemberArticle,
+    Color sectionColor
+  ) {
     if (articles.length > 0) {
       ParagraphFormat paragraphFormat = ParagraphFormat();
       List<Widget> articleWidgets = [];
@@ -476,7 +492,9 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         margin: const EdgeInsets.symmetric(horizontal: 20),
-        color: const Color.fromRGBO(5, 79, 119, 1),
+        color: isPremiumMemberArticle
+        ? const Color.fromRGBO(5, 79, 119, 1)
+        : sectionColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: articleWidgets,
@@ -517,12 +535,12 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
     );
   }
 
-  Widget _joinMemberBlock(bool isMember) {
+  Widget _joinMemberBlock(bool isLogin, String storySlug) {
     return Padding(
       padding: const EdgeInsets.only(left: 24.0, right: 24.0),
       child: JoinMemberBlock(
-        isMember: isMember,
-        storySlug: widget.slug,
+        isMember: isLogin,
+        storySlug: storySlug,
         isMemberContent: true,
       ),
     );
@@ -549,7 +567,7 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
       child: paragraphFormat.parseTheTextToHtmlWidget(moreContentHtml, color: Colors.black54, fontSize: 13),
     );
   }
-
+  
   Widget _downloadMagazinesWidget() {
     return BlocProvider(
       create: (BuildContext context) => MemberSubscriptionTypeCubit(),
@@ -564,7 +582,7 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
     List<Widget> relatedList = [];
 
     for (int i = 0; i < relateds.length; i++) {
-      relatedList.add(_buildRelatedItem(context, relateds[i]));
+      relatedList.add(_buildRelatedItem(relateds[i]));
     }
     return relatedList.length == 0
     ? Container()
@@ -584,7 +602,7 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
       );
   }
 
-  Widget _buildRelatedItem(BuildContext context, Record relatedItem) {
+  Widget _buildRelatedItem(Record relatedItem) {
     double imageWidth = 84;
     double imageHeight = 84;
 
@@ -627,18 +645,8 @@ class _MemberStoryWidgetState extends State<MemberStoryWidget>{
         ),
       ),
       onTap: () {
-        _fetchPublishedStoryBySlug(relatedItem.slug, widget.isMemberCheck);
+        _fetchPublishedStoryBySlug(relatedItem.slug, relatedItem.isMemberCheck);
       },
     );
-  }
-
-  bool _isWineCategory(List<Category> categories) {
-    for(Category category in categories) {
-      if(category.id == Environment().config.wineSectionKey ||
-      category.id == Environment().config.wine1SectionKey) {
-        return true;
-      }
-    }
-    return false;
   }
 }
