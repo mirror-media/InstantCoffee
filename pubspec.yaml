@@ -107,11 +107,7 @@ dependencies:
   # firebase remote config
   firebase_remote_config: ^1.0.4
   # firebase ad mob
-  google_mobile_ads:
-    git:
-      url: https://github.com/SuaMusica/googleads-mobile-flutter.git
-      path: packages/google_mobile_ads
-      ref: feature/suamusica
+  google_mobile_ads: ^1.1.0
   # firebase dynamic links 
   firebase_dynamic_links: ^4.0.4
 
