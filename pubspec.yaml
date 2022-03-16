@@ -198,6 +198,8 @@ flutter:
     - assets/data/androidStoryAd.json
     # magazine image
     - assets/image/splash.png
+    - assets/image/premiumIcon.png
+    - assets/image/premiumText.png
     - assets/image/magazine/magazineDownloadIcon.png
     - assets/image/magazine/hami.png
     - assets/image/magazine/kono.png

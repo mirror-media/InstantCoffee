@@ -28,6 +28,8 @@ const Map<String, int> sectionColorMaps = {
 
 /// assets
 const String splashIconPng = 'assets/image/splash.png';
+const String premiumIconPng = 'assets/image/premiumIcon.png';
+const String premiumTextPng = 'assets/image/premiumText.png';
 const String magazineDownloadIconPng = 'assets/image/magazine/magazineDownloadIcon.png';
 const String hamiPng = 'assets/image/magazine/hami.png';
 const String konoPng = 'assets/image/magazine/kono.png';
