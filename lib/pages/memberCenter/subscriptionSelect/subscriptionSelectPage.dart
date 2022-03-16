@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/bloc.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscriptionSelectWidget.dart';
 import 'package:readr_app/services/subscriptionSelectService.dart';
@@ -21,6 +22,7 @@ class _SubscriptionSelectPageState extends State<SubscriptionSelectPage> {
   void initState() {
     _subscriptionSelectBloc = SubscriptionSelectBloc(
       subscriptionSelectRepos: SubscriptionSelectServices(),
+      memberBloc: context.read<MemberBloc>(),
       storySlug: widget.storySlug,
     );
     super.initState();

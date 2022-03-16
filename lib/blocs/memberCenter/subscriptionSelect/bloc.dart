@@ -5,22 +5,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/helpers/iAPSubscriptionHelper.dart';
+import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/models/subscriptionDetail.dart';
 import 'package:readr_app/services/subscriptionSelectService.dart';
 
 class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, SubscriptionSelectState> {
   IAPSubscriptionHelper _iapSubscriptionHelper = IAPSubscriptionHelper();
   final SubscriptionSelectRepos subscriptionSelectRepos;
+  final MemberBloc memberBloc;
   final String? storySlug;
 
   late StreamSubscription<PurchaseDetails> _buyingPurchaseSubscription;
 
   SubscriptionSelectBloc({
     required this.subscriptionSelectRepos,
+    required this.memberBloc,
     required this.storySlug
   }) : super(SubscriptionSelectState.init()) {
     _iapSubscriptionHelper.verifyPurchaseInBloc = true;
@@ -148,6 +152,11 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
       
       if(isSuccess) { 
         emit(SubscriptionSelectState.buyingSuccess(storySlug: this.storySlug));
+        memberBloc.add(UpdateSubscriptionType(
+          isLogin: true,
+          israfelId: '',
+          subscriptionType: SubscriptionType.subscribe_monthly
+        ));
       } else {
         emit(SubscriptionSelectState.verifyPurchaseFail());
       }
