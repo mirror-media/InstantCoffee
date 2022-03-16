@@ -1,5 +1,13 @@
 import 'package:readr_app/helpers/EnumParser.dart';
 
+const List<SubscriptionType> premiumSubscriptionType = [
+  SubscriptionType.marketing,
+  SubscriptionType.subscribe_monthly,
+  SubscriptionType.subscribe_yearly,
+  SubscriptionType.marketing,
+  SubscriptionType.staff,
+];
+
 enum SubscriptionType { 
   none, 
   marketing, 

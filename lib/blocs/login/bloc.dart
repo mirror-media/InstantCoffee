@@ -12,6 +12,7 @@ import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/firebaseLoginStatus.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
+import 'package:readr_app/pages/shared/premiumAnimatePage.dart';
 import 'package:readr_app/services/loginService.dart';
 import 'package:readr_app/services/memberService.dart';
 
@@ -215,21 +216,32 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
     }
   }
 
-  void _navigateToRouteName(SubscriptionType subscriptionType) {
-    if(routeName != RouteGenerator.login) {
-      if(routeName == RouteGenerator.story) {
-        RouteGenerator.navigatorKey.currentState!.popUntil(ModalRoute.withName(RouteGenerator.root));
-      } else {
-        RouteGenerator.navigatorKey.currentState!.pop();
-      }
+  Future<void> runPremiumAnimation() async{
+    await RouteGenerator.navigatorKey.currentState!.pushReplacement(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => AnimatePage(
+          transitionAnimation: animation
+        ),
+        transitionDuration: const Duration(seconds: 2),
+        reverseTransitionDuration: const Duration(seconds: 2),
+      )
+    );
+  }
 
+  void _navigateToRouteName(SubscriptionType subscriptionType) async{
+    if(premiumSubscriptionType.contains(subscriptionType)) {
+      await runPremiumAnimation();
+    }
+
+    if(routeName != RouteGenerator.login) {
       if(routeArguments != null &&
         routeArguments!.containsKey('subscriptionType')) {
         routeArguments!.update('subscriptionType', (value) => subscriptionType);
       }
 
-      RouteGenerator.navigatorKey.currentState!.pushNamed(
+      RouteGenerator.navigatorKey.currentState!.pushNamedAndRemoveUntil(
         routeName,
+        ModalRoute.withName(RouteGenerator.root),
         arguments: routeArguments,
       );
     }
@@ -260,6 +272,10 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
           israfelId: memberIdAndSubscriptionType.israfelId,
           subscriptionType: memberIdAndSubscriptionType.subscriptionType
         ));
+
+        if(premiumSubscriptionType.contains(memberIdAndSubscriptionType.subscriptionType)) {
+          await runPremiumAnimation();
+        }
       } catch(e) {
         // there is no member in israfel
         if(e.toString() == "Invalid Request: $memberStateTypeIsNotFound") {
