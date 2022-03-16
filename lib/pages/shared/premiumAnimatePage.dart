@@ -59,10 +59,14 @@ class _AnimatePageState extends State<AnimatePage> {
                 children: [
                   Image.asset(
                     premiumIconPng,
+                    width: 37,
+                    height: 37,
                   ),
                   const SizedBox(height: 24),
                   Image.asset(
                     premiumTextPng,
+                    width: 108,
+                    height: 32,
                   ),
                 ],
               ),
