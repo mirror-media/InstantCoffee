@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/storyPage/news/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/pages/storyPage/news/buildStoryPage.dart';
@@ -39,10 +40,21 @@ class StoryPage extends StatelessWidget {
           )
         ],
       ),
-      body: BlocProvider(
-        create: (context) => _storyBloc,
-        child: BuildStoryPage(isMemberCheck: isMemberCheck)
-      ),
+      body: BlocConsumer<MemberBloc, MemberState>(
+        listener: (BuildContext context, MemberState state) {
+          if(state.status == MemberStatus.loaded) {
+            _storyBloc.add(
+              FetchPublishedStoryBySlug(_storyBloc.state.storySlug, isMemberCheck)
+            );
+          }
+        },
+        builder: (BuildContext context, MemberState state) {
+          return BlocProvider(
+            create: (context) => _storyBloc,
+            child: BuildStoryPage(isMemberCheck: isMemberCheck)
+          );
+        }
+      )
     );
   }
 }
