@@ -91,13 +91,7 @@ class JoinMemberBlock extends StatelessWidget {
                           storySlug: storySlug,
                         );
                       } else {
-                        RouteGenerator.navigateToLogin(
-                          routeName: RouteGenerator.story,
-                          routeArguments: {
-                            'slug': storySlug,
-                            'isMemberCheck': true
-                          },
-                        );
+                        RouteGenerator.navigateToLogin();
                       }
                     }
                   ),
@@ -118,13 +112,7 @@ class JoinMemberBlock extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    onTap: () => RouteGenerator.navigateToLogin(
-                      routeName: RouteGenerator.story,
-                      routeArguments: {
-                        'slug': storySlug,
-                        'isMemberCheck': true
-                      },
-                    ),
+                    onTap: () => RouteGenerator.navigateToLogin(),
                   ),
                   SizedBox(width: 4),
                   Text(
