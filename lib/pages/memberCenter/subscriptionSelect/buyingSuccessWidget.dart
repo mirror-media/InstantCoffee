@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
+import 'package:readr_app/pages/shared/premiumAnimatePage.dart';
 
 class BuyingSuccessWidget extends StatelessWidget {
   final String? storySlug;
   BuyingSuccessWidget({
     this.storySlug,
   });
+
+  Future<void> _runPremiumAnimation() async{
+    await RouteGenerator.navigatorKey.currentState!.pushReplacement(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => AnimatePage(
+          transitionAnimation: animation
+        ),
+        transitionDuration: const Duration(seconds: 2),
+        reverseTransitionDuration: const Duration(seconds: 2),
+      )
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +69,8 @@ class BuyingSuccessWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
+                await _runPremiumAnimation();
                 RouteGenerator.navigateToStory(storySlug!);
               }
             ),
@@ -74,7 +88,7 @@ class BuyingSuccessWidget extends StatelessWidget {
             child: Container(
               child: Center(
                 child: Text(
-                  '回會員中心頁',
+                  '回首頁',
                   style: TextStyle(
                     fontSize: 17,
                     color: storySlug == null ? Colors.white : Colors.black,
@@ -84,8 +98,7 @@ class BuyingSuccessWidget extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              RouteGenerator.navigatorKey.currentState!.popUntil((route) => route.isFirst);
-              RouteGenerator.navigateToLogin();
+              _runPremiumAnimation();
             }
           ),
         ),
