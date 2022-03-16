@@ -239,6 +239,11 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
         routeArguments!.update('subscriptionType', (value) => subscriptionType);
       }
 
+      if(premiumSubscriptionType.contains(subscriptionType)) {
+        // await premium animation pop completed
+        await Future.delayed(Duration(seconds: 1));
+      }
+
       RouteGenerator.navigatorKey.currentState!.pushNamedAndRemoveUntil(
         routeName!,
         ModalRoute.withName(RouteGenerator.root),
