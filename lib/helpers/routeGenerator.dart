@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
 import 'package:readr_app/initialApp.dart';
 import 'package:readr_app/models/magazine.dart';
@@ -430,19 +431,22 @@ class RouteGenerator {
     // https://github.com/flutter/flutter/issues/48245
     // There is a issue when opening pdf file in webview on android, 
     // so change to launch URL on android.
-    late String url;
-    if(magazine.type == 'weekly'){
-      url = magazine.onlineReadingUrl;
+    String url = magazine.type == 'weekly'
+        ? magazine.onlineReadingUrl
+        : magazine.pdfUrl;
 
-      navigatorKey.currentState!.pushNamed(
-        magazineBrowser,
-        arguments: {
-          'magazine': magazine,
-        },
+    if(url == '') {
+      Fluttertoast.showToast(
+        msg: '下載失敗，請再試一次',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0
       );
-    }else{
-      url = magazine.pdfUrl;
-      if(Platform.isAndroid) {
+    } else {
+      if(Platform.isAndroid && magazine.type != 'weekly') {
         if (await canLaunch(url)) {
           await launch(url);
         } else {
