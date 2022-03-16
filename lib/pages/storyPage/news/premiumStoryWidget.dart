@@ -541,7 +541,6 @@ class PremiumStoryWidget extends StatelessWidget {
       child: JoinMemberBlock(
         isMember: isLogin,
         storySlug: storySlug,
-        isMemberContent: true,
       ),
     );
   }
