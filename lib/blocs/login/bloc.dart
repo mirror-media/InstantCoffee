@@ -20,7 +20,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
   final LoginRepos loginRepos;
   final MemberBloc memberBloc;
 
-  final String routeName;
+  final String? routeName;
   final Map? routeArguments;
 
   LoginBloc({
@@ -233,14 +233,14 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
       await runPremiumAnimation();
     }
 
-    if(routeName != RouteGenerator.login) {
+    if(routeName != null) {
       if(routeArguments != null &&
         routeArguments!.containsKey('subscriptionType')) {
         routeArguments!.update('subscriptionType', (value) => subscriptionType);
       }
 
       RouteGenerator.navigatorKey.currentState!.pushNamedAndRemoveUntil(
-        routeName,
+        routeName!,
         ModalRoute.withName(RouteGenerator.root),
         arguments: routeArguments,
       );

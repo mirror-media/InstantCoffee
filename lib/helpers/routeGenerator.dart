@@ -283,8 +283,8 @@ class RouteGenerator {
 
   static void navigateToLogin(
     {
-      String routeName = login,
-      Object? routeArguments,
+      String? routeName,
+      Map? routeArguments,
     }
   ) {
     navigatorKey.currentState!.pushNamed(
