@@ -16,8 +16,7 @@ class _AnimatePageState extends State<AnimatePage> {
   void initState() {
     widget.transitionAnimation.addStatusListener((status) async{
       if(status == AnimationStatus.completed) {
-        await Future.delayed(const Duration(seconds: 1));
-        Navigator.of(context).popUntil((route) => route.isFirst);
+        Navigator.of(context).pop();
       }
     });
     super.initState();

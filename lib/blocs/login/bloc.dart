@@ -222,8 +222,8 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
         pageBuilder: (context, animation, secondaryAnimation) => AnimatePage(
           transitionAnimation: animation
         ),
-        transitionDuration: const Duration(seconds: 2),
-        reverseTransitionDuration: const Duration(seconds: 2),
+        transitionDuration: const Duration(milliseconds: 1500),
+        reverseTransitionDuration: const Duration(milliseconds: 1000),
       )
     );
   }
