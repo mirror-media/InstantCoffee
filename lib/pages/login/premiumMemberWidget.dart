@@ -48,6 +48,7 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
       appBar: AppBar(
         backgroundColor: Color(0xffE5E5E5),
         elevation: 0.0,
+        centerTitle: true,
         title: Text(
           '會員中心',
           style: TextStyle(
