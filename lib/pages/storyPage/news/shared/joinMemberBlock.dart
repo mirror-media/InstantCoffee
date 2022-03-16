@@ -37,6 +37,15 @@ class JoinMemberBlock extends StatelessWidget {
                 color: appColor,
               ),
             ),
+            SizedBox(height: 12),
+            Text(
+              '即日起加入年費會員  月月抽sony旗艦機',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Color(0xff9B9B9B),
+              ),
+            ),
             SizedBox(height: 24),
             Container(
               decoration: BoxDecoration(

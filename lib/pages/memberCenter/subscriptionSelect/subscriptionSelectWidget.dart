@@ -241,6 +241,8 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
             _memberClause('免費閱讀數位版動態雜誌'),
             Divider(),
             _memberClause('月方案定價 \$$originalPrice 元，限時優惠 \$$specialPrice 元'),
+            Divider(),
+            _memberClause('即日起加入年費會員，月月抽sony旗艦機'),
             SizedBox(height: 24),
             isBuying
             ? Column(
