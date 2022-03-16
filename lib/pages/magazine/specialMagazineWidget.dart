@@ -59,7 +59,7 @@ class _SpecialMagazineWidgetState extends State<SpecialMagazineWidget> with Auto
       builder: (BuildContext context, MagazineState state) {
         if (state is MagazineError) {
           final error = state.error;
-          print('EmailRegisteredFail: ${error.message}');
+          print('SpecialMagazineError: ${error.message}');
           return Container();
         }
 

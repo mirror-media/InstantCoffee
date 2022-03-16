@@ -34,7 +34,7 @@ class _WeeklyMagazineWidgetState extends State<WeeklyMagazineWidget> with Automa
       builder: (BuildContext context, MagazineState state) {
         if (state is MagazineError) {
           final error = state.error;
-          print('EmailRegisteredFail: ${error.message}');
+          print('WeeklyMagazineError: ${error.message}');
           return Container();
         }
         if (state is MagazineLoaded) {
