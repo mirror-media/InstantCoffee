@@ -12,7 +12,7 @@ class MagazineList extends CustomizedList<Magazine> {
     MagazineList magazines = MagazineList();
     List parseList = parsedJson.map((i) => Magazine.fromJson(i, type)).toList();
     parseList.forEach((element) {
-      magazines.add(element);
+      magazines.l.add(element);
     });
 
     return magazines;
