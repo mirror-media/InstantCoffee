@@ -2,7 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -104,9 +103,7 @@ class MagazineItemWidget extends StatelessWidget {
               fontWeight: FontWeight.w400,
               ),
             ),
-            onPressed: (){
-              _navigateToMagazineBrowser(context,magazine);
-            }
+            onPressed: () => RouteGenerator.navigateToMagazineBrowser(magazine)
           ),
         ]
       ),
@@ -131,23 +128,5 @@ class MagazineItemWidget extends StatelessWidget {
       ),
       fit: BoxFit.cover,
     );
-  }
-
-  void _navigateToMagazineBrowser(
-    BuildContext context,
-    Magazine magazine) async{
-    if(magazine.pdfUrl == '') {
-      Fluttertoast.showToast(
-        msg: '下載失敗，請再試一次',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0
-      );
-    } else {
-      RouteGenerator.navigateToMagazineBrowser(magazine);
-    }
   }
 }

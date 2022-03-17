@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/magazine.dart';
@@ -195,27 +194,9 @@ class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
             fontWeight: FontWeight.w400,
             ),
           ),
-          onPressed: (){
-            _navigateToMagazineBrowser(magazine);
-          }
+          onPressed: () => RouteGenerator.navigateToMagazineBrowser(magazine)
         ),
       ]
     );
-  }
-
-  void _navigateToMagazineBrowser(Magazine magazine) async{
-    if(magazine.pdfUrl == '') {
-      Fluttertoast.showToast(
-        msg: '下載失敗，請再試一次',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0
-      );
-    } else {
-      RouteGenerator.navigateToMagazineBrowser(magazine);
-    }
   }
 }
