@@ -12,6 +12,7 @@ import 'package:readr_app/pages/memberCenter/subscriptionDetail/memberSubscripti
 import 'package:readr_app/pages/passwordUpdate/passwordUpdatePage.dart';
 import 'package:readr_app/pages/shared/appVersionWidget.dart';
 import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
+import 'package:readr_app/pages/shared/premiumAnimatePage.dart';
 import 'package:readr_app/services/loginService.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -32,6 +33,15 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
   
   _signOut() async {
     await _auth.signOut();
+    await RouteGenerator.navigatorKey.currentState!.push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => AnimatePage(
+          transitionAnimation: animation
+        ),
+        transitionDuration: const Duration(milliseconds: 1500),
+        reverseTransitionDuration: const Duration(milliseconds: 1000),
+      )
+    );
     context.read<MemberBloc>().add(UpdateSubscriptionType(
       isLogin: false,
       israfelId: null,
