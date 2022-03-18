@@ -179,14 +179,33 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
       MemberIdAndSubscriptionType memberIdAndSubscriptionType = await _memberService.checkSubscriptionType(
         _auth.currentUser!
       );
-      emit(
-        LoginSuccess(
-          israfelId: memberIdAndSubscriptionType.israfelId!,
-          subscriptionType: memberIdAndSubscriptionType.subscriptionType!,
-          isNewebpay: memberIdAndSubscriptionType.isNewebpay,
-        )
-      );
-
+      if(premiumSubscriptionType.contains(memberIdAndSubscriptionType.subscriptionType)) {
+        if(_loginLoadingType == LoginLoadingType.email) {
+          emit(FetchSignInMethodsForEmailLoading());
+        } else {
+          LoginType loginType = LoginType.google;
+          if(_loginLoadingType == LoginLoadingType.facebook) {
+            loginType = LoginType.facebook;
+          } else if(_loginLoadingType == LoginLoadingType.apple) {
+            loginType = LoginType.apple;
+          }
+          
+          emit(
+            LoginLoading(
+              loginType: loginType
+            )
+          );
+        }
+      } else {
+        emit(
+          LoginSuccess(
+            israfelId: memberIdAndSubscriptionType.israfelId!,
+            subscriptionType: memberIdAndSubscriptionType.subscriptionType!,
+            isNewebpay: memberIdAndSubscriptionType.isNewebpay,
+          )
+        );
+      }
+      
       memberBloc.add(UpdateSubscriptionType(
         isLogin: true,
         israfelId: memberIdAndSubscriptionType.israfelId,
