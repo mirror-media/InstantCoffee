@@ -74,12 +74,20 @@ class RouteGenerator {
           fullscreenDialog: true,
         );
       case login:
-        Map args = settings.arguments as Map;
+        String? routeName;
+        Map? routeArguments;
+
+        if(settings.arguments != null) {
+          Map args = settings.arguments as Map;
+          routeName = args['routeName'];
+          routeArguments = args['routeArguments'];
+        }
+
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => LoginPage(
-            routeName: args['routeName']??login,
-            routeArguments: args['routeArguments'],
+            routeName: routeName,
+            routeArguments: routeArguments,
           ),
           fullscreenDialog: true,
         );
