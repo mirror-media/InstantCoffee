@@ -16,6 +16,8 @@ import 'package:readr_app/pages/shared/premiumAnimatePage.dart';
 import 'package:readr_app/services/loginService.dart';
 import 'package:readr_app/services/memberService.dart';
 
+enum LoginLoadingType { google, facebook, apple, email }
+
 class LoginBloc extends Bloc<LoginEvents, LoginState> {
   final LoginRepos loginRepos;
   final MemberBloc memberBloc;
@@ -41,6 +43,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   MemberService _memberService = MemberService();
   ErrorLogHelper _errorLogHelper = ErrorLogHelper();
+  LoginLoadingType? _loginLoadingType;
 
   Future<void> _handleFirebaseThirdPartyLogin(
     FirebaseLoginStatus frebaseLoginStatus,
@@ -320,6 +323,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
   ) async{
     print(event.toString());
     try{
+      _loginLoadingType = LoginLoadingType.google;
       emit(
         LoginLoading(loginType: LoginType.google)
       );
@@ -358,6 +362,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
   ) async{
     print(event.toString());
     try{
+      _loginLoadingType = LoginLoadingType.facebook;
       emit(
         LoginLoading(loginType: LoginType.facebook)
       );
@@ -396,6 +401,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
   ) async{
     print(event.toString());
     try{
+      _loginLoadingType = LoginLoadingType.apple;
       emit(
         LoginLoading(loginType: LoginType.apple)
       );
@@ -435,6 +441,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
   ) async{
     print(event.toString());
     try{
+      _loginLoadingType = LoginLoadingType.email;
       emit(
         FetchSignInMethodsForEmailLoading()
       );
