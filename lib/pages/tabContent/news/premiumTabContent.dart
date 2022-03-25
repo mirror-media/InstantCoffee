@@ -76,7 +76,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
 
               return _buildTheRecordList(
                 recordList,
-                hasNextPage: context.read<TabContentBloc>().hasNextPage,
+                hasNextPage: state.hasNextPage!,
                 isLoadingMore: state.status == TabContentStatus.loadingMore
               );
             default:

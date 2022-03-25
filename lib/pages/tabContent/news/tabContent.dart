@@ -89,7 +89,7 @@ class _TabContentState extends State<TabContent> {
 
                     return _buildTheRecordList(
                       recordList,
-                      hasNextPage: context.read<TabContentBloc>().hasNextPage,
+                      hasNextPage: state.hasNextPage!,
                       isLoadingMore: state.status == TabContentStatus.loadingMore
                     );
                   case TabContentStatus.loadingMoreFail:

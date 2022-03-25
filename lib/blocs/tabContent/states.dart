@@ -11,12 +11,14 @@ enum TabContentStatus {
 
 class TabContentState {
   final TabContentStatus status;
+  final bool? hasNextPage;
   final List<Record>? recordList;
   final dynamic errorMessages;
 
   /// if nextPageUrl is empty, it means no next page
   const TabContentState({
     required this.status,
+    this.hasNextPage,
     this.recordList,
     this.errorMessages,
   });
@@ -34,10 +36,12 @@ class TabContentState {
   }
 
   factory TabContentState.loaded({
+    required bool hasNextPage,
     required List<Record> recordList,
   }) {
     return TabContentState(
       status: TabContentStatus.loaded,
+      hasNextPage: hasNextPage,
       recordList: recordList,
     );
   }
@@ -52,10 +56,12 @@ class TabContentState {
   }
 
   factory TabContentState.loadingMore({
-    required List<Record> recordList,
+    required bool hasNextPage,
+    required List<Record> recordList
   }) {
     return TabContentState(
       status: TabContentStatus.loadingMore,
+      hasNextPage: hasNextPage,
       recordList: recordList,
     );
   }
@@ -66,6 +72,7 @@ class TabContentState {
   }) {
     return TabContentState(
       status: TabContentStatus.loadingMoreFail,
+      hasNextPage: true,
       recordList: recordList,
       errorMessages: errorMessages
     );

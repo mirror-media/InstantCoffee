@@ -17,8 +17,6 @@ class TabContentBloc extends Bloc<TabContentEvents, TabContentState> {
     on<FetchNextPageRecordList>(_fetchNextPageRecordList);
   }
 
-  bool hasNextPage = true;
-
   void _fetchRecordList(
     FetchRecordList event,
     Emitter<TabContentState> emit,
@@ -39,9 +37,9 @@ class TabContentBloc extends Bloc<TabContentEvents, TabContentState> {
 
       recordRepos.initialService();
       List<Record> recordList = await recordRepos.fetchRecordList(endpoint);
-      hasNextPage = recordList.length > 0;
 
       emit(TabContentState.loaded(
+        hasNextPage: recordList.length > 0,
         recordList: recordList,
       ));
     } catch (e) {
@@ -59,15 +57,16 @@ class TabContentBloc extends Bloc<TabContentEvents, TabContentState> {
     List<Record> recordList = state.recordList!;
     try{
       emit(TabContentState.loadingMore(
+        hasNextPage: state.hasNextPage!,
         recordList: recordList
       ));
       
       List<Record> newRecordList = await recordRepos.fetchNextPageRecordList();
-      hasNextPage = newRecordList.length > 0;
       newRecordList = Record.filterDuplicatedSlugByAnother(newRecordList, recordList);
       recordList.addAll(newRecordList);
 
       emit(TabContentState.loaded(
+        hasNextPage: newRecordList.length > 0,
         recordList: recordList,
       ));
     } catch (e) {
