@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/login/states.dart';
-import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/pages/login/loginErrorWidget.dart';
 import 'package:readr_app/pages/login/loginForm.dart';
