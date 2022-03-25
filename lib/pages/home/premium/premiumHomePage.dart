@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/search/bloc.dart';
+import 'package:readr_app/blocs/tabContent/bloc.dart';
 import 'package:readr_app/helpers/appLinkHelper.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
@@ -16,6 +17,7 @@ import 'package:readr_app/pages/search/searchWidget.dart';
 import 'package:readr_app/pages/tabContent/news/premiumTabContent.dart';
 import 'package:readr_app/pages/termsOfService/mMTermsOfServicePage.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/services/recordService.dart';
 import 'package:readr_app/services/searchService.dart';
 
 class PremiumHomePage extends StatefulWidget {
@@ -64,18 +66,23 @@ class _PremiumHomePageState extends State<PremiumHomePage> with WidgetsBindingOb
       ),
       ColoredBox(
         color: Colors.white,
-        child: PremiumTabContent(
-          section: Section(
-            key: Environment().config.memberSectionKey,
-            name: 'member',
-            title: '會員專區',
-            description: '',
-            order: 0,
-            focus: false,
-            type: 'section',
+        child: BlocProvider(
+          create: (context) => TabContentBloc(
+            recordRepos: RecordService()
           ),
-          scrollController: premeniumArticleBarScrollController,
-        ),
+          child: PremiumTabContent(
+            section: Section(
+              key: Environment().config.memberSectionKey,
+              name: 'member',
+              title: '會員專區',
+              description: '',
+              order: 0,
+              focus: false,
+              type: 'section',
+            ),
+            scrollController: premeniumArticleBarScrollController,
+          ),
+        )
       ),
       PremiumMemberWidget(
         israfelId: context.read<MemberBloc>().state.israfelId!,

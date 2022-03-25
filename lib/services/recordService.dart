@@ -3,17 +3,30 @@ import 'package:readr_app/helpers/apiBaseHelper.dart';
 import 'package:readr_app/helpers/cacheDurationCache.dart';
 import 'package:readr_app/models/record.dart';
 
-class RecordService {
+abstract class RecordRepos {
+  Future<List<Record>> fetchRecordList(String url, {bool isLoadingFirstPage = false});
+  Future<List<Record>> fetchNextPageRecordList();
+}
+
+class RecordService implements RecordRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
-
-  int page = 1;
-
+  int _page = 1;
   String _nextPageUrl = '';
-  String get getNextUrl => this._nextPageUrl;
 
-  Future<List<Record>> fetchRecordList(String url) async {
+  @override
+  Future<List<Record>> fetchRecordList(
+    String url,
+    {
+      bool isLoadingFirstPage = false
+    }
+  ) async{
+    if(isLoadingFirstPage) {
+      _page = 1;
+      _nextPageUrl = '';
+    }
+
     dynamic jsonResponse;
-    if(page <= 2) {
+    if(_page <= 2) {
       jsonResponse = await _helper.getByCacheAndAutoCache(url, maxAge: contentTabCacheDuration);
     }
     else {
@@ -22,9 +35,9 @@ class RecordService {
     
     if (jsonResponse.containsKey("_links") &&
         jsonResponse["_links"].containsKey("next")) {
-      this._nextPageUrl = Environment().config.apiBase + jsonResponse["_links"]["next"]["href"];
+      _nextPageUrl = Environment().config.apiBase + jsonResponse["_links"]["next"]["href"];
     } else {
-      this._nextPageUrl = '';
+      _nextPageUrl = '';
     }
 
     var jsonObject;
@@ -43,11 +56,13 @@ class RecordService {
     return records;
   }
 
-  int initialPage() {
-    return this.page = 1;
-  }
+  @override
+  Future<List<Record>> fetchNextPageRecordList() async{
+    if(_nextPageUrl != '') {
+      _page ++;
+      return await fetchRecordList(_nextPageUrl);
+    }
 
-  int nextPage() {
-    return ++ this.page;
+    return [];
   }
 }
