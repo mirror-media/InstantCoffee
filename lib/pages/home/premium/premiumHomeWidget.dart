@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/section/cubit.dart';
 import 'package:readr_app/blocs/section/states.dart';
+import 'package:readr_app/blocs/tabContent/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/firebaseAnalyticsHelper.dart';
@@ -12,6 +13,7 @@ import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/tabContent/listening/premiumListeningTabContent.dart';
 import 'package:readr_app/pages/tabContent/news/premiumTabContent.dart';
 import 'package:readr_app/pages/tabContent/personal/premium/premiumPersionalTabContent.dart';
+import 'package:readr_app/services/recordService.dart';
 import 'package:readr_app/widgets/newsMarquee/newsMarquee.dart';
 import 'package:readr_app/widgets/popupRoute/easyPopup.dart';
 import 'package:readr_app/widgets/popupRoute/sectionDropDownMenu.dart';
@@ -80,11 +82,18 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget> with TickerProvid
           scrollController: _scrollControllerList[i],
         ));
       } else {
-        _tabWidgets.add(PremiumTabContent(
-          section: section,
-          scrollController: _scrollControllerList[i],
-          needCarousel: i == 0,
-        ));
+        _tabWidgets.add(
+          BlocProvider(
+            create: (context) => TabContentBloc(
+              recordRepos: RecordService()
+            ),
+            child: PremiumTabContent(
+              section: section,
+              scrollController: _scrollControllerList[i],
+              needCarousel: i == 0,
+            )
+          )
+        );
       }
     }
 

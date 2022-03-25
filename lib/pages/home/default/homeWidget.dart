@@ -7,6 +7,7 @@ import 'package:readr_app/blocs/onBoarding/events.dart';
 import 'package:readr_app/blocs/onBoarding/states.dart';
 import 'package:readr_app/blocs/section/cubit.dart';
 import 'package:readr_app/blocs/section/states.dart';
+import 'package:readr_app/blocs/tabContent/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/firebaseAnalyticsHelper.dart';
@@ -16,6 +17,7 @@ import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/tabContent/listening/listeningTabContent.dart';
 import 'package:readr_app/pages/tabContent/news/tabContent.dart';
 import 'package:readr_app/pages/tabContent/personal/default/personalTabContent.dart';
+import 'package:readr_app/services/recordService.dart';
 import 'package:readr_app/widgets/newsMarquee/newsMarquee.dart';
 import 'package:readr_app/widgets/popupRoute/easyPopup.dart';
 import 'package:readr_app/widgets/popupRoute/sectionDropDownMenu.dart';
@@ -92,11 +94,18 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
           scrollController: _scrollControllerList[i],
         ));
       } else {
-        _tabWidgets.add(TabContent(
-          section: section,
-          scrollController: _scrollControllerList[i],
-          needCarousel: i == 0,
-        ));
+        _tabWidgets.add(
+          BlocProvider(
+            create: (context) => TabContentBloc(
+              recordRepos: RecordService()
+            ),
+            child: TabContent(
+              section: section,
+              scrollController: _scrollControllerList[i],
+              needCarousel: i == 0,
+            )
+          )
+        );
       }
     }
 

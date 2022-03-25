@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/editorChoice/cubit.dart';
 import 'package:readr_app/blocs/editorChoice/state.dart';
-import 'package:readr_app/blocs/tabContentBloc.dart';
-import 'package:readr_app/helpers/apiResponse.dart';
+import 'package:readr_app/blocs/tabContent/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/remoteConfigHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -33,68 +32,64 @@ class PremiumTabContent extends StatefulWidget {
 
 class _PremiumTabContentState extends State<PremiumTabContent> {
   RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
-  late TabContentBloc _tabContentBloc;
 
-  @override
-  void initState() {
-    _tabContentBloc = TabContentBloc(
-      widget.section.sectionAd,
-      widget.section.key, 
-      widget.section.type, 
+  _fetchRecordList() {
+    context.read<TabContentBloc>().add(
+      FetchRecordList(
+        sectionKey: widget.section.key, 
+        sectionType: widget.section.type
+      )
     );
-    super.initState();
+  }
+
+  _fetchNextPageRecordList() {
+    context.read<TabContentBloc>().add(
+      FetchNextPageRecordList()
+    );
   }
 
   @override
-  void dispose() {
-    _tabContentBloc.dispose();
-    super.dispose();
+  void initState() {
+    _fetchRecordList();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async {
-        _tabContentBloc.refreshTheList(widget.section.key, widget.section.type);
+      onRefresh: () async{
+        _fetchRecordList();
       },
-      child: _buildTabContentBody(),
+      child: BlocBuilder<TabContentBloc, TabContentState>(
+        builder: (BuildContext context, TabContentState state) {
+          switch (state.status) {
+            case TabContentStatus.loadingError:
+              final error = state.errorMessages;
+              print('TabContent: ${error.message}');
+              return ErrorStatelessWidget(
+                errorMessage: error.message,
+                onRetryPressed: () => _fetchRecordList(),
+              );
+            case TabContentStatus.loaded:
+            case TabContentStatus.loadingMore:
+              List<Record> recordList = state.recordList!;
+
+              return _buildTheRecordList(
+                recordList,
+                hasNextPage: context.read<TabContentBloc>().hasNextPage,
+                isLoadingMore: state.status == TabContentStatus.loadingMore
+              );
+            default:
+              // state is Init, Loading
+              return _loadingWidget();
+          }
+        }
+      ),
     );
   }
 
-  Widget _buildTabContentBody() {
-    return StreamBuilder<ApiResponse<TabContentState>>(
-      stream: _tabContentBloc.recordListStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          TabContentState? tabContentState = snapshot.data!.data;
-
-          switch (snapshot.data!.status) {
-            case Status.LOADING:
-              return Center(child: CircularProgressIndicator());
-
-            case Status.LOADINGMORE:
-            case Status.COMPLETED:
-              List<Record> recordList = tabContentState == null
-                  ? _tabContentBloc.records
-                  : tabContentState.recordList;
-
-              return _buildTheRecordList(
-                context, 
-                recordList,
-                snapshot.data!.status, 
-                _tabContentBloc
-              );
-
-            case Status.ERROR:
-              return ErrorStatelessWidget(
-                errorMessage: snapshot.data!.message!,
-                onRetryPressed: () => _tabContentBloc.fetchRecordList(),
-              );
-          }
-        }
-        return Container();
-      },
-    );
+  Widget _loadingWidget() {
+    return Center(child: CircularProgressIndicator(),);
   }
 
   Widget _buildEditorChoiceList() {
@@ -122,10 +117,11 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
   }
 
   Widget _buildTheRecordList(
-    BuildContext context, 
     List<Record> recordList,
-    Status status, 
-    TabContentBloc tabContentBloc
+    {
+      bool hasNextPage = true, 
+      bool isLoadingMore = false, 
+    }
   ) {
     
     return CustomScrollView(
@@ -139,7 +135,11 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              tabContentBloc.loadingMore(index);
+              if(hasNextPage && 
+                !isLoadingMore && 
+                index == recordList.length-1) {
+                _fetchNextPageRecordList();
+              }
               
               if (index == 0) {
                 if(widget.needCarousel) {
@@ -189,7 +189,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
                     color: Colors.grey,
                   ),
                   if (index == recordList.length - 1 &&
-                      status == Status.LOADINGMORE)
+                      isLoadingMore)
                     _loadMoreWidget(),
                 ],
               );
