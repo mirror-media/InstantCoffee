@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     SchedulerBinding.instance!.addPostFrameCallback((_) {
       _appLinkHelper.configAppLink(context);
       _appLinkHelper.listenAppLink(context);
-      _firebaseMessangingHelper.configFirebaseMessaging(context);
+      _firebaseMessangingHelper.configFirebaseMessaging();
     });
     _onBoardingBloc = context.read<OnBoardingBloc>();
 

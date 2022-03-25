@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/helpers/errorLogHelper.dart';
@@ -15,7 +14,7 @@ class FirebaseMessangingHelper {
 
   FirebaseMessangingHelper();
 
-  configFirebaseMessaging(BuildContext context) async{
+  configFirebaseMessaging() async{
     if(!Platform.isAndroid) {
       NotificationSettings settings = await _firebaseMessaging.requestPermission(
         alert: true,
@@ -31,16 +30,16 @@ class FirebaseMessangingHelper {
     }
 
     FirebaseMessaging.instance.getInitialMessage()
-      .then((initialMessage) => _navigateToStoryPage(context, initialMessage));
+      .then((initialMessage) => _navigateToStoryPage(initialMessage));
 
     // Also handle any interaction when the app is in the background via a
     // Stream listener
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      _navigateToStoryPage(context, message);
+      _navigateToStoryPage(message);
     });
   }
 
-  void _navigateToStoryPage(BuildContext context, RemoteMessage? message) {
+  void _navigateToStoryPage(RemoteMessage? message) {
     if(message != null ) {
       FcmData? fcmData;
       try{
