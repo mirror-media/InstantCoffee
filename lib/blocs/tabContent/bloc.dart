@@ -59,7 +59,6 @@ class TabContentBloc extends Bloc<TabContentEvents, TabContentState> {
     List<Record> recordList = state.recordList!;
     try{
       emit(TabContentState.loadingMore(
-        hasNextPage: state.hasNextPage!,
         recordList: recordList
       ));
       

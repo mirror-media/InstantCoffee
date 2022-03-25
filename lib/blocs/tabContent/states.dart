@@ -56,12 +56,11 @@ class TabContentState {
   }
 
   factory TabContentState.loadingMore({
-    required bool hasNextPage,
     required List<Record> recordList
   }) {
     return TabContentState(
       status: TabContentStatus.loadingMore,
-      hasNextPage: hasNextPage,
+      hasNextPage: false,
       recordList: recordList,
     );
   }
