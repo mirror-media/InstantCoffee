@@ -13,12 +13,12 @@ class TabContentBloc extends Bloc<TabContentEvents, TabContentState> {
   TabContentBloc({
     required this.recordRepos
   }) : super(TabContentState.initial()){
-    on<FetchRecordList>(_fetchRecordList);
+    on<FetchFirstRecordList>(_fetchFirstRecordList);
     on<FetchNextPageRecordList>(_fetchNextPageRecordList);
   }
 
-  void _fetchRecordList(
-    FetchRecordList event,
+  void _fetchFirstRecordList(
+    FetchFirstRecordList event,
     Emitter<TabContentState> emit,
   ) async {
     print(event.toString());

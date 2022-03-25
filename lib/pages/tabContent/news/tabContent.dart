@@ -38,9 +38,9 @@ class _TabContentState extends State<TabContent> {
   RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
   late SectionAd? _sectionAd;
   
-  _fetchRecordList() {
+  _fetchFirstRecordList() {
     context.read<TabContentBloc>().add(
-      FetchRecordList(
+      FetchFirstRecordList(
         sectionKey: widget.section.key, 
         sectionType: widget.section.type
       )
@@ -56,7 +56,7 @@ class _TabContentState extends State<TabContent> {
   @override
   void initState() {
     _sectionAd = widget.section.sectionAd;
-    _fetchRecordList();
+    _fetchFirstRecordList();
     super.initState();
   }
 
@@ -64,7 +64,7 @@ class _TabContentState extends State<TabContent> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async{
-        _fetchRecordList();
+        _fetchFirstRecordList();
       },
       child: Column(
         children: [
@@ -81,7 +81,7 @@ class _TabContentState extends State<TabContent> {
                     print('TabContent: ${error.message}');
                     return ErrorStatelessWidget(
                       errorMessage: error.message,
-                      onRetryPressed: () => _fetchRecordList(),
+                      onRetryPressed: () => _fetchFirstRecordList(),
                     );
                   case TabContentStatus.loaded:
                   case TabContentStatus.loadingMore:

@@ -1,15 +1,15 @@
 abstract class TabContentEvents{}
 
-class FetchRecordList extends TabContentEvents {
+class FetchFirstRecordList extends TabContentEvents {
   final String sectionKey;
   final String sectionType;
-  FetchRecordList({
+  FetchFirstRecordList({
     required this.sectionKey,
     required this.sectionType,
   });
 
   @override
-  String toString() => 'FetchRecordList { sectionKey: $sectionKey, sectionType: $sectionType }';
+  String toString() => 'FetchFirstRecordList { sectionKey: $sectionKey, sectionType: $sectionType }';
 }
 
 class FetchNextPageRecordList extends TabContentEvents {

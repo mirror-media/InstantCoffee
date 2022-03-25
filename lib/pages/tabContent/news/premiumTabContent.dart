@@ -33,9 +33,9 @@ class PremiumTabContent extends StatefulWidget {
 class _PremiumTabContentState extends State<PremiumTabContent> {
   RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
 
-  _fetchRecordList() {
+  _fetchFirstRecordList() {
     context.read<TabContentBloc>().add(
-      FetchRecordList(
+      FetchFirstRecordList(
         sectionKey: widget.section.key, 
         sectionType: widget.section.type
       )
@@ -50,7 +50,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
 
   @override
   void initState() {
-    _fetchRecordList();
+    _fetchFirstRecordList();
     super.initState();
   }
 
@@ -58,7 +58,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async{
-        _fetchRecordList();
+        _fetchFirstRecordList();
       },
       child: BlocBuilder<TabContentBloc, TabContentState>(
         builder: (BuildContext context, TabContentState state) {
@@ -68,7 +68,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
               print('TabContent: ${error.message}');
               return ErrorStatelessWidget(
                 errorMessage: error.message,
-                onRetryPressed: () => _fetchRecordList(),
+                onRetryPressed: () => _fetchFirstRecordList(),
               );
             case TabContentStatus.loaded:
             case TabContentStatus.loadingMore:
