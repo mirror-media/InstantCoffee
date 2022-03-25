@@ -4,8 +4,7 @@ import 'package:readr_app/helpers/cacheDurationCache.dart';
 import 'package:readr_app/models/record.dart';
 
 abstract class RecordRepos {
-  void initialService();
-  Future<List<Record>> fetchRecordList(String url);
+  Future<List<Record>> fetchRecordList(String url, {bool isLoadingFirstPage = false});
   Future<List<Record>> fetchNextPageRecordList();
 }
 
@@ -15,13 +14,17 @@ class RecordService implements RecordRepos {
   String _nextPageUrl = '';
 
   @override
-  void initialService() {
-    _page = 1;
-    _nextPageUrl = '';
-  }
+  Future<List<Record>> fetchRecordList(
+    String url,
+    {
+      bool isLoadingFirstPage = false
+    }
+  ) async{
+    if(isLoadingFirstPage) {
+      _page = 1;
+      _nextPageUrl = '';
+    }
 
-  @override
-  Future<List<Record>> fetchRecordList(String url) async{
     dynamic jsonResponse;
     if(_page <= 2) {
       jsonResponse = await _helper.getByCacheAndAutoCache(url, maxAge: contentTabCacheDuration);

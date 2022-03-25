@@ -35,8 +35,10 @@ class TabContentBloc extends Bloc<TabContentEvents, TabContentState> {
         endpoint = Environment().config.listingBaseSearchByPersonAndFoodSection;
       }
 
-      recordRepos.initialService();
-      List<Record> recordList = await recordRepos.fetchRecordList(endpoint);
+      List<Record> recordList = await recordRepos.fetchRecordList(
+        endpoint,
+        isLoadingFirstPage: true
+      );
 
       emit(TabContentState.loaded(
         hasNextPage: recordList.length > 0,
