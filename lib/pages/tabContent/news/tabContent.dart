@@ -7,6 +7,7 @@ import 'package:readr_app/blocs/editorChoice/cubit.dart';
 import 'package:readr_app/blocs/editorChoice/state.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/remoteConfigHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
@@ -49,7 +50,9 @@ class _TabContentState extends State<TabContent> {
 
   _fetchNextPageRecordList() {
     context.read<TabContentBloc>().add(
-      FetchNextPageRecordList(isLatest: widget.section.key == 'latest')
+      FetchNextPageRecordList(
+        isLatest: widget.section.key == Environment().config.latestSectionKey
+      )
     );
   }
 

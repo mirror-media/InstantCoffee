@@ -30,6 +30,7 @@ abstract class BaseConfig {
   String get magazinesApi;
   String get onlineMagazineUrl;
 
+  String get latestSectionKey;
   String get personalSectionKey;
   String get wineSectionKey;
   String get wine1SectionKey;
