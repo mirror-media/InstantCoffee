@@ -49,7 +49,7 @@ class _TabContentState extends State<TabContent> {
 
   _fetchNextPageRecordList() {
     context.read<TabContentBloc>().add(
-      FetchNextPageRecordList()
+      FetchNextPageRecordList(isLatest: widget.section.key == 'latest')
     );
   }
 
