@@ -6,6 +6,7 @@ import 'package:readr_app/models/record.dart';
 abstract class RecordRepos {
   Future<List<Record>> fetchRecordList(String url, {bool isLoadingFirstPage = false});
   Future<List<Record>> fetchNextPageRecordList();
+  Future<List<Record>> fetchLatestNextPageRecordList();
 }
 
 class RecordService implements RecordRepos {
@@ -49,6 +50,8 @@ class RecordService implements RecordRepos {
       for (var item in jsonObject) {
         item['slug'] = item['slug'].replaceAll(RegExp(r'(story|/)'), '');
       }
+    } else if(jsonResponse.containsKey("latest")) {
+      jsonObject = jsonResponse["latest"];
     } else {
       jsonObject = [];
     }
@@ -63,6 +66,17 @@ class RecordService implements RecordRepos {
       return await fetchRecordList(_nextPageUrl);
     }
 
+    return [];
+  }
+
+  @override
+  Future<List<Record>> fetchLatestNextPageRecordList() async{
+    if(_page < 4) {
+      _page ++;
+      _nextPageUrl = Environment().config.latestApi + 'post_external0$_page.json';
+      return await fetchRecordList(_nextPageUrl);
+    }
+    
     return [];
   }
 }
