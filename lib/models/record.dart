@@ -7,6 +7,7 @@ class Record extends Equatable {
   final String slug;
   final String publishedDate;
   final String photoUrl;
+  final bool isExternal;
   final bool isMemberCheck;
 
   Record({
@@ -14,6 +15,7 @@ class Record extends Equatable {
     required this.slug,
     required this.publishedDate,
     required this.photoUrl,
+    this.isExternal = false,
     this.isMemberCheck = true,
   });
 
@@ -45,7 +47,9 @@ class Record extends Equatable {
     }
 
     String photoUrl = Environment().config.mirrorMediaNotImageUrl;
-    if (json['heroImage'] != null && json['heroImage']['image'] != null) {
+    if(json['heroImage'] != null && json['heroImage'] is String) {
+      photoUrl = json['heroImage'];
+    } else if (json['heroImage'] != null && json['heroImage']['image'] != null) {
       photoUrl = json['heroImage']['image']['resizedTargets']['mobile']['url'];
     } else if (json['snippet'] != null && json['snippet']['thumbnails'] != null) {
       photoUrl = json['snippet']['thumbnails']['medium']['url'];
@@ -53,7 +57,7 @@ class Record extends Equatable {
       photoUrl = json['photoUrl'];
     }
     
-    List<Category> categoryBuilder = json["categories"] == null
+    List<Category> categoryBuilder = json["categories"] == null || json["categories"] == ""
     ? []
     : Category.categoryListFromJson(json["categories"]);
 
@@ -62,6 +66,7 @@ class Record extends Equatable {
       slug: origSlug,
       publishedDate: origPublishedDate,
       photoUrl: photoUrl,
+      isExternal: json["partner"] != null && json["partner"] != "",
       isMemberCheck: Category.isMemberOnlyInCategoryList(categoryBuilder),
     );
   }
