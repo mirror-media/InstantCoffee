@@ -9,8 +9,9 @@ import 'package:share/share.dart';
 
 class ExternalStoryPage extends StatelessWidget {
   final String slug;
+  final bool isPremiumMode;
   const ExternalStoryPage(
-      {Key? key, required this.slug})
+      {Key? key, required this.slug, required this.isPremiumMode})
       : super(key: key);
 
   @override
@@ -35,7 +36,7 @@ class ExternalStoryPage extends StatelessWidget {
       ),
       body: BlocProvider(
         create: (BuildContext context) => ExternalStoryCubit(externalStoryRepos: ExternalStoryService()),
-        child: ExternalStoryWidget(slug: slug),
+        child: ExternalStoryWidget(slug: slug, isPremiumMode: isPremiumMode),
       ),
     );
   }

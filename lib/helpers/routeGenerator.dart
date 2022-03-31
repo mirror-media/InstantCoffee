@@ -214,7 +214,8 @@ class RouteGenerator {
         if (args['slug'] is String) {
           return MaterialPageRoute(
             builder: (context) => ExternalStoryPage(
-              slug: args['slug']
+              slug: args['slug'],
+              isPremiumMode: args['isPremiumMode'],
             )
           );
         }
@@ -430,11 +431,13 @@ class RouteGenerator {
 
   static void navigateToExternalStory(
     String slug,
+    {bool isPremiumMode = false}
   ) {
     navigatorKey.currentState!.pushNamed(
       externalStory,
       arguments: {
         'slug': slug,
+        'isPremiumMode': isPremiumMode,
       },
     );
   }
