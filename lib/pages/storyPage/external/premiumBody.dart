@@ -54,6 +54,7 @@ class PremiumBody extends StatelessWidget {
             return {'padding': '0px 20px 0px 20px'};
           },
         ),
+        SizedBox(height: 24),
       ]
     );
   }

@@ -35,6 +35,7 @@ class DefaultBody extends StatelessWidget {
             return {'padding': '0px 16px 0px 16px'};
           },
         ),
+        SizedBox(height: 16),
       ]
     );
   }
