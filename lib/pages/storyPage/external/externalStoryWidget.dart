@@ -4,11 +4,13 @@ import 'package:readr_app/blocs/externalStory/cubit.dart';
 import 'package:readr_app/blocs/externalStory/states.dart';
 import 'package:readr_app/models/externalStory.dart';
 import 'package:readr_app/pages/storyPage/external/defaultBody.dart';
+import 'package:readr_app/pages/storyPage/external/premiumBody.dart';
 
 class ExternalStoryWidget extends StatefulWidget {
   final String slug;
+  final bool isPremiumMode;
   const ExternalStoryWidget(
-      {Key? key, required this.slug})
+      {Key? key, required this.slug, required this.isPremiumMode})
       : super(key: key);
 
   @override
@@ -33,7 +35,9 @@ class _ExternalStoryWidgetState extends State<ExternalStoryWidget> {
         if(state.status == ExternalStoryStatus.loaded) {
           ExternalStory externalStory = state.externalStory!;
           
-          return DefaultBody(externalStory: externalStory);
+          return widget.isPremiumMode
+          ? PremiumBody(externalStory: externalStory)
+          : DefaultBody(externalStory: externalStory);
         } else if(state.status == ExternalStoryStatus.error) {
           print('ExternalStoryWidget error: ${state.errorMessages}');
           return Container();
