@@ -29,13 +29,12 @@ class DefaultBody extends StatelessWidget {
         HtmlWidget(
           externalStory.content,
           customStylesBuilder: (element) {
-            print(element.innerHtml);
             if (element.localName == 'a') {
               return {'padding': '0px 0px 0px 0px'};
             }
             return {'padding': '0px 16px 0px 16px'};
           },
-        )
+        ),
       ]
     );
   }

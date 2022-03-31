@@ -48,13 +48,12 @@ class PremiumBody extends StatelessWidget {
         HtmlWidget(
           externalStory.content,
           customStylesBuilder: (element) {
-            print(element.innerHtml);
             if (element.localName == 'a') {
               return {'padding': '0px 0px 0px 0px'};
             }
             return {'padding': '0px 20px 0px 20px'};
           },
-        )
+        ),
       ]
     );
   }
