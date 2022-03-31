@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/models/externalStory.dart';
-import 'package:readr_app/pages/storyPage/external/externalEmbeddedCodeWidget.dart';
 
 class PremiumBody extends StatelessWidget {
   final ExternalStory externalStory;
@@ -45,7 +45,16 @@ class PremiumBody extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        ExternalEmbeddedCodeWidget(embeddedCode: externalStory.content)
+        HtmlWidget(
+          externalStory.content,
+          customStylesBuilder: (element) {
+            print(element.innerHtml);
+            if (element.localName == 'a') {
+              return {'padding': '0px 0px 0px 0px'};
+            }
+            return {'padding': '0px 20px 0px 20px'};
+          },
+        )
       ]
     );
   }
