@@ -24,6 +24,7 @@ import 'package:readr_app/pages/passwordResetPrompt/passwordResetPromptPage.dart
 import 'package:readr_app/pages/passwordUpdate/passwordUpdatePage.dart';
 import 'package:readr_app/pages/search/searchPage.dart';
 import 'package:readr_app/pages/settingPage/premiumSettingPage.dart';
+import 'package:readr_app/pages/storyPage/external/externalStoryPage.dart';
 import 'package:readr_app/pages/storyPage/listening/listeningStoryPage.dart';
 import 'package:readr_app/pages/storyPage/news/storyPage.dart';
 
@@ -52,6 +53,7 @@ class RouteGenerator {
   static const String notificationSettings = '/notificationSettings';
   static const String premiumSettings = '/premiumSettings';
   static const String story = '/story';
+  static const String externalStory = '/externalStory';
   static const String listeningStory = '/listeningStory';
   static const String magazine = '/magazine';
   static const String magazineBrowser = '/magazineBrowser';
@@ -200,6 +202,19 @@ class RouteGenerator {
             builder: (context) => StoryPage(
               slug: args['slug'],
               isMemberCheck: args['isMemberCheck']
+            )
+          );
+        }
+        // If args is not of the correct type, return an error page.
+        // You can also throw an exception while in development.
+        return _errorRoute(settings);
+      case externalStory:
+        Map args = settings.arguments as Map;
+        // Validation of correct data type
+        if (args['slug'] is String) {
+          return MaterialPageRoute(
+            builder: (context) => ExternalStoryPage(
+              slug: args['slug']
             )
           );
         }
@@ -409,6 +424,17 @@ class RouteGenerator {
       arguments: {
         'slug': slug,
         'isMemberCheck': isMemberCheck,
+      },
+    );
+  }
+
+  static void navigateToExternalStory(
+    String slug,
+  ) {
+    navigatorKey.currentState!.pushNamed(
+      externalStory,
+      arguments: {
+        'slug': slug,
       },
     );
   }
