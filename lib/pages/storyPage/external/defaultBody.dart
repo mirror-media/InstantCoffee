@@ -117,7 +117,7 @@ class DefaultBody extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Wrap(
+      child: Row(
         children: [
           Text("文"),
           myVerticalDivider,
