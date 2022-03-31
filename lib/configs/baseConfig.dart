@@ -4,6 +4,7 @@ abstract class BaseConfig {
 
   String get apiBase;
   String get storyPageApi;
+  String get externalStoryPageApi;
   String get memberApi;
   String get tokenStateApi;
   String get errorLogApi;
