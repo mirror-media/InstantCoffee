@@ -206,9 +206,7 @@ class _TabContentState extends State<TabContent> {
                       SizedBox(height: 8.0,),
                       ListItem(
                         record: recordList[index],
-                        onTap: () => RouteGenerator.navigateToStory(
-                            recordList[index].slug, 
-                            isMemberCheck: recordList[index].isMemberCheck),
+                        onTap: () => _navigateToStoryPage(recordList[index])
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
@@ -223,9 +221,7 @@ class _TabContentState extends State<TabContent> {
                 // if(!widget.needCarousel)
                 return TheFirstItem(
                   record: recordList[index],
-                  onTap: () => RouteGenerator.navigateToStory(
-                      recordList[index].slug, 
-                      isMemberCheck: recordList[index].isMemberCheck),
+                  onTap: () => _navigateToStoryPage(recordList[index])
                 );
               }
 
@@ -239,9 +235,7 @@ class _TabContentState extends State<TabContent> {
                     ),
                   ListItem(
                     record: recordList[index],
-                    onTap: () => RouteGenerator.navigateToStory(
-                        recordList[index].slug, 
-                        isMemberCheck: recordList[index].isMemberCheck),
+                    onTap: () => _navigateToStoryPage(recordList[index])
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 16.0, right: 16.0),
@@ -307,5 +301,13 @@ class _TabContentState extends State<TabContent> {
         color: appColor,
       ),
     );
+  }
+
+  void _navigateToStoryPage(Record record) {
+    if(record.isExternal) {
+      RouteGenerator.navigateToExternalStory(record.slug);
+    } else {
+      RouteGenerator.navigateToStory(record.slug, isMemberCheck: record.isMemberCheck);
+    }
   }
 }
