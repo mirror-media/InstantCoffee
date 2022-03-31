@@ -155,9 +155,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
                         padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
                         child: PremiumListItem(
                           record: recordList[index],
-                          onTap: () => RouteGenerator.navigateToStory(
-                              recordList[index].slug, 
-                              isMemberCheck: recordList[index].isMemberCheck),
+                          onTap: () => _navigateToStoryPage(recordList[index]),
                         )
                       ),
                       Divider(
@@ -170,9 +168,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
 
                 return TheFirstItem(
                   record: recordList[index],
-                  onTap: () => RouteGenerator.navigateToStory(
-                      recordList[index].slug, 
-                      isMemberCheck: recordList[index].isMemberCheck),
+                  onTap: () => _navigateToStoryPage(recordList[index]),
                 );
               }
 
@@ -182,9 +178,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
                     padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
                     child: PremiumListItem(
                       record: recordList[index],
-                      onTap: () => RouteGenerator.navigateToStory(
-                          recordList[index].slug, 
-                          isMemberCheck: recordList[index].isMemberCheck),
+                      onTap: () => _navigateToStoryPage(recordList[index]),
                     )
                   ),
                   Divider(
@@ -230,5 +224,13 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
         ),
       ),
     );
+  }
+
+  void _navigateToStoryPage(Record record) {
+    if(record.isExternal) {
+      RouteGenerator.navigateToExternalStory(record.slug, isPremiumMode: true);
+    } else {
+      RouteGenerator.navigateToStory(record.slug, isMemberCheck: record.isMemberCheck);
+    }
   }
 }
