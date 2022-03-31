@@ -13,7 +13,10 @@ class FetchFirstRecordList extends TabContentEvents {
 }
 
 class FetchNextPageRecordList extends TabContentEvents {
-  FetchNextPageRecordList();
+  final bool isLatest;
+  FetchNextPageRecordList({
+    this.isLatest = false
+  });
 
   @override
   String toString() => 'FetchNextPageRecordList';

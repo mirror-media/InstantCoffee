@@ -184,6 +184,8 @@ dynamic returnResponse(http.Response response) {
         (responseJson.containsKey('items') && responseJson['items'].length > 0) || 
         // properties responded by popular tab content api
         (responseJson.containsKey('report') && responseJson['report'].length > 0) || 
+        // properties responded by latest tab content api
+        (responseJson.containsKey('latest') && responseJson['latest'] is List) || 
         // properties responded by editor choice api
         (responseJson.containsKey('choices') && responseJson['choices'] is List) || 
         // properties responded by search api

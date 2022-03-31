@@ -28,7 +28,7 @@ class TabContentBloc extends Bloc<TabContentEvents, TabContentState> {
       if (event.sectionType == 'section') {
         endpoint = Environment().config.listingBase + '&where={"sections":{"\$in":["${event.sectionKey}"]}}';
       } else if (event.sectionKey == 'latest') {
-        endpoint = Environment().config.latestApi;
+        endpoint = Environment().config.latestApi + 'post_external01.json';
       } else if (event.sectionKey == 'popular') {
         endpoint = Environment().config.popularListApi;
       } else if (event.sectionKey == 'personal') {
@@ -62,7 +62,13 @@ class TabContentBloc extends Bloc<TabContentEvents, TabContentState> {
         recordList: recordList
       ));
       
-      List<Record> newRecordList = await recordRepos.fetchNextPageRecordList();
+      late List<Record> newRecordList;
+      if(event.isLatest) {
+        newRecordList = await recordRepos.fetchLatestNextPageRecordList();
+      } else {
+        newRecordList = await recordRepos.fetchNextPageRecordList();
+      }
+      
       newRecordList = Record.filterDuplicatedSlugByAnother(newRecordList, recordList);
       recordList.addAll(newRecordList);
 
