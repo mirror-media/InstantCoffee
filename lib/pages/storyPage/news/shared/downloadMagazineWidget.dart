@@ -4,8 +4,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/state.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/helpers/routeGenerator.dart';
-import 'package:readr_app/models/memberSubscriptionType.dart';
 
 class DownloadMagazineWidget extends StatefulWidget {
   final bool isMemberContent;
@@ -16,21 +14,7 @@ class DownloadMagazineWidget extends StatefulWidget {
 
 class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
   _fetchMemberSubscriptionType() {
-    context.read<MemberSubscriptionTypeCubit>().fetchMemberSubscriptionType();
-  }
-
-  void _delayNavigator(SubscriptionType? subscriptionType) async{
-    await Future.delayed(Duration());
-    if(subscriptionType != null) {
-      RouteGenerator.navigateToMagazine(subscriptionType);
-    } else {
-      RouteGenerator.navigateToLogin(
-        routeName: RouteGenerator.magazine,
-        routeArguments: {
-          'subscriptionType': subscriptionType,
-        },
-      );
-    }
+    context.read<MemberSubscriptionTypeCubit>().fetchMemberSubscriptionType(isNavigateToMagazine: true);
   }
 
   @override
@@ -42,8 +26,6 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
         if(state is MemberSubscriptionTypeLoadingState) {
           return _downloadMagazineWidget(width, true);
         } else if(state is MemberSubscriptionTypeLoadedState) {
-          SubscriptionType? subscriptionType = state.subscriptionType;
-          _delayNavigator(subscriptionType);
           return _downloadMagazineWidget(width, false);
         }
         
