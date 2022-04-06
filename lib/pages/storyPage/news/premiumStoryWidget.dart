@@ -28,9 +28,12 @@ class PremiumStoryWidget extends StatelessWidget {
     required this.story,
   });
   
-  late final StoryBloc _storyBloc;
-  _fetchPublishedStoryBySlug(String storySlug, bool isMemberCheck) {
-    _storyBloc.add(
+  _fetchPublishedStoryBySlug(
+    BuildContext context, 
+    String storySlug, 
+    bool isMemberCheck
+  ) {
+    context.read<StoryBloc>().add(
       FetchPublishedStoryBySlug(storySlug, isMemberCheck)
     );
   }
@@ -58,14 +61,13 @@ class PremiumStoryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = width / 16 * 9;
-    _storyBloc = context.read<StoryBloc>();
     bool isWineCategory = _isWineCategory(story.categories);
 
     if(isWineCategory){
       return Column(
         children: [
           Expanded(
-            child: _buildStoryWidget(width, height, story),
+            child: _buildStoryWidget(context, width, height, story),
           ),
           Container(
             color: Colors.black,
@@ -79,10 +81,11 @@ class PremiumStoryWidget extends StatelessWidget {
         ],
       );
     }
-    return _buildStoryWidget(width, height, story);
+    return _buildStoryWidget(context, width, height, story);
   }
   
   Widget _buildStoryWidget(
+    BuildContext context,
     double width,
     double height,
     Story story
@@ -156,7 +159,7 @@ class PremiumStoryWidget extends StatelessWidget {
           _downloadMagazinesWidget()
         ],
         const SizedBox(height: 48),
-        _buildRelatedWidget(story.relatedStory),
+        _buildRelatedWidget(context, story.relatedStory),
       ],
     );
   }
@@ -577,11 +580,14 @@ class PremiumStoryWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildRelatedWidget(List<Record> relateds) {
+  Widget _buildRelatedWidget(
+    BuildContext context,
+    List<Record> relateds
+  ) {
     List<Widget> relatedList = [];
 
     for (int i = 0; i < relateds.length; i++) {
-      relatedList.add(_buildRelatedItem(relateds[i]));
+      relatedList.add(_buildRelatedItem(context, relateds[i]));
     }
     return relatedList.length == 0
     ? Container()
@@ -601,7 +607,10 @@ class PremiumStoryWidget extends StatelessWidget {
       );
   }
 
-  Widget _buildRelatedItem(Record relatedItem) {
+  Widget _buildRelatedItem(
+    BuildContext context, 
+    Record relatedItem
+  ) {
     double imageWidth = 84;
     double imageHeight = 84;
 
@@ -644,7 +653,11 @@ class PremiumStoryWidget extends StatelessWidget {
         ),
       ),
       onTap: () {
-        _fetchPublishedStoryBySlug(relatedItem.slug, relatedItem.isMemberCheck);
+        _fetchPublishedStoryBySlug(
+          context,
+          relatedItem.slug, 
+          relatedItem.isMemberCheck
+        );
       },
     );
   }
