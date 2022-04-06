@@ -56,6 +56,9 @@ class Record extends Equatable {
     } else if (json['photoUrl'] != null) {
       photoUrl = json['photoUrl'];
     }
+    if(photoUrl == '') {
+      photoUrl = Environment().config.mirrorMediaNotImageUrl;
+    }
     
     List<Category> categoryBuilder = json["categories"] == null || json["categories"] == ""
     ? []
