@@ -24,10 +24,8 @@ import 'package:readr_app/widgets/mMVideoPlayer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StoryWidget extends StatelessWidget {
-  final bool isLogin;
   final Story story;
   StoryWidget({
-    required this.isLogin,
     required this.story,
   });
   

@@ -57,7 +57,6 @@ class _BuildStoryPageState extends State<BuildStoryPage> {
               );
             } 
             return StoryWidget(
-              isLogin: storyRes.isMember,
               story: storyRes.story,
             );
           default:
