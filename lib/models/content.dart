@@ -69,6 +69,13 @@ class Content {
   }
 
   static List<Content> contentListFromJson(List<dynamic> jsonList) {
-    return jsonList.map<Content>((json) => Content.fromJson(json)).toList();
+    List<Content> contentList = [];
+    for(dynamic json in jsonList) {
+      if(json != null && json != '') {
+        contentList.add(Content.fromJson(json));
+      }
+    }
+    
+    return contentList;
   }
 }
