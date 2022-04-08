@@ -55,31 +55,30 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
                 ),
               ),
               SizedBox(height: 24),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: appColor,
-                ),
-                child: Container(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: isLoading
-                      ? SpinKitThreeBounce(color: Colors.white, size: 17,)
-                      : Text(
-                          '線上閱讀',
-                          style: TextStyle(
-                            fontSize: 17,
-                            color: Colors.white,
+              AbsorbPointer(
+                absorbing: isLoading,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: appColor,
+                  ),
+                  child: Container(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: isLoading
+                        ? SpinKitThreeBounce(color: Colors.white, size: 17,)
+                        : Text(
+                            '線上閱讀',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
+                      ),
                     ),
                   ),
+                  onPressed: () => _fetchMemberSubscriptionType()
                 ),
-                onPressed: isLoading
-                ? () {}
-                : () {
-                    _fetchMemberSubscriptionType();
-                  },
               ),
             ]
           ),
@@ -103,30 +102,29 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
             SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.only(left: 32, right: 32),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: Colors.white),
-                child: Container(
-                  width: width,
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: isLoading
-                      ? SpinKitThreeBounce(color: appColor, size: 17,)
-                      : Text(
-                          '線上閱讀',
-                          style: TextStyle(
-                            fontSize: 17,
-                            color: appColor,
+              child: AbsorbPointer(
+                absorbing: isLoading,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: Colors.white),
+                  child: Container(
+                    width: width,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        child: isLoading
+                        ? SpinKitThreeBounce(color: appColor, size: 17,)
+                        : Text(
+                            '線上閱讀',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: appColor,
+                            ),
                           ),
-                        ),
+                      ),
                     ),
                   ),
+                  onPressed: () => _fetchMemberSubscriptionType()
                 ),
-                onPressed: isLoading
-                ? () {}
-                : () {
-                    _fetchMemberSubscriptionType();
-                  },
               ),
             ),
           ]
