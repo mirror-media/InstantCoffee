@@ -19,7 +19,6 @@ import 'package:readr_app/models/storyAd.dart';
 import 'package:readr_app/models/tag.dart';
 import 'package:readr_app/pages/storyPage/news/shared/downloadMagazineWidget.dart';
 import 'package:readr_app/pages/storyPage/news/shared/facebookIframeWidget.dart';
-import 'package:readr_app/pages/storyPage/news/shared/joinMemberBlock.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -93,8 +92,6 @@ class StoryWidget extends StatelessWidget {
             SizedBox(height: 16),
             _buildBrief(story, sectionColor),
             _buildContent(story, isAdsActivated),
-            SizedBox(height: 16),
-            _joinMemberBlock(isLogin, story.slug),
             SizedBox(height: 16),
             if(isAdsActivated)
               MMAdBanner(
@@ -452,16 +449,6 @@ class StoryWidget extends StatelessWidget {
             }
             return Container();
           }),
-    );
-  }
-
-  Widget _joinMemberBlock(bool isLogin, String storySlug) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-      child: JoinMemberBlock(
-        isMember: isLogin,
-        storySlug: storySlug,
-      ),
     );
   }
 
