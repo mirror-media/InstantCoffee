@@ -23,6 +23,8 @@ class Paragraph {
   }
 
   static List<Paragraph> paragraphListFromJson(List<dynamic> jsonList) {
-    return jsonList.map<Paragraph>((json) => Paragraph.fromJson(json)).toList();
+    List<Paragraph> paragraphList = jsonList.map<Paragraph>((json) => Paragraph.fromJson(json)).toList();
+    paragraphList.removeWhere((paragraph) => paragraph.contents.isEmpty);
+    return paragraphList;
   }
 }
