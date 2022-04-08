@@ -64,7 +64,7 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       child: isLoading
-                      ? SpinKitThreeBounce(color: appColor, size: 17,)
+                      ? SpinKitThreeBounce(color: Colors.white, size: 17,)
                       : Text(
                           '線上閱讀',
                           style: TextStyle(
