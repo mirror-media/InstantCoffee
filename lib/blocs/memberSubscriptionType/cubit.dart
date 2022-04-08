@@ -17,6 +17,14 @@ class MemberSubscriptionTypeCubit extends Cubit<MemberSubscriptionTypeState> {
     FirebaseAuth auth = FirebaseAuth.instance;
     if(auth.currentUser == null) {
       emit(MemberSubscriptionTypeLoadedState(subscriptionType: subscriptionType));
+      if(isNavigateToMagazine) {
+        RouteGenerator.navigateToLogin(
+          routeName: RouteGenerator.magazine,
+          routeArguments: {
+            'subscriptionType': subscriptionType,
+          },
+        );
+      }
     } else {
       try {
         MemberService memberService = MemberService();
