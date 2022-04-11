@@ -6,7 +6,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/iAPSubscriptionHelper.dart';
-import 'package:readr_app/helpers/remoteConfigHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/services/memberService.dart';
 
@@ -16,12 +15,10 @@ class MirrorMediaApp extends StatefulWidget {
 }
 
 class _MirrorMediaAppState extends State<MirrorMediaApp> {
-  RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
   IAPSubscriptionHelper _iapSubscriptionHelper = IAPSubscriptionHelper();
 
   @override
   void initState() {
-    _remoteConfigHelper.initialize();
     _iapSubscriptionHelper.setSubscription();
     super.initState();
   }

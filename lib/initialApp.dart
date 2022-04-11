@@ -8,6 +8,7 @@ import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/helpers/remoteConfigHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/firebaseLoginStatus.dart';
 import 'package:readr_app/pages/emailVerification/emailVerificationSuccessPage.dart';
@@ -21,7 +22,7 @@ class InitialApp extends StatefulWidget {
 }
 
 class _InitialAppState extends State<InitialApp> {
-  
+  RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
   AppUpgradeHelper _appUpgradeHelper = AppUpgradeHelper();
   StreamController<bool> _configController = StreamController<bool>();
   
@@ -126,6 +127,7 @@ class _InitialAppState extends State<InitialApp> {
   }
   
   _waiting() async{
+    await _remoteConfigHelper.initialize();
     _appUpgradeHelper.needToUpdate = await _appUpgradeHelper.isUpdateAvailable();
     print('in-app upgrade: ${_appUpgradeHelper.needToUpdate}');
 
