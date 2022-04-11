@@ -6,7 +6,7 @@ enum OnBoardingStatus { firstPage, secondPage, thirdPage, fourthPage }
 List onBoardingHintList = [
   OnBoardingHint(
     page: 1,
-    hintText: '新功能上線！來看看你的個人專屬頁面',
+    hintText: '新功能上線！\n來看看你的個人專屬頁面',
     left: -32,
     top: 16,
   ),
