@@ -182,19 +182,18 @@ flutter:
     - assets/image/yt_icon.png
     - packages/constants/countries.json
     - packages/constants/taiwan-districts.json
-    - assets/data/records.json
     - assets/data/menu.json
     - assets/data/defaultNotificationList.json
     # section ad data
-    - assets/data/iOSDevSectionAd.json   
-    - assets/data/iOSSectionAd.json
-    - assets/data/androidDevSectionAd.json
-    - assets/data/androidSectionAd.json
+    - assets/adJson/dev/iOSSectionAd.json
+    - assets/adJson/prod/iOSSectionAd.json
+    - assets/adJson/dev/androidSectionAd.json
+    - assets/adJson/prod/androidSectionAd.json
     # story ad data
-    - assets/data/iOSDevStoryAd.json
-    - assets/data/iOSStoryAd.json
-    - assets/data/androidDevStoryAd.json
-    - assets/data/androidStoryAd.json
+    - assets/adJson/dev/iOSStoryAd.json
+    - assets/adJson/prod/iOSStoryAd.json
+    - assets/adJson/dev/androidStoryAd.json
+    - assets/adJson/prod/androidStoryAd.json
     # magazine image
     - assets/image/splash.png
     - assets/image/premiumIcon.png
