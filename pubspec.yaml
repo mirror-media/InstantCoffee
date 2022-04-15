@@ -186,13 +186,17 @@ flutter:
     - assets/data/defaultNotificationList.json
     # section ad data
     - assets/adJson/dev/iOSSectionAd.json
+    - assets/adJson/staging/iOSSectionAd.json
     - assets/adJson/prod/iOSSectionAd.json
     - assets/adJson/dev/androidSectionAd.json
+    - assets/adJson/staging/androidSectionAd.json
     - assets/adJson/prod/androidSectionAd.json
     # story ad data
     - assets/adJson/dev/iOSStoryAd.json
+    - assets/adJson/staging/iOSStoryAd.json
     - assets/adJson/prod/iOSStoryAd.json
     - assets/adJson/dev/androidStoryAd.json
+    - assets/adJson/staging/androidStoryAd.json
     - assets/adJson/prod/androidStoryAd.json
     # magazine image
     - assets/image/splash.png
