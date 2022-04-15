@@ -31,6 +31,12 @@ if (devKeystorePropertiesFile.exists()) {
     devKeystoreProperties.load(new FileInputStream(devKeystorePropertiesFile))
 }
 
+def stagingKeystoreProperties = new Properties()
+def stagingKeystorePropertiesFile = rootProject.file('staging.properties')
+if (stagingKeystorePropertiesFile.exists()) {
+    stagingKeystoreProperties.load(new FileInputStream(stagingKeystorePropertiesFile))
+}
+
 def prodKeystoreProperties = new Properties()
 def prodKeystorePropertiesFile = rootProject.file('prod.properties')
 if (prodKeystorePropertiesFile.exists()) {
@@ -83,6 +89,19 @@ android {
                 storePassword devKeystoreProperties['storePassword']
             }
         }
+        staging {
+            if (System.getenv()["CI"]) { // CI=true is exported by Codemagic
+                storeFile file(System.getenv()["FCI_KEYSTORE_PATH"])
+                storePassword System.getenv()["FCI_KEYSTORE_PASSWORD"]
+                keyAlias System.getenv()["FCI_KEY_ALIAS"]
+                keyPassword System.getenv()["FCI_KEY_PASSWORD"]
+            } else {
+                keyAlias stagingKeystoreProperties['keyAlias']
+                keyPassword stagingKeystoreProperties['keyPassword']
+                storeFile stagingKeystoreProperties['storeFile'] ? file(stagingKeystoreProperties['storeFile']) : null
+                storePassword stagingKeystoreProperties['storePassword']
+            }
+        }
         prod {
             if (System.getenv()["CI"]) { // CI=true is exported by Codemagic
                 storeFile file(System.getenv()["FCI_KEYSTORE_PATH"])
@@ -104,6 +123,10 @@ android {
             dimension "flavors"
             applicationIdSuffix ".dev"
         }
+        staging {
+            dimension "flavors"
+            applicationIdSuffix ".staging"
+        }
         prod {
             dimension "flavors"
         }
@@ -114,6 +137,7 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             productFlavors.dev.signingConfig signingConfigs.dev
+            productFlavors.staging.signingConfig signingConfigs.staging
             productFlavors.prod.signingConfig signingConfigs.prod
         }
     }
