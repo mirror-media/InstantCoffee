@@ -25,12 +25,15 @@ lib/helpers/devApiConstants.dart
 # for internal config
 lib/configs/devConfig.dart
 lib/configs/prodConfig.dart
+lib/configs/stagingConfig.dart
 
 # firebase data
 android/app/src/dev/google-services.json
 android/app/src/prod/google-services.json
+android/app/src/staging/google-services.json
 ios/config/dev/GoogleService-Info.plist
 ios/config/prod/GoogleService-Info.plist
+ios/config/staging/GoogleService-Info.plist
 
 .flutter-plugins
 .flutter-plugins-dependencies
@@ -39,6 +42,8 @@ android/prod.properties
 android/MirrorMedia.jks
 android/dev.properties
 android/MirrorMediaDev.jks
+android/staging.properties
+android/MirrorMediaStaging.jks
 
 # Mac OS
 **/.DS_Store
