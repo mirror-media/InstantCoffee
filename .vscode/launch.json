@@ -23,6 +23,16 @@
                 "--flavor",
                 "dev"
             ]
+        },
+        {
+            "name": "Run staging",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_staging.dart",
+            "args": [
+                "--flavor",
+                "staging"
+            ]
         }
     ]
 }
