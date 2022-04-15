@@ -1,8 +1,9 @@
 import 'package:readr_app/configs/baseConfig.dart';
 import 'package:readr_app/configs/devConfig.dart';
+import 'package:readr_app/configs/stagingConfig.dart';
 import 'package:readr_app/configs/prodConfig.dart';
 
-enum BuildFlavor { production, development }
+enum BuildFlavor { development, staging, production }
 
 class Environment {
   factory Environment() {
@@ -23,6 +24,8 @@ class Environment {
     switch (buildFlavor) {
       case BuildFlavor.production:
         return ProdConfig();
+      case BuildFlavor.staging:
+        return StagingConfig();
       default:
         return DevConfig();
     }
