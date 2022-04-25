@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
 import 'package:readr_app/blocs/storyPage/news/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
@@ -14,10 +15,12 @@ import 'package:readr_app/models/people.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/models/story.dart';
+import 'package:readr_app/models/storyAd.dart';
 import 'package:readr_app/models/tag.dart';
 import 'package:readr_app/pages/storyPage/news/shared/downloadMagazineWidget.dart';
 import 'package:readr_app/pages/storyPage/news/shared/joinMemberBlock.dart';
 import 'package:readr_app/widgets/fadingEffectPainter.dart';
+import 'package:readr_app/widgets/mMAdBanner.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
 
 class PremiumStoryWidget extends StatelessWidget {
@@ -61,14 +64,17 @@ class PremiumStoryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = width / 16 * 9;
+    StoryAd storyAd = story.storyAd!;
     bool isWineCategory = _isWineCategory(story.categories);
-
-    if(isWineCategory){
-      return Column(
-        children: [
-          Expanded(
-            child: _buildStoryWidget(context, width, height, story),
-          ),
+    bool isTruncated = story.isTruncated;
+    bool isAdsActivated = isStoryWidgetAdsActivated && isTruncated;
+    
+    return Column(
+      children: [
+        Expanded(
+          child: _buildStoryWidget(context, width, height, story)
+        ),
+        if(isWineCategory)
           Container(
             color: Colors.black,
             height: 90,
@@ -78,10 +84,14 @@ class PremiumStoryWidget extends StatelessWidget {
               "assets/image/wine_warning.png",
             ),
           ),
-        ],
-      );
-    }
-    return _buildStoryWidget(context, width, height, story);
+        if(isAdsActivated && !isWineCategory)
+          MMAdBanner(
+            adUnitId: storyAd.stUnitId,
+            adSize: AdSize.banner,
+            isKeepAlive: true,
+          ),
+      ],
+    );
   }
   
   Widget _buildStoryWidget(
@@ -91,11 +101,22 @@ class PremiumStoryWidget extends StatelessWidget {
     Story story
   ){
     bool isTruncated = story.isTruncated;
+    bool isAdsActivated = isStoryWidgetAdsActivated && isTruncated;
+    StoryAd storyAd = story.storyAd!;
     Color sectionColor = _getSectionColor(story);
     
     return ListView(
       padding: const EdgeInsets.only(top: 24),
       children: [
+        if(isAdsActivated)
+        ...[
+          MMAdBanner(
+            adUnitId: storyAd.hDUnitId,
+            adSize: AdSize.mediumRectangle,
+            isKeepAlive: true,
+          ),
+          SizedBox(height: 16),
+        ],
         _buildCategoryText(story.sections, story.categories),
         const SizedBox(
           height: 8,
@@ -146,9 +167,18 @@ class PremiumStoryWidget extends StatelessWidget {
         const SizedBox(
           height: 32,
         ),
-        _buildContent(story, isTruncated),
+        _buildContent(story, isAdsActivated, isTruncated),
         if(isTruncated)...[
           _joinMemberBlock(isLogin, story.slug),
+        ],
+        if(isAdsActivated)
+        ...[
+          SizedBox(height: 16),
+          MMAdBanner(
+            adUnitId: storyAd.hDUnitId,
+            adSize: AdSize.mediumRectangle,
+            isKeepAlive: true,
+          ),
         ],
         if(!isTruncated)...[
           const SizedBox(height: 32),
@@ -160,6 +190,15 @@ class PremiumStoryWidget extends StatelessWidget {
         ],
         const SizedBox(height: 48),
         _buildRelatedWidget(context, story.relatedStory),
+        if(isAdsActivated)
+        ...[
+          MMAdBanner(
+            adUnitId: storyAd.hDUnitId,
+            adSize: AdSize.mediumRectangle,
+            isKeepAlive: true,
+          ),
+          SizedBox(height: 16),
+        ],
       ],
     );
   }
@@ -508,8 +547,14 @@ class PremiumStoryWidget extends StatelessWidget {
     return Container();
   }
 
-  Widget _buildContent(Story story, bool isNeedFadding) {
+  Widget _buildContent(
+    Story story, 
+    bool isAdsActivated,
+    bool isNeedFadding
+  ) {
     ParagraphFormat paragraphFormat = ParagraphFormat();
+    int unStyleParagraphCount = 0;
+    bool aT1IsActivated = false;
 
     return ListView.separated(
       shrinkWrap: true,
@@ -520,19 +565,38 @@ class PremiumStoryWidget extends StatelessWidget {
         Paragraph paragraph = story.apiDatas[index];
         if (paragraph.contents.length > 0 &&
             paragraph.contents[0].data != '') {
+          if(unStyleParagraphCount == storyAT1AdIndex) {
+            aT1IsActivated = true;
+          }
+          if(paragraph.type == 'unstyled') {
+            unStyleParagraphCount ++;
+          }
 
-            return CustomPaint(
-              foregroundPainter: (isNeedFadding && index == story.apiDatas.length-1)
-                ? FadingEffect()
-                : null,
-                child: paragraphFormat.parseTheParagraph(
-                  paragraph, 
-                  context,
-                  story.imageUrlList,
-                  htmlFontSize: 17,
-                  isMemberContent: true,
+          return Column(
+            children: [
+              CustomPaint(
+                foregroundPainter: (isNeedFadding && index == story.apiDatas.length-1)
+                  ? FadingEffect()
+                  : null,
+                  child: paragraphFormat.parseTheParagraph(
+                    paragraph, 
+                    context,
+                    story.imageUrlList,
+                    htmlFontSize: 17,
+                    isMemberContent: true,
+                  ),
+              ),
+              if(isAdsActivated && (!aT1IsActivated && unStyleParagraphCount == storyAT1AdIndex))
+              ...[
+                SizedBox(height: 16),
+                MMAdBanner(
+                  adUnitId: story.storyAd!.aT1UnitId,
+                  adSize: AdSize.mediumRectangle,
+                  isKeepAlive: true,
                 ),
-            );
+              ],
+            ],
+          );
         }
         return Container();
       },
