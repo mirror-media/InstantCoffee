@@ -147,6 +147,10 @@ class Story {
 
   String? getSectionName() {
     String? sectionName;
+    if(sections.any((section) => section.name == 'member')) {
+      return 'member';
+    }
+
     if (sections.length > 0) {
       sectionName = sections[0].name;
     }
