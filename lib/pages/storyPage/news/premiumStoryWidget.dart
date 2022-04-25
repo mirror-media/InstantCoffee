@@ -511,10 +511,11 @@ class PremiumStoryWidget extends StatelessWidget {
   Widget _buildContent(Story story, bool isNeedFadding) {
     ParagraphFormat paragraphFormat = ParagraphFormat();
 
-    return ListView.builder(
+    return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       itemCount: story.apiDatas.length,
+      separatorBuilder: (BuildContext context, int index) => SizedBox(height: 16.0),
       itemBuilder: (context, index) {
         Paragraph paragraph = story.apiDatas[index];
         if (paragraph.contents.length > 0 &&
@@ -534,7 +535,7 @@ class PremiumStoryWidget extends StatelessWidget {
             );
         }
         return Container();
-      }
+      },
     );
   }
 
