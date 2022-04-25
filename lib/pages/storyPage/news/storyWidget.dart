@@ -105,13 +105,8 @@ class StoryWidget extends StatelessWidget {
             _socialButtons(),
             _buildRelatedWidget(context, story.relatedStory),
             SizedBox(height: 16),
-            _buildMoreContentWidget(),
-            SizedBox(height: 24),
-            _downloadMagazinesWidget(),
-            SizedBox(height: 24),
             if(isAdsActivated)
             ...[
-              SizedBox(height: 16),
               MMAdBanner(
                 adUnitId: storyAd.e1UnitId,
                 adSize: AdSize.mediumRectangle,
@@ -119,8 +114,12 @@ class StoryWidget extends StatelessWidget {
               ),
               SizedBox(height: 16),
             ],
+            _buildMoreContentWidget(),
+            SizedBox(height: 24),
+            _downloadMagazinesWidget(),
             SizedBox(height: 16),
             _buildTagWidget(context, story.tags),
+            SizedBox(height: 16),
             if(isAdsActivated)
             ...[
               MMAdBanner(
