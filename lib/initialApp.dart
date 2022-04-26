@@ -187,24 +187,6 @@ class _InitialAppState extends State<InitialApp> {
       builder: (BuildContext context, MemberState state) {
         MemberStatus status = state.status;
         switch (status) {
-          case MemberStatus.initial:
-            return Scaffold(
-              backgroundColor: appColor,
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      splashIconPng,
-                      width: 100,
-                      height: 100,
-                    ),
-                    SizedBox(height: 16),
-                    Text('Loading...'),
-                  ]
-                ),
-              ),
-            );
           case MemberStatus.loading:
             return Scaffold(
               backgroundColor: appColor,

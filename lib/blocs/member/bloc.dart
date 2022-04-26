@@ -12,7 +12,7 @@ class MemberBloc extends Bloc<MemberEvents, MemberState> {
   final MemberRepos memberRepos;
   MemberBloc({
     required this.memberRepos
-  }) : super(MemberState.init()) {
+  }) : super(MemberState.loading()) {
     on<FetchMemberSubscriptionType>(_fetchMemberSubscriptionType);
     on<UpdateSubscriptionType>(_updateSubscriptionType);
   }
@@ -27,7 +27,6 @@ class MemberBloc extends Bloc<MemberEvents, MemberState> {
       emit(MemberState.isNotLogin());
     } else {
       try {
-        emit(MemberState.loading());
         MemberIdAndSubscriptionType memberIdAndSubscriptionType = await memberRepos.checkSubscriptionType(auth.currentUser!);
         emit(
           MemberState.loaded(

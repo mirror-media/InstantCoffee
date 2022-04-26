@@ -1,7 +1,6 @@
 import 'package:readr_app/models/memberSubscriptionType.dart';
 
 enum MemberStatus { 
-  initial,
   loading,
   loaded,
   error 
@@ -21,12 +20,6 @@ class MemberState {
     this.subscriptionType,
     this.errorMessages,
   });
-
-  factory MemberState.init() {
-    return MemberState(
-      status: MemberStatus.initial,
-    );
-  }
 
   factory MemberState.isNotLogin() {
     return MemberState(
