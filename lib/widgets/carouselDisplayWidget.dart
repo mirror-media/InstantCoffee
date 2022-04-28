@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
+import 'package:readr_app/helpers/adHelper.dart';
 
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -36,10 +39,14 @@ class CarouselDisplayWidget extends StatelessWidget {
         ],
       ),
       onTap: () {
+        if(!context.read<MemberBloc>().state.isPremium) {
+          AdHelper adHelper = AdHelper();
+          adHelper.checkToShowInterstitialAd();
+        }
         RouteGenerator.navigateToStory(
           record.slug, 
           isMemberCheck: record.isMemberCheck
-          );
+        );
       },
     );
   }

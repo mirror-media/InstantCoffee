@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
 import 'package:readr_app/blocs/storyPage/news/bloc.dart';
+import 'package:readr_app/helpers/adHelper.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/helpers/environment.dart';
@@ -718,6 +719,11 @@ class PremiumStoryWidget extends StatelessWidget {
         ),
       ),
       onTap: () {
+        if(story.isTruncated) {
+          AdHelper adHelper = AdHelper();
+          adHelper.checkToShowInterstitialAd();
+        }
+ 
         _fetchPublishedStoryBySlug(
           context,
           relatedItem.slug, 

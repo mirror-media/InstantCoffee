@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/storyPage/listening/cubit.dart';
 import 'package:readr_app/blocs/storyPage/listening/states.dart';
+import 'package:readr_app/helpers/adHelper.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/dateTimeFormat.dart';
 import 'package:readr_app/models/listening.dart';
@@ -218,6 +219,11 @@ class _ListeningWidget extends State<ListeningWidget> {
                   ],
                 ),
                 onTap: () {
+                  if(!_isPremium) {
+                    AdHelper adHelper = AdHelper();
+                    adHelper.checkToShowInterstitialAd();
+                  }
+                  
                   _fetchListeningStoryPageInfo(recordList[index].slug);
                 },
               );

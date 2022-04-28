@@ -49,6 +49,9 @@ abstract class BaseConfig {
   String get finishEmailVerificationUrl;
   String get dynamicLinkDomain;
 
+  String get iOSInterstitialAdUnitId;
+  String get androidInterstitialAdUnitId;
+  
   String get iOSSectionAdJsonLocation;
   String get androidSectionAdJsonLocation;
   String get iOSStoryAdJsonLocation;

@@ -14,6 +14,7 @@ import 'package:readr_app/blocs/personalPage/category/states.dart';
 import 'package:readr_app/blocs/personalPage/article/bloc.dart';
 import 'package:readr_app/blocs/personalPage/article/events.dart';
 import 'package:readr_app/blocs/personalPage/article/states.dart';
+import 'package:readr_app/helpers/adHelper.dart';
 import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/pages/tabContent/personal/default/unsubscriptionCategoryList.dart';
 
@@ -418,9 +419,15 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
           ]),
         ListItem(
           record: record,
-          onTap: () => RouteGenerator.navigateToStory(
+          onTap: () {
+            AdHelper adHelper = AdHelper();
+            adHelper.checkToShowInterstitialAd();
+            
+            RouteGenerator.navigateToStory(
               record.slug, 
-              isMemberCheck: record.isMemberCheck),
+              isMemberCheck: record.isMemberCheck
+            );
+          }
         ),
         Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16.0),

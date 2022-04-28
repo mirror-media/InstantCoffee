@@ -6,6 +6,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/editorChoice/cubit.dart';
 import 'package:readr_app/blocs/editorChoice/state.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
+import 'package:readr_app/helpers/adHelper.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/remoteConfigHelper.dart';
@@ -304,6 +305,9 @@ class _TabContentState extends State<TabContent> {
   }
 
   void _navigateToStoryPage(Record record) {
+    AdHelper adHelper = AdHelper();
+    adHelper.checkToShowInterstitialAd();
+
     if(record.isExternal) {
       RouteGenerator.navigateToExternalStory(record.slug);
     } else {
