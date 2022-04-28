@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/storyPage/listening/cubit.dart';
 import 'package:readr_app/blocs/storyPage/listening/states.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
@@ -21,8 +22,11 @@ class ListeningWidget extends StatefulWidget {
 }
 
 class _ListeningWidget extends State<ListeningWidget> {
+  late bool _isPremium;
+
   @override
   void initState() {
+    _isPremium = context.read<MemberBloc>().state.isPremium;
     _fetchListeningStoryPageInfo(context.read<ListeningStoryCubit>().storySlug);
     super.initState();
   }
@@ -77,7 +81,7 @@ class _ListeningWidget extends State<ListeningWidget> {
               youtubeId: listening.slug,
             ),
             SizedBox(height: 16.0),
-            if(isListeningWidgetAdsActivated)
+            if(isListeningWidgetAdsActivated && !_isPremium)
             ...[
               MMAdBanner(
                 adUnitId: listening.storyAd!.hDUnitId,
@@ -91,7 +95,7 @@ class _ListeningWidget extends State<ListeningWidget> {
               child: _buildTitleAndDescription(listening),
             ),
             SizedBox(height: 16.0),
-            if(isListeningWidgetAdsActivated)
+            if(isListeningWidgetAdsActivated && !_isPremium)
             ...[
               MMAdBanner(
                 adUnitId: listening.storyAd!.aT1UnitId,
@@ -104,7 +108,7 @@ class _ListeningWidget extends State<ListeningWidget> {
               padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
               child: _buildTheNewestVideos(width, recordList),
             ),
-            if(isListeningWidgetAdsActivated)
+            if(isListeningWidgetAdsActivated && !_isPremium)
             ...[
               MMAdBanner(
                 adUnitId: listening.storyAd!.fTUnitId,
@@ -115,7 +119,7 @@ class _ListeningWidget extends State<ListeningWidget> {
             ],
           ]),
         ),
-        if(isListeningWidgetAdsActivated)
+        if(isListeningWidgetAdsActivated && !_isPremium)
           MMAdBanner(
             adUnitId: listening.storyAd!.stUnitId,
             adSize: AdSize.banner,
