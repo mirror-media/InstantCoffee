@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/listeningTabContentBloc.dart';
+import 'package:readr_app/helpers/adHelper.dart';
 import 'package:readr_app/helpers/apiResponse.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/remoteConfigHelper.dart';
@@ -113,8 +114,7 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
               if (index == 0) {
                 return TheFirstItem(
                   record: recordList[index],
-                  onTap: () => RouteGenerator.navigateToListeningStory(
-                      recordList[index].slug),
+                  onTap: () => _navigateToListeningStory(recordList[index].slug),
                 );
               }
 
@@ -127,8 +127,7 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
                     ),
                   ListItem(
                     record: recordList[index],
-                    onTap: () => RouteGenerator.navigateToListeningStory(
-                        recordList[index].slug),
+                    onTap: () => _navigateToListeningStory(recordList[index].slug),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 16.0, right: 16.0),
@@ -158,5 +157,12 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
         ),
       ],
     );
+  }
+
+  void _navigateToListeningStory(String slug) {
+    AdHelper adHelper = AdHelper();
+    adHelper.checkToShowInterstitialAd();
+
+    RouteGenerator.navigateToListeningStory(slug);
   }
 }
