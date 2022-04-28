@@ -1,5 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
+import 'package:readr_app/helpers/adHelper.dart';
 import 'package:readr_app/helpers/firebaseAnalyticsHelper.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -71,6 +74,10 @@ class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
             slug: recordList[i].slug, 
             title: recordList[i].title
           );
+          if(!context.read<MemberBloc>().state.isPremium) {
+            AdHelper adHelper = AdHelper();
+            adHelper.checkToShowInterstitialAd();
+          }
           RouteGenerator.navigateToStory(
             recordList[i].slug, 
             isMemberCheck: recordList[i].isMemberCheck
