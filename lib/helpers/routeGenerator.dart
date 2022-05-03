@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
+import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/initialApp.dart';
 import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/memberSubscriptionType.dart';
@@ -35,7 +37,7 @@ import 'package:readr_app/widgets/imageViewerWidget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RouteGenerator {
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();  
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   static const String root = '/';
   static const String search = '/search';
@@ -66,9 +68,7 @@ class RouteGenerator {
     switch (settings.name) {
       case root:
         return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => InitialApp()
-        );
+            settings: settings, builder: (_) => InitialApp());
       case search:
         return MaterialPageRoute(
           settings: settings,
@@ -79,7 +79,7 @@ class RouteGenerator {
         String? routeName;
         Map? routeArguments;
 
-        if(settings.arguments != null) {
+        if (settings.arguments != null) {
           Map args = settings.arguments as Map;
           routeName = args['routeName'];
           routeArguments = args['routeArguments'];
@@ -199,11 +199,8 @@ class RouteGenerator {
         // Validation of correct data type
         if (args['slug'] is String) {
           return MaterialPageRoute(
-            builder: (context) => StoryPage(
-              slug: args['slug'],
-              isMemberCheck: args['isMemberCheck']
-            )
-          );
+              builder: (context) => StoryPage(
+                  slug: args['slug'], isMemberCheck: args['isMemberCheck']));
         }
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
@@ -213,11 +210,10 @@ class RouteGenerator {
         // Validation of correct data type
         if (args['slug'] is String) {
           return MaterialPageRoute(
-            builder: (context) => ExternalStoryPage(
-              slug: args['slug'],
-              isPremiumMode: args['isPremiumMode'],
-            )
-          );
+              builder: (context) => ExternalStoryPage(
+                    slug: args['slug'],
+                    isPremiumMode: args['isPremiumMode'],
+                  ));
         }
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
@@ -227,10 +223,9 @@ class RouteGenerator {
         // Validation of correct data type
         if (args['slug'] is String) {
           return MaterialPageRoute(
-            builder: (context) => ListeningStoryPage(
-              slug: args['slug'],
-            )
-          );
+              builder: (context) => ListeningStoryPage(
+                    slug: args['slug'],
+                  ));
         }
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
@@ -238,19 +233,17 @@ class RouteGenerator {
       case magazine:
         Map args = settings.arguments as Map;
         return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => MagazinePage(
-            subscriptionType: args['subscriptionType'],
-          )
-        );
+            settings: settings,
+            builder: (_) => MagazinePage(
+                  subscriptionType: args['subscriptionType'],
+                ));
       case magazineBrowser:
         Map args = settings.arguments as Map;
         return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => MagazineBrowser(
-            magazine: args['magazine'],
-          )
-        );
+            settings: settings,
+            builder: (_) => MagazineBrowser(
+                  magazine: args['magazine'],
+                ));
       case subscriptionSelect:
         Map args = settings.arguments as Map;
         return MaterialPageRoute(
@@ -268,7 +261,9 @@ class RouteGenerator {
         Map args = settings.arguments as Map;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => TagPage(tag: args['tag'],),
+          builder: (context) => TagPage(
+            tag: args['tag'],
+          ),
         );
       case imageViewer:
         Map args = settings.arguments as Map;
@@ -288,30 +283,27 @@ class RouteGenerator {
 
   static Route<dynamic> _errorRoute(RouteSettings settings) {
     return MaterialPageRoute(
-      settings: settings,
-      builder: (_) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('Error'),
-          ),
-          body: Center(
-            child: Text('ERROR'),
-          ),
-        );
-      }
-    );
+        settings: settings,
+        builder: (_) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Error'),
+            ),
+            body: Center(
+              child: Text('ERROR'),
+            ),
+          );
+        });
   }
 
   static void navigateToSearch() {
     navigatorKey.currentState!.pushNamed(search);
   }
 
-  static void navigateToLogin(
-    {
-      String? routeName,
-      Map? routeArguments,
-    }
-  ) {
+  static void navigateToLogin({
+    String? routeName,
+    Map? routeArguments,
+  }) {
     navigatorKey.currentState!.pushNamed(
       login,
       arguments: {
@@ -323,7 +315,7 @@ class RouteGenerator {
 
   static Future<void> navigateToEmailRegistered({
     required String email,
-  }) async{
+  }) async {
     await navigatorKey.currentState!.pushNamed(
       emailRegistered,
       arguments: {
@@ -334,7 +326,7 @@ class RouteGenerator {
 
   static Future<void> navigateToEmailLogin({
     required String email,
-  }) async{
+  }) async {
     await navigatorKey.currentState!.pushNamed(
       emailLogin,
       arguments: {
@@ -345,7 +337,7 @@ class RouteGenerator {
 
   static Future<void> navigateToPasswordResetPrompt({
     required String email,
-  }) async{
+  }) async {
     await navigatorKey.currentState!.pushNamed(
       passwordResetPrompt,
       arguments: {
@@ -356,7 +348,7 @@ class RouteGenerator {
 
   static Future<void> navigateToPasswordResetEmail({
     required String email,
-  }) async{
+  }) async {
     await navigatorKey.currentState!.pushNamed(
       passwordResetEmail,
       arguments: {
@@ -364,7 +356,7 @@ class RouteGenerator {
       },
     );
   }
-  
+
   static void navigateToPasswordReset({
     required String code,
   }) {
@@ -389,9 +381,7 @@ class RouteGenerator {
   }
 
   static void navigateToDeleteMember(
-    String israfelId,
-    SubscriptionType subscriptionType
-  ) {
+      String israfelId, SubscriptionType subscriptionType) {
     navigatorKey.currentState!.pushNamed(
       deleteMember,
       arguments: {
@@ -402,7 +392,9 @@ class RouteGenerator {
   }
 
   static void navigateToEmailVerification() {
-    navigatorKey.currentState!.pushNamed(emailVerification,);
+    navigatorKey.currentState!.pushNamed(
+      emailVerification,
+    );
   }
 
   static void navigateToNotificationSettings(OnBoardingBloc onBoardingBloc) {
@@ -416,10 +408,7 @@ class RouteGenerator {
     navigatorKey.currentState!.pushNamed(premiumSettings);
   }
 
-  static void navigateToStory(
-    String slug,
-    {bool isMemberCheck = true}
-  ) {
+  static void navigateToStory(String slug, {bool isMemberCheck = true}) {
     navigatorKey.currentState!.pushNamed(
       story,
       arguments: {
@@ -429,10 +418,8 @@ class RouteGenerator {
     );
   }
 
-  static void navigateToExternalStory(
-    String slug,
-    {bool isPremiumMode = false}
-  ) {
+  static void navigateToExternalStory(String slug,
+      {bool isPremiumMode = false}) {
     navigatorKey.currentState!.pushNamed(
       externalStory,
       arguments: {
@@ -445,9 +432,7 @@ class RouteGenerator {
   static void navigateToListeningStory(String slug) {
     navigatorKey.currentState!.pushNamed(
       listeningStory,
-      arguments: {
-        'slug': slug
-      },
+      arguments: {'slug': slug},
     );
   }
 
@@ -456,34 +441,50 @@ class RouteGenerator {
   ) {
     navigatorKey.currentState!.pushNamed(
       magazine,
-      arguments: {
-        'subscriptionType': subscriptionType
-      },
+      arguments: {'subscriptionType': subscriptionType},
     );
   }
 
-  static void navigateToMagazineBrowser(
-    Magazine magazine
-  ) async{
+  static void navigateToMagazineBrowser(Magazine magazine) async {
     // https://github.com/flutter/flutter/issues/48245
-    // There is a issue when opening pdf file in webview on android, 
+    // There is a issue when opening pdf file in webview on android,
     // so change to launch URL on android.
-    String url = magazine.type == 'weekly'
-        ? magazine.onlineReadingUrl
-        : magazine.pdfUrl;
+    String url =
+        magazine.type == 'weekly' ? magazine.onlineReadingUrl : magazine.pdfUrl;
 
-    if(url == '') {
+    if (url == '') {
       Fluttertoast.showToast(
-        msg: '下載失敗，請再試一次',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0
+          msg: '下載失敗，請再試一次',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    } else if (magazine.type == 'weekly') {
+      InAppBrowser browser = InAppBrowser();
+      browser.openUrlRequest(
+        urlRequest: URLRequest(
+          url: Uri.parse(url),
+        ),
+        options: InAppBrowserClassOptions(
+          crossPlatform: InAppBrowserOptions(
+            hideUrlBar: true,
+            toolbarTopBackgroundColor: appColor,
+            hideToolbarTop: Platform.isAndroid,
+          ),
+          ios: IOSInAppBrowserOptions(
+            hideToolbarBottom: true,
+            closeButtonColor: Colors.white,
+          ),
+          android: AndroidInAppBrowserOptions(
+            closeOnCannotGoBack: false,
+            shouldCloseOnBackButtonPressed: true,
+          ),
+        ),
       );
     } else {
-      if(Platform.isAndroid && magazine.type != 'weekly') {
+      if (Platform.isAndroid) {
         if (await canLaunch(url)) {
           await launch(url);
         } else {
@@ -500,31 +501,24 @@ class RouteGenerator {
     }
   }
 
-  static void navigateToSubscriptionSelect(
-    {
-      bool usePushReplacement = false,
-      bool isNewebpay = false,
-      String? storySlug,
-    }
-  ) {
-    if(usePushReplacement){
+  static void navigateToSubscriptionSelect({
+    bool usePushReplacement = false,
+    bool isNewebpay = false,
+    String? storySlug,
+  }) {
+    if (usePushReplacement) {
       navigatorKey.currentState!.pushReplacementNamed(
         subscriptionSelect,
-        arguments: {
-          'storySlug': storySlug
-        },
+        arguments: {'storySlug': storySlug},
       );
-    }else if(isNewebpay){
+    } else if (isNewebpay) {
       navigatorKey.currentState!.pushNamed(
         newebpayChangePlan,
       );
-    }
-    else{
+    } else {
       navigatorKey.currentState!.pushNamed(
         subscriptionSelect,
-        arguments: {
-          'storySlug': storySlug
-        },
+        arguments: {'storySlug': storySlug},
       );
     }
   }
@@ -532,26 +526,24 @@ class RouteGenerator {
   static void navigateToTagPage(Tag tag) {
     navigatorKey.currentState!.pushNamed(
       tagPage,
-      arguments: {
-          'tag': tag
-        },
+      arguments: {'tag': tag},
     );
   }
 
-  static void navigateToImageViewer(
-    List<String> imageUrlList, {int openIndex = 0}){
+  static void navigateToImageViewer(List<String> imageUrlList,
+      {int openIndex = 0}) {
     navigatorKey.currentState!.pushNamed(
       imageViewer,
       arguments: {
-          'imageUrlList': imageUrlList,
-          'openIndex': openIndex,
-        },
+        'imageUrlList': imageUrlList,
+        'openIndex': openIndex,
+      },
     );
   }
 
   static void printRouteSettings() {
     var route = ModalRoute.of(navigatorKey.currentContext!);
-    if(route!=null){
+    if (route != null) {
       print('route is current: ${route.isCurrent}');
       print('route name: ${route.settings.name}');
       print('route arg: ${route.settings.arguments.toString()}');

@@ -5,6 +5,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:readr_app/services/subscriptionSelectService.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 class IAPSubscriptionHelper {  
   static final IAPSubscriptionHelper _instance = IAPSubscriptionHelper._internal();
@@ -19,25 +20,30 @@ class IAPSubscriptionHelper {
   StreamController<PurchaseDetails> buyingPurchaseController = StreamController<PurchaseDetails>.broadcast();
   late StreamSubscription<List<PurchaseDetails>> _subscription;
   InAppPurchase _inAppPurchase = InAppPurchase.instance;
+  DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
 
   Future<void> handleIncompletePurchases() async{
+    
     if(Platform.isIOS) {
-      SKPaymentQueueWrapper skPaymentQueueWrapper = SKPaymentQueueWrapper();
-      List<SKPaymentTransactionWrapper> transactions = await skPaymentQueueWrapper.transactions();
-      List<SKPaymentTransactionWrapper> purchasedTransactions = [];
-      transactions.forEach((skPaymentTransactionWrapper) async{
-        if(skPaymentTransactionWrapper.transactionState == SKPaymentTransactionStateWrapper.purchased) {
-          purchasedTransactions.add(skPaymentTransactionWrapper);
-        }
-      });
-      String receiptData = await getReceiptData();
-      List<PurchaseDetails> purchaseDetails = purchasedTransactions
-          .map((SKPaymentTransactionWrapper transaction) =>
-              AppStorePurchaseDetails.fromSKTransaction(transaction, receiptData))
-          .toList();
-      purchaseDetails.forEach((purchaseDetail) {
-        verifyEntirePurchase(purchaseDetail);
-      });
+      IosDeviceInfo iosInfo = await _deviceInfo.iosInfo;
+      if(iosInfo.isPhysicalDevice){
+        SKPaymentQueueWrapper skPaymentQueueWrapper = SKPaymentQueueWrapper();
+        List<SKPaymentTransactionWrapper> transactions = await skPaymentQueueWrapper.transactions();
+        List<SKPaymentTransactionWrapper> purchasedTransactions = [];
+        transactions.forEach((skPaymentTransactionWrapper) async{
+          if(skPaymentTransactionWrapper.transactionState == SKPaymentTransactionStateWrapper.purchased) {
+            purchasedTransactions.add(skPaymentTransactionWrapper);
+          }
+        });
+        String receiptData = await getReceiptData();
+        List<PurchaseDetails> purchaseDetails = purchasedTransactions
+            .map((SKPaymentTransactionWrapper transaction) =>
+                AppStorePurchaseDetails.fromSKTransaction(transaction, receiptData))
+            .toList();
+        purchaseDetails.forEach((purchaseDetail) {
+          verifyEntirePurchase(purchaseDetail);
+        });
+      }
     } else if(Platform.isAndroid) {
       _inAppPurchase.restorePurchases();
     }
