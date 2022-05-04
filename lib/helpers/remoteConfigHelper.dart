@@ -1,16 +1,15 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class RemoteConfigHelper {
-  RemoteConfig _remoteConfig = RemoteConfig.instance;
-  
+  FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
+
   Future<bool> initialize({
     Duration fetchTimeout = const Duration(seconds: 10),
-    Duration minimumFetchInterval= const Duration(seconds: 1),
-  }) async{
+    Duration minimumFetchInterval = const Duration(seconds: 1),
+  }) async {
     await _remoteConfig.setConfigSettings(RemoteConfigSettings(
-      fetchTimeout: fetchTimeout,
-      minimumFetchInterval: minimumFetchInterval
-    ));
+        fetchTimeout: fetchTimeout,
+        minimumFetchInterval: minimumFetchInterval));
 
     return await _remoteConfig.fetchAndActivate();
   }
