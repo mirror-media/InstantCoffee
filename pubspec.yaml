@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # iOS and android is the same version
-version: 4.4.1+390
+version: 4.4.2+390
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -99,23 +99,19 @@ dependencies:
   version: ^2.0.0
   
   # firebase
-  firebase_core: ^1.11.0
+  firebase_core: ^1.15.0
   # firebase analytics API
-  firebase_analytics: ^9.0.5
+  firebase_analytics: ^9.1.6
   # firebase messaging
-  firebase_messaging: ^11.2.5
+  firebase_messaging: ^11.2.15
   # firebase remote config
-  firebase_remote_config: ^1.0.4
-  google_mobile_ads:
-    git:
-      url: https://github.com/SuaMusica/googleads-mobile-flutter.git
-      path: packages/google_mobile_ads
-      ref: feature/suamusica
+  firebase_remote_config: ^2.0.5
+  google_mobile_ads: ^1.2.0
   # firebase dynamic links 
   firebase_dynamic_links: ^4.0.4
 
   # firebase auth
-  firebase_auth: ^3.3.5
+  firebase_auth: ^3.3.16
   # google sign in
   google_sign_in: ^5.2.2
   # facebook sign in
@@ -124,13 +120,13 @@ dependencies:
   sign_in_with_apple: ^3.3.0
 
   # a storefront-independent API for purchases in Flutter apps.
-  in_app_purchase: ^2.0.1
+  in_app_purchase: ^3.0.2
 
   # generate app icons
   flutter_launcher_icons: ^0.9.2
 
   # more powerful webview
-  flutter_inappwebview: ^5.3.2
+  flutter_inappwebview: ^5.4.3+4
 
   # zoomable widget
   photo_view: ^0.13.0
