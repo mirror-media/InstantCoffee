@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,7 +15,8 @@ import 'package:readr_app/models/memberSubscriptionType.dart';
 import 'package:readr_app/models/subscriptionDetail.dart';
 import 'package:readr_app/services/subscriptionSelectService.dart';
 
-class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, SubscriptionSelectState> {
+class SubscriptionSelectBloc
+    extends Bloc<SubscriptionSelectEvents, SubscriptionSelectState> {
   IAPSubscriptionHelper _iapSubscriptionHelper = IAPSubscriptionHelper();
   final SubscriptionSelectRepos subscriptionSelectRepos;
   final MemberBloc memberBloc;
@@ -22,18 +24,19 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
 
   late StreamSubscription<PurchaseDetails> _buyingPurchaseSubscription;
 
-  SubscriptionSelectBloc({
-    required this.subscriptionSelectRepos,
-    required this.memberBloc,
-    required this.storySlug
-  }) : super(SubscriptionSelectState.init()) {
+  SubscriptionSelectBloc(
+      {required this.subscriptionSelectRepos,
+      required this.memberBloc,
+      required this.storySlug})
+      : super(SubscriptionSelectState.init()) {
     _iapSubscriptionHelper.verifyPurchaseInBloc = true;
 
     on<FetchSubscriptionProducts>(_fetchSubscriptionProducts);
     on<BuySubscriptionProduct>(_buySubscriptionProduct);
     on<BuyingPurchaseStatusChanged>(_buyingPurchaseStatusChanged);
 
-    _buyingPurchaseSubscription = _iapSubscriptionHelper.buyingPurchaseController.stream.listen(
+    _buyingPurchaseSubscription =
+        _iapSubscriptionHelper.buyingPurchaseController.stream.listen(
       (purchaseDetails) => add(BuyingPurchaseStatusChanged(purchaseDetails)),
     );
   }
@@ -48,13 +51,22 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
   void _fetchSubscriptionProducts(
     FetchSubscriptionProducts event,
     Emitter<SubscriptionSelectState> emit,
-  ) async{
+  ) async {
     print(event.toString());
-    try{
+    try {
       emit(SubscriptionSelectState.loading());
+      SubscriptionDetail subscriptionDetail = SubscriptionDetail(
+        subscriptionType: SubscriptionType.none,
+        isAutoRenewing: null,
+        paymentType: null,
+      );
+      if (FirebaseAuth.instance.currentUser != null) {
+        subscriptionDetail =
+            await subscriptionSelectRepos.fetchSubscriptionDetail();
+      }
 
-      SubscriptionDetail subscriptionDetail = await subscriptionSelectRepos.fetchSubscriptionDetail();
-      List<ProductDetails> productDetailList = await subscriptionSelectRepos.fetchProductDetailList();
+      List<ProductDetails> productDetailList =
+          await subscriptionSelectRepos.fetchProductDetailList();
 
       emit(SubscriptionSelectState.loaded(
         subscriptionDetail: subscriptionDetail,
@@ -82,25 +94,24 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
   void _buySubscriptionProduct(
     BuySubscriptionProduct event,
     Emitter<SubscriptionSelectState> emit,
-  ) async{
+  ) async {
     print(event.toString());
-    try{
+    try {
       emit(SubscriptionSelectState.buying(
-        subscriptionDetail: state.subscriptionDetail!,
-        productDetailList: state.productDetailList!
-      ));
-      bool buySuccess = await subscriptionSelectRepos.buySubscriptionProduct(event.purchaseParam);
-      if(buySuccess) {
+          subscriptionDetail: state.subscriptionDetail!,
+          productDetailList: state.productDetailList!));
+      bool buySuccess = await subscriptionSelectRepos
+          .buySubscriptionProduct(event.purchaseParam);
+      if (buySuccess) {
       } else {
         Fluttertoast.showToast(
-          msg: '購買失敗，請再試一次',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0
-        );
+            msg: '購買失敗，請再試一次',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
 
         emit(SubscriptionSelectState.loaded(
           subscriptionDetail: state.subscriptionDetail!,
@@ -109,14 +120,13 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
       }
     } catch (e) {
       Fluttertoast.showToast(
-        msg: '購買失敗，請再試一次',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0
-      );
+          msg: '購買失敗，請再試一次',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
 
       emit(SubscriptionSelectState.loaded(
         subscriptionDetail: state.subscriptionDetail!,
@@ -128,50 +138,48 @@ class SubscriptionSelectBloc extends Bloc<SubscriptionSelectEvents, Subscription
   void _buyingPurchaseStatusChanged(
     BuyingPurchaseStatusChanged event,
     Emitter<SubscriptionSelectState> emit,
-  ) async{
+  ) async {
     PurchaseDetails purchaseDetails = event.purchaseDetails;
-    if(purchaseDetails.status == PurchaseStatus.canceled) {
-      if(Platform.isIOS) {
+    if (purchaseDetails.status == PurchaseStatus.canceled) {
+      if (Platform.isIOS) {
         await _iapSubscriptionHelper.completePurchase(purchaseDetails);
       }
       emit(SubscriptionSelectState.loaded(
         subscriptionDetail: state.subscriptionDetail!,
         productDetailList: state.productDetailList!,
       ));
-    } else if(purchaseDetails.status == PurchaseStatus.purchased) {
-      bool isSuccess = await _iapSubscriptionHelper.verifyEntirePurchase(purchaseDetails);
+    } else if (purchaseDetails.status == PurchaseStatus.purchased) {
+      bool isSuccess =
+          await _iapSubscriptionHelper.verifyEntirePurchase(purchaseDetails);
       Fluttertoast.showToast(
-        msg: '變更方案成功',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        fontSize: 16.0
-      );
-      
-      if(isSuccess) { 
+          msg: '變更方案成功',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
+
+      if (isSuccess) {
         emit(SubscriptionSelectState.buyingSuccess(storySlug: this.storySlug));
         memberBloc.add(UpdateSubscriptionType(
-          isLogin: true,
-          israfelId: '',
-          subscriptionType: SubscriptionType.subscribe_monthly
-        ));
+            isLogin: true,
+            israfelId: '',
+            subscriptionType: SubscriptionType.subscribe_monthly));
       } else {
         emit(SubscriptionSelectState.verifyPurchaseFail());
       }
-    } else if(purchaseDetails.status == PurchaseStatus.error) {
+    } else if (purchaseDetails.status == PurchaseStatus.error) {
       print("error code: ${purchaseDetails.error!.code}");
       print("error message: ${purchaseDetails.error!.message}");
       Fluttertoast.showToast(
-        msg: '購買失敗，請再試一次',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0
-      );
+          msg: '購買失敗，請再試一次',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
 
       emit(SubscriptionSelectState.loaded(
         subscriptionDetail: state.subscriptionDetail!,
