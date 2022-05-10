@@ -221,16 +221,11 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
   }
 
   void _navigateToRouteName(SubscriptionType subscriptionType) async {
-    bool backToHome = false;
     if (premiumSubscriptionType.contains(subscriptionType)) {
       await runPremiumAnimation();
-      if (routeName != null && routeName == RouteGenerator.subscriptionSelect) {
-        backToHome = true;
-        RouteGenerator.navigatorKey.currentState!.pop();
-      }
     }
 
-    if (routeName != null && !backToHome) {
+    if (routeName != null) {
       if (routeArguments != null &&
           routeArguments!.containsKey('subscriptionType')) {
         routeArguments!.update('subscriptionType', (value) => subscriptionType);
@@ -241,11 +236,15 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
         await Future.delayed(Duration(seconds: 1));
       }
 
-      RouteGenerator.navigatorKey.currentState!.pushNamedAndRemoveUntil(
-        routeName!,
-        ModalRoute.withName(RouteGenerator.root),
-        arguments: routeArguments,
-      );
+      if (routeName == RouteGenerator.subscriptionSelect) {
+        RouteGenerator.navigatorKey.currentState!.pop();
+      } else {
+        RouteGenerator.navigatorKey.currentState!.pushNamedAndRemoveUntil(
+          routeName!,
+          ModalRoute.withName(RouteGenerator.root),
+          arguments: routeArguments,
+        );
+      }
     }
   }
 
