@@ -5,20 +5,19 @@ import 'package:readr_app/helpers/routeGenerator.dart';
 class JoinMemberBlock extends StatelessWidget {
   final bool isMember;
   final String storySlug;
-  JoinMemberBlock({ 
+  JoinMemberBlock({
     required this.isMember,
     required this.storySlug,
   });
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width; 
+    double width = MediaQuery.of(context).size.width;
     return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20.0, 24.0, 20.0, 24.0),
-        child: Column(
-          children: [
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20.0, 24.0, 20.0, 24.0),
+          child: Column(children: [
             Text(
               '歡迎加入鏡週刊',
               style: TextStyle(
@@ -69,36 +68,31 @@ class JoinMemberBlock extends StatelessWidget {
                   ),
                   SizedBox(height: 12),
                   TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: appColor,
-                      padding: const EdgeInsets.only(top: 12, bottom: 12),
-                    ),
-                    child: Container(
-                      width: width,
-                      child: Center(
-                        child: Text(
-                          isMember ? '成為 Premium 會員' : '加入 Premium 會員',
-                          style: TextStyle(
-                            fontSize: 17,
-                            color: Colors.white,
+                      style: TextButton.styleFrom(
+                        backgroundColor: appColor,
+                        padding: const EdgeInsets.only(top: 12, bottom: 12),
+                      ),
+                      child: Container(
+                        width: width,
+                        child: Center(
+                          child: Text(
+                            isMember ? '成為 Premium 會員' : '加入 Premium 會員',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    onPressed: () {
-                      if(isMember) {
+                      onPressed: () {
                         RouteGenerator.navigateToSubscriptionSelect(
                           storySlug: storySlug,
                         );
-                      } else {
-                        RouteGenerator.navigateToLogin();
-                      }
-                    }
-                  ),
+                      }),
                 ],
               ),
             ),
-            if(!isMember)...[
+            if (!isMember) ...[
               SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -126,9 +120,7 @@ class JoinMemberBlock extends StatelessWidget {
                 ],
               ),
             ],
-          ]
-        ),
-      )
-    );
+          ]),
+        ));
   }
 }
