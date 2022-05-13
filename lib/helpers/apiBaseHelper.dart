@@ -84,7 +84,13 @@ class ApiBaseHelper {
         res = file.path;
       }
 
-      return returnResponse(http.Response(res, 200));
+      return returnResponse(http.Response(
+        res,
+        200,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
+        },
+      ));
     }
     return returnResponse(http.Response("Can not find any cache", 404));
   }
