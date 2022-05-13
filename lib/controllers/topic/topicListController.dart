@@ -27,8 +27,10 @@ class TopicListController extends GetxController {
   void fetchTopicList() async {
     try {
       await _loadAds();
-      topicList.assignAll(
-          await repository.fetchTopicList(Environment().config.topicListApi));
+      topicList.assignAll(await repository.fetchTopicList(
+        Environment().config.topicListApi,
+        isLoadingFirstPage: true,
+      ));
     } catch (e) {
       print('Fetch Topic List Error: $e');
     }
