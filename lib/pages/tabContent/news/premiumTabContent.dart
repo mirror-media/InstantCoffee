@@ -12,6 +12,7 @@ import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/tabContent/shared/premiumListItem.dart';
 import 'package:readr_app/pages/tabContent/shared/theFirstItem.dart';
+import 'package:readr_app/pages/tabContent/shared/topicBlock.dart';
 import 'package:readr_app/services/editorChoiceService.dart';
 import 'package:readr_app/widgets/editorChoiceCarousel.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
@@ -35,20 +36,13 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
   RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
 
   _fetchFirstRecordList() {
-    context.read<TabContentBloc>().add(
-      FetchFirstRecordList(
-        sectionKey: widget.section.key, 
-        sectionType: widget.section.type
-      )
-    );
+    context.read<TabContentBloc>().add(FetchFirstRecordList(
+        sectionKey: widget.section.key, sectionType: widget.section.type));
   }
 
   _fetchNextPageRecordList() {
-    context.read<TabContentBloc>().add(
-      FetchNextPageRecordList(
-        isLatest: widget.section.key == Environment().config.latestSectionKey
-      )
-    );
+    context.read<TabContentBloc>().add(FetchNextPageRecordList(
+        isLatest: widget.section.key == Environment().config.latestSectionKey));
   }
 
   @override
@@ -60,139 +54,135 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async{
+      onRefresh: () async {
         _fetchFirstRecordList();
       },
       child: BlocBuilder<TabContentBloc, TabContentState>(
-        builder: (BuildContext context, TabContentState state) {
-          switch (state.status) {
-            case TabContentStatus.loadingError:
-              final error = state.errorMessages;
-              print('TabContent: ${error.message}');
-              return ErrorStatelessWidget(
-                errorMessage: error.message,
-                onRetryPressed: () => _fetchFirstRecordList(),
-              );
-            case TabContentStatus.loaded:
-            case TabContentStatus.loadingMore:
-              List<Record> recordList = state.recordList!;
+          builder: (BuildContext context, TabContentState state) {
+        switch (state.status) {
+          case TabContentStatus.loadingError:
+            final error = state.errorMessages;
+            print('TabContent: ${error.message}');
+            return ErrorStatelessWidget(
+              errorMessage: error.message,
+              onRetryPressed: () => _fetchFirstRecordList(),
+            );
+          case TabContentStatus.loaded:
+          case TabContentStatus.loadingMore:
+            List<Record> recordList = state.recordList!;
 
-              return _buildTheRecordList(
-                recordList,
+            return _buildTheRecordList(recordList,
                 hasNextPage: state.hasNextPage!,
-                isLoadingMore: state.status == TabContentStatus.loadingMore
-              );
-            default:
-              // state is Init, Loading
-              return _loadingWidget();
-          }
+                isLoadingMore: state.status == TabContentStatus.loadingMore);
+          default:
+            // state is Init, Loading
+            return _loadingWidget();
         }
-      ),
+      }),
     );
   }
 
   Widget _loadingWidget() {
-    return Center(child: CircularProgressIndicator(),);
+    return Center(
+      child: CircularProgressIndicator(),
+    );
   }
 
   Widget _buildEditorChoiceList() {
     return BlocProvider(
-      create: (BuildContext context) => EditorChoiceCubit(editorChoiceRepos: EditorChoiceService()),
+      create: (BuildContext context) =>
+          EditorChoiceCubit(editorChoiceRepos: EditorChoiceService()),
       child: BlocBuilder<EditorChoiceCubit, EditorChoiceState>(
-        builder: (context, state) {
-          if(state.status == EditorChoiceStatus.initial) {
-            context.read<EditorChoiceCubit>().fetchEditorChoiceRecordList();
-          } else if(state.status == EditorChoiceStatus.loaded) {
-            List<Record> editorChoiceList = state.editorChoiceList!;
-            
-            return EditorChoiceCarousel(
-              editorChoiceList: editorChoiceList,
-              aspectRatio: 16 / 10,
-            );
-          } else if(state.status == EditorChoiceStatus.error) {
-            print('NewsMarquee error: ${state.errorMessages}');
-          }
+          builder: (context, state) {
+        if (state.status == EditorChoiceStatus.initial) {
+          context.read<EditorChoiceCubit>().fetchEditorChoiceRecordList();
+        } else if (state.status == EditorChoiceStatus.loaded) {
+          List<Record> editorChoiceList = state.editorChoiceList!;
 
-          return Container();
+          return EditorChoiceCarousel(
+            editorChoiceList: editorChoiceList,
+            aspectRatio: 16 / 10,
+          );
+        } else if (state.status == EditorChoiceStatus.error) {
+          print('NewsMarquee error: ${state.errorMessages}');
         }
-      ),
+
+        return Container();
+      }),
     );
   }
 
   Widget _buildTheRecordList(
-    List<Record> recordList,
-    {
-      bool hasNextPage = true, 
-      bool isLoadingMore = false, 
-    }
-  ) {
-    
+    List<Record> recordList, {
+    bool hasNextPage = true,
+    bool isLoadingMore = false,
+  }) {
     return CustomScrollView(
       controller: widget.scrollController,
       slivers: [
-        if(!_remoteConfigHelper.isNewsMarqueePin)
+        if (!_remoteConfigHelper.isNewsMarqueePin)
           SliverPersistentHeader(
             delegate: NewsMarqueePersistentHeaderDelegate(),
             floating: true,
           ),
         SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              if(hasNextPage && 
-                !isLoadingMore && 
-                index == recordList.length-1) {
-                _fetchNextPageRecordList();
-              }
-              
-              if (index == 0) {
-                if(widget.needCarousel) {
-                  return Column(
+          delegate:
+              SliverChildBuilderDelegate((BuildContext context, int index) {
+            if (hasNextPage &&
+                !isLoadingMore &&
+                index == recordList.length - 1) {
+              _fetchNextPageRecordList();
+            }
+
+            if (index == 0) {
+              if (widget.needCarousel) {
+                return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildEditorChoiceList(),
+                      if (widget.section.key ==
+                          Environment().config.latestSectionKey)
+                        TopicBlock(
+                          isPremium: true,
+                        ),
                       _buildTagText(),
                       Padding(
-                        padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
-                        child: PremiumListItem(
-                          record: recordList[index],
-                          onTap: () => _navigateToStoryPage(recordList[index]),
-                        )
-                      ),
+                          padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
+                          child: PremiumListItem(
+                            record: recordList[index],
+                            onTap: () =>
+                                _navigateToStoryPage(recordList[index]),
+                          )),
                       Divider(
                         thickness: 1,
                         color: Colors.grey,
                       ),
-                    ]
-                  );
-                }
-
-                return TheFirstItem(
-                  record: recordList[index],
-                  onTap: () => _navigateToStoryPage(recordList[index]),
-                );
+                    ]);
               }
 
-              return Column(
-                children: [
-                  Padding(
+              return TheFirstItem(
+                record: recordList[index],
+                onTap: () => _navigateToStoryPage(recordList[index]),
+              );
+            }
+
+            return Column(
+              children: [
+                Padding(
                     padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
                     child: PremiumListItem(
                       record: recordList[index],
                       onTap: () => _navigateToStoryPage(recordList[index]),
-                    )
-                  ),
-                  Divider(
-                    thickness: 1,
-                    color: Colors.grey,
-                  ),
-                  if (index == recordList.length - 1 &&
-                      isLoadingMore)
-                    _loadMoreWidget(),
-                ],
-              );
-            },
-            childCount: recordList.length
-          ),
+                    )),
+                Divider(
+                  thickness: 1,
+                  color: Colors.grey,
+                ),
+                if (index == recordList.length - 1 && isLoadingMore)
+                  _loadMoreWidget(),
+              ],
+            );
+          }, childCount: recordList.length),
         ),
       ],
     );
@@ -201,9 +191,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
   Widget _loadMoreWidget() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Center(
-        child: CupertinoActivityIndicator()
-      ),
+      child: Center(child: CupertinoActivityIndicator()),
     );
   }
 
@@ -216,10 +204,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
           child: Text(
             '最新文章',
             style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Colors.white
-            ),
+                fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
           ),
         ),
       ),
@@ -227,10 +212,11 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
   }
 
   void _navigateToStoryPage(Record record) {
-    if(record.isExternal) {
+    if (record.isExternal) {
       RouteGenerator.navigateToExternalStory(record.slug, isPremiumMode: true);
     } else {
-      RouteGenerator.navigateToStory(record.slug, isMemberCheck: record.isMemberCheck);
+      RouteGenerator.navigateToStory(record.slug,
+          isMemberCheck: record.isMemberCheck);
     }
   }
 }

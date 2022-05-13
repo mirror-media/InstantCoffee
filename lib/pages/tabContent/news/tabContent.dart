@@ -16,6 +16,7 @@ import 'package:readr_app/models/section.dart';
 import 'package:readr_app/models/sectionAd.dart';
 import 'package:readr_app/pages/tabContent/shared/listItem.dart';
 import 'package:readr_app/pages/tabContent/shared/theFirstItem.dart';
+import 'package:readr_app/pages/tabContent/shared/topicBlock.dart';
 import 'package:readr_app/services/editorChoiceService.dart';
 import 'package:readr_app/widgets/editorChoiceCarousel.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
@@ -195,6 +196,13 @@ class _TabContentState extends State<TabContent> {
                       SizedBox(
                         height: 16.0,
                       ),
+                      if (widget.section.key ==
+                          Environment().config.latestSectionKey) ...[
+                        TopicBlock(),
+                        SizedBox(
+                          height: 16.0,
+                        ),
+                      ],
                       Padding(
                         padding:
                             const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
