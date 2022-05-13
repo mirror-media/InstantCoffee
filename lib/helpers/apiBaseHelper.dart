@@ -22,57 +22,52 @@ class ApiBaseHelper {
   /// get cache file by key
   /// the key is url
   Future<dynamic> getByCache(String url) async {
-    if(_mMCacheManager == null) {
+    if (_mMCacheManager == null) {
       _mMCacheManager = MMCacheManager();
     }
-    
+
     final cacheFile = await _mMCacheManager!.getFileFromCache(url);
     var file = cacheFile?.file;
     if (file != null && await file.exists()) {
       var mimeStr = lookupMimeType(file.path);
       String res;
-      if(mimeStr == 'application/json') {
+      if (mimeStr == 'application/json') {
         res = await file.readAsString();
-      }
-      else {
+      } else {
         res = file.path;
       }
       return returnResponse(http.Response(res, 200));
     }
-    
+
     return returnResponse(http.Response("Can not find any cache", 404));
   }
 
   /// Get the json file from cache first.
-  /// If there is no json file from cache, 
+  /// If there is no json file from cache,
   /// fetch the json file from get api and save the json file to cache.
-  Future<dynamic> getByCacheAndAutoCache(
-    String url, 
-    {
-      Duration maxAge = const Duration(days: 30),
-      Map<String,String> headers = const {'Cache-control': 'no-cache'}
-    }
-  ) async {
-    if(_mMCacheManager == null) {
+  Future<dynamic> getByCacheAndAutoCache(String url,
+      {Duration maxAge = const Duration(days: 30),
+      Map<String, String> headers = const {
+        'Cache-control': 'no-cache'
+      }}) async {
+    if (_mMCacheManager == null) {
       _mMCacheManager = MMCacheManager();
     }
 
     final cacheFile = await _mMCacheManager!.getFileFromCache(url);
-    if ( cacheFile == null || 
-      cacheFile.validTill.isBefore(DateTime.now())
-    ) {
+    if (cacheFile == null || cacheFile.validTill.isBefore(DateTime.now())) {
       Uri uri = Uri.parse(url);
       var responseJson;
       try {
-        final response =
-            await _client.get(uri, headers: headers);
+        final response = await _client.get(uri, headers: headers);
         responseJson = returnResponse(response);
         // save cache file
-        _mMCacheManager!.putFile(url, response.bodyBytes, maxAge: maxAge, fileExtension: 'json');
+        _mMCacheManager!.putFile(url, response.bodyBytes,
+            maxAge: maxAge, fileExtension: 'json');
       } on SocketException {
         print('No Internet connection');
         throw FetchDataException('No Internet connection');
-      } catch(e) {
+      } catch (e) {
         print('error: $e');
       }
       print('Api get done.');
@@ -83,29 +78,25 @@ class ApiBaseHelper {
     if (await file.exists()) {
       var mimeStr = lookupMimeType(file.path);
       String res;
-      if(mimeStr == 'application/json') {
+      if (mimeStr == 'application/json') {
         res = await file.readAsString();
-      }
-      else {
+      } else {
         res = file.path;
       }
-      
+
       return returnResponse(http.Response(res, 200));
     }
     return returnResponse(http.Response("Can not find any cache", 404));
   }
 
   Future<dynamic> getByUrl(
-    String url,
-    {
-      Map<String,String> headers = const {'Cache-control': 'no-cache'},
-    }
-  ) async {
+    String url, {
+    Map<String, String> headers = const {'Cache-control': 'no-cache'},
+  }) async {
     var responseJson;
     try {
       Uri uri = Uri.parse(url);
-      final response =
-          await _client.get(uri, headers: headers);
+      final response = await _client.get(uri, headers: headers);
       responseJson = returnResponse(response);
     } on SocketException {
       print('No Internet connection');
@@ -119,7 +110,8 @@ class ApiBaseHelper {
     getByUrl(baseUrl + endpoint);
   }
 
-  Future<dynamic> postByUrl(String url, dynamic body, {Map<String, String>? headers}) async {
+  Future<dynamic> postByUrl(String url, dynamic body,
+      {Map<String, String>? headers}) async {
     var responseJson;
     try {
       Uri uri = Uri.parse(url);
@@ -180,25 +172,35 @@ dynamic returnResponse(http.Response response) {
       String utf8Json = utf8.decode(response.bodyBytes);
       var responseJson = json.decode(utf8Json);
 
-      bool hasData = (responseJson.containsKey('_items') && responseJson['_items'].length > 0) || 
-        (responseJson.containsKey('items') && responseJson['items'].length > 0) || 
-        // properties responded by popular tab content api
-        (responseJson.containsKey('report') && responseJson['report'].length > 0) || 
-        // properties responded by latest tab content api
-        (responseJson.containsKey('latest') && responseJson['latest'] is List) || 
-        // properties responded by editor choice api
-        (responseJson.containsKey('choices') && responseJson['choices'] is List) || 
-        // properties responded by search api
-        (responseJson.containsKey('hits') && responseJson['hits'].containsKey('hits')) ||
-        // properties responded by member graphql
-        (responseJson.containsKey('data') || responseJson.containsKey('tokenState')) ||
-        responseJson.containsKey('status') ||
-        // error log
-        responseJson.containsKey('msg');
-      if(!hasData) {
+      bool hasData = (responseJson.containsKey('_items') &&
+              responseJson['_items'].length > 0) ||
+          (responseJson.containsKey('items') &&
+              responseJson['items'].length > 0) ||
+          // properties responded by popular tab content api
+          (responseJson.containsKey('report') &&
+              responseJson['report'].length > 0) ||
+          // properties responded by latest tab content api
+          (responseJson.containsKey('latest') &&
+              responseJson['latest'] is List) ||
+          // properties responded by editor choice api
+          (responseJson.containsKey('choices') &&
+              responseJson['choices'] is List) ||
+          // properties responded by search api
+          (responseJson.containsKey('hits') &&
+              responseJson['hits'].containsKey('hits')) ||
+          // properties responded by member graphql
+          (responseJson.containsKey('data') ||
+              responseJson.containsKey('tokenState')) ||
+          responseJson.containsKey('status') ||
+          // error log
+          responseJson.containsKey('msg') ||
+          // topic list
+          responseJson.containsKey('_endpoints');
+
+      if (!hasData) {
         throw BadRequestException(response.body.toString());
       }
-      
+
       return responseJson;
     case 400:
       throw BadRequestException(response.body.toString());
