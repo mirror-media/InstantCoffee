@@ -4,6 +4,7 @@ import 'package:readr_app/controllers/topic/topicListController.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/topic.dart';
 import 'package:readr_app/pages/topic/topicListPage.dart';
+import 'package:readr_app/pages/topic/topicPage.dart';
 import 'package:readr_app/services/topicService.dart';
 
 class TopicBlock extends GetView<TopicListController> {
@@ -107,7 +108,7 @@ class TopicBlock extends GetView<TopicListController> {
 
   Widget _buildListItem(Topic topic) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () => Get.to(() => TopicPage(topic)),
       child: Container(
         height: 42,
         decoration: BoxDecoration(

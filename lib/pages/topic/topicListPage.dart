@@ -7,6 +7,7 @@ import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/controllers/topic/topicListController.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/topic.dart';
+import 'package:readr_app/pages/topic/topicPage.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
 
 class TopicListPage extends GetView<TopicListController> {
@@ -134,7 +135,7 @@ class TopicListPage extends GetView<TopicListController> {
           ],
         ),
       ),
-      onTap: () {},
+      onTap: () => Get.to(() => TopicPage(topic)),
     );
   }
 
