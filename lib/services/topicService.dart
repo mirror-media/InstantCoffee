@@ -3,6 +3,7 @@ import 'package:readr_app/helpers/cacheDurationCache.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/topic.dart';
+import 'package:readr_app/models/topicImageItem.dart';
 import 'package:readr_app/models/topicItem.dart';
 
 abstract class TopicRepos {
@@ -13,10 +14,14 @@ abstract class TopicRepos {
     String url, {
     bool isLoadingFirstPage = false,
     List<String>? tagIdList,
+    List<String>? tagNameList,
   });
   Future<List<TopicItem>> fetchNextPageTopicItemList({
     List<String>? tagIdList,
+    List<String>? tagNameList,
   });
+  Future<List<TopicImageItem>> fetchPortraitWallList(
+      String topicId, String recordApi);
   bool get isNoMore;
 }
 
@@ -94,6 +99,7 @@ class TopicService implements TopicRepos {
     String url, {
     bool isLoadingFirstPage = false,
     List<String>? tagIdList,
+    List<String>? tagNameList,
   }) async {
     if (isLoadingFirstPage) {
       _page = 1;
@@ -133,6 +139,14 @@ class TopicService implements TopicRepos {
             break;
           }
         }
+      } else if (tagNameList != null && item.containsKey("tags")) {
+        for (var tag in item["tags"]) {
+          if (tagNameList.contains(tag['name'])) {
+            tagId = tag['_id'];
+            tagTitle = tag['name'];
+            break;
+          }
+        }
       }
       topicItemList.add(TopicItem(
         record: Record.fromJson(item),
@@ -148,6 +162,7 @@ class TopicService implements TopicRepos {
   @override
   Future<List<TopicItem>> fetchNextPageTopicItemList({
     List<String>? tagIdList,
+    List<String>? tagNameList,
   }) async {
     if (_nextPageUrl != '') {
       _page++;
@@ -155,5 +170,53 @@ class TopicService implements TopicRepos {
     }
 
     return [];
+  }
+
+  Future<List<TopicImageItem>> fetchPortraitWallList(
+      String topicId, String recordApi) async {
+    String imageApi = Environment().config.mirrorMediaDomain +
+        '/api/v2/images?where={"topics":{"\$in":["$topicId"]}}&max_results=25';
+
+    dynamic jsonResponse;
+    jsonResponse = await _helper.getByCacheAndAutoCache(imageApi,
+        maxAge: contentTabCacheDuration);
+    var jsonObject = jsonResponse["_items"];
+    List<TopicImageItem> portraitWallItemList = [];
+    List<String> descriptionList = [];
+    for (var object in jsonObject) {
+      String imageUrl = '';
+      if (object['image'] != null &&
+          object['image']['resizedTargets'] != null) {
+        imageUrl = object['image']['resizedTargets']['mobile']['url'];
+      }
+      portraitWallItemList.add(TopicImageItem(
+        imageUrl: imageUrl,
+        description: object['description'],
+      ));
+      descriptionList.add(object['description']);
+    }
+
+    List<TopicItem> topicItemList = await fetchTopicItemList(
+      recordApi,
+      isLoadingFirstPage: true,
+      tagNameList: descriptionList,
+    );
+    while (!_isNoMore) {
+      topicItemList.addAll(await fetchNextPageTopicItemList(
+        tagNameList: descriptionList,
+      ));
+    }
+
+    for (var topicItem in topicItemList) {
+      if (topicItem.tagTitle != null &&
+          portraitWallItemList
+              .any((element) => element.description == topicItem.tagTitle)) {
+        portraitWallItemList
+            .firstWhere((element) => element.description == topicItem.tagTitle)
+            .record = topicItem.record;
+      }
+    }
+
+    return portraitWallItemList;
   }
 }
