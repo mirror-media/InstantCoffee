@@ -125,8 +125,8 @@ class TopicService implements TopicRepos {
     for (var item in jsonObject) {
       String? tagId;
       String? tagTitle;
-      if (tagIdList != null && json.containsKey("tags")) {
-        for (var tag in json["tags"]) {
+      if (tagIdList != null && item.containsKey("tags")) {
+        for (var tag in item["tags"]) {
           if (tagIdList.contains(tag['_id'])) {
             tagId = tag['_id'];
             tagTitle = tag['name'];
