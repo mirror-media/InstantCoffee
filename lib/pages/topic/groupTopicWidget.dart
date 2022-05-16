@@ -28,52 +28,32 @@ class GroupTopicWidget extends GetView<TopicPageController> {
   }
 
   Widget _buildList() {
-    return Obx(() {
-      if (controller.topicItemList.isEmpty) {
-        return const Center(child: Text('無資料'));
-      }
+    if (controller.topicItemList.isEmpty) {
+      return const Center(child: Text('無資料'));
+    }
 
-      return ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          if (index == controller.topicItemList.length) {
-            return _loadMoreWidget();
-          }
+    return ListView.separated(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        if (index == 0 || !_checkPreviousItemTagSame(index)) {
+          return _buildItemWithTag(controller.topicItemList[index]);
+        }
 
-          if (index == 0 || !_checkPreviousItemTagSame(index)) {
-            return _buildItemWithTag(controller.topicItemList[index]);
-          }
-
-          return _buildListItem(controller.topicItemList[index].record);
-        },
-        separatorBuilder: (context, index) {
-          if (!_checkPreviousItemTagSame(index + 1)) {
-            return Container();
-          }
-          return Divider(
-            color: controller.topic.dividerColor,
-            thickness: 1,
-            height: 1,
-          );
-        },
-        itemCount: controller.topicItemList.length + 1,
-      );
-    });
-  }
-
-  Widget _loadMoreWidget() {
-    return Obx(() {
-      if (controller.isLoadingMore.isFalse && controller.isNoMore.isFalse) {
-        controller.fetchMoreTopicItems();
-      }
-
-      if (controller.isNoMore.isTrue) {
-        return Container();
-      }
-
-      return const Center(child: CircularProgressIndicator.adaptive());
-    });
+        return _buildListItem(controller.topicItemList[index].record);
+      },
+      separatorBuilder: (context, index) {
+        if (!_checkPreviousItemTagSame(index + 1)) {
+          return Container();
+        }
+        return Divider(
+          color: controller.topic.dividerColor,
+          thickness: 1,
+          height: 1,
+        );
+      },
+      itemCount: controller.topicItemList.length,
+    );
   }
 
   bool _checkPreviousItemTagSame(int currentIndex) {
