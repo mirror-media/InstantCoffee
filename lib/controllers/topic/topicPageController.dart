@@ -44,7 +44,19 @@ class TopicPageController extends GetxController {
           }
           break;
         case TopicType.group:
-          // TODO: Handle this case.
+          List<TopicItem> groupTopicList = await repository.fetchTopicItemList(
+            _buildUrl(),
+            isLoadingFirstPage: true,
+            tagIdList: topic.tagIdList,
+          );
+          isNoMore.value = repository.isNoMore;
+          while (!isNoMore.value) {
+            groupTopicList.addAll(await repository.fetchNextPageTopicItemList(
+              tagIdList: topic.tagIdList,
+            ));
+            isNoMore.value = repository.isNoMore;
+          }
+          items.assignAll(_sortByMap(groupTopicList));
           break;
         case TopicType.portraitWall:
           // TODO: Handle this case.
@@ -67,7 +79,9 @@ class TopicPageController extends GetxController {
       topicItemList.addAll(await repository.fetchTopicItemList(_buildUrl(),
           isLoadingFirstPage: true));
     } else {
-      topicItemList.addAll(await repository.fetchNextPageTopicItemList());
+      topicItemList.addAll(await repository.fetchNextPageTopicItemList(
+        tagIdList: topic.tagIdList,
+      ));
     }
     isNoMore.value = repository.isNoMore;
   }
@@ -75,5 +89,41 @@ class TopicPageController extends GetxController {
   String _buildUrl() {
     return topicRecordApi +
         'getposts?max_results=12&where={"isFeatured":$isFeatured,"topics":{"\$in":["${topic.id}"]}}&sort=-publishedDate&page=1';
+  }
+
+  List<TopicItem> _sortByMap(List<TopicItem> items) {
+    if (topic.tagOrderMap != null && topic.tagOrderMap!.isNotEmpty) {
+      items.sort((a, b) {
+        if (topic.tagOrderMap!.containsKey(a.tagId) &&
+            topic.tagOrderMap!.containsKey(b.tagId)) {
+          int orderCompare = topic.tagOrderMap![a.tagId]!
+              .compareTo(topic.tagOrderMap![b.tagId]!);
+          if (orderCompare != 0) {
+            return orderCompare;
+          } else {
+            return b.record.publishedDate.compareTo(a.record.publishedDate);
+          }
+        }
+
+        return b.record.publishedDate.compareTo(a.record.publishedDate);
+      });
+    } else {
+      Map<String, int> tagOrderMap = {};
+      int order = 0;
+      for (var item in items) {
+        tagOrderMap.putIfAbsent(item.tagId!, () => order);
+        order++;
+      }
+      items.sort((a, b) {
+        int orderCompare =
+            tagOrderMap[a.tagId]!.compareTo(tagOrderMap[b.tagId]!);
+        if (orderCompare != 0) {
+          return orderCompare;
+        }
+
+        return b.record.publishedDate.compareTo(a.record.publishedDate);
+      });
+    }
+    return items;
   }
 }
