@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/topic.dart';
+import 'package:readr_app/models/topicImageItem.dart';
 import 'package:readr_app/models/topicItem.dart';
 import 'package:readr_app/services/topicService.dart';
 
@@ -10,6 +11,7 @@ class TopicPageController extends GetxController {
   TopicPageController(this.repository, this.topic);
 
   final topicItemList = <TopicItem>[].obs;
+  final List<TopicImageItem> portraitWallItemList = [];
   final String topicRecordApi =
       Environment().config.mirrorMediaDomain + '/api/v2/membership/v0/';
   bool isLoading = true;
@@ -29,9 +31,9 @@ class TopicPageController extends GetxController {
     isError = false;
     update();
     try {
-      List<TopicItem> items = [];
       switch (topic.type) {
         case TopicType.list:
+          List<TopicItem> items = [];
           isFeatured = true;
           List<TopicItem> featuredList = await repository
               .fetchTopicItemList(_buildUrl(), isLoadingFirstPage: true);
@@ -42,6 +44,7 @@ class TopicPageController extends GetxController {
                 .fetchTopicItemList(_buildUrl(), isLoadingFirstPage: true);
             items.addAll(notFeaturedList);
           }
+          topicItemList.assignAll(items);
           break;
         case TopicType.group:
           List<TopicItem> groupTopicList = await repository.fetchTopicItemList(
@@ -56,14 +59,14 @@ class TopicPageController extends GetxController {
             ));
             isNoMore.value = repository.isNoMore;
           }
-          items.assignAll(_sortByMap(groupTopicList));
+          topicItemList.assignAll(_sortByMap(groupTopicList));
           break;
         case TopicType.portraitWall:
-          // TODO: Handle this case.
+          portraitWallItemList.assignAll(
+              await repository.fetchPortraitWallList(topic.id, _buildUrl()));
           break;
       }
 
-      topicItemList.assignAll(items);
       isNoMore.value = repository.isNoMore;
       isLoading = false;
     } catch (e) {
