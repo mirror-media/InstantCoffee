@@ -57,7 +57,7 @@ class Topic {
     Color recordTitleColor = Colors.black;
     Color dividerColor = Colors.grey;
     Map<String, int> tagOrderMap = {};
-    if (json.containsKey('style') && type == TopicType.group) {
+    if (json.containsKey('style') && type != TopicType.list) {
       String styleString = json['style'] as String;
 
       StyleSheet css = csslib.parse(styleString);
@@ -87,6 +87,16 @@ class Topic {
                 String tagId = simpleSelector.name.replaceAll('tag-', '');
                 int tagOrder = _findOrderInCss(item);
                 tagOrderMap.putIfAbsent(tagId, () => tagOrder);
+              }
+            } else if (simpleSelector.name == 'portraitWallList__block' &&
+                simpleSelectors.length == 2) {
+              //find portrait wall background color
+              simpleSelector = simpleSelectors[1].simpleSelector;
+              if (simpleSelector.name == 'color') {
+                bgColor = _findColorInCss(item);
+                recordTitleColor = bgColor.computeLuminance() >= 0.5
+                    ? Colors.black
+                    : Colors.white;
               }
             }
           }
