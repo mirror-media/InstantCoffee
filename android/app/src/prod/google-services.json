@@ -1,0 +1,72 @@
+{
+  "project_info": {
+    "project_number": "814835936704",
+    "firebase_url": "https://mirror-weekly-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "mirror-weekly",
+    "storage_bucket": "mirror-weekly.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:814835936704:android:d866a7f625cdd6e928ec25",
+        "android_client_info": {
+          "package_name": "com.mirrormedia.news"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "814835936704-02fve9gm6iusp259f4npdl35ntjiscu4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mirrormedia.news",
+            "certificate_hash": "0a68f704262d58c857a0dfa946c36cbfb9400494"
+          }
+        },
+        {
+          "client_id": "814835936704-2g2noeq5et7npvm9k4vbgufpp1p78jtg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mirrormedia.news",
+            "certificate_hash": "b9fc3b0dcca3d170c110fb06e0b93f675ec053a3"
+          }
+        },
+        {
+          "client_id": "814835936704-cboefhuuiol24m1ia8jd4usei9gdnrs3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mirrormedia.news",
+            "certificate_hash": "fd0c020a25becb1e54a618d14878c07cb9ebff22"
+          }
+        },
+        {
+          "client_id": "814835936704-mqepoesd69abaabm8c3b6qmu7sju1g44.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBh-rCMuMbChvhXgSY81T-BVPQUVuh8aSI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "814835936704-mqepoesd69abaabm8c3b6qmu7sju1g44.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "814835936704-7haqvdmhufoj2ijvitdv9rph42rujtu7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mirrormedia.news",
+                "app_store_id": "1186614515"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
