@@ -242,7 +242,7 @@ packages:
     source: hosted
     version: "3.0.1"
   csslib:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: csslib
       url: "https://pub.dartlang.org"
