@@ -6,6 +6,7 @@ enum TopicType {
   list,
   group,
   portraitWall,
+  slideshow,
 }
 
 class Topic {
@@ -21,8 +22,9 @@ class Topic {
   final Color subTitleColor;
   final Color recordTitleColor;
   final Color dividerColor;
+  List<String>? slideshowImageUrlList;
 
-  const Topic({
+  Topic({
     required this.id,
     required this.title,
     this.isFeatured = false,
@@ -35,6 +37,7 @@ class Topic {
     this.recordTitleColor = Colors.black,
     this.dividerColor = Colors.grey,
     this.tagOrderMap,
+    this.slideshowImageUrlList,
   });
 
   factory Topic.fromJson(Map<String, dynamic> json) {
@@ -48,6 +51,8 @@ class Topic {
       type = TopicType.group;
     } else if (json['type'] == 'portrait wall') {
       type = TopicType.portraitWall;
+    } else if (json['leading'] == 'slideshow') {
+      type = TopicType.slideshow;
     } else {
       type = TopicType.list;
     }
@@ -57,7 +62,8 @@ class Topic {
     Color recordTitleColor = Colors.black;
     Color dividerColor = Colors.grey;
     Map<String, int> tagOrderMap = {};
-    if (json.containsKey('style') && type != TopicType.list) {
+    if (json.containsKey('style') &&
+        (type == TopicType.group || type == TopicType.portraitWall)) {
       String styleString = json['style'] as String;
 
       StyleSheet css = csslib.parse(styleString);

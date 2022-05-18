@@ -12,8 +12,6 @@ class TopicPageController extends GetxController {
 
   final topicItemList = <TopicItem>[].obs;
   final List<TopicImageItem> portraitWallItemList = [];
-  final String topicRecordApi =
-      Environment().config.mirrorMediaDomain + '/api/v2/membership/v0/';
   bool isLoading = true;
   final isLoadingMore = false.obs;
   final isNoMore = false.obs;
@@ -32,23 +30,25 @@ class TopicPageController extends GetxController {
     update();
     try {
       switch (topic.type) {
+        case TopicType.slideshow:
         case TopicType.list:
           List<TopicItem> items = [];
           isFeatured = true;
           List<TopicItem> featuredList = await repository
-              .fetchTopicItemList(_buildUrl(), isLoadingFirstPage: true);
+              .fetchTopicItemList(_buildRecordUrl(), isLoadingFirstPage: true);
           items.addAll(featuredList);
           if (featuredList.isEmpty || repository.isNoMore) {
             isFeatured = false;
-            List<TopicItem> notFeaturedList = await repository
-                .fetchTopicItemList(_buildUrl(), isLoadingFirstPage: true);
+            List<TopicItem> notFeaturedList =
+                await repository.fetchTopicItemList(_buildRecordUrl(),
+                    isLoadingFirstPage: true);
             items.addAll(notFeaturedList);
           }
           topicItemList.assignAll(items);
           break;
         case TopicType.group:
           List<TopicItem> groupTopicList = await repository.fetchTopicItemList(
-            _buildUrl(),
+            _buildRecordUrl(),
             isLoadingFirstPage: true,
             tagIdList: topic.tagIdList,
           );
@@ -62,8 +62,8 @@ class TopicPageController extends GetxController {
           topicItemList.assignAll(_sortByMap(groupTopicList));
           break;
         case TopicType.portraitWall:
-          portraitWallItemList.assignAll(
-              await repository.fetchPortraitWallList(topic.id, _buildUrl()));
+          portraitWallItemList.assignAll(await repository.fetchPortraitWallList(
+              _buildImageUrl(), _buildRecordUrl()));
           break;
       }
 
@@ -79,8 +79,8 @@ class TopicPageController extends GetxController {
   void fetchMoreTopicItems() async {
     if (isFeatured && repository.isNoMore) {
       isFeatured = false;
-      topicItemList.addAll(await repository.fetchTopicItemList(_buildUrl(),
-          isLoadingFirstPage: true));
+      topicItemList.addAll(await repository
+          .fetchTopicItemList(_buildRecordUrl(), isLoadingFirstPage: true));
     } else {
       topicItemList.addAll(await repository.fetchNextPageTopicItemList(
         tagIdList: topic.tagIdList,
@@ -89,12 +89,18 @@ class TopicPageController extends GetxController {
     isNoMore.value = repository.isNoMore;
   }
 
-  String _buildUrl() {
-    return topicRecordApi +
-        'getposts?max_results=12&where={"isFeatured":$isFeatured,"topics":{"\$in":["${topic.id}"]}}&sort=-publishedDate&page=1';
+  String _buildRecordUrl() {
+    return Environment().config.mirrorMediaDomain +
+        '/api/v2/membership/v0/getposts?max_results=12&where={"isFeatured":$isFeatured,"topics":{"\$in":["${topic.id}"]}}&sort=-publishedDate&page=1';
+  }
+
+  String _buildImageUrl() {
+    return Environment().config.mirrorMediaDomain +
+        '/api/v2/images?where={"topics":{"\$in":["${topic.id}"]}}&max_results=25';
   }
 
   List<TopicItem> _sortByMap(List<TopicItem> items) {
+    items.removeWhere((element) => element.tagId == null);
     if (topic.tagOrderMap != null && topic.tagOrderMap!.isNotEmpty) {
       items.sort((a, b) {
         if (topic.tagOrderMap!.containsKey(a.tagId) &&

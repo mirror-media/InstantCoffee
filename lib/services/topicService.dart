@@ -21,7 +21,8 @@ abstract class TopicRepos {
     List<String>? tagNameList,
   });
   Future<List<TopicImageItem>> fetchPortraitWallList(
-      String topicId, String recordApi);
+      String imageApi, String recordApi);
+  Future<List<String>> fethcSlideshowImageList(String topicId);
   bool get isNoMore;
 }
 
@@ -68,7 +69,12 @@ class TopicService implements TopicRepos {
     List<Topic> topics = [];
     var jsonObject = json["_items"];
     for (var item in jsonObject) {
-      topics.add(Topic.fromJson(item));
+      Topic topic = Topic.fromJson(item);
+      if (topic.type == TopicType.slideshow) {
+        List<String> imageUrlList = await fethcSlideshowImageList(topic.id);
+        topic.slideshowImageUrlList = imageUrlList;
+      }
+      topics.add(topic);
     }
 
     topics.sort((a, b) {
@@ -173,10 +179,7 @@ class TopicService implements TopicRepos {
   }
 
   Future<List<TopicImageItem>> fetchPortraitWallList(
-      String topicId, String recordApi) async {
-    String imageApi = Environment().config.mirrorMediaDomain +
-        '/api/v2/images?where={"topics":{"\$in":["$topicId"]}}&max_results=25';
-
+      String imageApi, String recordApi) async {
     dynamic jsonResponse;
     jsonResponse = await _helper.getByCacheAndAutoCache(imageApi,
         maxAge: contentTabCacheDuration);
@@ -218,5 +221,25 @@ class TopicService implements TopicRepos {
     }
 
     return portraitWallItemList;
+  }
+
+  @override
+  Future<List<String>> fethcSlideshowImageList(String topicId) async {
+    String imageApi = Environment().config.mirrorMediaDomain +
+        '/api/v2/images?where={"topics":{"\$in":["$topicId"]}}&max_results=25';
+    dynamic jsonResponse;
+    jsonResponse = await _helper.getByCacheAndAutoCache(imageApi,
+        maxAge: contentTabCacheDuration);
+    var jsonObject = jsonResponse["_items"];
+    List<String> imageUrlList = [];
+    for (var object in jsonObject) {
+      String imageUrl = '';
+      if (object['image'] != null &&
+          object['image']['resizedTargets'] != null) {
+        imageUrl = object['image']['resizedTargets']['mobile']['url'];
+        imageUrlList.add(imageUrl);
+      }
+    }
+    return imageUrlList;
   }
 }

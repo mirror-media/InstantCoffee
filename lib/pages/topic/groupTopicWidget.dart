@@ -58,7 +58,7 @@ class GroupTopicWidget extends GetView<TopicPageController> {
 
   bool _checkPreviousItemTagSame(int currentIndex) {
     if (currentIndex > 0 && currentIndex < controller.topicItemList.length) {
-      if (controller.topicItemList[currentIndex].tagId! ==
+      if (controller.topicItemList[currentIndex].tagId ==
           controller.topicItemList[currentIndex - 1].tagId) {
         return true;
       }

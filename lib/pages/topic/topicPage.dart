@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:readr_app/controllers/topic/topicPageController.dart';
@@ -7,6 +8,7 @@ import 'package:readr_app/models/topic.dart';
 import 'package:readr_app/pages/topic/groupTopicWidget.dart';
 import 'package:readr_app/pages/topic/listTopicWidget.dart';
 import 'package:readr_app/pages/topic/portraitWallTopicWidget.dart';
+import 'package:readr_app/pages/topic/slideshowCarouselWidget.dart';
 import 'package:readr_app/services/topicService.dart';
 
 class TopicPage extends StatelessWidget {
@@ -39,7 +41,7 @@ class TopicPage extends StatelessWidget {
         child: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
-              if (topic.ogImageUrl != null)
+              if (topic.ogImageUrl != null && topic.type != TopicType.slideshow)
                 SliverToBoxAdapter(
                   child: Container(
                     color: Colors.black,
@@ -54,6 +56,10 @@ class TopicPage extends StatelessWidget {
                       errorWidget: (context, url, error) => Container(),
                     ),
                   ),
+                ),
+              if (topic.type == TopicType.slideshow)
+                SliverToBoxAdapter(
+                  child: SlideshowCarouselWidget(topic),
                 )
             ];
           },
@@ -66,6 +72,7 @@ class TopicPage extends StatelessWidget {
   Widget _buildBody() {
     switch (topic.type) {
       case TopicType.list:
+      case TopicType.slideshow:
         return ListTopicWidget();
       case TopicType.group:
         return GroupTopicWidget();
