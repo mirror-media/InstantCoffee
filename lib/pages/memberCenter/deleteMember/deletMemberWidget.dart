@@ -5,7 +5,7 @@ import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/deleteMember/cubit.dart';
 import 'package:readr_app/blocs/memberCenter/deleteMember/state.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class DeleteMemberWidget extends StatefulWidget {
   final String israfelId;
@@ -27,58 +27,53 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<DeleteMemberCubit, DeleteMemberState>(
-      listener: (context, state) {
-        if(state is DeleteMemberSuccess) {
-          context.read<MemberBloc>().add(UpdateSubscriptionType(
-            isLogin: false,
-            israfelId: null,
-            subscriptionType: null
-          ));
-        }
-      },
-      builder: (context, state) {
-        if(state is DeleteMemberInitState) {
-          return Scaffold(
-            appBar: _buildBar(context),
-            body: _askingDeleteMemberWidget(context),
-          );
-        }
-
-        if(state is DeleteMemberSuccess) {
-          return Scaffold(
-            appBar: _buildBar(context, isDeletedSuccessfully: true),
-            body: _deletingMemberSuccessWidget(context),
-          );
-        }
-
-        if(state is DeleteMemberError) {
-          return Scaffold(
-            appBar: _buildBar(context),
-            body: _deletingMemberErrorWidget(context),
-          );
-        }
-
-        // state is DeleteMemberLoading
+        listener: (context, state) {
+      if (state is DeleteMemberSuccess) {
+        context.read<MemberBloc>().add(UpdateSubscriptionType(
+            isLogin: false, israfelId: null, subscriptionType: null));
+      }
+    }, builder: (context, state) {
+      if (state is DeleteMemberInitState) {
         return Scaffold(
           appBar: _buildBar(context),
-          body: _loadingWidget(),
+          body: _askingDeleteMemberWidget(context),
         );
       }
-    );
+
+      if (state is DeleteMemberSuccess) {
+        return Scaffold(
+          appBar: _buildBar(context, isDeletedSuccessfully: true),
+          body: _deletingMemberSuccessWidget(context),
+        );
+      }
+
+      if (state is DeleteMemberError) {
+        return Scaffold(
+          appBar: _buildBar(context),
+          body: _deletingMemberErrorWidget(context),
+        );
+      }
+
+      // state is DeleteMemberLoading
+      return Scaffold(
+        appBar: _buildBar(context),
+        body: _loadingWidget(),
+      );
+    });
   }
 
-  PreferredSizeWidget _buildBar(BuildContext context, {bool isDeletedSuccessfully = false}) {
+  PreferredSizeWidget _buildBar(BuildContext context,
+      {bool isDeletedSuccessfully = false}) {
     return AppBar(
       leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios),
-        onPressed: () {
-          if(isDeletedSuccessfully) {
-            Navigator.of(context).popUntil((route) => route.isFirst);
-          } else {
-            Navigator.of(context).pop();
-          }
-        } 
-      ),
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            if (isDeletedSuccessfully) {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            } else {
+              Navigator.of(context).pop();
+            }
+          }),
       centerTitle: true,
       title: Text('會員中心'),
       backgroundColor: appColor,
@@ -140,7 +135,9 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
   }
 
   Widget _loadingWidget() {
-    return Center(child: CircularProgressIndicator(),);
+    return Center(
+      child: CircularProgressIndicator(),
+    );
   }
 
   Widget _deletingMemberSuccessWidget(BuildContext context) {
@@ -217,30 +214,29 @@ class _DeleteMemberWidgetState extends State<DeleteMemberWidget> {
           ),
         ),
         InkWell(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-              child: Text(
-                mirrorMediaServiceEmail,
-                style: TextStyle(
-                  fontSize: 17,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                child: Text(
+                  mirrorMediaServiceEmail,
+                  style: TextStyle(
+                    fontSize: 17,
+                  ),
                 ),
               ),
             ),
-          ),
-          onTap: () async{
-            final Uri emailLaunchUri = Uri(
-              scheme: 'mailto',
-              path: mirrorMediaServiceEmail,
-            );
+            onTap: () async {
+              final Uri emailLaunchUri = Uri(
+                scheme: 'mailto',
+                path: mirrorMediaServiceEmail,
+              );
 
-            if (await canLaunch(emailLaunchUri.toString())) {
-              await launch(emailLaunchUri.toString());
-            } else {
-              throw 'Could not launch $mirrorMediaServiceEmail';
-            }
-          }
-        ),
+              if (await canLaunchUrlString(emailLaunchUri.toString())) {
+                await launchUrlString(emailLaunchUri.toString());
+              } else {
+                throw 'Could not launch $mirrorMediaServiceEmail';
+              }
+            }),
         Center(
           child: Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),

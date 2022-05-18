@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/pages/magazine/magazineListLabel.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class OnlineMagazineWidget extends StatelessWidget {
   @override
@@ -15,24 +15,14 @@ class OnlineMagazineWidget extends StatelessWidget {
         MagazineListLabel(label: '購買線上雜誌'),
         SizedBox(height: 20),
         Padding(
-          padding: const EdgeInsets.only(
-            left: 24.0, right: 24.0
-          ),
+          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _magazineButton(
-                imageWidth,
-                imageHeight,
-                hamiPng,
-                hamiMagazineURL
-              ),
+                  imageWidth, imageHeight, hamiPng, hamiMagazineURL),
               _magazineButton(
-                imageWidth,
-                imageHeight,
-                myBookPng,
-                myBookMagazineURL
-              ),
+                  imageWidth, imageHeight, myBookPng, myBookMagazineURL),
               _magazineButton(
                 imageWidth,
                 imageHeight,
@@ -44,9 +34,7 @@ class OnlineMagazineWidget extends StatelessWidget {
         ),
         SizedBox(height: 20),
         Padding(
-          padding: const EdgeInsets.only(
-            left: 24.0, right: 24.0
-          ),
+          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -79,50 +67,44 @@ class OnlineMagazineWidget extends StatelessWidget {
   }
 
   Widget _magazineButton(
-    double imageWidth,
-    double imageHeight,
-    String pngPath,
-    String url,
-    {
-      String? label
-    }
-  ) {
+      double imageWidth, double imageHeight, String pngPath, String url,
+      {String? label}) {
     return InkWell(
       child: label == null
-      ? Ink(
-          width: imageWidth,
-          height: imageHeight,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(pngPath),
-              fit: BoxFit.contain,
-            ),
-          ),
-        )
-      : Column(
-        children: [
-          Ink(
-            width: imageWidth,
-            height: imageHeight,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(pngPath),
-                fit: BoxFit.contain,
+          ? Ink(
+              width: imageWidth,
+              height: imageHeight,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(pngPath),
+                  fit: BoxFit.contain,
+                ),
               ),
+            )
+          : Column(
+              children: [
+                Ink(
+                  width: imageWidth,
+                  height: imageHeight,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(pngPath),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: appColor,
+                  ),
+                ),
+              ],
             ),
-          ),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 13,
-              color: appColor,
-            ),
-          ),
-        ],
-      ),
-      onTap: () async{
-        if (await canLaunch(url)) {
-          await launch(url);
+      onTap: () async {
+        if (await canLaunchUrlString(url)) {
+          await launchUrlString(url);
         } else {
           throw 'Could not launch $url';
         }

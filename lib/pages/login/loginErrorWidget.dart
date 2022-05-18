@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class LoginErrorWidget extends StatelessWidget {
   @override
@@ -32,30 +32,29 @@ class LoginErrorWidget extends StatelessWidget {
           ),
         ),
         InkWell(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-              child: Text(
-                'E-MAIL: $mirrorMediaServiceEmail',
-                style: TextStyle(
-                  fontSize: 17,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                child: Text(
+                  'E-MAIL: $mirrorMediaServiceEmail',
+                  style: TextStyle(
+                    fontSize: 17,
+                  ),
                 ),
               ),
             ),
-          ),
-          onTap: () async{
-            final Uri emailLaunchUri = Uri(
-              scheme: 'mailto',
-              path: mirrorMediaServiceEmail,
-            );
+            onTap: () async {
+              final Uri emailLaunchUri = Uri(
+                scheme: 'mailto',
+                path: mirrorMediaServiceEmail,
+              );
 
-            if (await canLaunch(emailLaunchUri.toString())) {
-              await launch(emailLaunchUri.toString());
-            } else {
-              throw 'Could not launch $mirrorMediaServiceEmail';
-            }
-          }
-        ),
+              if (await canLaunchUrlString(emailLaunchUri.toString())) {
+                await launchUrlString(emailLaunchUri.toString());
+              } else {
+                throw 'Could not launch $mirrorMediaServiceEmail';
+              }
+            }),
         Center(
           child: Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),

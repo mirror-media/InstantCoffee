@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class VerifyPurchaseFailWidget extends StatelessWidget {
   final ButtonStyle buttonStyle = TextButton.styleFrom(
@@ -53,41 +53,39 @@ class VerifyPurchaseFailWidget extends StatelessWidget {
               ),
               SizedBox(width: 16),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '聯繫會員專屬客服信箱',
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '聯繫會員專屬客服信箱',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  TextButton(
+                    child: Text(
+                      mirrorMediaServiceEmail,
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    TextButton(
-                      child: Text(
-                        mirrorMediaServiceEmail,
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      onPressed: () async{
-                        final Uri emailLaunchUri = Uri(
-                          scheme: 'mailto',
-                          path: mirrorMediaServiceEmail,
-                        );
+                    onPressed: () async {
+                      final Uri emailLaunchUri = Uri(
+                        scheme: 'mailto',
+                        path: mirrorMediaServiceEmail,
+                      );
 
-                        if (await canLaunch(emailLaunchUri.toString())) {
-                          await launch(emailLaunchUri.toString());
-                        } else {
-                          throw 'Could not launch $mirrorMediaServiceEmail';
-                        }
-                      }, 
-                    ),
-                    
-                  ],
-                )
-              ),
+                      if (await canLaunchUrlString(emailLaunchUri.toString())) {
+                        await launchUrlString(emailLaunchUri.toString());
+                      } else {
+                        throw 'Could not launch $mirrorMediaServiceEmail';
+                      }
+                    },
+                  ),
+                ],
+              )),
             ],
           ),
         ),
@@ -144,7 +142,8 @@ class VerifyPurchaseFailWidget extends StatelessWidget {
                 ),
               ),
             ),
-            onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
+            onPressed: () =>
+                Navigator.of(context).popUntil((route) => route.isFirst),
           ),
         ),
       ],

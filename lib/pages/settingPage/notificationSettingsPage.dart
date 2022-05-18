@@ -8,15 +8,14 @@ import 'package:readr_app/blocs/onBoarding/bloc.dart';
 import 'package:readr_app/blocs/onBoarding/events.dart';
 import 'package:readr_app/blocs/onBoarding/states.dart';
 import 'package:readr_app/pages/shared/appVersionWidget.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:localstorage/localstorage.dart';
-
 import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/notificationSetting.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/widgets/appExpansionTile.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class NotificationSettingsPage extends StatefulWidget {
   @override
@@ -398,8 +397,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
               path: mirrorMediaServiceEmail,
             );
 
-            if (await canLaunch(emailLaunchUri.toString())) {
-              await launch(emailLaunchUri.toString());
+            if (await canLaunchUrlString(emailLaunchUri.toString())) {
+              await launchUrlString(emailLaunchUri.toString());
             } else {
               throw 'Could not launch $mirrorMediaServiceEmail';
             }

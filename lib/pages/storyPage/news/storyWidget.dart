@@ -22,19 +22,17 @@ import 'package:readr_app/pages/storyPage/news/shared/downloadMagazineWidget.dar
 import 'package:readr_app/pages/storyPage/news/shared/facebookIframeWidget.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
 import 'package:readr_app/widgets/mMVideoPlayer.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class StoryWidget extends StatelessWidget {
   final Story story;
   StoryWidget({
     required this.story,
   });
-  
+
   late final StoryBloc _storyBloc;
   _fetchPublishedStoryBySlug(String storySlug, bool isMemberCheck) {
-    _storyBloc.add(
-      FetchPublishedStoryBySlug(storySlug, isMemberCheck)
-    );
+    _storyBloc.add(FetchPublishedStoryBySlug(storySlug, isMemberCheck));
   }
 
   Color _getSectionColor(Story? story) {
@@ -52,8 +50,8 @@ class StoryWidget extends StatelessWidget {
 
   bool _isWineCategory(List<Category> categories) {
     return categories.any((category) =>
-      (category.id == Environment().config.wineSectionKey || category.id == Environment().config.wine1SectionKey)
-    );
+        (category.id == Environment().config.wineSectionKey ||
+            category.id == Environment().config.wine1SectionKey));
   }
 
   @override
@@ -71,8 +69,7 @@ class StoryWidget extends StatelessWidget {
       children: [
         Expanded(
           child: ListView(children: [
-            if(isAdsActivated)
-            ...[
+            if (isAdsActivated) ...[
               SizedBox(height: 16),
               MMAdBanner(
                 adUnitId: storyAd.hDUnitId,
@@ -92,7 +89,7 @@ class StoryWidget extends StatelessWidget {
             _buildBrief(story, sectionColor),
             _buildContent(story, isAdsActivated),
             SizedBox(height: 16),
-            if(isAdsActivated)
+            if (isAdsActivated)
               MMAdBanner(
                 adUnitId: storyAd.aT3UnitId,
                 adSize: AdSize.mediumRectangle,
@@ -106,8 +103,7 @@ class StoryWidget extends StatelessWidget {
             _socialButtons(),
             _buildRelatedWidget(context, story.relatedStory),
             SizedBox(height: 16),
-            if(isAdsActivated)
-            ...[
+            if (isAdsActivated) ...[
               MMAdBanner(
                 adUnitId: storyAd.e1UnitId,
                 adSize: AdSize.mediumRectangle,
@@ -121,8 +117,7 @@ class StoryWidget extends StatelessWidget {
             SizedBox(height: 16),
             _buildTagWidget(context, story.tags),
             SizedBox(height: 16),
-            if(isAdsActivated)
-            ...[
+            if (isAdsActivated) ...[
               MMAdBanner(
                 adUnitId: storyAd.fTUnitId,
                 adSize: AdSize.mediumRectangle,
@@ -132,13 +127,12 @@ class StoryWidget extends StatelessWidget {
             ],
           ]),
         ),
-
-        if(isWineCategory)
+        if (isWineCategory)
           Image.asset(
             "assets/image/wine_warning.png",
             height: 50.0,
           ),
-        if(isAdsActivated && !isWineCategory)
+        if (isAdsActivated && !isWineCategory)
           MMAdBanner(
             adUnitId: storyAd.stUnitId,
             adSize: AdSize.banner,
@@ -158,10 +152,10 @@ class StoryWidget extends StatelessWidget {
           ),
         if (story.heroVideo == null)
           InkWell(
-            onTap: (){
-              if(story.heroImage != Environment().config.mirrorMediaNotImageUrl
-                && story.imageUrlList.isNotEmpty
-              ){
+            onTap: () {
+              if (story.heroImage !=
+                      Environment().config.mirrorMediaNotImageUrl &&
+                  story.imageUrlList.isNotEmpty) {
                 RouteGenerator.navigateToImageViewer(story.imageUrlList);
               }
             },
@@ -196,9 +190,9 @@ class StoryWidget extends StatelessWidget {
   }
 
   Widget _buildCategory(Story story, Color sectionColor) {
-    List<Category> categories= story.categories;
+    List<Category> categories = story.categories;
 
-    if(story.isAdvertised) {
+    if (story.isAdvertised) {
       return Container();
     }
 
@@ -356,7 +350,8 @@ class StoryWidget extends StatelessWidget {
           if (articles[i].contents.length > 0) {
             articleWidgets.add(
               paragraphFormat.parseTheTextToHtmlWidget(
-                  articles[i].contents[0].data!, color: Colors.white),
+                  articles[i].contents[0].data!,
+                  color: Colors.white),
             );
           }
 
@@ -407,24 +402,25 @@ class StoryWidget extends StatelessWidget {
             Paragraph paragraph = story.apiDatas[index];
             if (paragraph.contents.length > 0 &&
                 paragraph.contents[0].data != '') {
-              if(unStyleParagraphCount == storyAT1AdIndex) {
+              if (unStyleParagraphCount == storyAT1AdIndex) {
                 aT1IsActivated = true;
-              }
-              else if(unStyleParagraphCount == storyAT2AdIndex) {
+              } else if (unStyleParagraphCount == storyAT2AdIndex) {
                 aT2IsActivated = true;
               }
 
-              if(paragraph.type == 'unstyled') {
-                unStyleParagraphCount ++;
+              if (paragraph.type == 'unstyled') {
+                unStyleParagraphCount++;
               }
 
               return Padding(
                 padding: const EdgeInsets.only(top: 16.0),
                 child: Column(
                   children: [
-                    paragraphFormat.parseTheParagraph(paragraph, context, story.imageUrlList),
-                    if(isAdsActivated && (!aT1IsActivated && unStyleParagraphCount == storyAT1AdIndex)) 
-                    ...[
+                    paragraphFormat.parseTheParagraph(
+                        paragraph, context, story.imageUrlList),
+                    if (isAdsActivated &&
+                        (!aT1IsActivated &&
+                            unStyleParagraphCount == storyAT1AdIndex)) ...[
                       SizedBox(height: 16),
                       MMAdBanner(
                         adUnitId: story.storyAd!.aT1UnitId,
@@ -432,8 +428,9 @@ class StoryWidget extends StatelessWidget {
                         isKeepAlive: true,
                       ),
                     ],
-                    if(isAdsActivated && (!aT2IsActivated && unStyleParagraphCount == storyAT2AdIndex)) 
-                    ...[
+                    if (isAdsActivated &&
+                        (!aT2IsActivated &&
+                            unStyleParagraphCount == storyAT2AdIndex)) ...[
                       SizedBox(height: 16),
                       MMAdBanner(
                         adUnitId: story.storyAd!.aT2UnitId,
@@ -452,45 +449,43 @@ class StoryWidget extends StatelessWidget {
 
   Widget _buildTagWidget(BuildContext context, List<Tag> tags) {
     return tags.length == 0
-    ? Container()
-    : Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Divider(
-            color: Colors.black,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '相關關鍵字 : ',
-                  style: TextStyle(fontSize: 18),
+        ? Container()
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Divider(
+                color: Colors.black,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '相關關鍵字 : ',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    _buildTags(context, tags),
+                  ],
                 ),
-                _buildTags(context, tags),
-              ],
-            ),
-          ),
-          Divider(
-            color: Colors.black,
-          ),
-        ],
-      );
+              ),
+              Divider(
+                color: Colors.black,
+              ),
+            ],
+          );
   }
 
   Widget _buildTags(BuildContext context, List<Tag> tags) {
     List<Widget> tagWidgets = [];
     for (int i = 0; i < tags.length; i++) {
-      tagWidgets.add(
-        GestureDetector(
-          onTap: () => RouteGenerator.navigateToTagPage(tags[i]),
-          child: Text(
-            '#' + tags[i].name,
-            style: TextStyle(fontSize: 18, color: appColor),
-          ),
-        )
-      );
+      tagWidgets.add(GestureDetector(
+        onTap: () => RouteGenerator.navigateToTagPage(tags[i]),
+        child: Text(
+          '#' + tags[i].name,
+          style: TextStyle(fontSize: 18, color: appColor),
+        ),
+      ));
 
       if (i != tags.length - 1) {
         tagWidgets.add(
@@ -541,7 +536,8 @@ class StoryWidget extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
-      child: paragraphFormat.parseTheTextToHtmlWidget(moreContentHtml, fontSize: 18),
+      child: paragraphFormat.parseTheTextToHtmlWidget(moreContentHtml,
+          fontSize: 18),
     );
   }
 
@@ -561,27 +557,27 @@ class StoryWidget extends StatelessWidget {
       relatedList.add(_buildRelatedItem(context, relateds[i]));
     }
     return relatedList.length == 0
-    ? Container()
-    : Padding(
-        padding: const EdgeInsets.only(top: 16.0, bottom: 32.0),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+        ? Container()
+        : Padding(
+            padding: const EdgeInsets.only(top: 16.0, bottom: 32.0),
+            child: Column(
               children: [
-                myVerticalDivider,
-                Text(
-                  '相關文章',
-                  style: TextStyle(fontSize: 24, color: appColor),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    myVerticalDivider,
+                    Text(
+                      '相關文章',
+                      style: TextStyle(fontSize: 24, color: appColor),
+                    ),
+                    myVerticalDivider,
+                  ],
                 ),
-                myVerticalDivider,
+                SizedBox(height: 16),
+                ...relatedList,
               ],
             ),
-            SizedBox(height: 16),
-            ...relatedList,
-          ],
-        ),
-      );
+          );
   }
 
   Widget _buildRelatedItem(BuildContext context, Record relatedItem) {
@@ -642,55 +638,61 @@ class StoryWidget extends StatelessWidget {
     );
   }
 
-  Widget _socialButtons(){
+  Widget _socialButtons() {
     Widget lineButton = TextButton.icon(
-      onPressed: () => launch('https://lin.ee/dkD1s4q'), 
-      icon: Image.asset(lineIconPng), 
-      label: Text('加入', 
+      onPressed: () => launchUrlString('https://lin.ee/dkD1s4q'),
+      icon: Image.asset(lineIconPng),
+      label: Text(
+        '加入',
         style: TextStyle(
-          fontSize: 16, 
+          fontSize: 16,
           color: Color.fromRGBO(74, 74, 74, 1),
         ),
       ),
     );
 
     Widget igButton = TextButton.icon(
-      onPressed: () => launch('https://www.instagram.com/mirror_media/'), 
-      icon: Image.asset(igIconPng), 
-      label: Text('追蹤', 
+      onPressed: () =>
+          launchUrlString('https://www.instagram.com/mirror_media/'),
+      icon: Image.asset(igIconPng),
+      label: Text(
+        '追蹤',
         style: TextStyle(
-          fontSize: 16, 
+          fontSize: 16,
           color: Color.fromRGBO(74, 74, 74, 1),
         ),
       ),
     );
 
     Widget ytButton = TextButton.icon(
-      onPressed: () => launch('https://www.youtube.com/channel/UCYkldEK001GxR884OZMFnRw?sub_confirmation=1'), 
-      icon: Image.asset(ytIconPng), 
-      label: Text('訂閱', 
+      onPressed: () => launchUrlString(
+          'https://www.youtube.com/channel/UCYkldEK001GxR884OZMFnRw?sub_confirmation=1'),
+      icon: Image.asset(ytIconPng),
+      label: Text(
+        '訂閱',
         style: TextStyle(
-          fontSize: 16, 
+          fontSize: 16,
           color: Color.fromRGBO(74, 74, 74, 1),
         ),
       ),
     );
 
     Widget addMemberButton = TextButton.icon(
-      onPressed: (){
-        if(FirebaseAuth.instance.currentUser == null){
+      onPressed: () {
+        if (FirebaseAuth.instance.currentUser == null) {
           RouteGenerator.navigateToLogin();
         } else {
           RouteGenerator.navigateToSubscriptionSelect();
         }
-      }, 
+      },
       icon: ClipRRect(
         borderRadius: BorderRadius.circular(12.0),
         child: Image.asset('assets/icon/icon.jpg', width: 32, height: 32),
-      ), 
-      label: Text('加入會員', 
+      ),
+      label: Text(
+        '加入會員',
         style: TextStyle(
-          fontSize: 16, 
+          fontSize: 16,
           color: Color.fromRGBO(74, 74, 74, 1),
         ),
       ),

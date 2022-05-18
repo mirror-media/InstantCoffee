@@ -14,7 +14,7 @@ import 'package:readr_app/pages/shared/appVersionWidget.dart';
 import 'package:readr_app/pages/shared/memberSubscriptionTypeTitleWidget.dart';
 import 'package:readr_app/pages/shared/premiumAnimatePage.dart';
 import 'package:readr_app/services/loginService.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class PremiumMemberWidget extends StatefulWidget {
   final String israfelId;
@@ -23,32 +23,26 @@ class PremiumMemberWidget extends StatefulWidget {
     required this.israfelId,
     required this.subscriptionType,
   });
-  
+
   @override
   _PremiumMemberWidgetState createState() => _PremiumMemberWidgetState();
 }
 
 class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
   FirebaseAuth _auth = FirebaseAuth.instance;
-  
+
   _signOut() async {
     await _auth.signOut();
-    await RouteGenerator.navigatorKey.currentState!.push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => AnimatePage(
-          transitionAnimation: animation
-        ),
-        transitionDuration: const Duration(milliseconds: 1500),
-        reverseTransitionDuration: const Duration(milliseconds: 1000),
-      )
-    );
-    context.read<MemberBloc>().add(UpdateSubscriptionType(
-      isLogin: false,
-      israfelId: null,
-      subscriptionType: null
+    await RouteGenerator.navigatorKey.currentState!.push(PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          AnimatePage(transitionAnimation: animation),
+      transitionDuration: const Duration(milliseconds: 1500),
+      reverseTransitionDuration: const Duration(milliseconds: 1000),
     ));
+    context.read<MemberBloc>().add(UpdateSubscriptionType(
+        isLogin: false, israfelId: null, subscriptionType: null));
   }
-  
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -62,10 +56,7 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
         title: Text(
           '會員中心',
           style: TextStyle(
-            color: appColor,
-            fontSize: 20,
-            fontWeight: FontWeight.w400
-          ),
+              color: appColor, fontSize: 20, fontWeight: FontWeight.w400),
         ),
       ),
       body: CustomScrollView(
@@ -79,17 +70,16 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                if(widget.subscriptionType != SubscriptionType.staff)...[
+                if (widget.subscriptionType != SubscriptionType.staff) ...[
                   _horizontalDivider(width),
                   _memberSubscriptionDetailButton(widget.subscriptionType),
-                  if(widget.subscriptionType != SubscriptionType.marketing && 
-                    widget.subscriptionType != SubscriptionType.subscribe_group
-                  )...[
+                  if (widget.subscriptionType != SubscriptionType.marketing &&
+                      widget.subscriptionType !=
+                          SubscriptionType.subscribe_group) ...[
                     _horizontalDivider(width),
                     _memberPaymentRecordButton(widget.subscriptionType),
                   ],
                 ],
-
                 _horizontalDivider(width),
                 _memberProfileButton(),
                 _horizontalDivider(width),
@@ -112,13 +102,9 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
           SliverFillRemaining(
             hasScrollBody: false,
             child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                height: 185,
-                width: width,
-                child: _contactInfo(width)
-              )
-            ),
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                    height: 185, width: width, child: _contactInfo(width))),
           ),
         ],
       ),
@@ -126,30 +112,27 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
   }
 
   Widget _memberLevelBlock(SubscriptionType subscriptionType) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: Text(
-            '我的會員等級',
-            style: TextStyle(fontSize: 15),
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Padding(
+        padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+        child: Text(
+          '我的會員等級',
+          style: TextStyle(fontSize: 15),
+        ),
+      ),
+      SizedBox(height: 4),
+      Padding(
+        padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+        child: MemberSubscriptionTypeTitleWiget(
+          subscriptionType: subscriptionType,
+          textStyle: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w500,
+            color: appColor,
           ),
         ),
-        SizedBox(height: 4),
-        Padding(
-          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-          child: MemberSubscriptionTypeTitleWiget(
-            subscriptionType: subscriptionType,
-            textStyle: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w500,
-              color: appColor,
-            ),
-          ),
-        ),
-      ]
-    );
+      ),
+    ]);
   }
 
   Widget _horizontalDivider(double width) {
@@ -163,31 +146,25 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
   Widget _memberSubscriptionDetailButton(SubscriptionType subscriptionType) {
     return _navigateButton(
       '我的方案細節',
-      () => Navigator.push(context,
-          MaterialPageRoute(builder: (context) {
-            return BlocProvider(
-              child: MemberSubscriptionDetailPage(subscriptionType: subscriptionType,),
-              create: (BuildContext context) =>
-                  MemberDetailCubit());
-                  }
-                )
-              ),
+      () => Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return BlocProvider(
+            child: MemberSubscriptionDetailPage(
+              subscriptionType: subscriptionType,
+            ),
+            create: (BuildContext context) => MemberDetailCubit());
+      })),
     );
   }
 
   Widget _memberPaymentRecordButton(SubscriptionType subscriptionType) {
     return _navigateButton(
       '付款紀錄',
-      () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context){
-          return BlocProvider(
-            create: (BuildContext context) => PaymentRecordBloc(),
-            child: MemberPaymentRecordPage(subscriptionType),
-            );
-          }
-        )
-      ),
+      () => Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return BlocProvider(
+          create: (BuildContext context) => PaymentRecordBloc(),
+          child: MemberPaymentRecordPage(subscriptionType),
+        );
+      })),
     );
   }
 
@@ -202,11 +179,9 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
     return _navigateButton(
       '修改密碼',
       () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => PasswordUpdatePage(isPremium: true),
-          )
-        );
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => PasswordUpdatePage(isPremium: true),
+        ));
       },
     );
   }
@@ -252,7 +227,9 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
   Widget _logoutButton(double width) {
     final ButtonStyle flatButtonStyle = ButtonStyle(
       overlayColor: MaterialStateProperty.all(Colors.grey[350]),
-      padding: MaterialStateProperty.all(const EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 4.0),),
+      padding: MaterialStateProperty.all(
+        const EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 4.0),
+      ),
     );
 
     return InkWell(
@@ -304,36 +281,32 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
 
   Widget _deleteMemberButton(double width) {
     return InkWell(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
-        child: Container(
-          width: width,
-          child: Text(
-            '刪除帳號',
-            style: TextStyle(
-              fontSize: 17,
-              color: Colors.red,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+          child: Container(
+            width: width,
+            child: Text(
+              '刪除帳號',
+              style: TextStyle(
+                fontSize: 17,
+                color: Colors.red,
+              ),
             ),
           ),
         ),
-      ),
-      onTap: () => RouteGenerator.navigateToDeleteMember(
-        widget.israfelId,
-        widget.subscriptionType
-      )
-    );
+        onTap: () => RouteGenerator.navigateToDeleteMember(
+            widget.israfelId, widget.subscriptionType));
   }
 
   Widget _contactInfo(double width) {
-    return Wrap(
-      children: [
-        Container(
-          color: appColor,
-          width: width,
-          height: 1,
-        ),
-        SizedBox(height: 16),
-        InkWell(
+    return Wrap(children: [
+      Container(
+        color: appColor,
+        width: width,
+        height: 1,
+      ),
+      SizedBox(height: 16),
+      InkWell(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: Container(
@@ -344,20 +317,19 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
               ),
             ),
           ),
-          onTap: () async{
+          onTap: () async {
             final Uri emailLaunchUri = Uri(
               scheme: 'mailto',
               path: mirrorMediaServiceEmail,
             );
 
-            if (await canLaunch(emailLaunchUri.toString())) {
-              await launch(emailLaunchUri.toString());
+            if (await canLaunchUrlString(emailLaunchUri.toString())) {
+              await launchUrlString(emailLaunchUri.toString());
             } else {
               throw 'Could not launch $mirrorMediaServiceEmail';
             }
-          }
-        ),
-        InkWell(
+          }),
+      InkWell(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: Container(
@@ -368,11 +340,10 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
               ),
             ),
           ),
-          onTap: () async{
+          onTap: () async {
             RouteGenerator.navigateToStory('privacy', isMemberCheck: false);
-          }
-        ),
-        InkWell(
+          }),
+      InkWell(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: Container(
@@ -384,15 +355,13 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
             ),
           ),
           onTap: () {
-            RouteGenerator.navigateToStory('service-rule', isMemberCheck: false);
-          }
-        ),
-        SizedBox(height: 16),
-        Padding(
+            RouteGenerator.navigateToStory('service-rule',
+                isMemberCheck: false);
+          }),
+      SizedBox(height: 16),
+      Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-          child: AppVersionWidget()
-        ),
-      ]
-    );
+          child: AppVersionWidget()),
+    ]);
   }
 }
