@@ -22,52 +22,54 @@ class TopicListPage extends GetView<TopicListController> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: Obx(
-                () => ListView.separated(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                  itemBuilder: (context, index) {
-                    if (index == controller.topicList.length) {
-                      return _loadMoreWidget();
-                    }
-                    return _buildItem(controller.topicList[index]);
-                  },
-                  separatorBuilder: (context, index) {
-                    if (index == 0) {
-                      return _buildAdItem(controller.storyAd.aT1UnitId);
-                    } else if (index == 4) {
-                      return _buildAdItem(controller.storyAd.aT2UnitId);
-                    } else if (index == 9) {
-                      return _buildAdItem(controller.storyAd.aT3UnitId);
-                    }
-                    return Divider(
-                      thickness: 1,
-                      color: Colors.grey,
-                    );
-                  },
-                  itemCount: controller.topicList.length + 1,
-                ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Obx(
+              () => ListView.separated(
+                padding: const EdgeInsets.only(bottom: 20),
+                itemBuilder: (context, index) {
+                  if (index == controller.topicList.length) {
+                    return _loadMoreWidget();
+                  }
+
+                  if (index == 0) {
+                    return _buildFirstItem(controller.topicList[index]);
+                  }
+
+                  return _buildItem(controller.topicList[index]);
+                },
+                separatorBuilder: (context, index) {
+                  if (index == 0) {
+                    return _buildAdItem(controller.storyAd.aT1UnitId);
+                  } else if (index == 4) {
+                    return _buildAdItem(controller.storyAd.aT2UnitId);
+                  } else if (index == 9) {
+                    return _buildAdItem(controller.storyAd.aT3UnitId);
+                  }
+                  return Divider(
+                    thickness: 1,
+                    color: Colors.grey,
+                  );
+                },
+                itemCount: controller.topicList.length + 1,
               ),
             ),
-            BlocBuilder<MemberBloc, MemberState>(
-              builder: (context, state) {
-                if (state.status == MemberStatus.loaded && !state.isPremium) {
-                  return MMAdBanner(
-                    adUnitId: controller.storyAd.stUnitId,
-                    adSize: AdSize.banner,
-                    isKeepAlive: true,
-                  );
-                }
+          ),
+          BlocBuilder<MemberBloc, MemberState>(
+            builder: (context, state) {
+              if (state.status == MemberStatus.loaded && !state.isPremium) {
+                return MMAdBanner(
+                  adUnitId: controller.storyAd.stUnitId,
+                  adSize: AdSize.banner,
+                  isKeepAlive: true,
+                );
+              }
 
-                return Container();
-              },
-            )
-          ],
-        ),
+              return Container();
+            },
+          )
+        ],
       ),
     );
   }
@@ -143,13 +145,25 @@ class TopicListPage extends GetView<TopicListController> {
     return BlocBuilder<MemberBloc, MemberState>(
       builder: (context, state) {
         if (state.status == MemberStatus.loaded && !state.isPremium) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: MMAdBanner(
-              adUnitId: adUnitId,
-              adSize: AdSize.mediumRectangle,
-              isKeepAlive: true,
-            ),
+          return Column(
+            children: [
+              Divider(
+                thickness: 1,
+                color: Colors.grey,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: MMAdBanner(
+                  adUnitId: adUnitId,
+                  adSize: AdSize.mediumRectangle,
+                  isKeepAlive: true,
+                ),
+              ),
+              Divider(
+                thickness: 1,
+                color: Colors.grey,
+              ),
+            ],
           );
         }
 
@@ -158,6 +172,43 @@ class TopicListPage extends GetView<TopicListController> {
           color: Colors.grey,
         );
       },
+    );
+  }
+
+  Widget _buildFirstItem(Topic topic) {
+    double width = Get.width;
+
+    return InkWell(
+      child: Column(
+        children: [
+          if (topic.ogImageUrl != null)
+            CachedNetworkImage(
+              height: width / 16 * 9,
+              width: width,
+              imageUrl: topic.ogImageUrl!,
+              placeholder: (context, url) => Container(
+                height: width / 16 * 9,
+                width: width,
+                color: Colors.grey,
+              ),
+              errorWidget: (context, url, error) => Container(
+                height: width / 16 * 9,
+                width: width,
+                color: Colors.grey,
+                child: Icon(Icons.error),
+              ),
+              fit: BoxFit.cover,
+            ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
+            child: Text(
+              topic.title,
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+        ],
+      ),
+      onTap: () => Get.to(() => TopicPage(topic)),
     );
   }
 }
