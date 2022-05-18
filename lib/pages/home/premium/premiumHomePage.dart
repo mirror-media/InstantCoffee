@@ -30,19 +30,21 @@ class PremiumHomePage extends StatefulWidget {
   _PremiumHomePageState createState() => _PremiumHomePageState();
 }
 
-class _PremiumHomePageState extends State<PremiumHomePage> with WidgetsBindingObserver {
+class _PremiumHomePageState extends State<PremiumHomePage>
+    with WidgetsBindingObserver {
   int _selectedIndex = 0;
   late PageController _pageController;
   ScrollController _premeniumArticleBarScrollController = ScrollController();
 
   final LocalStorage _storage = LocalStorage('setting');
   AppLinkHelper _appLinkHelper = AppLinkHelper();
-  FirebaseMessangingHelper _firebaseMessangingHelper = FirebaseMessangingHelper();
+  FirebaseMessangingHelper _firebaseMessangingHelper =
+      FirebaseMessangingHelper();
 
   @override
   void initState() {
-    WidgetsBinding.instance!.addObserver(this);
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addObserver(this);
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       _appLinkHelper.configAppLink(context);
       _appLinkHelper.listenAppLink(context);
       _firebaseMessangingHelper.configFirebaseMessaging();
@@ -52,72 +54,59 @@ class _PremiumHomePageState extends State<PremiumHomePage> with WidgetsBindingOb
     super.initState();
   }
 
-  List<Widget> _getPages(
-    ScrollController premeniumArticleBarScrollController
-  ) {
+  List<Widget> _getPages(ScrollController premeniumArticleBarScrollController) {
     return <Widget>[
       PremiumHomeWidget(),
       BlocProvider(
         create: (context) => SearchBloc(searchRepos: SearchServices()),
-        child: ColoredBox(
-          color: Colors.white,
-          child: SearchWidget()
-        ),
+        child: ColoredBox(color: Colors.white, child: SearchWidget()),
       ),
       ColoredBox(
-        color: Colors.white,
-        child: BlocProvider(
-          create: (context) => TabContentBloc(
-            recordRepos: RecordService()
-          ),
-          child: PremiumTabContent(
-            section: Section(
-              key: Environment().config.memberSectionKey,
-              name: 'member',
-              title: '會員專區',
-              description: '',
-              order: 0,
-              focus: false,
-              type: 'section',
+          color: Colors.white,
+          child: BlocProvider(
+            create: (context) => TabContentBloc(recordRepos: RecordService()),
+            child: PremiumTabContent(
+              section: Section(
+                key: Environment().config.memberSectionKey,
+                name: 'member',
+                title: '會員專區',
+                description: '',
+                order: 0,
+                focus: false,
+                type: 'section',
+              ),
+              scrollController: premeniumArticleBarScrollController,
             ),
-            scrollController: premeniumArticleBarScrollController,
-          ),
-        )
-      ),
+          )),
       PremiumMemberWidget(
-        israfelId: context.read<MemberBloc>().state.israfelId!,
-        subscriptionType: context.read<MemberBloc>().state.subscriptionType!
-      )
+          israfelId: context.read<MemberBloc>().state.israfelId!,
+          subscriptionType: context.read<MemberBloc>().state.subscriptionType!)
     ];
   }
 
-
-  _showTermsOfService() async{
-    if(await _storage.ready) {
+  _showTermsOfService() async {
+    if (await _storage.ready) {
       bool? isAcceptTerms = await _storage.getItem("isAcceptTerms");
-      if(isAcceptTerms == null || !isAcceptTerms) {
+      if (isAcceptTerms == null || !isAcceptTerms) {
         _storage.setItem("isAcceptTerms", false);
         await Future.delayed(Duration(seconds: 1));
-        await Navigator.of(context).push(
-          PageRouteBuilder(
+        await Navigator.of(context).push(PageRouteBuilder(
             barrierDismissible: false,
-            pageBuilder: (BuildContext context, _, __) => MMTermsOfServicePage()
-          )
-        );
+            pageBuilder: (BuildContext context, _, __) =>
+                MMTermsOfServicePage()));
       }
     }
   }
 
   void _onItemTapped(int index) {
-    if(_selectedIndex == index && _selectedIndex == 2) {
+    if (_selectedIndex == index && _selectedIndex == 2) {
       _premeniumArticleBarScrollController.animateTo(
-        _premeniumArticleBarScrollController.position.minScrollExtent,
-        duration: Duration(milliseconds: 1000),
-        curve: Curves.easeIn
-      );
+          _premeniumArticleBarScrollController.position.minScrollExtent,
+          duration: Duration(milliseconds: 1000),
+          curve: Curves.easeIn);
     }
 
-    if(_selectedIndex != index) {
+    if (_selectedIndex != index) {
       setState(() {
         _selectedIndex = index;
       });
@@ -149,26 +138,13 @@ class _PremiumHomePageState extends State<PremiumHomePage> with WidgetsBindingOb
         backgroundColor: appColor,
         unselectedItemColor: Colors.white,
         selectedItemColor: Color(0xff1B455C),
-
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped, 
+        onTap: _onItemTapped,
         items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: '首頁'
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: '搜尋'
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.star),
-            label: 'Premium文章'
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: '會員中心'
-          )
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: '首頁'),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: '搜尋'),
+          BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Premium文章'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: '會員中心')
         ],
       ),
     );

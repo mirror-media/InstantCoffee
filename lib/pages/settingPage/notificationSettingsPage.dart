@@ -29,7 +29,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   List<GlobalKey> _notificationKeys = [];
   List<GlobalKey<AppExpansionTileState>> _expansionTileKeys = [];
   final LocalStorage _storage = LocalStorage('setting');
-  FirebaseMessangingHelper _firebaseMessangingHelper = FirebaseMessangingHelper();
+  FirebaseMessangingHelper _firebaseMessangingHelper =
+      FirebaseMessangingHelper();
   List<NotificationSetting>? _notificationSettingList;
 
   @override
@@ -42,58 +43,58 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
 
   _setNotificationSettingList() async {
     if (await _storage.ready) {
-      if(_storage.getItem("notification") != null) {
+      if (_storage.getItem("notification") != null) {
         _notificationSettingList =
-            NotificationSetting.notificationSettingListFromJson(_storage.getItem("notification"));
+            NotificationSetting.notificationSettingListFromJson(
+                _storage.getItem("notification"));
       }
     }
 
     if (_notificationSettingList == null) {
       await _initNotification();
     } else {
-      List<NotificationSetting> notificationSettingListFromAsset = await _getNotificationFromAsset();
+      List<NotificationSetting> notificationSettingListFromAsset =
+          await _getNotificationFromAsset();
       checkAndSyncNotificationSettingList(
-        notificationSettingListFromAsset,
-        _notificationSettingList
-      );
+          notificationSettingListFromAsset, _notificationSettingList);
       _notificationSettingList = notificationSettingListFromAsset;
       _storage.setItem(
-        "notification", 
-        NotificationSetting.toNotificationSettingListJson(_notificationSettingList!),
+        "notification",
+        NotificationSetting.toNotificationSettingListJson(
+            _notificationSettingList!),
       );
     }
 
-    for(int i=0; i<_notificationSettingList!.length; i++) {
+    for (int i = 0; i < _notificationSettingList!.length; i++) {
       _notificationKeys.add(GlobalKey());
       _expansionTileKeys.add(GlobalKey());
     }
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async{  
-      if(_onBoardingBloc.state.status == OnBoardingStatus.thirdPage) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      if (_onBoardingBloc.state.status == OnBoardingStatus.thirdPage) {
         // await navigation completed, or onBoarding will get the wrong position
         await Future.delayed(Duration(milliseconds: 300));
-        OnBoardingPosition onBoardingPosition = await _onBoardingBloc.getSizeAndPosition(_notificationKeys[1]);
+        OnBoardingPosition onBoardingPosition =
+            await _onBoardingBloc.getSizeAndPosition(_notificationKeys[1]);
         onBoardingPosition.left = 0;
         onBoardingPosition.height += 16;
         onBoardingPosition.function = () {
           _notificationSettingList![1].value = true;
           _storage.setItem(
-            "notification", 
-            NotificationSetting.toNotificationSettingListJson(_notificationSettingList!),
+            "notification",
+            NotificationSetting.toNotificationSettingListJson(
+                _notificationSettingList!),
           );
 
-          _firebaseMessangingHelper.subscribeTheNotification(_notificationSettingList![1]);
+          _firebaseMessangingHelper
+              .subscribeTheNotification(_notificationSettingList![1]);
           _expansionTileKeys[1].currentState!.expand();
           _onBoardingBloc.setOnBoardingClose();
-          _onBoardingBloc.add(
-            CloseOnBoarding()
-          );
+          _onBoardingBloc.add(CloseOnBoarding());
         };
-        _onBoardingBloc.add(
-          GoToNextHint(
-            onBoardingStatus: OnBoardingStatus.fourthPage,
-            onBoardingPosition: onBoardingPosition,
-          )
-        );
+        _onBoardingBloc.add(GoToNextHint(
+          onBoardingStatus: OnBoardingStatus.fourthPage,
+          onBoardingPosition: onBoardingPosition,
+        ));
       }
     });
     setState(() {});
@@ -110,47 +111,38 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   /// userList is from storage notification
   /// change the title and topic from assetList
   /// keep the subscription value from userList
-  checkAndSyncNotificationSettingList(
-    List<NotificationSetting>? assetList, 
-    List<NotificationSetting>? userList
-  ) async{
-    if(assetList != null) {
-      assetList.forEach(
-        (asset) { 
-          NotificationSetting? user = NotificationSetting.getNotificationSettingListById(
-            userList, 
-            asset.id
-          );
-          if(user != null && user.id == asset.id) {
-            if(user.topic != asset.topic && user.value) {
-              _firebaseMessangingHelper.unsubscribeFromTopic(user.topic!);
-              _firebaseMessangingHelper.subscribeToTopic(asset.topic!);
-            }
-            asset.value = user.value;
+  checkAndSyncNotificationSettingList(List<NotificationSetting>? assetList,
+      List<NotificationSetting>? userList) async {
+    if (assetList != null) {
+      assetList.forEach((asset) {
+        NotificationSetting? user =
+            NotificationSetting.getNotificationSettingListById(
+                userList, asset.id);
+        if (user != null && user.id == asset.id) {
+          if (user.topic != asset.topic && user.value) {
+            _firebaseMessangingHelper.unsubscribeFromTopic(user.topic!);
+            _firebaseMessangingHelper.subscribeToTopic(asset.topic!);
+          }
+          asset.value = user.value;
 
-            if(asset.notificationSettingList != null || user.notificationSettingList != null) {
-              checkAndSyncNotificationSettingList(
-                asset.notificationSettingList!,
-                user.notificationSettingList
-              );
-            }
+          if (asset.notificationSettingList != null ||
+              user.notificationSettingList != null) {
+            checkAndSyncNotificationSettingList(
+                asset.notificationSettingList!, user.notificationSettingList);
           }
         }
-      );
+      });
     }
 
-    if(userList != null) {
-      userList.forEach(
-        (user) { 
-          NotificationSetting? asset = NotificationSetting.getNotificationSettingListById(
-            assetList, 
-            user.id
-          );
-          if(asset == null && user.topic != null && user.value) {
-            _firebaseMessangingHelper.unsubscribeFromTopic(user.topic!);
-          }
+    if (userList != null) {
+      userList.forEach((user) {
+        NotificationSetting? asset =
+            NotificationSetting.getNotificationSettingListById(
+                assetList, user.id);
+        if (asset == null && user.topic != null && user.value) {
+          _firebaseMessangingHelper.unsubscribeFromTopic(user.topic!);
         }
-      );
+      });
     }
   }
 
@@ -164,11 +156,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     _storage.setItem("notification", jsonSettingList);
 
     // reset all of topics by defaultNotificationList.json
-    _notificationSettingList!.forEach(
-      (notificationSetting) { 
-        _firebaseMessangingHelper.subscribeTheNotification(notificationSetting);
-      }
-    );
+    _notificationSettingList!.forEach((notificationSetting) {
+      _firebaseMessangingHelper.subscribeTheNotification(notificationSetting);
+    });
   }
 
   @override
@@ -187,24 +177,25 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
               Scaffold(
                 appBar: _buildBar(context),
                 body: SafeArea(
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverToBoxAdapter(child: _buildDescriptionSection(context)),
-                      SliverToBoxAdapter(child: _buildNotificationSettingListSection(context, _notificationSettingList)),
-                      SliverFillRemaining(
-                        hasScrollBody: false,
-                        child: Align(
+                  child: CustomScrollView(slivers: [
+                    SliverToBoxAdapter(
+                        child: _buildDescriptionSection(context)),
+                    SliverToBoxAdapter(
+                        child: _buildNotificationSettingListSection(
+                            context, _notificationSettingList)),
+                    SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Align(
                           alignment: Alignment.bottomCenter,
-                          child: Container(height: 180, child: _contactInfo(width))
-                        ),
-                      ),
-                    ]
-                  ),
+                          child: Container(
+                              height: 180, child: _contactInfo(width))),
+                    ),
+                  ]),
                 ),
               ),
-              if(isOnBoarding && onBoardingPosition != null)
+              if (isOnBoarding && onBoardingPosition != null)
                 GestureDetector(
-                  onTap: () async{
+                  onTap: () async {
                     onBoardingPosition.function?.call();
                   },
                   child: _onBoardingBloc.getCustomPaintOverlay(
@@ -215,13 +206,12 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                     onBoardingPosition.height,
                   ),
                 ),
-              if(isOnBoarding && onBoardingPosition != null)
+              if (isOnBoarding && onBoardingPosition != null)
                 _onBoardingBloc.getHint(
-                  context,
-                  onBoardingPosition.left, 
-                  onBoardingPosition.top + onBoardingPosition.height,
-                  state.onBoardingHint!
-                ),
+                    context,
+                    onBoardingPosition.left,
+                    onBoardingPosition.top + onBoardingPosition.height,
+                    state.onBoardingHint!),
             ],
           ),
         );
@@ -265,8 +255,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
     );
   }
 
-  Widget _buildNotificationSettingListSection(
-      BuildContext context, List<NotificationSetting>? notificationSettingList) {
+  Widget _buildNotificationSettingListSection(BuildContext context,
+      List<NotificationSetting>? notificationSettingList) {
     if (notificationSettingList == null) {
       return Center(
           child: Padding(
@@ -292,7 +282,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                 title: Text(
                   notificationSettingList[listViewIndex].title,
                   style: TextStyle(
-                    color:  Colors.black,
+                    color: Colors.black,
                   ),
                 ),
               ),
@@ -306,11 +296,13 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                   notificationSettingList[listViewIndex].value = value;
                 });
                 _storage.setItem(
-                  "notification", 
-                  NotificationSetting.toNotificationSettingListJson(_notificationSettingList!),
+                  "notification",
+                  NotificationSetting.toNotificationSettingListJson(
+                      _notificationSettingList!),
                 );
 
-                _firebaseMessangingHelper.subscribeTheNotification(notificationSettingList[listViewIndex]);
+                _firebaseMessangingHelper.subscribeTheNotification(
+                    notificationSettingList[listViewIndex]);
               },
               children: _renderCheckBoxChildren(
                   context, notificationSettingList[listViewIndex]),
@@ -324,15 +316,9 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   List<Widget> _renderCheckBoxChildren(
       BuildContext context, NotificationSetting notificationSetting) {
     if (notificationSetting.id == 'horoscopes') {
-      return [
-        _buildCheckbox(
-            context, notificationSetting, false, 4, 2.0)
-      ];
+      return [_buildCheckbox(context, notificationSetting, false, 4, 2.0)];
     } else if (notificationSetting.id == 'subscriptionChannels') {
-      return [
-        _buildCheckbox(
-            context, notificationSetting, true, 2, 4)
-      ];
+      return [_buildCheckbox(context, notificationSetting, true, 2, 4)];
     }
 
     return [];
@@ -344,7 +330,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
       bool isRepeatable,
       int count,
       double ratio) {
-    List<NotificationSetting> checkboxList = notificationSetting.notificationSettingList!;
+    List<NotificationSetting> checkboxList =
+        notificationSetting.notificationSettingList!;
     return GridView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
@@ -368,12 +355,14 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
                 }
               });
 
-                _storage.setItem(
-                  "notification", 
-                  NotificationSetting.toNotificationSettingListJson(_notificationSettingList!),
-                );
+              _storage.setItem(
+                "notification",
+                NotificationSetting.toNotificationSettingListJson(
+                    _notificationSettingList!),
+              );
 
-              _firebaseMessangingHelper.subscribeTheNotification(notificationSetting);
+              _firebaseMessangingHelper
+                  .subscribeTheNotification(notificationSetting);
             },
             child: IgnorePointer(
               child: Row(children: [
@@ -389,11 +378,10 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
   }
 
   Widget _contactInfo(double width) {
-    return Wrap(
-      children: [
-        Divider(height: 2),
-        SizedBox(height: 16),
-        InkWell(
+    return Wrap(children: [
+      Divider(height: 2),
+      SizedBox(height: 16),
+      InkWell(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: Container(
@@ -404,7 +392,7 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
               ),
             ),
           ),
-          onTap: () async{
+          onTap: () async {
             final Uri emailLaunchUri = Uri(
               scheme: 'mailto',
               path: mirrorMediaServiceEmail,
@@ -415,9 +403,8 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
             } else {
               throw 'Could not launch $mirrorMediaServiceEmail';
             }
-          }
-        ),
-        InkWell(
+          }),
+      InkWell(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: Container(
@@ -428,11 +415,10 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
               ),
             ),
           ),
-          onTap: () async{
+          onTap: () async {
             RouteGenerator.navigateToStory('privacy', isMemberCheck: false);
-          }
-        ),
-        InkWell(
+          }),
+      InkWell(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
             child: Container(
@@ -444,15 +430,14 @@ class _NotificationSettingsPageState extends State<NotificationSettingsPage> {
             ),
           ),
           onTap: () {
-            RouteGenerator.navigateToStory('service-rule', isMemberCheck: false);
-          }
-        ),
-        SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-          child: AppVersionWidget(),
-        ),
-      ]
-    );
+            RouteGenerator.navigateToStory('service-rule',
+                isMemberCheck: false);
+          }),
+      SizedBox(height: 16),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+        child: AppVersionWidget(),
+      ),
+    ]);
   }
 }

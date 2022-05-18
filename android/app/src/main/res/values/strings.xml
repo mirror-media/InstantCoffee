@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="facebook_app_name">鏡傳媒</string>
     <string name="facebook_app_id">175313259598308</string>
-    <string name="fb_login_protocol_scheme">fb175313259598308</string>
+    <string name="facebook_client_token">b9321470cc8b4649b9401041a0bc0fd8</string>
 </resources>
