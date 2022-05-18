@@ -217,7 +217,7 @@ packages:
       path: "."
       ref: master
       resolved-ref: "691672f39fc7269fdac42776e9c916a42386e464"
-      url: "git://github.com/mirror-media/constants.git"
+      url: "https://github.com/mirror-media/constants.git"
     source: git
     version: "2.0.0"
   convert:
@@ -490,7 +490,7 @@ packages:
       path: "."
       ref: master
       resolved-ref: cea1ff4f9849e0ba1d017c1b4fecd355b996e259
-      url: "git://github.com/mirror-media/flutter_embedded_webview.git"
+      url: "https://github.com/mirror-media/flutter_embedded_webview.git"
     source: git
     version: "0.2.1"
   flutter_facebook_auth:
