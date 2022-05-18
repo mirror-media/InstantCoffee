@@ -34,7 +34,8 @@ class MMVideoPlayer extends StatefulWidget {
   _MMVideoPlayerState createState() => _MMVideoPlayerState();
 }
 
-class _MMVideoPlayerState extends State<MMVideoPlayer> with AutomaticKeepAliveClientMixin {
+class _MMVideoPlayerState extends State<MMVideoPlayer>
+    with AutomaticKeepAliveClientMixin {
   late VideoPlayerController _videoPlayerController;
   late ChewieController _chewieController;
   late Future<bool> _configChewieFuture;
@@ -48,7 +49,7 @@ class _MMVideoPlayerState extends State<MMVideoPlayer> with AutomaticKeepAliveCl
     super.initState();
   }
 
-  Future<bool> _configVideoPlayer() async{
+  Future<bool> _configVideoPlayer() async {
     _videoPlayerController = VideoPlayerController.network(widget.videourl);
     try {
       await _videoPlayerController.initialize();
@@ -58,8 +59,8 @@ class _MMVideoPlayerState extends State<MMVideoPlayer> with AutomaticKeepAliveCl
         autoInitialize: true,
         customControls: MaterialControls(),
       );
-    } catch(e) {
-      // TODO: need to return error
+    } catch (e) {
+      print('Video player error: $e');
       return false;
     }
 
@@ -75,32 +76,29 @@ class _MMVideoPlayerState extends State<MMVideoPlayer> with AutomaticKeepAliveCl
 
   @override
   Widget build(BuildContext context) {
-
     super.build(context);
     return FutureBuilder<bool>(
-      initialData: false,
-      future: _configChewieFuture,
-      builder: (context, snapshot) {
-        return LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            if(!snapshot.data!) {
+        initialData: false,
+        future: _configChewieFuture,
+        builder: (context, snapshot) {
+          return LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+            if (!snapshot.data!) {
               return Container(
-                width: constraints.maxWidth,
-                height: constraints.maxWidth/widget.aspectRatio,
-                child: Center(child: CircularProgressIndicator())
-              );
+                  width: constraints.maxWidth,
+                  height: constraints.maxWidth / widget.aspectRatio,
+                  child: Center(child: CircularProgressIndicator()));
             }
 
             return Container(
               width: constraints.maxWidth,
-              height: constraints.maxWidth/_videoPlayerController.value.aspectRatio,
+              height: constraints.maxWidth /
+                  _videoPlayerController.value.aspectRatio,
               child: Chewie(
                 controller: _chewieController,
               ),
             );
-          }
-        );
-      }
-    );
+          });
+        });
   }
 }
