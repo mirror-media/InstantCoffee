@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/controllers/topic/topicPageController.dart';
 import 'package:readr_app/helpers/adHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -18,7 +20,7 @@ class PortraitWallTopicWidget extends GetView<TopicPageController> {
         }
 
         if (!controller.isLoading) {
-          return _buildList();
+          return _buildList(context);
         }
 
         return const Center(child: CircularProgressIndicator.adaptive());
@@ -26,7 +28,7 @@ class PortraitWallTopicWidget extends GetView<TopicPageController> {
     );
   }
 
-  Widget _buildList() {
+  Widget _buildList(BuildContext context) {
     if (controller.portraitWallItemList.isEmpty) {
       return const Center(child: Text('無資料'));
     }
@@ -39,19 +41,21 @@ class PortraitWallTopicWidget extends GetView<TopicPageController> {
         childAspectRatio: 0.75,
       ),
       itemBuilder: (context, index) =>
-          _buildItem(controller.portraitWallItemList[index]),
+          _buildItem(context, controller.portraitWallItemList[index]),
       itemCount: controller.portraitWallItemList.length,
       padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
     );
   }
 
-  Widget _buildItem(TopicImageItem topicImageItem) {
+  Widget _buildItem(BuildContext context, TopicImageItem topicImageItem) {
     double imageSize = (Get.width - 96 - 24) / 2;
     return InkWell(
       onTap: () {
         if (topicImageItem.record != null) {
-          AdHelper adHelper = AdHelper();
-          adHelper.checkToShowInterstitialAd();
+          if (!context.read<MemberBloc>().state.isPremium) {
+            AdHelper adHelper = AdHelper();
+            adHelper.checkToShowInterstitialAd();
+          }
 
           if (topicImageItem.record!.isExternal) {
             RouteGenerator.navigateToExternalStory(topicImageItem.record!.slug);

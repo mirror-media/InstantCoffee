@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/controllers/topic/topicListController.dart';
+import 'package:readr_app/helpers/adHelper.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/topic.dart';
 import 'package:readr_app/pages/topic/topicPage.dart';
@@ -34,10 +35,11 @@ class TopicListPage extends GetView<TopicListController> {
                   }
 
                   if (index == 0) {
-                    return _buildFirstItem(controller.topicList[index]);
+                    return _buildFirstItem(
+                        context, controller.topicList[index]);
                   }
 
-                  return _buildItem(controller.topicList[index]);
+                  return _buildItem(context, controller.topicList[index]);
                 },
                 separatorBuilder: (context, index) {
                   if (index == 0) {
@@ -92,7 +94,7 @@ class TopicListPage extends GetView<TopicListController> {
     );
   }
 
-  Widget _buildItem(Topic topic) {
+  Widget _buildItem(BuildContext context, Topic topic) {
     double width = Get.width;
     double imageSize = 25 * (width - 32) / 100;
 
@@ -135,7 +137,13 @@ class TopicListPage extends GetView<TopicListController> {
           ],
         ),
       ),
-      onTap: () => Get.to(() => TopicPage(topic)),
+      onTap: () {
+        if (!context.read<MemberBloc>().state.isPremium) {
+          AdHelper adHelper = AdHelper();
+          adHelper.checkToShowInterstitialAd();
+        }
+        Get.to(() => TopicPage(topic));
+      },
     );
   }
 
@@ -173,7 +181,7 @@ class TopicListPage extends GetView<TopicListController> {
     );
   }
 
-  Widget _buildFirstItem(Topic topic) {
+  Widget _buildFirstItem(BuildContext context, Topic topic) {
     double width = Get.width;
 
     return InkWell(
@@ -205,7 +213,13 @@ class TopicListPage extends GetView<TopicListController> {
           ),
         ],
       ),
-      onTap: () => Get.to(() => TopicPage(topic)),
+      onTap: () {
+        if (!context.read<MemberBloc>().state.isPremium) {
+          AdHelper adHelper = AdHelper();
+          adHelper.checkToShowInterstitialAd();
+        }
+        Get.to(() => TopicPage(topic));
+      },
     );
   }
 }

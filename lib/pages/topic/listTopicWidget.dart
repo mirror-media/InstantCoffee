@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/controllers/topic/topicPageController.dart';
 import 'package:readr_app/helpers/adHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -18,7 +20,7 @@ class ListTopicWidget extends GetView<TopicPageController> {
         }
 
         if (!controller.isLoading) {
-          return _buildList();
+          return _buildList(context);
         }
 
         return const Center(child: CircularProgressIndicator.adaptive());
@@ -26,7 +28,7 @@ class ListTopicWidget extends GetView<TopicPageController> {
     );
   }
 
-  Widget _buildList() {
+  Widget _buildList(BuildContext context) {
     return Obx(() {
       if (controller.topicItemList.isEmpty) {
         return const Center(child: Text('無資料'));
@@ -40,7 +42,8 @@ class ListTopicWidget extends GetView<TopicPageController> {
             return _loadMoreWidget();
           }
 
-          return _buildListItem(controller.topicItemList[index].record);
+          return _buildListItem(
+              context, controller.topicItemList[index].record);
         },
         separatorBuilder: (context, index) => Divider(
           color: Colors.grey[300],
@@ -66,7 +69,7 @@ class ListTopicWidget extends GetView<TopicPageController> {
     });
   }
 
-  Widget _buildListItem(Record record) {
+  Widget _buildListItem(BuildContext context, Record record) {
     double width = Get.width;
     double imageSize = 25 * (width - 48) / 100;
 
@@ -110,8 +113,10 @@ class ListTopicWidget extends GetView<TopicPageController> {
         ),
       ),
       onTap: () {
-        AdHelper adHelper = AdHelper();
-        adHelper.checkToShowInterstitialAd();
+        if (!context.read<MemberBloc>().state.isPremium) {
+          AdHelper adHelper = AdHelper();
+          adHelper.checkToShowInterstitialAd();
+        }
 
         if (record.isExternal) {
           RouteGenerator.navigateToExternalStory(record.slug);

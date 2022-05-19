@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/controllers/topic/topicListController.dart';
+import 'package:readr_app/helpers/adHelper.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/models/topic.dart';
 import 'package:readr_app/pages/topic/topicListPage.dart';
@@ -17,14 +20,14 @@ class TopicBlock extends GetView<TopicListController> {
     return Obx(
       () {
         if (controller.topicList.isNotEmpty) {
-          return _buildTopicBlock();
+          return _buildTopicBlock(context);
         }
         return Container();
       },
     );
   }
 
-  Widget _buildTopicBlock() {
+  Widget _buildTopicBlock(BuildContext context) {
     return Container(
       color: Colors.white,
       height: isPremium ? 130 : 138,
@@ -52,14 +55,14 @@ class TopicBlock extends GetView<TopicListController> {
             ),
           ),
           Expanded(
-            child: _buildList(),
+            child: _buildList(context),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildList() {
+  Widget _buildList(BuildContext context) {
     List<Topic> topicList = [];
     for (int i = 0; i < controller.topicList.length; i++) {
       topicList.addIf(
@@ -99,16 +102,22 @@ class TopicBlock extends GetView<TopicListController> {
           );
         }
 
-        return _buildListItem(topicList[index]);
+        return _buildListItem(context, topicList[index]);
       },
       separatorBuilder: (context, index) => const SizedBox(width: 12),
       itemCount: topicList.length + 1,
     );
   }
 
-  Widget _buildListItem(Topic topic) {
+  Widget _buildListItem(BuildContext context, Topic topic) {
     return GestureDetector(
-      onTap: () => Get.to(() => TopicPage(topic)),
+      onTap: () {
+        if (!context.read<MemberBloc>().state.isPremium) {
+          AdHelper adHelper = AdHelper();
+          adHelper.checkToShowInterstitialAd();
+        }
+        Get.to(() => TopicPage(topic));
+      },
       child: Container(
         height: 42,
         decoration: BoxDecoration(

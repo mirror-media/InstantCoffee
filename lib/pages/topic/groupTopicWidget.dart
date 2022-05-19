@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/controllers/topic/topicPageController.dart';
 import 'package:readr_app/helpers/adHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
@@ -19,7 +21,7 @@ class GroupTopicWidget extends GetView<TopicPageController> {
         }
 
         if (!controller.isLoading) {
-          return _buildList();
+          return _buildList(context);
         }
 
         return const Center(child: CircularProgressIndicator.adaptive());
@@ -27,7 +29,7 @@ class GroupTopicWidget extends GetView<TopicPageController> {
     );
   }
 
-  Widget _buildList() {
+  Widget _buildList(BuildContext context) {
     if (controller.topicItemList.isEmpty) {
       return const Center(child: Text('無資料'));
     }
@@ -37,10 +39,10 @@ class GroupTopicWidget extends GetView<TopicPageController> {
       shrinkWrap: true,
       itemBuilder: (context, index) {
         if (index == 0 || !_checkPreviousItemTagSame(index)) {
-          return _buildItemWithTag(controller.topicItemList[index]);
+          return _buildItemWithTag(context, controller.topicItemList[index]);
         }
 
-        return _buildListItem(controller.topicItemList[index].record);
+        return _buildListItem(context, controller.topicItemList[index].record);
       },
       separatorBuilder: (context, index) {
         if (!_checkPreviousItemTagSame(index + 1)) {
@@ -66,7 +68,7 @@ class GroupTopicWidget extends GetView<TopicPageController> {
     return false;
   }
 
-  Widget _buildItemWithTag(TopicItem topicItem) {
+  Widget _buildItemWithTag(BuildContext context, TopicItem topicItem) {
     if (topicItem.tagTitle != null) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,15 +82,15 @@ class GroupTopicWidget extends GetView<TopicPageController> {
               fontWeight: FontWeight.w500,
             ),
           ),
-          _buildListItem(topicItem.record),
+          _buildListItem(context, topicItem.record),
         ],
       );
     }
 
-    return _buildListItem(topicItem.record);
+    return _buildListItem(context, topicItem.record);
   }
 
-  Widget _buildListItem(Record record) {
+  Widget _buildListItem(BuildContext context, Record record) {
     double width = Get.width;
     double imageSize = 25 * (width - 48) / 100;
 
@@ -135,8 +137,10 @@ class GroupTopicWidget extends GetView<TopicPageController> {
         ),
       ),
       onTap: () {
-        AdHelper adHelper = AdHelper();
-        adHelper.checkToShowInterstitialAd();
+        if (!context.read<MemberBloc>().state.isPremium) {
+          AdHelper adHelper = AdHelper();
+          adHelper.checkToShowInterstitialAd();
+        }
 
         if (record.isExternal) {
           RouteGenerator.navigateToExternalStory(record.slug);
