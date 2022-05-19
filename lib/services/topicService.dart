@@ -70,10 +70,6 @@ class TopicService implements TopicRepos {
     var jsonObject = json["_items"];
     for (var item in jsonObject) {
       Topic topic = Topic.fromJson(item);
-      if (topic.type == TopicType.slideshow) {
-        List<String> imageUrlList = await fethcSlideshowImageList(topic.id);
-        topic.slideshowImageUrlList = imageUrlList;
-      }
       topics.add(topic);
     }
 

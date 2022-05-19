@@ -23,7 +23,6 @@ class Topic {
   final Color subTitleColor;
   final Color recordTitleColor;
   final Color dividerColor;
-  List<String>? slideshowImageUrlList;
 
   Topic({
     required this.id,
@@ -38,7 +37,6 @@ class Topic {
     this.recordTitleColor = Colors.black,
     this.dividerColor = Colors.grey,
     this.tagOrderMap,
-    this.slideshowImageUrlList,
   });
 
   factory Topic.fromJson(Map<String, dynamic> json) {

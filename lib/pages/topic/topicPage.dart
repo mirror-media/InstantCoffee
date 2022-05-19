@@ -7,7 +7,7 @@ import 'package:readr_app/models/topic.dart';
 import 'package:readr_app/pages/topic/groupTopicWidget.dart';
 import 'package:readr_app/pages/topic/listTopicWidget.dart';
 import 'package:readr_app/pages/topic/portraitWallTopicWidget.dart';
-import 'package:readr_app/pages/topic/slideshowCarouselWidget.dart';
+import 'package:readr_app/pages/topic/slideshowWebviewWidget.dart';
 import 'package:readr_app/services/topicService.dart';
 
 class TopicPage extends StatelessWidget {
@@ -43,7 +43,7 @@ class TopicPage extends StatelessWidget {
               if (topic.type != TopicType.slideshow)
                 SliverToBoxAdapter(
                   child: Container(
-                    color: Colors.black,
+                    color: Color(0xFFE2E5E7),
                     child: CachedNetworkImage(
                       imageUrl: topic.ogImageUrl,
                       fit: BoxFit.contain,
@@ -58,7 +58,7 @@ class TopicPage extends StatelessWidget {
                 ),
               if (topic.type == TopicType.slideshow)
                 SliverToBoxAdapter(
-                  child: SlideshowCarouselWidget(topic),
+                  child: SlideshowWebviewWidget(topic.id),
                 )
             ];
           },
