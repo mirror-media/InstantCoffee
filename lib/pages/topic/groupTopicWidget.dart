@@ -75,7 +75,7 @@ class GroupTopicWidget extends GetView<TopicPageController> {
           Text(
             topicItem.tagTitle!,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 26,
               color: controller.topic.subTitleColor,
               fontWeight: FontWeight.w500,
             ),
