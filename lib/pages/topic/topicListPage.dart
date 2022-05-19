@@ -42,9 +42,9 @@ class TopicListPage extends GetView<TopicListController> {
                 separatorBuilder: (context, index) {
                   if (index == 0) {
                     return _buildAdItem(controller.storyAd.aT1UnitId);
-                  } else if (index == 4) {
+                  } else if (index == 5) {
                     return _buildAdItem(controller.storyAd.aT2UnitId);
-                  } else if (index == 9) {
+                  } else if (index == 10) {
                     return _buildAdItem(controller.storyAd.aT3UnitId);
                   }
                   return Divider(
