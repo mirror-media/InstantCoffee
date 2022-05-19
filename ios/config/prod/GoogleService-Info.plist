@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>814835936704-7haqvdmhufoj2ijvitdv9rph42rujtu7.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.814835936704-7haqvdmhufoj2ijvitdv9rph42rujtu7</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>814835936704-02fve9gm6iusp259f4npdl35ntjiscu4.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDswNX6BvsJUMZj7ySW4OlVzn4pilChqIM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>814835936704</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mirrormedia.news</string>
+	<key>PROJECT_ID</key>
+	<string>mirror-weekly</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mirror-weekly.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:814835936704:ios:aacd4b39e52dae7728ec25</string>
+	<key>DATABASE_URL</key>
+	<string>https://mirror-weekly-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+</dict>
+</plist>

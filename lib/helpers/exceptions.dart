@@ -13,14 +13,14 @@ class NoInternetException {
   NoInternetException(this.message);
 }
 
-class NoServiceFoundException extends Error500Exception{
+class NoServiceFoundException extends Error500Exception {
   NoServiceFoundException(message) : super(message);
 }
 
-class InvalidFormatException extends Error400Exception{
+class InvalidFormatException extends Error400Exception {
   InvalidFormatException(message) : super(message);
 }
 
-class UnknownException extends Error400Exception{
+class UnknownException extends Error400Exception {
   UnknownException(message) : super(message);
 }

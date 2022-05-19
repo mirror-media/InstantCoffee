@@ -5,6 +5,7 @@ abstract class BaseConfig {
   String get apiBase;
   String get storyPageApi;
   String get externalStoryPageApi;
+  String get topicListApi;
   String get memberApi;
   String get tokenStateApi;
   String get errorLogApi;
@@ -51,7 +52,7 @@ abstract class BaseConfig {
 
   String get iOSInterstitialAdUnitId;
   String get androidInterstitialAdUnitId;
-  
+
   String get iOSSectionAdJsonLocation;
   String get androidSectionAdJsonLocation;
   String get iOSStoryAdJsonLocation;

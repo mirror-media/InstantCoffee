@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/appUpgradeHelper.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class AppUpdatePage extends StatelessWidget {
   final AppUpgradeHelper appUpgradeHelper;
@@ -12,47 +12,46 @@ class AppUpdatePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: appColor,
-        centerTitle: true,
-        title: Text(appTitle),
-      ),
-      body: ListView(
-        children: [
-          SizedBox(height: 48),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-              child: Text(
-                '更新通知',
-                style: TextStyle(
-                  fontSize: 28,
+        appBar: AppBar(
+          backgroundColor: appColor,
+          centerTitle: true,
+          title: Text(appTitle),
+        ),
+        body: ListView(
+          children: [
+            SizedBox(height: 48),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                child: Text(
+                  '更新通知',
+                  style: TextStyle(
+                    fontSize: 28,
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(height: 24),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-              child: Text(
-                appUpgradeHelper.updateMessage,
-                style: TextStyle(
-                  fontSize: 28,
+            SizedBox(height: 24),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                child: Text(
+                  appUpgradeHelper.updateMessage,
+                  style: TextStyle(
+                    fontSize: 28,
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(height: 24),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-              child: _updateButton(context),
+            SizedBox(height: 24),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                child: _updateButton(context),
+              ),
             ),
-          ),
-        ],
-      )
-    );
+          ],
+        ));
   }
 
   _updateButton(BuildContext context) {
@@ -74,11 +73,11 @@ class AppUpdatePage extends StatelessWidget {
           ),
         ),
       ),
-      onTap: () async{
+      onTap: () async {
         String trackViewUrl = await appUpgradeHelper.getTrackViewUrl();
-        if (await canLaunch(trackViewUrl)) {
+        if (await canLaunchUrlString(trackViewUrl)) {
           try {
-            await launch(trackViewUrl);
+            await launchUrlString(trackViewUrl);
           } catch (e) {
             print('upgrader: launch to app store failed: $e');
           }

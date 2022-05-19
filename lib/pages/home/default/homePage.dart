@@ -27,12 +27,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   final LocalStorage _storage = LocalStorage('setting');
   AppLinkHelper _appLinkHelper = AppLinkHelper();
-  FirebaseMessangingHelper _firebaseMessangingHelper = FirebaseMessangingHelper();
+  FirebaseMessangingHelper _firebaseMessangingHelper =
+      FirebaseMessangingHelper();
 
   @override
   void initState() {
-    WidgetsBinding.instance!.addObserver(this);
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addObserver(this);
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       _appLinkHelper.configAppLink(context);
       _appLinkHelper.listenAppLink(context);
       _firebaseMessangingHelper.configFirebaseMessaging();
@@ -43,18 +44,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.initState();
   }
 
-  _showTermsOfService() async{
-    if(await _storage.ready) {
+  _showTermsOfService() async {
+    if (await _storage.ready) {
       bool? isAcceptTerms = await _storage.getItem("isAcceptTerms");
-      if(isAcceptTerms == null || !isAcceptTerms) {
+      if (isAcceptTerms == null || !isAcceptTerms) {
         _storage.setItem("isAcceptTerms", false);
         await Future.delayed(Duration(seconds: 1));
-        await Navigator.of(context).push(
-          PageRouteBuilder(
+        await Navigator.of(context).push(PageRouteBuilder(
             barrierDismissible: false,
-            pageBuilder: (BuildContext context, _, __) => MMTermsOfServicePage()
-          )
-        );
+            pageBuilder: (BuildContext context, _, __) =>
+                MMTermsOfServicePage()));
       }
     }
   }
@@ -68,10 +67,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildBar(context),
-      body: HomeWidget()
-    );
+    return Scaffold(appBar: _buildBar(context), body: HomeWidget());
   }
 
   PreferredSizeWidget _buildBar(BuildContext context) {
@@ -79,9 +75,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       leading: IconButton(
         key: widget.settingKey,
         icon: Icon(Icons.settings),
-        onPressed: () => RouteGenerator.navigateToNotificationSettings(
-          _onBoardingBloc
-        ),
+        onPressed: () =>
+            RouteGenerator.navigateToNotificationSettings(_onBoardingBloc),
       ),
       backgroundColor: appColor,
       centerTitle: true,

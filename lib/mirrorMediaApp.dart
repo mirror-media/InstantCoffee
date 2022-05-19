@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/iAPSubscriptionHelper.dart';
@@ -36,10 +37,11 @@ class _MirrorMediaAppState extends State<MirrorMediaApp> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    
+
     return BlocProvider(
-      create: (BuildContext context) => MemberBloc(memberRepos: MemberService()),
-      child: MaterialApp(
+      create: (BuildContext context) =>
+          MemberBloc(memberRepos: MemberService()),
+      child: GetMaterialApp(
         navigatorKey: RouteGenerator.navigatorKey,
         debugShowCheckedModeBanner: false,
         localizationsDelegates: [

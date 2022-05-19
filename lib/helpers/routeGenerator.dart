@@ -34,7 +34,7 @@ import 'package:readr_app/pages/memberCenter/editMemberProfile/editMemberProfile
 import 'package:readr_app/pages/memberCenter/editMemberContactInfo/editMemberContactInfoPage.dart';
 import 'package:readr_app/pages/tag/tagPage.dart';
 import 'package:readr_app/widgets/imageViewerWidget.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class RouteGenerator {
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
@@ -485,8 +485,8 @@ class RouteGenerator {
       );
     } else {
       if (Platform.isAndroid) {
-        if (await canLaunch(url)) {
-          await launch(url);
+        if (await canLaunchUrlString(url)) {
+          await launchUrlString(url);
         } else {
           throw 'Could not launch $url';
         }

@@ -1,0 +1,80 @@
+{
+  "project_info": {
+    "project_number": "305253456270",
+    "firebase_url": "https://mirrormediaapptest.firebaseio.com",
+    "project_id": "mirrormediaapptest",
+    "storage_bucket": "mirrormediaapptest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:305253456270:android:c55783f997d80c41fbacdf",
+        "android_client_info": {
+          "package_name": "com.mirrormedia.news.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "305253456270-4samjnh2hsuvufh89igsob5he30uhmap.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mirrormedia.news.dev",
+            "certificate_hash": "b9fc3b0dcca3d170c110fb06e0b93f675ec053a3"
+          }
+        },
+        {
+          "client_id": "305253456270-dqkm749nvks7uu8st08u3hchtan7219b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mirrormedia.news.dev",
+            "certificate_hash": "eb3be1d321fef240a22d1494c73cde0e83f81729"
+          }
+        },
+        {
+          "client_id": "305253456270-ds0q5og8dacfvt27sao92ubaq9a8avab.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mirrormedia.news.dev",
+            "certificate_hash": "fd0c020a25becb1e54a618d14878c07cb9ebff22"
+          }
+        },
+        {
+          "client_id": "305253456270-utatu67ha5asv2e0md57aeo80b9j3pbu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mirrormedia.news.dev",
+            "certificate_hash": "4d75fc00e9c7bc9f45ee531386f6fff3e504ec7f"
+          }
+        },
+        {
+          "client_id": "305253456270-of3ae3aqa619jdb4de7fq3kark6uo77a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMKxIWVA0JK035izKRYFPh4eyHjKTT6tk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "305253456270-of3ae3aqa619jdb4de7fq3kark6uo77a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "305253456270-jrak0dnv0a8omptmh6at6bscke1iebhf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "mg.mirrormedia.readrApp"
+              }
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-7986335951683342~1205438796"
+    }
+  ],
+  "configuration_version": "1"
+}

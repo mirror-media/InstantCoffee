@@ -26,12 +26,6 @@ lib/helpers/devApiConstants.dart
 lib/configs/devConfig.dart
 lib/configs/prodConfig.dart
 
-# firebase data
-android/app/src/dev/google-services.json
-android/app/src/prod/google-services.json
-ios/config/dev/GoogleService-Info.plist
-ios/config/prod/GoogleService-Info.plist
-
 .flutter-plugins
 .flutter-plugins-dependencies
 # key

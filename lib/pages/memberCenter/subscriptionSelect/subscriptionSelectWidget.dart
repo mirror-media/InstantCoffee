@@ -17,7 +17,7 @@ import 'package:readr_app/models/subscriptionDetail.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/buyingSuccessWidget.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/verifyPurchaseFailWidget.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/hintToOtherPlatform.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class SubscriptionSelectWidget extends StatefulWidget {
   SubscriptionSelectWidget();
@@ -437,8 +437,8 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () async {
-                        if (await canLaunch(cancelSubscriptionUrl)) {
-                          await launch(cancelSubscriptionUrl);
+                        if (await canLaunchUrlString(cancelSubscriptionUrl)) {
+                          await launchUrlString(cancelSubscriptionUrl);
                         } else {
                           throw 'Could not launch $cancelSubscriptionUrl';
                         }
@@ -492,8 +492,9 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget> {
                           path: mirrorMediaServiceEmail,
                         );
 
-                        if (await canLaunch(emailLaunchUri.toString())) {
-                          await launch(emailLaunchUri.toString());
+                        if (await canLaunchUrlString(
+                            emailLaunchUri.toString())) {
+                          await launchUrlString(emailLaunchUri.toString());
                         } else {
                           throw 'Could not launch $mirrorMediaServiceEmail';
                         }

@@ -27,11 +27,6 @@
 			<array>
 				<string>com.googleusercontent.apps.814835936704-7haqvdmhufoj2ijvitdv9rph42rujtu7</string>
 				<string>com.googleusercontent.apps.305253456270-o63n9u2m3k937v2jbt55dqsjk645d3le</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
 				<string>fb175313259598308</string>
 			</array>
 		</dict>
@@ -51,6 +46,8 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FacebookAppID</key>
 	<string>175313259598308</string>
+	<key>FacebookClientToken</key>
+	<string>b9321470cc8b4649b9401041a0bc0fd8</string>
 	<key>FacebookDisplayName</key>
 	<string>鏡傳媒</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
@@ -62,6 +59,17 @@
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
+		<string>fbapi20130214</string>
+		<string>fbapi20130410</string>
+		<string>fbapi20130702</string>
+		<string>fbapi20131010</string>
+		<string>fbapi20131219</string>
+		<string>fbapi20140410</string>
+		<string>fbapi20140116</string>
+		<string>fbapi20150313</string>
+		<string>fbapi20150629</string>
+		<string>fbapi20160328</string>
+		<string>fbauth</string>
 		<string>fb-messenger-share-api</string>
 		<string>fbauth2</string>
 		<string>fbshareextension</string>
@@ -113,6 +121,8 @@
 	<key>com.apple.security.network.client</key>
 	<true/>
 	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 </dict>
 </plist>
