@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:csslib/parser.dart' as csslib;
 import 'package:csslib/visitor.dart';
+import 'package:readr_app/helpers/environment.dart';
 
 enum TopicType {
   list,
@@ -15,7 +16,7 @@ class Topic {
   final bool isFeatured;
   final int sortOrder;
   final TopicType type;
-  final String? ogImageUrl;
+  final String ogImageUrl;
   final Color bgColor;
   final List<String>? tagIdList;
   final Map<String, int>? tagOrderMap;
@@ -30,7 +31,7 @@ class Topic {
     this.isFeatured = false,
     this.sortOrder = 0,
     required this.type,
-    this.ogImageUrl,
+    required this.ogImageUrl,
     this.bgColor = Colors.white,
     this.tagIdList,
     this.subTitleColor = Colors.white,
@@ -41,7 +42,7 @@ class Topic {
   });
 
   factory Topic.fromJson(Map<String, dynamic> json) {
-    String? ogImageUrl;
+    String ogImageUrl = Environment().config.mirrorMediaNotImageUrl;
     if (json.containsKey('og_image')) {
       ogImageUrl = json['og_image']['image']['resizedTargets']['mobile']['url'];
     }

@@ -40,12 +40,12 @@ class TopicPage extends StatelessWidget {
         child: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
-              if (topic.ogImageUrl != null && topic.type != TopicType.slideshow)
+              if (topic.type != TopicType.slideshow)
                 SliverToBoxAdapter(
                   child: Container(
                     color: Colors.black,
                     child: CachedNetworkImage(
-                      imageUrl: topic.ogImageUrl!,
+                      imageUrl: topic.ogImageUrl,
                       fit: BoxFit.contain,
                       width: Get.width,
                       height: Get.width / (16 / 9),

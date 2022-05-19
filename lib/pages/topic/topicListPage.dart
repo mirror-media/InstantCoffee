@@ -110,28 +110,26 @@ class TopicListPage extends GetView<TopicListController> {
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
-                if (topic.ogImageUrl != null) ...[
-                  SizedBox(
-                    width: 16,
-                  ),
-                  CachedNetworkImage(
+                SizedBox(
+                  width: 16,
+                ),
+                CachedNetworkImage(
+                  height: imageSize,
+                  width: imageSize,
+                  imageUrl: topic.ogImageUrl,
+                  placeholder: (context, url) => Container(
                     height: imageSize,
                     width: imageSize,
-                    imageUrl: topic.ogImageUrl!,
-                    placeholder: (context, url) => Container(
-                      height: imageSize,
-                      width: imageSize,
-                      color: Colors.grey,
-                    ),
-                    errorWidget: (context, url, error) => Container(
-                      height: imageSize,
-                      width: imageSize,
-                      color: Colors.grey,
-                      child: Icon(Icons.error),
-                    ),
-                    fit: BoxFit.cover,
+                    color: Colors.grey,
                   ),
-                ],
+                  errorWidget: (context, url, error) => Container(
+                    height: imageSize,
+                    width: imageSize,
+                    color: Colors.grey,
+                    child: Icon(Icons.error),
+                  ),
+                  fit: BoxFit.cover,
+                ),
               ],
             ),
           ],
@@ -181,24 +179,23 @@ class TopicListPage extends GetView<TopicListController> {
     return InkWell(
       child: Column(
         children: [
-          if (topic.ogImageUrl != null)
-            CachedNetworkImage(
+          CachedNetworkImage(
+            height: width / 16 * 9,
+            width: width,
+            imageUrl: topic.ogImageUrl,
+            placeholder: (context, url) => Container(
               height: width / 16 * 9,
               width: width,
-              imageUrl: topic.ogImageUrl!,
-              placeholder: (context, url) => Container(
-                height: width / 16 * 9,
-                width: width,
-                color: Colors.grey,
-              ),
-              errorWidget: (context, url, error) => Container(
-                height: width / 16 * 9,
-                width: width,
-                color: Colors.grey,
-                child: Icon(Icons.error),
-              ),
-              fit: BoxFit.cover,
+              color: Colors.grey,
             ),
+            errorWidget: (context, url, error) => Container(
+              height: width / 16 * 9,
+              width: width,
+              color: Colors.grey,
+              child: Icon(Icons.error),
+            ),
+            fit: BoxFit.cover,
+          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
             child: Text(

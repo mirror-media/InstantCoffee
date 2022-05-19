@@ -27,12 +27,10 @@ class _SlideshowCarouselWidgetState extends State<SlideshowCarouselWidget> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        image: widget.topic.ogImageUrl != null
-            ? DecorationImage(
-                image: NetworkImage(widget.topic.ogImageUrl!),
-                fit: BoxFit.contain,
-              )
-            : null,
+        image: DecorationImage(
+          image: NetworkImage(widget.topic.ogImageUrl),
+          fit: BoxFit.contain,
+        ),
         color: Colors.black,
       ),
       child: _carouselWidget(),
