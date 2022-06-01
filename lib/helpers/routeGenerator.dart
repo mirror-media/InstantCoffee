@@ -199,8 +199,11 @@ class RouteGenerator {
         // Validation of correct data type
         if (args['slug'] is String) {
           return MaterialPageRoute(
-              builder: (context) => StoryPage(
-                  slug: args['slug'], isMemberCheck: args['isMemberCheck']));
+            builder: (context) => StoryPage(
+              slug: args['slug'],
+              isMemberCheck: args['isMemberCheck'],
+            ),
+          );
         }
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
@@ -408,14 +411,19 @@ class RouteGenerator {
     navigatorKey.currentState!.pushNamed(premiumSettings);
   }
 
-  static void navigateToStory(String slug, {bool isMemberCheck = true}) {
-    navigatorKey.currentState!.pushNamed(
-      story,
-      arguments: {
-        'slug': slug,
-        'isMemberCheck': isMemberCheck,
-      },
-    );
+  static void navigateToStory(String slug,
+      {bool isMemberCheck = true, String? url}) {
+    if (url != null) {
+      launchUrlString(url);
+    } else {
+      navigatorKey.currentState!.pushNamed(
+        story,
+        arguments: {
+          'slug': slug,
+          'isMemberCheck': isMemberCheck,
+        },
+      );
+    }
   }
 
   static void navigateToExternalStory(String slug,
