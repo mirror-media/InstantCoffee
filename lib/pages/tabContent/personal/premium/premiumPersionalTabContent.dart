@@ -32,7 +32,8 @@ class PremiumPersonalTabContent extends StatefulWidget {
   });
 
   @override
-  _PremiumPersonalTabContentState createState() => _PremiumPersonalTabContentState();
+  _PremiumPersonalTabContentState createState() =>
+      _PremiumPersonalTabContentState();
 }
 
 class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
@@ -48,9 +49,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => _personalCategoryBloc
-        ),
+        BlocProvider(create: (context) => _personalCategoryBloc),
         BlocProvider(
           create: (context) => PersonalArticleBloc(
             personalSubscriptionRepos: PersonalSubscriptionService(),
@@ -60,7 +59,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
       child: CustomScrollView(
         controller: widget.scrollController,
         slivers: [
-          if(!_remoteConfigHelper.isNewsMarqueePin)
+          if (!_remoteConfigHelper.isNewsMarqueePin)
             SliverPersistentHeader(
               delegate: NewsMarqueePersistentHeaderDelegate(),
               floating: true,
@@ -71,7 +70,6 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
               child: PremiumMemberSubscriptionTypeBlock(),
             ),
           ),
-          
           _buildSubscribedCategoryList(),
           _buildTabContent(),
         ],
@@ -81,101 +79,90 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
 
   _buildSubscribedCategoryList() {
     return BlocBuilder<PersonalCategoryBloc, PersonalCategoryState>(
-      builder: (BuildContext context, PersonalCategoryState state) {
-        PersonalCategoryStatus status = state.status;
-        if(status == PersonalCategoryStatus.initial) {
-          context.read<PersonalCategoryBloc>().add(FetchSubscribedCategoryList());
-        }
+        builder: (BuildContext context, PersonalCategoryState state) {
+      PersonalCategoryStatus status = state.status;
+      if (status == PersonalCategoryStatus.initial) {
+        context.read<PersonalCategoryBloc>().add(FetchSubscribedCategoryList());
+      }
 
-        if(status == PersonalCategoryStatus.subscribedCategoryListLoading) {
-          return SliverToBoxAdapter(
-            child: Center(child: CircularProgressIndicator()),
-          );
-        }
-
-        if(status == PersonalCategoryStatus.subscribedCategoryListLoaded) {
-          _subscribedCategoryList = state.subscribedCategoryList!;
-          context.read<PersonalArticleBloc>().add(FetchSubscribedArticleList(
-            _subscribedCategoryList
-          ));
-
-          return SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-              child: _buildCategoryList(context, _subscribedCategoryList),
-            ),
-          );
-        }
-
-        if(status == PersonalCategoryStatus.subscribedCategoryListLoadingError) {
-          return SliverToBoxAdapter(
-            child: Container()
-          );      
-        }
-
+      if (status == PersonalCategoryStatus.subscribedCategoryListLoading) {
         return SliverToBoxAdapter(
-          child: Container()
+          child: Center(child: CircularProgressIndicator()),
         );
       }
-    );
+
+      if (status == PersonalCategoryStatus.subscribedCategoryListLoaded) {
+        _subscribedCategoryList = state.subscribedCategoryList!;
+        context
+            .read<PersonalArticleBloc>()
+            .add(FetchSubscribedArticleList(_subscribedCategoryList));
+
+        return SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+            child: _buildCategoryList(context, _subscribedCategoryList),
+          ),
+        );
+      }
+
+      if (status == PersonalCategoryStatus.subscribedCategoryListLoadingError) {
+        return SliverToBoxAdapter(child: Container());
+      }
+
+      return SliverToBoxAdapter(child: Container());
+    });
   }
 
-  _showUnsubscriptionDialog(){
+  _showUnsubscriptionDialog() {
     double height = MediaQuery.of(context).size.height;
 
     showDialog(
-      barrierDismissible: true,
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return Dialog(
-            backgroundColor: Colors.transparent,
-            child: Stack(
-              children: [
-                Container(
-                  width: double.maxFinite,
-                  height: height/1.5,
-                  color: Colors.white,
-                  margin: EdgeInsets.only(top: 13.0,right: 8.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: PremiumUnsubscriptionCategoryList(
-                      personalCategoryBloc: _personalCategoryBloc
+        barrierDismissible: true,
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return Dialog(
+              backgroundColor: Colors.transparent,
+              child: Stack(
+                children: [
+                  Container(
+                    width: double.maxFinite,
+                    height: height / 1.5,
+                    color: Colors.white,
+                    margin: EdgeInsets.only(top: 13.0, right: 8.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: PremiumUnsubscriptionCategoryList(
+                          personalCategoryBloc: _personalCategoryBloc),
                     ),
                   ),
-                ),
-                Positioned(
-                  right: 0.0,
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: CircleAvatar(
-                        radius: 14.0,
-                        backgroundColor: appColor,
-                        child: Icon(Icons.close, color: Colors.white),
+                  Positioned(
+                    right: 0.0,
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: CircleAvatar(
+                          radius: 14.0,
+                          backgroundColor: appColor,
+                          child: Icon(Icons.close, color: Colors.white),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
+                ],
+              ),
+            );
+          });
         });
-      }
-    );
   }
 
-  Widget _buildCategoryChip({
-    String title = '', 
-    Color backgroundColor = appColor,
-    Icon icon = const Icon(
-      Icons.remove_circle_outline,
-      size: 18,
-      color: Colors.white
-    ),
-    GestureTapCallback? onTap
-  }) {
+  Widget _buildCategoryChip(
+      {String title = '',
+      Color backgroundColor = appColor,
+      Icon icon = const Icon(Icons.remove_circle_outline,
+          size: 18, color: Colors.white),
+      GestureTapCallback? onTap}) {
     return InkWell(
       borderRadius: BorderRadius.circular((10.0)),
       child: Container(
@@ -184,8 +171,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
           borderRadius: BorderRadius.circular((10.0)),
         ),
         child: Padding(
-          padding:
-              const EdgeInsets.fromLTRB(8.0, 6.0, 8.0, 6.0),
+          padding: const EdgeInsets.fromLTRB(8.0, 6.0, 8.0, 6.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -203,10 +189,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
     );
   }
 
-  Widget _buildCategoryList(
-    BuildContext context, 
-    List<Category> categoryList
-  ) {
+  Widget _buildCategoryList(BuildContext context, List<Category> categoryList) {
     return Column(
       key: _categoryKey,
       children: [
@@ -221,52 +204,46 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
         SizedBox(
           height: 32,
           child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: categoryList.length,
-            itemBuilder: (context, index) {
-              if(index != 0 && !categoryList[index].isSubscribed) {
-                return Container();
-              }
+              scrollDirection: Axis.horizontal,
+              itemCount: categoryList.length,
+              itemBuilder: (context, index) {
+                if (index != 0 && !categoryList[index].isSubscribed) {
+                  return Container();
+                }
 
-              return Row(
-                children: [
-                  if(index == 0)...[
+                return Row(children: [
+                  if (index == 0) ...[
                     SizedBox(width: 8.0),
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: _buildCategoryChip(
-                        title: '新增',
-                        backgroundColor: Color(0xff7C7C7C),
-                        icon: const Icon(
-                          Icons.add_circle_outline,
-                          size: 18,
-                          color: Colors.white,
-                        ),
-                        onTap: () {
-                          _showUnsubscriptionDialog();
-                        }
-                      ),
+                          title: '新增',
+                          backgroundColor: Color(0xff7C7C7C),
+                          icon: const Icon(
+                            Icons.add_circle_outline,
+                            size: 18,
+                            color: Colors.white,
+                          ),
+                          onTap: () {
+                            _showUnsubscriptionDialog();
+                          }),
                     ),
                   ],
-
-                  if(categoryList[index].isSubscribed)
+                  if (categoryList[index].isSubscribed)
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: _buildCategoryChip(
-                        title: categoryList[index].title,
-                        onTap: () {
-                          categoryList[index].isSubscribed =
-                              !categoryList[index].isSubscribed;
-                          context.read<PersonalCategoryBloc>().add(
-                            SetCategoryListInStorage(categoryList)
-                          );
-                        }
-                      ),
+                          title: categoryList[index].title,
+                          onTap: () {
+                            categoryList[index].isSubscribed =
+                                !categoryList[index].isSubscribed;
+                            context
+                                .read<PersonalCategoryBloc>()
+                                .add(SetCategoryListInStorage(categoryList));
+                          }),
                     ),
-                ]
-              );
-            }
-          ),
+                ]);
+              }),
         ),
       ],
     );
@@ -274,128 +251,124 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
 
   _buildTabContent() {
     return BlocConsumer<PersonalArticleBloc, PersonalArticleState>(
-      listener: (BuildContext context, PersonalArticleState state) async{
-        PersonalArticleStatus status = state.status;
-        if(status == PersonalArticleStatus.subscribedArticleListLoadingMoreFail) {
-          await Future.delayed(Duration(seconds: 3));
-          context.read<PersonalArticleBloc>().add(FetchNextPageSubscribedArticleList(
-            _subscribedCategoryList
-          ));
-        }
-      },
-      builder: (BuildContext context, PersonalArticleState state) {
-        PersonalArticleStatus status = state.status;
-        if(status == PersonalArticleStatus.subscribedArticleListLoadingError) {
-          return SliverToBoxAdapter(
-            child: Container()
-          );
-        }
+        listener: (BuildContext context, PersonalArticleState state) async {
+      PersonalArticleStatus status = state.status;
+      if (status ==
+          PersonalArticleStatus.subscribedArticleListLoadingMoreFail) {
+        await Future.delayed(Duration(seconds: 3));
+        context
+            .read<PersonalArticleBloc>()
+            .add(FetchNextPageSubscribedArticleList(_subscribedCategoryList));
+      }
+    }, builder: (BuildContext context, PersonalArticleState state) {
+      PersonalArticleStatus status = state.status;
+      if (status == PersonalArticleStatus.subscribedArticleListLoadingError) {
+        return SliverToBoxAdapter(child: Container());
+      }
 
-        if(status == PersonalArticleStatus.subscribedArticleListLoading) {
-          return SliverToBoxAdapter(
-            child: Center(child: CircularProgressIndicator()),
-          );
-        }
+      if (status == PersonalArticleStatus.subscribedArticleListLoading) {
+        return SliverToBoxAdapter(
+          child: Center(child: CircularProgressIndicator()),
+        );
+      }
 
-        if(status == PersonalArticleStatus.subscribedArticleListLoaded) {
-          List<Record> subscribedArticleList = state.subscribedArticleList!;
-          if(subscribedArticleList.length == 0) {
-            return SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  Center(
-                    child: Text(
-                      '目前沒有訂閱的新聞類別',
-                      style: TextStyle(
-                        color: appColor,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      '點上方按鈕進行訂閱！',
-                      style: TextStyle(
-                        color: appColor,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
+      if (status == PersonalArticleStatus.subscribedArticleListLoaded) {
+        List<Record> subscribedArticleList = state.subscribedArticleList!;
+        if (subscribedArticleList.length == 0) {
           return SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                if(!context.read<PersonalArticleBloc>().isNextPageEmpty &&
+            delegate: SliverChildListDelegate(
+              [
+                Center(
+                  child: Text(
+                    '目前沒有訂閱的新聞類別',
+                    style: TextStyle(
+                      color: appColor,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Text(
+                    '點上方按鈕進行訂閱！',
+                    style: TextStyle(
+                      color: appColor,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+        return SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              if (!context.read<PersonalArticleBloc>().isNextPageEmpty &&
                   index == subscribedArticleList.length - 5) {
-                  context.read<PersonalArticleBloc>().add(FetchNextPageSubscribedArticleList(
-                    _subscribedCategoryList
-                  ));
-                }
+                context.read<PersonalArticleBloc>().add(
+                    FetchNextPageSubscribedArticleList(
+                        _subscribedCategoryList));
+              }
 
-                return _buildSubscribtoinList(context, subscribedArticleList, index);
-              },
-              childCount: subscribedArticleList.length,
-            ),
-          );
-        }
+              return _buildSubscribtoinList(
+                  context, subscribedArticleList, index);
+            },
+            childCount: subscribedArticleList.length,
+          ),
+        );
+      }
 
-        if(status == PersonalArticleStatus.subscribedArticleListLoadingMore) {
-          List<Record> subscribedArticleList = state.subscribedArticleList!;
+      if (status == PersonalArticleStatus.subscribedArticleListLoadingMore) {
+        List<Record> subscribedArticleList = state.subscribedArticleList!;
 
-          return SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                if(index == subscribedArticleList.length -1) {
-                  return Column(
-                    children: [
-                      _buildSubscribtoinList(context, subscribedArticleList, index),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                        child:  Center(child: CupertinoActivityIndicator()),
-                      ),
-                    ]
-                  );
-                }
-                
-                return _buildSubscribtoinList(context, subscribedArticleList, index);
-              },
-              childCount: subscribedArticleList.length,
-            ),
-          );
-        }
-        
-        if(status == PersonalArticleStatus.subscribedArticleListLoadingMoreFail) {
-          Fluttertoast.showToast(
+        return SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              if (index == subscribedArticleList.length - 1) {
+                return Column(children: [
+                  _buildSubscribtoinList(context, subscribedArticleList, index),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                    child: Center(child: CupertinoActivityIndicator()),
+                  ),
+                ]);
+              }
+
+              return _buildSubscribtoinList(
+                  context, subscribedArticleList, index);
+            },
+            childCount: subscribedArticleList.length,
+          ),
+        );
+      }
+
+      if (status ==
+          PersonalArticleStatus.subscribedArticleListLoadingMoreFail) {
+        Fluttertoast.showToast(
             msg: '加載更多失敗',
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.red,
             textColor: Colors.white,
-            fontSize: 16.0
-          );
-          
-          List<Record> subscribedArticleList = state.subscribedArticleList!;
+            fontSize: 16.0);
 
-          return SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {                
-                return _buildSubscribtoinList(context, subscribedArticleList, index);
-              },
-              childCount: subscribedArticleList.length,
-            ),
-          );
-        }
+        List<Record> subscribedArticleList = state.subscribedArticleList!;
 
-        // initial
-        return SliverToBoxAdapter(
-          child: Container()
+        return SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              return _buildSubscribtoinList(
+                  context, subscribedArticleList, index);
+            },
+            childCount: subscribedArticleList.length,
+          ),
         );
       }
-    );
+
+      // initial
+      return SliverToBoxAdapter(child: Container());
+    });
   }
 
   _buildSubscribtoinList(
@@ -414,7 +387,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
 
     return Column(
       children: [
-        if(index == 0) 
+        if (index == 0)
           Padding(
             padding: const EdgeInsets.only(top: 24.0, bottom: 18.0),
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -434,8 +407,10 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
           child: PremiumListItem(
             record: record,
             onTap: () => RouteGenerator.navigateToStory(
-                record.slug, 
-                isMemberCheck: record.isMemberCheck),
+              record.slug,
+              isMemberCheck: record.isMemberCheck,
+              url: record.url,
+            ),
           ),
         ),
         Divider(

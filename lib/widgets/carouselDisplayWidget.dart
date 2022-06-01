@@ -16,7 +16,7 @@ class CarouselDisplayWidget extends StatelessWidget {
   CarouselDisplayWidget({
     required this.record,
     required this.width,
-    this.aspectRatio = 16/9,
+    this.aspectRatio = 16 / 9,
   });
 
   @override
@@ -39,13 +39,14 @@ class CarouselDisplayWidget extends StatelessWidget {
         ],
       ),
       onTap: () {
-        if(!context.read<MemberBloc>().state.isPremium) {
+        if (!context.read<MemberBloc>().state.isPremium) {
           AdHelper adHelper = AdHelper();
           adHelper.checkToShowInterstitialAd();
         }
         RouteGenerator.navigateToStory(
-          record.slug, 
-          isMemberCheck: record.isMemberCheck
+          record.slug,
+          isMemberCheck: record.isMemberCheck,
+          url: record.url,
         );
       },
     );

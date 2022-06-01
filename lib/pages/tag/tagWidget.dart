@@ -41,8 +41,7 @@ class _TagWidgetState extends State<TagWidget> {
       if (status == TagPageStatus.error) {
         final error = state.errorMessages;
         print('TagRecordListError: $error');
-        return error.renderWidget(
-          onPressed: () => _fetchStoryListByTagId());
+        return error.renderWidget(onPressed: () => _fetchStoryListByTagId());
       }
 
       if (status == TagPageStatus.loaded) {
@@ -82,19 +81,19 @@ class _TagWidgetState extends State<TagWidget> {
 
   Widget _buildList(
     List<Record> tagRecordList,
-    int totalTagList,
-    {
-      bool isLoadingMore = false,
-    }
-  ) {
+    int totalTagList, {
+    bool isLoadingMore = false,
+  }) {
     bool isAll = tagRecordList.length == totalTagList;
 
     return ListView.separated(
       itemCount: tagRecordList.length + 1,
       padding: const EdgeInsets.only(top: 24, left: 24, right: 24),
-      separatorBuilder: (context, index){
-        if(index == tagRecordList.length - 1){
-          return const SizedBox(height: 24,);
+      separatorBuilder: (context, index) {
+        if (index == tagRecordList.length - 1) {
+          return const SizedBox(
+            height: 24,
+          );
         }
         return const Divider(
           height: 40,
@@ -105,7 +104,7 @@ class _TagWidgetState extends State<TagWidget> {
       itemBuilder: (context, index) {
         if (index == tagRecordList.length) {
           if (!isLoadingMore) {
-            if(!isAll) {
+            if (!isAll) {
               _fetchNextPage();
             }
             return Container(
@@ -163,7 +162,8 @@ class _TagWidgetState extends State<TagWidget> {
       onTap: () {
         RouteGenerator.navigateToStory(
           record.slug,
-          isMemberCheck: record.isMemberCheck
+          isMemberCheck: record.isMemberCheck,
+          url: record.url,
         );
       },
     );

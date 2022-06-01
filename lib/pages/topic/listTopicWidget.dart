@@ -121,8 +121,11 @@ class ListTopicWidget extends GetView<TopicPageController> {
         if (record.isExternal) {
           RouteGenerator.navigateToExternalStory(record.slug);
         } else {
-          RouteGenerator.navigateToStory(record.slug,
-              isMemberCheck: record.isMemberCheck);
+          RouteGenerator.navigateToStory(
+            record.slug,
+            isMemberCheck: record.isMemberCheck,
+            url: record.url,
+          );
         }
       },
     );

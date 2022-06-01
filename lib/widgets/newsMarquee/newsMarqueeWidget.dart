@@ -27,8 +27,8 @@ class NewsMarqueeWidget extends StatefulWidget {
 }
 
 class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
-  CarouselController _carouselController= CarouselController();
-  CarouselOptions _options= CarouselOptions(
+  CarouselController _carouselController = CarouselController();
+  CarouselOptions _options = CarouselOptions(
     scrollPhysics: NeverScrollableScrollPhysics(),
     height: 48,
     viewportFraction: 1,
@@ -40,7 +40,7 @@ class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
     enlargeCenterPage: false,
     onPageChanged: (index, reason) {},
   );
-  
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -56,34 +56,32 @@ class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
     List<Widget> resultList = [];
     for (int i = 0; i < recordList.length; i++) {
       resultList.add(InkWell(
-        child: SizedBox(
-          width: width,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: MarqueeWidget(
-              child: Text(
-                recordList[i].title,
-                style: TextStyle(fontSize: 18, color: appColor),
+          child: SizedBox(
+            width: width,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MarqueeWidget(
+                child: Text(
+                  recordList[i].title,
+                  style: TextStyle(fontSize: 18, color: appColor),
+                ),
+                animationDuration: Duration(milliseconds: 4000),
               ),
-              animationDuration: Duration(milliseconds: 4000),
             ),
           ),
-        ),
-        onTap: () {
-          FirebaseAnalyticsHelper.logNewsMarqueeOpen(
-            slug: recordList[i].slug, 
-            title: recordList[i].title
-          );
-          if(!context.read<MemberBloc>().state.isPremium) {
-            AdHelper adHelper = AdHelper();
-            adHelper.checkToShowInterstitialAd();
-          }
-          RouteGenerator.navigateToStory(
-            recordList[i].slug, 
-            isMemberCheck: recordList[i].isMemberCheck
-          );
-        }
-      ));
+          onTap: () {
+            FirebaseAnalyticsHelper.logNewsMarqueeOpen(
+                slug: recordList[i].slug, title: recordList[i].title);
+            if (!context.read<MemberBloc>().state.isPremium) {
+              AdHelper adHelper = AdHelper();
+              adHelper.checkToShowInterstitialAd();
+            }
+            RouteGenerator.navigateToStory(
+              recordList[i].slug,
+              isMemberCheck: recordList[i].isMemberCheck,
+              url: recordList[i].url,
+            );
+          }));
     }
 
     return resultList;

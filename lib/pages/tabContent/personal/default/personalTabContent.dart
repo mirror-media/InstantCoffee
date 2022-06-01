@@ -411,8 +411,11 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
               AdHelper adHelper = AdHelper();
               adHelper.checkToShowInterstitialAd();
 
-              RouteGenerator.navigateToStory(record.slug,
-                  isMemberCheck: record.isMemberCheck);
+              RouteGenerator.navigateToStory(
+                record.slug,
+                isMemberCheck: record.isMemberCheck,
+                url: record.url,
+              );
             }),
         Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16.0),

@@ -60,8 +60,11 @@ class PortraitWallTopicWidget extends GetView<TopicPageController> {
           if (topicImageItem.record!.isExternal) {
             RouteGenerator.navigateToExternalStory(topicImageItem.record!.slug);
           } else {
-            RouteGenerator.navigateToStory(topicImageItem.record!.slug,
-                isMemberCheck: topicImageItem.record!.isMemberCheck);
+            RouteGenerator.navigateToStory(
+              topicImageItem.record!.slug,
+              isMemberCheck: topicImageItem.record!.isMemberCheck,
+              url: topicImageItem.record!.url,
+            );
           }
         }
       },

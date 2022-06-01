@@ -8,7 +8,7 @@ class SearchListItem extends StatelessWidget {
   SearchListItem({
     required this.record,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -50,7 +50,9 @@ class SearchListItem extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8,),
+            SizedBox(
+              height: 8,
+            ),
             Divider(
               thickness: 1,
               color: Colors.grey,
@@ -58,7 +60,11 @@ class SearchListItem extends StatelessWidget {
           ],
         ),
       ),
-      onTap: () => RouteGenerator.navigateToStory(record.slug, isMemberCheck: record.isMemberCheck),
+      onTap: () => RouteGenerator.navigateToStory(
+        record.slug,
+        isMemberCheck: record.isMemberCheck,
+        url: record.url,
+      ),
     );
   }
 }

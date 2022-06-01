@@ -215,8 +215,11 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
     if (record.isExternal) {
       RouteGenerator.navigateToExternalStory(record.slug, isPremiumMode: true);
     } else {
-      RouteGenerator.navigateToStory(record.slug,
-          isMemberCheck: record.isMemberCheck);
+      RouteGenerator.navigateToStory(
+        record.slug,
+        isMemberCheck: record.isMemberCheck,
+        url: record.url,
+      );
     }
   }
 }
