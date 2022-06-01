@@ -9,6 +9,7 @@ class Record extends Equatable {
   final String photoUrl;
   final bool isExternal;
   final bool isMemberCheck;
+  final String? url;
 
   Record({
     required this.title,
@@ -17,11 +18,12 @@ class Record extends Equatable {
     required this.photoUrl,
     this.isExternal = false,
     this.isMemberCheck = true,
+    this.url,
   });
 
   factory Record.fromJson(Map<String, dynamic> json) {
     // check the search json format
-    if(json.containsKey('_source')) {
+    if (json.containsKey('_source')) {
       json = json['_source'];
     }
 
@@ -47,22 +49,34 @@ class Record extends Equatable {
     }
 
     String photoUrl = Environment().config.mirrorMediaNotImageUrl;
-    if(json['heroImage'] != null && json['heroImage'] is String) {
+    if (json['heroImage'] != null && json['heroImage'] is String) {
       photoUrl = json['heroImage'];
-    } else if (json['heroImage'] != null && json['heroImage']['image'] != null) {
+    } else if (json['heroImage'] != null &&
+        json['heroImage']['image'] != null) {
       photoUrl = json['heroImage']['image']['resizedTargets']['mobile']['url'];
-    } else if (json['snippet'] != null && json['snippet']['thumbnails'] != null) {
+    } else if (json['snippet'] != null &&
+        json['snippet']['thumbnails'] != null) {
       photoUrl = json['snippet']['thumbnails']['medium']['url'];
     } else if (json['photoUrl'] != null) {
       photoUrl = json['photoUrl'];
     }
-    if(photoUrl == '') {
+    if (photoUrl == '') {
       photoUrl = Environment().config.mirrorMediaNotImageUrl;
     }
-    
-    List<Category> categoryBuilder = json["categories"] == null || json["categories"] == ""
-    ? []
-    : Category.categoryListFromJson(json["categories"]);
+
+    List<Category> categoryBuilder =
+        json["categories"] == null || json["categories"] == ""
+            ? []
+            : Category.categoryListFromJson(json["categories"]);
+
+    String? url;
+    if (json.containsKey('style')) {
+      if (json['style'] == 'projects') {
+        url = Environment().config.mirrorMediaDomain + '/projects/' + origSlug;
+      } else if (json['style'] == 'campaign') {
+        url = Environment().config.mirrorMediaDomain + '/campaigns/' + origSlug;
+      }
+    }
 
     return Record(
       title: origTitle,
@@ -71,6 +85,7 @@ class Record extends Equatable {
       photoUrl: photoUrl,
       isExternal: json["partner"] != null && json["partner"] != "",
       isMemberCheck: Category.isMemberOnlyInCategoryList(categoryBuilder),
+      url: url,
     );
   }
 
@@ -90,8 +105,8 @@ class Record extends Equatable {
     List<Record> another,
   ) {
     List<Record> records = [];
-    base.forEach((element) { 
-      if(!another.any((record) => record.slug == element.slug)) {
+    base.forEach((element) {
+      if (!another.any((record) => record.slug == element.slug)) {
         records.add(element);
       }
     });
@@ -99,11 +114,6 @@ class Record extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
-    title, 
-    slug, 
-    publishedDate, 
-    photoUrl, 
-    isMemberCheck
-  ];
+  List<Object?> get props =>
+      [title, slug, publishedDate, photoUrl, isMemberCheck];
 }
