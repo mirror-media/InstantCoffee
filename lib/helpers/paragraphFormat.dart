@@ -24,19 +24,20 @@ class ParagraphFormat {
   }
 
   Widget parseTheParagraph(
-    Paragraph paragraph, 
+    Paragraph paragraph,
     BuildContext context,
-    List<String> imageUrlList, 
-    {double htmlFontSize = 20, 
+    List<String> imageUrlList, {
+    double htmlFontSize = 20,
     bool isMemberContent = false,
-    }) {
+  }) {
     _isMemberContent = isMemberContent;
     switch (paragraph.type) {
       case 'header-one':
         {
           if (isParagraphFirstContentsAvailable(paragraph.contents)) {
             return parseTheTextToHtmlWidget(
-                '<h1>' + paragraph.contents[0].data! + '</h1>', fontSize: htmlFontSize);
+                '<h1>' + paragraph.contents[0].data! + '</h1>',
+                fontSize: htmlFontSize);
           }
           return Container();
         }
@@ -44,7 +45,8 @@ class ParagraphFormat {
         {
           if (isParagraphFirstContentsAvailable(paragraph.contents)) {
             return parseTheTextToHtmlWidget(
-                '<h2>' + paragraph.contents[0].data! + '</h2>', fontSize: htmlFontSize);
+                '<h2>' + paragraph.contents[0].data! + '</h2>',
+                fontSize: htmlFontSize);
           }
           return Container();
         }
@@ -52,7 +54,12 @@ class ParagraphFormat {
       case 'unstyled':
         {
           if (isParagraphFirstContentsAvailable(paragraph.contents)) {
-            return parseTheTextToHtmlWidget(paragraph.contents[0].data!, fontSize: htmlFontSize);
+            String htmlData =
+                '<div style="text-align: start">${paragraph.contents[0].data!}</div>';
+            return Padding(
+              padding: EdgeInsets.only(left: _isMemberContent ? 5.5 : 7.5),
+              child: parseTheTextToHtmlWidget(htmlData, fontSize: htmlFontSize),
+            );
           }
           return Container();
         }
@@ -60,7 +67,7 @@ class ParagraphFormat {
         {
           if (isParagraphFirstContentsAvailable(paragraph.contents)) {
             Widget blockquote;
-            if(_isMemberContent){
+            if (_isMemberContent) {
               blockquote = QuoteByWidget(
                 quote: paragraph.contents[0].data!,
                 isMemberContent: _isMemberContent,
@@ -80,8 +87,8 @@ class ParagraphFormat {
                 ),
                 SizedBox(width: 8),
                 Expanded(
-                    child: parseTheTextToHtmlWidget(
-                        paragraph.contents[0].data!, fontSize: htmlFontSize)),
+                    child: parseTheTextToHtmlWidget(paragraph.contents[0].data!,
+                        fontSize: htmlFontSize)),
                 SizedBox(width: 8),
                 Icon(
                   Icons.format_quote,
@@ -96,23 +103,25 @@ class ParagraphFormat {
         }
       case 'ordered-list-item':
         {
-          Widget orderedListItem = buildOrderListWidget(paragraph.contents, htmlFontSize: htmlFontSize);
+          Widget orderedListItem = buildOrderListWidget(paragraph.contents,
+              htmlFontSize: htmlFontSize);
           return _addPaddingIfNeeded(orderedListItem);
         }
       case 'unordered-list-item':
         {
-          Widget unOrderedListItem = buildUnorderListWidget(paragraph.contents, htmlFontSize: htmlFontSize);
+          Widget unOrderedListItem = buildUnorderListWidget(paragraph.contents,
+              htmlFontSize: htmlFontSize);
           return _addPaddingIfNeeded(unOrderedListItem);
         }
       case 'image':
         {
           var width;
-          if(_isMemberContent){
+          if (_isMemberContent) {
             width = MediaQuery.of(context).size.width;
-          }else{
+          } else {
             width = MediaQuery.of(context).size.width - 32;
           }
-          if(isParagraphFirstContentsAvailable(paragraph.contents)) {
+          if (isParagraphFirstContentsAvailable(paragraph.contents)) {
             return ImageDescriptionWidget(
               imageUrl: paragraph.contents[0].data!,
               description: paragraph.contents[0].description!,
@@ -136,12 +145,12 @@ class ParagraphFormat {
       case 'youtube':
         {
           var width;
-          if(_isMemberContent){
+          if (_isMemberContent) {
             width = MediaQuery.of(context).size.width;
-          }else{
+          } else {
             width = MediaQuery.of(context).size.width - 40;
           }
-          if(isParagraphFirstContentsAvailable(paragraph.contents)) {
+          if (isParagraphFirstContentsAvailable(paragraph.contents)) {
             return YoutubeWidget(
               width: width,
               youtubeId: paragraph.contents[0].data!,
@@ -152,7 +161,7 @@ class ParagraphFormat {
         }
       case 'video':
         {
-          if(isParagraphFirstContentsAvailable(paragraph.contents)) {
+          if (isParagraphFirstContentsAvailable(paragraph.contents)) {
             Widget video = MMVideoPlayer(
               videourl: paragraph.contents[0].data!,
               aspectRatio: 16 / 9,
@@ -163,13 +172,13 @@ class ParagraphFormat {
         }
       case 'audio':
         {
-          if(isParagraphFirstContentsAvailable(paragraph.contents)) {
+          if (isParagraphFirstContentsAvailable(paragraph.contents)) {
             List<String> titleAndDescription = [];
-            if(paragraph.contents[0].description != null) {
+            if (paragraph.contents[0].description != null) {
               titleAndDescription =
                   paragraph.contents[0].description!.split(';');
             }
-            
+
             Widget audio = MMAudioPlayer(
               audioUrl: paragraph.contents[0].data!,
               title: titleAndDescription[0],
@@ -180,10 +189,10 @@ class ParagraphFormat {
         }
       case 'embeddedcode':
         {
-          if(isParagraphFirstContentsAvailable(paragraph.contents)) {
+          if (isParagraphFirstContentsAvailable(paragraph.contents)) {
             Widget embeddedcode = EmbeddedCodeWidget(
               embeddedCode: paragraph.contents[0].data!,
-              aspectRatio:  paragraph.contents[0].aspectRatio,
+              aspectRatio: paragraph.contents[0].aspectRatio,
             );
             return _addPaddingIfNeeded(embeddedcode);
           }
@@ -191,7 +200,7 @@ class ParagraphFormat {
         }
       case 'infobox':
         {
-          if(isParagraphFirstContentsAvailable(paragraph.contents)) {
+          if (isParagraphFirstContentsAvailable(paragraph.contents)) {
             Widget infoBox = InfoBoxWidget(
               title: paragraph.contents[0].description!,
               description: paragraph.contents[0].data!,
@@ -203,7 +212,7 @@ class ParagraphFormat {
         }
       case 'annotation':
         {
-          if(isParagraphFirstContentsAvailable(paragraph.contents)) {
+          if (isParagraphFirstContentsAvailable(paragraph.contents)) {
             Widget annotation = AnnotationWidget(
               data: paragraph.contents[0].data!,
               isMemberContent: _isMemberContent,
@@ -214,7 +223,7 @@ class ParagraphFormat {
         }
       case 'quoteby':
         {
-          if(isParagraphFirstContentsAvailable(paragraph.contents)) {
+          if (isParagraphFirstContentsAvailable(paragraph.contents)) {
             Widget quoteby = QuoteByWidget(
               quote: paragraph.contents[0].data!,
               quoteBy: paragraph.contents[0].description,
@@ -231,14 +240,9 @@ class ParagraphFormat {
     }
   }
 
-  Widget parseTheTextToHtmlWidget(
-    String data,
-    {
-      Color? color,
-      double fontSize = 20
-    }
-  ) {
-    if(_isMemberContent){
+  Widget parseTheTextToHtmlWidget(String data,
+      {Color? color, double fontSize = 20}) {
+    if (_isMemberContent) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: HtmlWidget(
@@ -299,8 +303,8 @@ class ParagraphFormat {
     );
   }
 
-  Widget _addPaddingIfNeeded(Widget widget){
-    if(_isMemberContent){
+  Widget _addPaddingIfNeeded(Widget widget) {
+    if (_isMemberContent) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: widget,
@@ -311,7 +315,7 @@ class ParagraphFormat {
 
   List<String> _convertStrangedataList(List<Content> contentList) {
     List<String> resultList = [];
-    if(isParagraphFirstContentsAvailable(contentList)) {
+    if (isParagraphFirstContentsAvailable(contentList)) {
       if (contentList.length == 1 && contentList[0].data![0] == '[') {
         // api data is strange [[...]]
         String dataString =
@@ -327,7 +331,8 @@ class ParagraphFormat {
     return resultList;
   }
 
-  Widget buildOrderListWidget(List<Content> contentList, {double htmlFontSize = 20}) {
+  Widget buildOrderListWidget(List<Content> contentList,
+      {double htmlFontSize = 20}) {
     List<String> dataList = _convertStrangedataList(contentList);
 
     return ListView.builder(
@@ -346,13 +351,16 @@ class ParagraphFormat {
                 ),
               ),
               SizedBox(width: 16),
-              Expanded(child: parseTheTextToHtmlWidget(dataList[index], fontSize: htmlFontSize)),
+              Expanded(
+                  child: parseTheTextToHtmlWidget(dataList[index],
+                      fontSize: htmlFontSize)),
             ],
           );
         });
   }
 
-  Widget buildUnorderListWidget(List<Content> contentList, {double htmlFontSize = 20}) {
+  Widget buildUnorderListWidget(List<Content> contentList,
+      {double htmlFontSize = 20}) {
     List<String> dataList = _convertStrangedataList(contentList);
 
     return ListView.builder(
@@ -375,7 +383,9 @@ class ParagraphFormat {
                 ),
               ),
               SizedBox(width: 16),
-              Expanded(child: parseTheTextToHtmlWidget(dataList[index], fontSize: htmlFontSize)),
+              Expanded(
+                  child: parseTheTextToHtmlWidget(dataList[index],
+                      fontSize: htmlFontSize)),
             ],
           );
         });
