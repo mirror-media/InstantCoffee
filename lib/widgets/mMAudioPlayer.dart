@@ -21,17 +21,18 @@ class MMAudioPlayer extends StatefulWidget {
   _MMAudioPlayerState createState() => _MMAudioPlayerState();
 }
 
-class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveClientMixin {
+class _MMAudioPlayerState extends State<MMAudioPlayer>
+    with AutomaticKeepAliveClientMixin {
   Color _audioColor = Colors.orange.shade800;
   AudioPlayer _audioPlayer = AudioPlayer();
-  bool get _checkIsPlaying => !(_audioPlayer.state == PlayerState.COMPLETED ||
-      _audioPlayer.state == PlayerState.STOPPED ||
-      _audioPlayer.state == PlayerState.PAUSED);
-  int _duration = 0;
+  bool get _checkIsPlaying => !(_audioPlayer.state == PlayerState.completed ||
+      _audioPlayer.state == PlayerState.stopped ||
+      _audioPlayer.state == PlayerState.paused);
+  Duration _duration = Duration();
 
   @override
   bool get wantKeepAlive => true;
-  
+
   @override
   void initState() {
     _initAudioPlayer();
@@ -39,20 +40,20 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveCl
   }
 
   void _initAudioPlayer() async {
-    await _audioPlayer.setUrl(widget.audioUrl);
+    await _audioPlayer.setSourceUrl(widget.audioUrl);
   }
 
   _start() async {
     try {
-      _duration = await _audioPlayer.getDuration();
-      if(_duration < 0) {
-        _duration = 0;
+      _duration = await _audioPlayer.getDuration() ?? Duration();
+      if (_duration.inMilliseconds < 0) {
+        _duration = Duration();
       }
-    } catch(e) {
-      _duration = 0;
+    } catch (e) {
+      _duration = Duration();
     }
-    
-    await _audioPlayer.play(widget.audioUrl);
+
+    await _audioPlayer.play(UrlSource(widget.audioUrl));
   }
 
   _play() async {
@@ -64,12 +65,12 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveCl
   }
 
   _playAndPause() {
-    if (_audioPlayer.state == PlayerState.COMPLETED ||
-        _audioPlayer.state == PlayerState.STOPPED) {
+    if (_audioPlayer.state == PlayerState.completed ||
+        _audioPlayer.state == PlayerState.stopped) {
       _start();
-    } else if (_audioPlayer.state == PlayerState.PLAYING) {
+    } else if (_audioPlayer.state == PlayerState.playing) {
       _pause();
-    } else if (_audioPlayer.state == PlayerState.PAUSED) {
+    } else if (_audioPlayer.state == PlayerState.paused) {
       _play();
     }
   }
@@ -80,24 +81,25 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveCl
     super.dispose();
   }
 
-@override
+  @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    
+
     super.build(context);
     return Container(
       color: Colors.grey[300],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if(widget.title != null)
+          if (widget.title != null)
             Padding(
               padding: const EdgeInsets.all(3),
               child: Container(
                 width: width,
                 color: Colors.white,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, top: 12, bottom: 12),
+                  padding:
+                      const EdgeInsets.only(left: 8.0, top: 12, bottom: 12),
                   child: Text(
                     widget.title!,
                     style: TextStyle(
@@ -134,26 +136,27 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveCl
                   }),
               Expanded(
                 child: StreamBuilder<Duration>(
-                    stream: _audioPlayer.onAudioPositionChanged,
+                    stream: _audioPlayer.onPositionChanged,
                     builder: (context, snapshot) {
                       double sliderPosition = snapshot.data == null
                           ? 0.0
                           : snapshot.data!.inMilliseconds.toDouble();
                       String position =
                           DateTimeFormat.stringDuration(snapshot.data);
-                      String duration = DateTimeFormat.stringDuration(
-                          Duration(milliseconds: _duration));
+                      String duration =
+                          DateTimeFormat.stringDuration(_duration);
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Slider(
                             min: 0.0,
-                            max: _duration.toDouble(),
+                            max: _duration.inMilliseconds.toDouble(),
                             value: sliderPosition,
                             activeColor: _audioColor,
                             inactiveColor: Colors.black,
                             onChanged: (v) {
-                              _audioPlayer.seek(Duration(milliseconds: v.toInt()));
+                              _audioPlayer
+                                  .seek(Duration(milliseconds: v.toInt()));
                             },
                           ),
                           Padding(
@@ -189,4 +192,3 @@ class _MMAudioPlayerState extends State<MMAudioPlayer> with AutomaticKeepAliveCl
     );
   }
 }
-
