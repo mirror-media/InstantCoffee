@@ -14,74 +14,75 @@ class DownloadMagazineWidget extends StatefulWidget {
 
 class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
   _fetchMemberSubscriptionType() {
-    context.read<MemberSubscriptionTypeCubit>().fetchMemberSubscriptionType(isNavigateToMagazine: true);
+    context
+        .read<MemberSubscriptionTypeCubit>()
+        .fetchMemberSubscriptionType(isNavigateToMagazine: true);
   }
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    return BlocBuilder<MemberSubscriptionTypeCubit, MemberSubscriptionTypeState>(
-      builder: (context, state) {
-        if(state is MemberSubscriptionTypeLoadingState) {
-          return _downloadMagazineWidget(width, true);
-        } else if(state is MemberSubscriptionTypeLoadedState) {
-          return _downloadMagazineWidget(width, false);
-        }
-        
-        // state is member subscription type init
+    return BlocBuilder<MemberSubscriptionTypeCubit,
+        MemberSubscriptionTypeState>(builder: (context, state) {
+      if (state is MemberSubscriptionTypeLoadingState) {
+        return _downloadMagazineWidget(width, true);
+      } else if (state is MemberSubscriptionTypeLoadedState) {
         return _downloadMagazineWidget(width, false);
       }
-    );
+
+      // state is member subscription type init
+      return _downloadMagazineWidget(width, false);
+    });
   }
 
   Widget _downloadMagazineWidget(double width, bool isLoading) {
-    if(widget.isMemberContent){
+    if (widget.isMemberContent) {
       return Card(
         elevation: 10,
         color: Colors.white,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
           margin: const EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                '月費、年費會員免費線上閱讀動態雜誌',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Color.fromRGBO(0, 0, 0, 0.66),
-                ),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Text(
+              '月費、年費會員免費線上閱讀動態雜誌',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+                color: Color.fromRGBO(0, 0, 0, 0.66),
               ),
-              SizedBox(height: 24),
-              AbsorbPointer(
-                absorbing: isLoading,
-                child: ElevatedButton(
+            ),
+            SizedBox(height: 24),
+            AbsorbPointer(
+              absorbing: isLoading,
+              child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: appColor,
+                    backgroundColor: appColor,
                   ),
                   child: Container(
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         child: isLoading
-                        ? SpinKitThreeBounce(color: Colors.white, size: 17,)
-                        : Text(
-                            '線上閱讀',
-                            style: TextStyle(
-                              fontSize: 17,
-                              color: Colors.white,
-                            ),
-                          ),
+                            ? SpinKitThreeBounce(
+                                color: Colors.white,
+                                size: 17,
+                              )
+                            : Text(
+                                '線上閱讀',
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: Colors.white,
+                                ),
+                              ),
                       ),
                     ),
                   ),
-                  onPressed: () => _fetchMemberSubscriptionType()
-                ),
-              ),
-            ]
-          ),
+                  onPressed: () => _fetchMemberSubscriptionType()),
+            ),
+          ]),
         ),
       );
     }
@@ -90,45 +91,46 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
       child: Container(
         padding: const EdgeInsets.only(top: 24, bottom: 26),
         margin: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          children: [
-            Text(
-              '月費、年費會員免費線上閱讀動態雜誌',
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.white,
-              ),
+        child: Column(children: [
+          Text(
+            '月費、年費會員免費線上閱讀動態雜誌',
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
             ),
-            SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.only(left: 32, right: 32),
-              child: AbsorbPointer(
-                absorbing: isLoading,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: Colors.white),
+          ),
+          SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.only(left: 32, right: 32),
+            child: AbsorbPointer(
+              absorbing: isLoading,
+              child: ElevatedButton(
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.white),
                   child: Container(
                     width: width,
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.only(top: 10, bottom: 10),
                         child: isLoading
-                        ? SpinKitThreeBounce(color: appColor, size: 17,)
-                        : Text(
-                            '線上閱讀',
-                            style: TextStyle(
-                              fontSize: 17,
-                              color: appColor,
-                            ),
-                          ),
+                            ? SpinKitThreeBounce(
+                                color: appColor,
+                                size: 17,
+                              )
+                            : Text(
+                                '線上閱讀',
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: appColor,
+                                ),
+                              ),
                       ),
                     ),
                   ),
-                  onPressed: () => _fetchMemberSubscriptionType()
-                ),
-              ),
+                  onPressed: () => _fetchMemberSubscriptionType()),
             ),
-          ]
-        ),
+          ),
+        ]),
       ),
     );
   }

@@ -21,12 +21,12 @@ class MagazinePage extends StatefulWidget {
 
 class _MagazinePageState extends State<MagazinePage> {
   ScrollController _listviewController = ScrollController();
-  
+
   bool _checkPermission(SubscriptionType subscriptionType) {
     return widget.subscriptionType == SubscriptionType.subscribe_monthly ||
-    widget.subscriptionType == SubscriptionType.subscribe_yearly ||
-    widget.subscriptionType == SubscriptionType.marketing ||
-    widget.subscriptionType == SubscriptionType.staff;
+        widget.subscriptionType == SubscriptionType.subscribe_yearly ||
+        widget.subscriptionType == SubscriptionType.marketing ||
+        widget.subscriptionType == SubscriptionType.staff;
   }
 
   @override
@@ -41,55 +41,58 @@ class _MagazinePageState extends State<MagazinePage> {
       backgroundColor: Colors.white,
       appBar: _buildBar(context),
       body: _checkPermission(widget.subscriptionType)
-      ? ListView(
-          controller: _listviewController,
-          children: [
-            BlocProvider(
-              create: (context) => MagazineBloc(magazineRepos: MagazineServices()),
-              child: WeeklyMagazineWidget(),
-            ),
-            OnlineMagazineWidget(),
-            BlocProvider(
-              create: (context) => MagazineBloc(magazineRepos: MagazineServices()),
-              child: SpecialMagazineWidget(
-                listviewController: _listviewController,
-              ),
-            ),
-          ],
-        )
-      : Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              '加入Premium會員，免費線上閱讀動態雜誌',
-              style: TextStyle(
-                color: Colors.black26,
-                fontSize: 17,
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 24),
-              padding: const EdgeInsets.symmetric(horizontal: 80),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: appColor),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Center(
-                    child: Text(
-                      '升級 Premium 會員',
-                      style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.white,
-                      ),
-                    ),
+          ? ListView(
+              controller: _listviewController,
+              children: [
+                BlocProvider(
+                  create: (context) =>
+                      MagazineBloc(magazineRepos: MagazineServices()),
+                  child: WeeklyMagazineWidget(),
+                ),
+                OnlineMagazineWidget(),
+                BlocProvider(
+                  create: (context) =>
+                      MagazineBloc(magazineRepos: MagazineServices()),
+                  child: SpecialMagazineWidget(
+                    listviewController: _listviewController,
                   ),
                 ),
-                onPressed: () => RouteGenerator.navigateToSubscriptionSelect(),
-              ),
+              ],
+            )
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  '加入Premium會員，免費線上閱讀動態雜誌',
+                  style: TextStyle(
+                    color: Colors.black26,
+                    fontSize: 17,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 24),
+                  padding: const EdgeInsets.symmetric(horizontal: 80),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: appColor),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Center(
+                        child: Text(
+                          '升級 Premium 會員',
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    onPressed: () =>
+                        RouteGenerator.navigateToSubscriptionSelect(),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
     );
   }
 

@@ -213,7 +213,7 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
                 margin: const EdgeInsets.only(top: 24),
                 padding: const EdgeInsets.symmetric(horizontal: 80),
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: appColor),
+                  style: ElevatedButton.styleFrom(backgroundColor: appColor),
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     child: Center(
