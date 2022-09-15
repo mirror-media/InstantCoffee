@@ -67,7 +67,7 @@ android {
         versionName flutterVersionName
         // https://github.com/flutter/flutter/issues/53047
         multiDexEnabled true
-        ndkVersion "23.1.7779620"
+        ndkVersion "23.0.7123448"
         ndk {
             debugSymbolLevel 'FULL'
         }
