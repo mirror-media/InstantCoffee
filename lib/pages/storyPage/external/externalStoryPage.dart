@@ -5,7 +5,7 @@ import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/pages/storyPage/external/externalStoryWidget.dart';
 import 'package:readr_app/services/externalStoryService.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ExternalStoryPage extends StatelessWidget {
   final String slug;
@@ -29,13 +29,15 @@ class ExternalStoryPage extends StatelessWidget {
             icon: Icon(Icons.share),
             tooltip: 'share',
             onPressed: () {
-              Share.share(Environment().config.mirrorMediaDomain+'/external/$slug');
+              Share.share(
+                  Environment().config.mirrorMediaDomain + '/external/$slug');
             },
           )
         ],
       ),
       body: BlocProvider(
-        create: (BuildContext context) => ExternalStoryCubit(externalStoryRepos: ExternalStoryService()),
+        create: (BuildContext context) =>
+            ExternalStoryCubit(externalStoryRepos: ExternalStoryService()),
         child: ExternalStoryWidget(slug: slug, isPremiumMode: isPremiumMode),
       ),
     );

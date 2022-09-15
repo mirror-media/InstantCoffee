@@ -3,19 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/storyPage/listening/cubit.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/pages/storyPage/listening/listeningWidget.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ListeningStoryPage extends StatelessWidget {
   final String slug;
-  const ListeningStoryPage(
-      {Key? key, required this.slug})
-      : super(key: key);
+  const ListeningStoryPage({Key? key, required this.slug}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    ListeningStoryCubit _listeningStoryCubit= ListeningStoryCubit(
-      storySlug: slug
-    );
+    ListeningStoryCubit _listeningStoryCubit =
+        ListeningStoryCubit(storySlug: slug);
 
     return Scaffold(
       backgroundColor: Colors.white,
