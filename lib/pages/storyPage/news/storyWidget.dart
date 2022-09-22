@@ -30,9 +30,11 @@ class StoryWidget extends StatelessWidget {
     required this.story,
   });
 
-  late final StoryBloc _storyBloc;
-  _fetchPublishedStoryBySlug(String storySlug, bool isMemberCheck) {
-    _storyBloc.add(FetchPublishedStoryBySlug(storySlug, isMemberCheck));
+  _fetchPublishedStoryBySlug(
+      BuildContext context, String storySlug, bool isMemberCheck) {
+    context
+        .read<StoryBloc>()
+        .add(FetchPublishedStoryBySlug(storySlug, isMemberCheck));
   }
 
   Color _getSectionColor(Story? story) {
@@ -59,7 +61,6 @@ class StoryWidget extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     double height = width / 16 * 9;
 
-    _storyBloc = context.read<StoryBloc>();
     bool isAdsActivated = isStoryWidgetAdsActivated;
     bool isWineCategory = _isWineCategory(story.categories);
     StoryAd storyAd = story.storyAd!;
@@ -623,7 +624,8 @@ class StoryWidget extends StatelessWidget {
         AdHelper adHelper = AdHelper();
         adHelper.checkToShowInterstitialAd();
 
-        _fetchPublishedStoryBySlug(relatedItem.slug, relatedItem.isMemberCheck);
+        _fetchPublishedStoryBySlug(
+            context, relatedItem.slug, relatedItem.isMemberCheck);
       },
     );
   }
