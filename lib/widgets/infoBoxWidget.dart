@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/widgets/trianglePainter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class InfoBoxWidget extends StatelessWidget {
   final String title;
@@ -14,7 +15,7 @@ class InfoBoxWidget extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    if(isMemberContent){
+    if (isMemberContent) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 32),
         child: Card(
@@ -23,7 +24,7 @@ class InfoBoxWidget extends StatelessWidget {
           shape: Border(
             top: BorderSide(
               width: 1.5,
-              color: appColor, 
+              color: appColor,
             ),
           ),
           child: Padding(
@@ -55,6 +56,16 @@ class InfoBoxWidget extends StatelessWidget {
                     }
 
                     return null;
+                  },
+                  onTapUrl: (url) async {
+                    try {
+                      String newUrl = url.replaceAll(' ', '');
+                      Uri uri = Uri.parse(newUrl);
+                      return await launchUrl(uri);
+                    } catch (e) {
+                      print(e);
+                      return false;
+                    }
                   },
                 ),
               ],
@@ -95,6 +106,16 @@ class InfoBoxWidget extends StatelessWidget {
                       }
 
                       return null;
+                    },
+                    onTapUrl: (url) async {
+                      try {
+                        String newUrl = url.replaceAll(' ', '');
+                        Uri uri = Uri.parse(newUrl);
+                        return await launchUrl(uri);
+                      } catch (e) {
+                        print(e);
+                        return false;
+                      }
                     },
                   ),
                 ],
