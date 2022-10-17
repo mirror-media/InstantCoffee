@@ -126,11 +126,7 @@ dependencies:
   flutter_launcher_icons: ^0.10.0
 
   # more powerful webview
-  flutter_inappwebview:
-    git:
-      url: https://github.com/vocsyinfotech/flutter_inappwebview.git
-      ref: master
-      version: 5.4.3+7
+  flutter_inappwebview: ^5.5.0+2
 
   # zoomable widget
   photo_view: ^0.14.0
