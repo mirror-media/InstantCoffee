@@ -1599,7 +1599,7 @@ packages:
     source: hosted
     version: "2.0.12"
   visibility_detector:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: visibility_detector
       url: "https://pub.dartlang.org"

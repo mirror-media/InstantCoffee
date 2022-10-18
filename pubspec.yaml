@@ -140,6 +140,8 @@ dependencies:
 
   get: ^4.6.3
 
+  visibility_detector: ^0.3.3
+
   #format css
   csslib: ^0.17.1
 
