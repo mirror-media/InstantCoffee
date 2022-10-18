@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:readr_app/blocs/search/bloc.dart';
+import 'package:readr_app/blocs/search/cubit.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/pages/search/searchWidget.dart';
 import 'package:readr_app/services/searchService.dart';
@@ -16,7 +16,7 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: _buildBar(context),
       body: BlocProvider(
-        create: (context) => SearchBloc(searchRepos: SearchServices()),
+        create: (context) => SearchCubit(searchRepos: SearchServices()),
         child: SearchWidget(),
       ),
     );

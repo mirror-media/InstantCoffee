@@ -100,6 +100,19 @@ class Record extends Equatable {
     return jsonList.map<Record>((json) => Record.fromJson(json)).toList();
   }
 
+  static List<Record> recordListFromSearchJson(List<dynamic> jsonList) {
+    return jsonList
+        .map<Record>((json) => Record(
+              title: json['title'],
+              slug: json['pagemap']['metatags'][0]['dable:item_id'],
+              publishedDate: json['pagemap']['metatags'][0]
+                  ['article:published_time'],
+              photoUrl: json['pagemap']['metatags'][0]['og:image'],
+              isExternal: json['link'].contains('external'),
+            ))
+        .toList();
+  }
+
   static List<Record> filterDuplicatedSlugByAnother(
     List<Record> base,
     List<Record> another,

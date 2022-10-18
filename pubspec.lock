@@ -580,12 +580,10 @@ packages:
   flutter_inappwebview:
     dependency: "direct main"
     description:
-      path: "."
-      ref: master
-      resolved-ref: e81d9b76aa8cbbdec65429a84a9edaf370715e90
-      url: "https://github.com/vocsyinfotech/flutter_inappwebview.git"
-    source: git
-    version: "5.4.3+7"
+      name: flutter_inappwebview
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.5.0+2"
   flutter_launcher_icons:
     dependency: "direct main"
     description:
@@ -1601,7 +1599,7 @@ packages:
     source: hosted
     version: "2.0.12"
   visibility_detector:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: visibility_detector
       url: "https://pub.dartlang.org"

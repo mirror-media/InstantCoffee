@@ -201,7 +201,9 @@ dynamic returnResponse(http.Response response) {
           // error log
           responseJson.containsKey('msg') ||
           // topic list
-          responseJson.containsKey('_endpoints');
+          responseJson.containsKey('_endpoints') ||
+          // Google custom search
+          responseJson.containsKey('searchInformation');
 
       if (!hasData) {
         throw BadRequestException(response.body.toString());
