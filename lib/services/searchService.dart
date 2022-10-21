@@ -18,7 +18,7 @@ class SearchServices implements SearchRepos {
   Future<RecordListAndAllCount> searchByKeyword(String keyword,
       {int startIndex = 1}) async {
     String searchApi =
-        '${Environment().config.searchApi}&q=$keyword&start=$startIndex';
+        '${Environment().config.searchApi}&exactTerms=$keyword&sort=date:d&start=$startIndex';
 
     final jsonResponse = await _helper.getByCacheAndAutoCache(
       searchApi,
