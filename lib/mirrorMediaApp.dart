@@ -10,7 +10,6 @@ import 'package:readr_app/helpers/iAPSubscriptionHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/services/memberService.dart';
 
-//TODO: change flutter_inappwebview back to pub.dev version
 class MirrorMediaApp extends StatefulWidget {
   @override
   State<MirrorMediaApp> createState() => _MirrorMediaAppState();

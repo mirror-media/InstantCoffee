@@ -5,7 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
-import 'package:readr_app/blocs/search/bloc.dart';
+import 'package:readr_app/blocs/search/cubit.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
 import 'package:readr_app/helpers/appLinkHelper.dart';
 import 'package:readr_app/helpers/environment.dart';
@@ -58,7 +58,7 @@ class _PremiumHomePageState extends State<PremiumHomePage>
     return <Widget>[
       PremiumHomeWidget(),
       BlocProvider(
-        create: (context) => SearchBloc(searchRepos: SearchServices()),
+        create: (context) => SearchCubit(searchRepos: SearchServices()),
         child: ColoredBox(color: Colors.white, child: SearchWidget()),
       ),
       ColoredBox(
