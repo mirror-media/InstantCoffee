@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # iOS and android is the same version
-version: 4.4.9+390
+version: 4.5.0+390
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -47,7 +47,7 @@ dependencies:
     git:
       url: https://github.com/mirror-media/flutter_embedded_webview.git
       ref: master
-      version: ^0.2.2
+      version: ^0.4.0
   # local storage
   localstorage: ^4.0.0+1
   # A Flutter plugin to store data in secure storage
@@ -130,17 +130,14 @@ dependencies:
 
   # zoomable widget
   photo_view: ^0.14.0
-
   # svg loader
   flutter_svg: ^1.0.1
-
-  file: ^6.1.2
   
+  file: ^6.1.2 
   intl: ^0.17.0
-
   get: ^4.6.3
-
   visibility_detector: ^0.3.3
+  percent_indicator: ^4.2.2
 
   #format css
   csslib: ^0.17.1
@@ -212,6 +209,8 @@ flutter:
     - assets/image/badge.png
     - assets/image/subscription_icon.png
     - assets/image/subscribe_banner_mobile.jpg
+    # election
+    - assets/image/election/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
