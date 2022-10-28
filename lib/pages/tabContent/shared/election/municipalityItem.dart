@@ -54,11 +54,20 @@ class MunicipalityItem extends StatelessWidget {
                           partyLogoMap[item.party]!,
                           width: 16,
                           height: 16,
+                        )
+                      else
+                        Text(
+                          item.party,
+                          style: const TextStyle(
+                            color: Color.fromRGBO(74, 74, 74, 0.75),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       const SizedBox(
                         width: 8.3,
                       ),
-                      if (index == 0 && item.elected)
+                      if (item.elected)
                         SvgPicture.asset(
                           electedSvg,
                           width: 16,
