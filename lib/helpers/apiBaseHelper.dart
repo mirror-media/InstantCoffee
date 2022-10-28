@@ -203,7 +203,9 @@ dynamic returnResponse(http.Response response) {
           // topic list
           responseJson.containsKey('_endpoints') ||
           // Google custom search
-          responseJson.containsKey('searchInformation');
+          responseJson.containsKey('searchInformation') ||
+          // election widget
+          responseJson.containsKey('polling');
 
       if (!hasData) {
         throw BadRequestException(response.body.toString());
