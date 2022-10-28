@@ -22,7 +22,7 @@ class Candidate {
       party: json['party'],
       votes: json['tks'],
       percentageOfVotesObtained: json['tksRate'],
-      elected: json['elected'],
+      elected: json['candVictor'],
     );
   }
 }
