@@ -86,11 +86,17 @@ const mirrormediaGroupDomain = [
 //election
 const kmtLogoSvg = 'assets/image/election/kmt.svg';
 const dppLogoSvg = 'assets/image/election/dpp.svg';
+const tppLogoSvg = 'assets/image/election/tpp.svg';
 const noPartySvg = 'assets/image/election/noParty.svg';
 const electedSvg = 'assets/image/election/elected.svg';
 
 const Map<String, String> partyLogoMap = {
   '國民黨': kmtLogoSvg,
+  '中國國民黨': kmtLogoSvg,
   '民進黨': dppLogoSvg,
+  '民主進步黨': dppLogoSvg,
+  '民眾黨': tppLogoSvg,
+  '台灣民眾黨': tppLogoSvg,
   '無黨籍': noPartySvg,
+  '無': noPartySvg,
 };

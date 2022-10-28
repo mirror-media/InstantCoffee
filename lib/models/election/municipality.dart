@@ -11,11 +11,10 @@ class Municipality {
 
   factory Municipality.fromJson(Map<String, dynamic> json) {
     List<Candidate> candidates = [];
-    for (var item in json['candidate']) {
+    for (var item in json['candidates']) {
       candidates.add(Candidate.fromJson(item));
     }
-    candidates.sort((a, b) =>
-        b.percentageOfVotesObtained.compareTo(a.percentageOfVotesObtained));
+
     return Municipality(
       name: json['city'],
       candidates: candidates,
