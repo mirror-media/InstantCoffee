@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/election/election_cubit.dart';
 import 'package:readr_app/blocs/section/cubit.dart';
 import 'package:readr_app/blocs/section/states.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
@@ -10,6 +11,7 @@ import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/firebaseAnalyticsHelper.dart';
 import 'package:readr_app/helpers/remoteConfigHelper.dart';
 import 'package:readr_app/models/section.dart';
+import 'package:readr_app/pages/home/election/electionWidget.dart';
 import 'package:readr_app/pages/tabContent/listening/premiumListeningTabContent.dart';
 import 'package:readr_app/pages/tabContent/news/premiumTabContent.dart';
 import 'package:readr_app/pages/tabContent/personal/premium/premiumPersionalTabContent.dart';
@@ -23,7 +25,8 @@ class PremiumHomeWidget extends StatefulWidget {
   _PremiumHomeWidgetState createState() => _PremiumHomeWidgetState();
 }
 
-class _PremiumHomeWidgetState extends State<PremiumHomeWidget> with TickerProviderStateMixin{
+class _PremiumHomeWidgetState extends State<PremiumHomeWidget>
+    with TickerProviderStateMixin {
   RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
 
   /// tab controller
@@ -34,7 +37,7 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget> with TickerProvid
   List<Tab> _tabs = [];
   List<Widget> _tabWidgets = [];
   List<ScrollController> _scrollControllerList = [];
-  
+
   _fetchSectionList() {
     context.read<SectionCubit>().fetchSectionList();
   }
@@ -44,7 +47,7 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget> with TickerProvid
     _fetchSectionList();
     super.initState();
   }
-  
+
   _initializeTabController(List<Section> sectionItems) {
     _tabs.clear();
     _tabWidgets.clear();
@@ -54,7 +57,7 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget> with TickerProvid
       Section section = sectionItems[i];
       String title = section.title;
       Color? color;
-      if(section.name == 'member') {
+      if (section.name == 'member') {
         title = 'Premium文章';
         color = Color(0xff707070);
       }
@@ -77,23 +80,18 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget> with TickerProvid
           section: section,
           scrollController: _scrollControllerList[i],
         ));
-      } else if (section.key == Environment().config.personalSectionKey){
+      } else if (section.key == Environment().config.personalSectionKey) {
         _tabWidgets.add(PremiumPersonalTabContent(
           scrollController: _scrollControllerList[i],
         ));
       } else {
-        _tabWidgets.add(
-          BlocProvider(
-            create: (context) => TabContentBloc(
-              recordRepos: RecordService()
-            ),
+        _tabWidgets.add(BlocProvider(
+            create: (context) => TabContentBloc(recordRepos: RecordService()),
             child: PremiumTabContent(
               section: section,
               scrollController: _scrollControllerList[i],
               needCarousel: i == 0,
-            )
-          )
-        );
+            )));
       }
     }
 
@@ -105,36 +103,39 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget> with TickerProvid
       length: sectionItems.length,
       initialIndex:
           _tabController == null ? _initialTabIndex : _tabController!.index,
-    )..addListener(() { 
-      _tabs.clear();
-      for (int i = 0; i < sectionItems.length; i++) {
-        Section section = sectionItems[i];
-        String title = section.title;
-        Color? color;
-        if(section.name == 'member') {
-          title = 'Premium文章';
-          // when index is member
-          if (_tabController!.index == 3) {
-            color = appColor;
-          } else {
-            color = Color(0xff707070);
+    )..addListener(() {
+        _tabs.clear();
+        for (int i = 0; i < sectionItems.length; i++) {
+          Section section = sectionItems[i];
+          String title = section.title;
+          Color? color;
+          if (section.name == 'member') {
+            title = 'Premium文章';
+            // when index is member
+            if (_tabController!.index == 3) {
+              color = appColor;
+            } else {
+              color = Color(0xff707070);
+            }
           }
-        }
 
-        _tabs.add(
-          Tab(
-            child: Text(
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: color
+          _tabs.add(
+            Tab(
+              child: Text(
+                title,
+                style: TextStyle(fontWeight: FontWeight.bold, color: color),
               ),
             ),
-          ),
-        );
-      }
-      _tabBarController!.sink.add(_tabs);
-    });
+          );
+        }
+        _tabBarController!.sink.add(_tabs);
+
+        if (_tabController!.index == 0) {
+          context.read<ElectionCubit>().fetchMunicipalityData();
+        } else {
+          context.read<ElectionCubit>().hideElectionBlock();
+        }
+      });
   }
 
   _scrollToTop(int index) {
@@ -162,34 +163,25 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget> with TickerProvid
     return ColoredBox(
       color: Colors.white,
       child: BlocBuilder<SectionCubit, SectionState>(
-        builder: (BuildContext context, SectionState state) {
-          SectionStatus status = state.status;
-          if(status == SectionStatus.error) {
-            print('PremiumHomePageSectionError: ${state.errorMessages}');
-            return Container();
-          } else if(status == SectionStatus.loaded) {
-            _initializeTabController(state.sectionList!);
-            return _buildTabs(
-              state.sectionList!,
-              _tabs, 
-              _tabWidgets, 
-              _tabController!
-            );
-          }
-
-          // init or loading
-          return Center(child: CircularProgressIndicator());
+          builder: (BuildContext context, SectionState state) {
+        SectionStatus status = state.status;
+        if (status == SectionStatus.error) {
+          print('PremiumHomePageSectionError: ${state.errorMessages}');
+          return Container();
+        } else if (status == SectionStatus.loaded) {
+          _initializeTabController(state.sectionList!);
+          return _buildTabs(
+              state.sectionList!, _tabs, _tabWidgets, _tabController!);
         }
-      ),
+
+        // init or loading
+        return Center(child: CircularProgressIndicator());
+      }),
     );
   }
 
-  Widget _buildTabs(
-    List<Section> sections,
-    List<Tab> tabs, 
-    List<Widget> tabWidgets, 
-    TabController tabController
-  ) {
+  Widget _buildTabs(List<Section> sections, List<Tab> tabs,
+      List<Widget> tabWidgets, TabController tabController) {
     return Column(
       children: [
         Container(
@@ -197,81 +189,85 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget> with TickerProvid
           child: Material(
             color: Color.fromARGB(255, 229, 229, 229),
             child: StreamBuilder<List<Tab>>(
-              initialData: tabs,
-              stream: _tabBarController!.stream,
-              builder: (context, snapshot) {
-                List<Tab> tabs = snapshot.data!;
-                TabBar tabBar = TabBar(
-                  isScrollable: true,
-                  indicatorColor: appColor,
-                  unselectedLabelColor: Color(0xffA3A3A3),
-                  labelColor: appColor,
-                  tabs: tabs.toList(),
-                  controller: tabController,
-                  onTap: (int index) {
-                    if(index >= 5) {
-                      FirebaseAnalyticsHelper.logTabBarAfterTheSixthClick(
-                        sectiontitle: sections[index].title
-                      );
-                    }
+                initialData: tabs,
+                stream: _tabBarController!.stream,
+                builder: (context, snapshot) {
+                  List<Tab> tabs = snapshot.data!;
+                  TabBar tabBar = TabBar(
+                    isScrollable: true,
+                    indicatorColor: appColor,
+                    unselectedLabelColor: Color(0xffA3A3A3),
+                    labelColor: appColor,
+                    tabs: tabs.toList(),
+                    controller: tabController,
+                    onTap: (int index) {
+                      if (index >= 5) {
+                        FirebaseAnalyticsHelper.logTabBarAfterTheSixthClick(
+                            sectiontitle: sections[index].title);
+                      }
 
-                    if (_initialTabIndex == index) {
-                      _scrollToTop(index);
-                    }
-                    _initialTabIndex = index;
-                  },
-                );
+                      if (_initialTabIndex == index) {
+                        _scrollToTop(index);
+                      }
+                      _initialTabIndex = index;
+                    },
+                  );
 
-                return Row(
-                  children: [
-                    Expanded(
-                      child: tabBar,
-                    ),
-                    
-                    if(_remoteConfigHelper.hasTabSectionButton)...[
-                      Container(
-                        height: tabBar.preferredSize.height,
-                        child: VerticalDivider(
-                          color: Colors.black12,
-                          thickness: 1,
-                          indent: 12,
-                          endIndent: 12,
-                          width: 8,
-                        ),
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: tabBar,
                       ),
-                      InkWell(
-                        child: Container(
+                      if (_remoteConfigHelper.hasTabSectionButton) ...[
+                        Container(
                           height: tabBar.preferredSize.height,
-                          width: tabBar.preferredSize.height-8,
-                          child: Icon(
-                            Icons.keyboard_arrow_down,
-                            size: 24,
-                            color: Colors.black54,
+                          child: VerticalDivider(
+                            color: Colors.black12,
+                            thickness: 1,
+                            indent: 12,
+                            endIndent: 12,
+                            width: 8,
                           ),
                         ),
-                        onTap: () {
-                          EasyPopup.show(
-                            context, 
-                            SectionDropDownMenu(
-                              tabBarHeight: tabBar.preferredSize.height,
-                              tabController: _tabController!,
-                              sectionList: sections,
+                        InkWell(
+                            child: Container(
+                              height: tabBar.preferredSize.height,
+                              width: tabBar.preferredSize.height - 8,
+                              child: Icon(
+                                Icons.keyboard_arrow_down,
+                                size: 24,
+                                color: Colors.black54,
+                              ),
                             ),
-                            hasPaddingTop: true,
-                            cancelable: true,
-                            outsideTouchCancelable: false,
-                          );
-                        }
-                      )
-                    ]
-                  ],
-                );
-              }
-            ),
+                            onTap: () {
+                              EasyPopup.show(
+                                context,
+                                SectionDropDownMenu(
+                                  tabBarHeight: tabBar.preferredSize.height,
+                                  tabController: _tabController!,
+                                  sectionList: sections,
+                                ),
+                                hasPaddingTop: true,
+                                cancelable: true,
+                                outsideTouchCancelable: false,
+                              );
+                            })
+                      ]
+                    ],
+                  );
+                }),
           ),
         ),
-        if(_remoteConfigHelper.isNewsMarqueePin)
-          NewsMarquee(),
+        BlocBuilder<ElectionCubit, ElectionState>(
+          builder: (context, state) {
+            if (state is HideElectionBlock) {
+              return const SizedBox();
+            }
+
+            return ElectionWidget();
+          },
+        ),
+        if (_remoteConfigHelper.isNewsMarqueePin) NewsMarquee(),
         Expanded(
           child: TabBarView(
             controller: tabController,

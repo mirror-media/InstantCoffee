@@ -21,7 +21,7 @@ class Candidate {
       name: json['name'],
       party: json['party'],
       votes: json['tks'],
-      percentageOfVotesObtained: json['tksRate'],
+      percentageOfVotesObtained: json['tksRate'].toDouble(),
       elected: json['candVictor'],
     );
   }
