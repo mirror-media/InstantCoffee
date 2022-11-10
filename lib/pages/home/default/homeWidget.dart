@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:readr_app/blocs/election/election_cubit.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
 import 'package:readr_app/blocs/onBoarding/events.dart';
 import 'package:readr_app/blocs/onBoarding/states.dart';
@@ -15,7 +14,6 @@ import 'package:readr_app/helpers/firebaseAnalyticsHelper.dart';
 import 'package:readr_app/helpers/remoteConfigHelper.dart';
 import 'package:readr_app/models/OnBoardingPosition.dart';
 import 'package:readr_app/models/section.dart';
-import 'package:readr_app/pages/home/election/electionWidget.dart';
 import 'package:readr_app/pages/tabContent/listening/listeningTabContent.dart';
 import 'package:readr_app/pages/tabContent/news/tabContent.dart';
 import 'package:readr_app/pages/tabContent/personal/default/personalTabContent.dart';
@@ -138,12 +136,6 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
           );
         }
         _tabBarController!.sink.add(_tabs);
-
-        if (_tabController!.index == 0) {
-          context.read<ElectionCubit>().fetchMunicipalityData();
-        } else {
-          context.read<ElectionCubit>().hideElectionBlock();
-        }
       });
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -287,15 +279,6 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                   );
                 }),
           ),
-        ),
-        BlocBuilder<ElectionCubit, ElectionState>(
-          builder: (context, state) {
-            if (state is HideElectionBlock) {
-              return const SizedBox();
-            }
-
-            return ElectionWidget();
-          },
         ),
         if (_remoteConfigHelper.isNewsMarqueePin) NewsMarquee(),
         Expanded(
