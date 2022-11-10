@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:readr_app/blocs/election/election_cubit.dart';
 import 'package:readr_app/models/election/municipality.dart';
-import 'package:readr_app/pages/tabContent/shared/election/municipalityItem.dart';
+import 'package:readr_app/pages/home/election/municipalityItem.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class ElectionWidget extends StatefulWidget {
