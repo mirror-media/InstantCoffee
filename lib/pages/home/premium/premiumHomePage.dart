@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:readr_app/blocs/election/election_cubit.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/search/cubit.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
@@ -18,7 +17,6 @@ import 'package:readr_app/pages/search/searchWidget.dart';
 import 'package:readr_app/pages/tabContent/news/premiumTabContent.dart';
 import 'package:readr_app/pages/termsOfService/mMTermsOfServicePage.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
-import 'package:readr_app/services/electionService.dart';
 import 'package:readr_app/services/recordService.dart';
 import 'package:readr_app/services/searchService.dart';
 
@@ -58,10 +56,7 @@ class _PremiumHomePageState extends State<PremiumHomePage>
 
   List<Widget> _getPages(ScrollController premeniumArticleBarScrollController) {
     return <Widget>[
-      BlocProvider(
-        create: (context) => ElectionCubit(ElectionService()),
-        child: PremiumHomeWidget(),
-      ),
+      PremiumHomeWidget(),
       BlocProvider(
         create: (context) => SearchCubit(searchRepos: SearchServices()),
         child: ColoredBox(color: Colors.white, child: SearchWidget()),
