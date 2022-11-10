@@ -5,7 +5,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/editorChoice/cubit.dart';
 import 'package:readr_app/blocs/editorChoice/state.dart';
-import 'package:readr_app/blocs/election/election_cubit.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
 import 'package:readr_app/helpers/adHelper.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
@@ -15,12 +14,10 @@ import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/models/sectionAd.dart';
-import 'package:readr_app/pages/tabContent/shared/election/electionWidget.dart';
 import 'package:readr_app/pages/tabContent/shared/listItem.dart';
 import 'package:readr_app/pages/tabContent/shared/theFirstItem.dart';
 import 'package:readr_app/pages/tabContent/shared/topicBlock.dart';
 import 'package:readr_app/services/editorChoiceService.dart';
-import 'package:readr_app/services/electionService.dart';
 import 'package:readr_app/widgets/editorChoiceCarousel.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
 import 'package:readr_app/widgets/mMAdBanner.dart';
@@ -164,14 +161,6 @@ class _TabContentState extends State<TabContent> {
     return CustomScrollView(
       controller: widget.scrollController,
       slivers: [
-        if (_remoteConfigHelper.electionApi.isNotEmpty &&
-            widget.section.key == Environment().config.latestSectionKey)
-          SliverToBoxAdapter(
-            child: BlocProvider(
-              create: (context) => ElectionCubit(ElectionService()),
-              child: ElectionWidget(),
-            ),
-          ),
         if (!_remoteConfigHelper.isNewsMarqueePin)
           SliverPersistentHeader(
             delegate: NewsMarqueePersistentHeaderDelegate(),

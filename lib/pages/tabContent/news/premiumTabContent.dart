@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/editorChoice/cubit.dart';
 import 'package:readr_app/blocs/editorChoice/state.dart';
-import 'package:readr_app/blocs/election/election_cubit.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
 import 'package:readr_app/helpers/environment.dart';
@@ -11,12 +10,10 @@ import 'package:readr_app/helpers/remoteConfigHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section.dart';
-import 'package:readr_app/pages/tabContent/shared/election/electionWidget.dart';
 import 'package:readr_app/pages/tabContent/shared/premiumListItem.dart';
 import 'package:readr_app/pages/tabContent/shared/theFirstItem.dart';
 import 'package:readr_app/pages/tabContent/shared/topicBlock.dart';
 import 'package:readr_app/services/editorChoiceService.dart';
-import 'package:readr_app/services/electionService.dart';
 import 'package:readr_app/widgets/editorChoiceCarousel.dart';
 import 'package:readr_app/widgets/errorStatelessWidget.dart';
 import 'package:readr_app/widgets/newsMarquee/newsMarqueePersistentHeaderDelegate.dart';
@@ -123,14 +120,6 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
     return CustomScrollView(
       controller: widget.scrollController,
       slivers: [
-        if (_remoteConfigHelper.electionApi.isNotEmpty &&
-            widget.section.key == Environment().config.latestSectionKey)
-          SliverToBoxAdapter(
-            child: BlocProvider(
-              create: (context) => ElectionCubit(ElectionService()),
-              child: ElectionWidget(),
-            ),
-          ),
         if (!_remoteConfigHelper.isNewsMarqueePin)
           SliverPersistentHeader(
             delegate: NewsMarqueePersistentHeaderDelegate(),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readr_app/blocs/election/election_cubit.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
 import 'package:readr_app/pages/home/default/homeWidget.dart';
 import 'package:readr_app/helpers/appLinkHelper.dart';
@@ -11,6 +12,7 @@ import 'package:readr_app/helpers/firebaseMessangingHelper.dart';
 import 'package:readr_app/helpers/routeGenerator.dart';
 import 'package:readr_app/pages/termsOfService/mMTermsOfServicePage.dart';
 import 'package:readr_app/helpers/dataConstants.dart';
+import 'package:readr_app/services/electionService.dart';
 
 class HomePage extends StatefulWidget {
   final GlobalKey settingKey;
@@ -67,7 +69,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: _buildBar(context), body: HomeWidget());
+    return Scaffold(
+      appBar: _buildBar(context),
+      body: BlocProvider(
+        create: (context) => ElectionCubit(ElectionService()),
+        child: HomeWidget(),
+      ),
+    );
   }
 
   PreferredSizeWidget _buildBar(BuildContext context) {
