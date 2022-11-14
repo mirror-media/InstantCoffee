@@ -32,19 +32,27 @@ class _MagazineBrowserState extends State<MagazineBrowser> {
       ),
     );
 
-    if(type == 'weekly'){
+    if (type == 'weekly') {
       _browser = InAppWebView(
         initialUrlRequest: URLRequest(
           url: Uri.parse(widget.magazine.onlineReadingUrl),
         ),
         initialOptions: options,
+        onLoadError: (controller, url, code, message) =>
+            Navigator.of(context).pop(),
+        onLoadHttpError: (controller, url, statusCode, description) =>
+            Navigator.of(context).pop(),
       );
-    } else{
+    } else {
       _browser = InAppWebView(
         initialUrlRequest: URLRequest(
           url: Uri.parse(widget.magazine.pdfUrl),
         ),
         initialOptions: options,
+        onLoadError: (controller, url, code, message) =>
+            Navigator.of(context).pop(),
+        onLoadHttpError: (controller, url, statusCode, description) =>
+            Navigator.of(context).pop(),
       );
     }
   }
@@ -73,24 +81,23 @@ class _MagazineBrowserState extends State<MagazineBrowser> {
 
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        if(orientation  == Orientation.portrait) {
-          return Scaffold(
-            appBar: _buildBar(context),
-            body: _browser,
-          );
-        }
+    return OrientationBuilder(builder: (context, orientation) {
+      if (orientation == Orientation.portrait) {
         return Scaffold(
-          body: Stack(
-            children: [
-              _browser,
-              SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: InkWell(
+          appBar: _buildBar(context),
+          body: _browser,
+        );
+      }
+      return Scaffold(
+        body: Stack(
+          children: [
+            _browser,
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: InkWell(
                       child: Container(
                         color: Colors.black45,
                         child: Icon(
@@ -99,24 +106,21 @@ class _MagazineBrowserState extends State<MagazineBrowser> {
                           size: 36,
                         ),
                       ),
-                      onTap: () => Navigator.of(context).pop()
-                    ),             
-                  ),
+                      onTap: () => Navigator.of(context).pop()),
                 ),
               ),
-            ],
-          ),
-        );
-      }
-    );
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios),
-        onPressed: () => Navigator.of(context).pop()
-      ),
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () => Navigator.of(context).pop()),
       centerTitle: true,
       title: Text(widget.magazine.issue),
       backgroundColor: appColor,
