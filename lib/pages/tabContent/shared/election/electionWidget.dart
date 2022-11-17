@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:readr_app/blocs/election/election_cubit.dart';
+import 'package:readr_app/helpers/remoteConfigHelper.dart';
 import 'package:readr_app/models/election/municipality.dart';
 import 'package:readr_app/pages/tabContent/shared/election/municipalityItem.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -23,27 +24,44 @@ class _ElectionWidgetState extends State<ElectionWidget> {
   final CarouselController carouselController = CarouselController();
   late final Timer autoUpdateTimer;
   int currentIndex = 0;
+  RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+  late final String api;
+  late final DateTime startShowTime;
+  late final DateTime endShowTime;
 
   @override
   void initState() {
-    fetchMunicipalityData();
-    autoUpdateTimer = Timer.periodic(
-        const Duration(minutes: 1), (timer) => fetchMunicipalityData());
+    if (remoteConfigHelper.election != null) {
+      api = remoteConfigHelper.election!['api'];
+      startShowTime = remoteConfigHelper.election!['startTime'];
+      endShowTime = remoteConfigHelper.election!['endTime'];
+      fetchMunicipalityData();
+      autoUpdateTimer = Timer.periodic(
+          const Duration(minutes: 1), (timer) => fetchMunicipalityData());
+    }
     super.initState();
   }
 
   @override
   void dispose() {
-    autoUpdateTimer.cancel();
+    if (remoteConfigHelper.election != null) autoUpdateTimer.cancel();
     super.dispose();
   }
 
   void fetchMunicipalityData() {
-    context.read<ElectionCubit>().fetchMunicipalityData();
+    var now = DateTime.now();
+    if (now.isBefore(startShowTime) || now.isAfter(endShowTime)) {
+      context.read<ElectionCubit>().hideWidget();
+    } else {
+      context.read<ElectionCubit>().fetchMunicipalityData(api);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (remoteConfigHelper.election == null) {
+      return const SizedBox();
+    }
     return BlocBuilder<ElectionCubit, ElectionState>(
       builder: (context, state) {
         if (state is ElectionDataLoaded) {
@@ -52,7 +70,7 @@ class _ElectionWidgetState extends State<ElectionWidget> {
         }
 
         if (municipalityList.isEmpty) {
-          return Container();
+          return const SizedBox();
         }
 
         List<Widget> items = [];
