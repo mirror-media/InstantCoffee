@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class RemoteConfigHelper {
@@ -18,5 +20,17 @@ class RemoteConfigHelper {
   String get updateMessage => _remoteConfig.getString('update_message');
   bool get isNewsMarqueePin => _remoteConfig.getBool('news_marquee_pin');
   bool get hasTabSectionButton => _remoteConfig.getBool('tab_section_button');
-  String get electionApi => _remoteConfig.getString('election_api');
+  Map<String, dynamic>? get election {
+    try {
+      var election = jsonDecode(_remoteConfig.getString('election'));
+      return {
+        "api": election['api'],
+        "startTime": DateTime.parse(election['startTime']),
+        "endTime": DateTime.parse(election['endTime']),
+      };
+    } catch (e) {
+      print('Convert election json error: $e');
+      return null;
+    }
+  }
 }

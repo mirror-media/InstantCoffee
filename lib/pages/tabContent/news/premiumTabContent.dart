@@ -123,7 +123,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> {
     return CustomScrollView(
       controller: widget.scrollController,
       slivers: [
-        if (_remoteConfigHelper.electionApi.isNotEmpty &&
+        if (_remoteConfigHelper.election != null &&
             widget.section.key == Environment().config.latestSectionKey)
           SliverToBoxAdapter(
             child: BlocProvider(
