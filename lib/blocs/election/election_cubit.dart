@@ -9,10 +9,10 @@ class ElectionCubit extends Cubit<ElectionState> {
   final ElectionRepos repos;
   ElectionCubit(this.repos) : super(ElectionInitial());
 
-  void fetchMunicipalityData() async {
+  void fetchMunicipalityData(String api) async {
     emit(UpdatingElectionData());
     try {
-      var result = await repos.fetchMunicipalityData();
+      var result = await repos.fetchMunicipalityData(api);
       emit(ElectionDataLoaded(
         lastUpdateTime: result['lastUpdateTime'],
         municipalityList: result['municipalityList'],
@@ -21,5 +21,9 @@ class ElectionCubit extends Cubit<ElectionState> {
       print('Fetch election data failed: $e');
       emit(ElectionDataError());
     }
+  }
+
+  void hideWidget() {
+    emit(HideWidget());
   }
 }
