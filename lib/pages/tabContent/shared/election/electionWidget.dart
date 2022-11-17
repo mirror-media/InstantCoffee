@@ -64,6 +64,10 @@ class _ElectionWidgetState extends State<ElectionWidget> {
     }
     return BlocBuilder<ElectionCubit, ElectionState>(
       builder: (context, state) {
+        if (state is HideWidget) {
+          return const SizedBox();
+        }
+
         if (state is ElectionDataLoaded) {
           municipalityList = state.municipalityList;
           lastUpdateTime = state.lastUpdateTime;
