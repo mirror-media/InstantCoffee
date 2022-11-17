@@ -1,19 +1,17 @@
 import 'package:readr_app/helpers/apiBaseHelper.dart';
-import 'package:readr_app/helpers/remoteConfigHelper.dart';
 import 'package:readr_app/models/election/municipality.dart';
 
 abstract class ElectionRepos {
-  Future<Map<String, dynamic>> fetchMunicipalityData();
+  Future<Map<String, dynamic>> fetchMunicipalityData(String api);
 }
 
 class ElectionService implements ElectionRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
-  RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
 
   @override
-  Future<Map<String, dynamic>> fetchMunicipalityData() async {
+  Future<Map<String, dynamic>> fetchMunicipalityData(String api) async {
     var jsonResponse = await _helper.getByCacheAndAutoCache(
-      _remoteConfigHelper.electionApi,
+      api,
       maxAge: const Duration(seconds: 40),
     );
 
