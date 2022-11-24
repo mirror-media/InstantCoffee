@@ -24,9 +24,12 @@ class RemoteConfigHelper {
     try {
       var election = jsonDecode(_remoteConfig.getString('election'));
       return {
-        "api": election['api'],
+        "api": election['api'] ??
+            'https://whoareyou-gcs.readr.tw/elections/2022/mayor/special_municipality.json',
         "startTime": DateTime.parse(election['startTime']),
         "endTime": DateTime.parse(election['endTime']),
+        "lookmoreUrl": election['lookmoreUrl'] ??
+            'https://www.mirrormedia.mg/projects/election2022/index.html',
       };
     } catch (e) {
       print('Convert election json error: $e');

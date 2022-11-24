@@ -26,6 +26,7 @@ class _ElectionWidgetState extends State<ElectionWidget> {
   int currentIndex = 0;
   RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
   late final String api;
+  late final String lookmoreUrl;
   late final DateTime startShowTime;
   late final DateTime endShowTime;
 
@@ -35,6 +36,7 @@ class _ElectionWidgetState extends State<ElectionWidget> {
       api = remoteConfigHelper.election!['api'];
       startShowTime = remoteConfigHelper.election!['startTime'];
       endShowTime = remoteConfigHelper.election!['endTime'];
+      lookmoreUrl = remoteConfigHelper.election!['lookmoreUrl'];
       fetchMunicipalityData();
       autoUpdateTimer = Timer.periodic(
           const Duration(minutes: 1), (timer) => fetchMunicipalityData());
@@ -177,8 +179,7 @@ class _ElectionWidgetState extends State<ElectionWidget> {
               Align(
                 alignment: Alignment.center,
                 child: GestureDetector(
-                  onTap: () => launchUrlString(
-                      'https://www.mirrormedia.mg/projects/election2022'),
+                  onTap: () => launchUrlString(lookmoreUrl),
                   child: const Text(
                     '完整開票內容',
                     style: TextStyle(
