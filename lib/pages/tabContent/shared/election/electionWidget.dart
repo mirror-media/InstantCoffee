@@ -37,9 +37,9 @@ class _ElectionWidgetState extends State<ElectionWidget> {
       startShowTime = remoteConfigHelper.election!['startTime'];
       endShowTime = remoteConfigHelper.election!['endTime'];
       lookmoreUrl = remoteConfigHelper.election!['lookmoreUrl'];
-      fetchMunicipalityData();
       autoUpdateTimer = Timer.periodic(
           const Duration(minutes: 1), (timer) => fetchMunicipalityData());
+      fetchMunicipalityData();
     }
     super.initState();
   }
