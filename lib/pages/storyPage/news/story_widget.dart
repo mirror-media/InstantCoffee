@@ -227,7 +227,9 @@ class StoryWidget extends StatelessWidget {
           _buildCategory(story, sectionColor),
           Text(
             dateTimeFormat.changeDatabaseStringToDisplayString(
-                story.publishedDate, 'yyyy.MM.dd HH:mm'),
+                story.publishedDate,
+                'yyyy.MM.dd HH:mm',
+                articleDateTimePostfix),
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[600], /*fontStyle: FontStyle.italic,*/
@@ -525,7 +527,7 @@ class StoryWidget extends StatelessWidget {
         myVerticalDivider,
         Text(
           dateTimeFormat.changeDatabaseStringToDisplayString(
-              story.updatedAt, 'yyyy.MM.dd HH:mm'),
+              story.updatedAt, 'yyyy.MM.dd HH:mm', articleDateTimePostfix),
           style: const TextStyle(fontSize: 16),
         ),
       ],

@@ -316,7 +316,7 @@ class PremiumStoryWidget extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           dateTimeFormat.changeDatabaseStringToDisplayString(
-              time, 'yyyy.MM.dd HH:mm'),
+              time, 'yyyy.MM.dd HH:mm', articleDateTimePostfix),
           style: const TextStyle(
             fontSize: 13,
             color: Colors.black87,

@@ -100,3 +100,6 @@ const Map<String, String> partyLogoMap = {
   '無黨籍': noPartySvg,
   '無': noPartySvg,
 };
+
+// misc
+const String articleDateTimePostfix = '臺北時間';
