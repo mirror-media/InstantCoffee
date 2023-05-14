@@ -80,7 +80,7 @@ class DefaultBody extends StatelessWidget {
           _buildCategory(),
           Text(
             dateTimeFormat.changeDatabaseStringToDisplayString(
-                publishedDate, 'yyyy.MM.dd HH:mm'),
+                publishedDate, 'yyyy.MM.dd HH:mm', articleDateTimePostfix),
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[600], /*fontStyle: FontStyle.italic,*/
