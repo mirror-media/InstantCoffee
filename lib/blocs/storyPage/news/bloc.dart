@@ -6,65 +6,60 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/storyPage/news/events.dart';
 import 'package:readr_app/blocs/storyPage/news/states.dart';
 import 'package:readr_app/helpers/environment.dart';
-import 'package:readr_app/helpers/errorLogHelper.dart';
+import 'package:readr_app/helpers/error_log_helper.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/models/story.dart';
-import 'package:readr_app/models/storyAd.dart';
-import 'package:readr_app/models/storyRes.dart';
-import 'package:readr_app/services/storyService.dart';
+import 'package:readr_app/models/story_ad.dart';
+import 'package:readr_app/models/story_res.dart';
+import 'package:readr_app/services/story_service.dart';
+import 'package:readr_app/widgets/logger.dart';
 
 export 'events.dart';
 export 'states.dart';
 
-class StoryBloc extends Bloc<StoryEvents, StoryState> {
+class StoryBloc extends Bloc<StoryEvents, StoryState> with Logger {
   final StoryRepos storyRepos;
-  StoryBloc({
-    required String storySlug,
-    required this.storyRepos
-  }) : super(StoryState.init(storySlug: storySlug)) {
+  StoryBloc({required String storySlug, required this.storyRepos})
+      : super(StoryState.init(storySlug: storySlug)) {
     on<FetchPublishedStoryBySlug>(_fetchPublishedStoryBySlug);
   }
 
-  ErrorLogHelper _errorLogHelper = ErrorLogHelper();
+  final ErrorLogHelper _errorLogHelper = ErrorLogHelper();
 
   _fetchPublishedStoryBySlug(
     FetchPublishedStoryBySlug event,
     Emitter<StoryState> emit,
-  ) async{
-    print(event.toString());
+  ) async {
+    debugLog(event.toString());
 
-    try{
+    try {
       emit(StoryState.loading(storySlug: event.slug));
 
-      StoryRes storyRes = await storyRepos.fetchStory(
-        event.slug, 
-        event.isMemberCheck
-      );
+      StoryRes storyRes =
+          await storyRepos.fetchStory(event.slug, event.isMemberCheck);
       Story story = storyRes.story;
-      
+
       String storyAdJsonFileLocation = Platform.isIOS
-      ? Environment().config.iOSStoryAdJsonLocation
-      : Environment().config.androidStoryAdJsonLocation;
+          ? Environment().config.iOSStoryAdJsonLocation
+          : Environment().config.androidStoryAdJsonLocation;
       // String storyAdJsonFileLocation = Platform.isIOS
       // ? 'assets/data/iOSTestStoryAd.json'
       // : 'assets/data/androidTestStoryAd.json';
-      String storyAdString = await rootBundle.loadString(storyAdJsonFileLocation);
+      String storyAdString =
+          await rootBundle.loadString(storyAdJsonFileLocation);
       final storyAdMaps = json.decode(storyAdString);
 
       story.storyAd = StoryAd.fromJson(storyAdMaps['other']);
-      for(int i=0; i<story.sections.length; i++) {
+      for (int i = 0; i < story.sections.length; i++) {
         String? sectionName = story.getSectionName();
-        
-        if(sectionName != null && storyAdMaps[sectionName] != null) {
+
+        if (sectionName != null && storyAdMaps[sectionName] != null) {
           story.storyAd = StoryAd.fromJson(storyAdMaps[sectionName]);
           break;
         }
       }
 
-      emit(StoryState.loaded(
-        storySlug: event.slug, 
-        storyRes: storyRes
-      ));
+      emit(StoryState.loaded(storySlug: event.slug, storyRes: storyRes));
     } catch (e) {
       _errorLogHelper.record(
         event.eventName(),
@@ -72,9 +67,8 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> {
         e.toString(),
       );
       emit(StoryState.error(
-        storySlug: event.slug, 
-        errorMessages: UnknownException(e.toString())
-      ));
+          storySlug: event.slug,
+          errorMessages: UnknownException(e.toString())));
     }
   }
 

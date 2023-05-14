@@ -9,6 +9,6 @@ class EmailLoginSuccess extends EmailLoginState {}
 class EmailLoginFail extends EmailLoginState {}
 
 class EmailLoginError extends EmailLoginState {
-  final error;
+  final dynamic error;
   EmailLoginError({this.error});
 }

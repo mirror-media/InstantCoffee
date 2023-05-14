@@ -15,13 +15,13 @@ class NewsMarqueeState extends Equatable {
   });
 
   factory NewsMarqueeState.init() {
-    return NewsMarqueeState(
+    return const NewsMarqueeState(
       status: NewsMarqueeStatus.initial
     );
   }
 
   factory NewsMarqueeState.loading() {
-    return NewsMarqueeState(
+    return const NewsMarqueeState(
       status: NewsMarqueeStatus.loading
     );
   }

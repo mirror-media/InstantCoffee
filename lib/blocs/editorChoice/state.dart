@@ -15,15 +15,11 @@ class EditorChoiceState extends Equatable {
   });
 
   factory EditorChoiceState.init() {
-    return EditorChoiceState(
-      status: EditorChoiceStatus.initial
-    );
+    return const EditorChoiceState(status: EditorChoiceStatus.initial);
   }
 
   factory EditorChoiceState.loading() {
-    return EditorChoiceState(
-      status: EditorChoiceStatus.loading
-    );
+    return const EditorChoiceState(status: EditorChoiceStatus.loading);
   }
 
   factory EditorChoiceState.loaded({
@@ -35,9 +31,7 @@ class EditorChoiceState extends Equatable {
     );
   }
 
-  factory EditorChoiceState.error({
-    dynamic errorMessages
-  }) {
+  factory EditorChoiceState.error({dynamic errorMessages}) {
     return EditorChoiceState(
       status: EditorChoiceStatus.error,
       errorMessages: errorMessages,
@@ -50,9 +44,5 @@ class EditorChoiceState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
-    status, 
-    editorChoiceList, 
-    errorMessages
-  ];
+  List<Object?> get props => [status, editorChoiceList, errorMessages];
 }

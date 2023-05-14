@@ -3,14 +3,13 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/record.dart';
-import 'jsonAndObject.dart';
+import 'json_and_object.dart';
 
 void main() {
   Environment().initConfig(BuildFlavor.development);
   final List<JsonAndObject<Record>> jsonAndObjectList = [
     JsonAndObject<Record>(
-      responseBody: 
-          '''
+      responseBody: '''
           {
             "title": "title",
             "slug": "slug",
@@ -20,17 +19,15 @@ void main() {
             "sections": null
           }
           ''',
-      object: Record(
-        title: "title",
-        slug: "slug",
-        publishedDate: "19110101",
-        photoUrl: "dummy_url",
-        isMemberCheck: false
-      ),
+      object: const Record(
+          title: "title",
+          slug: "slug",
+          publishedDate: "19110101",
+          photoUrl: "dummy_url",
+          isMemberCheck: false),
     ),
     JsonAndObject<Record>(
-      responseBody: 
-          '''
+      responseBody: '''
           {
             "snippet": {
               "title": "title"
@@ -42,17 +39,15 @@ void main() {
             "sections": null
           }
           ''',
-      object: Record(
-        title: "title",
-        slug: "slug",
-        publishedDate: "19110101",
-        photoUrl: "dummy_url",
-        isMemberCheck: false
-      ),
+      object: const Record(
+          title: "title",
+          slug: "slug",
+          publishedDate: "19110101",
+          photoUrl: "dummy_url",
+          isMemberCheck: false),
     ),
     JsonAndObject<Record>(
-      responseBody: 
-          '''
+      responseBody: '''
           {
             "title": "title",
             "id": {
@@ -64,17 +59,15 @@ void main() {
             "sections": null
           }
           ''',
-      object: Record(
-        title: "title",
-        slug: "videoId",
-        publishedDate: "19110101",
-        photoUrl: "dummy_url",
-        isMemberCheck: false
-      ),
+      object: const Record(
+          title: "title",
+          slug: "videoId",
+          publishedDate: "19110101",
+          photoUrl: "dummy_url",
+          isMemberCheck: false),
     ),
-     JsonAndObject<Record>(
-      responseBody: 
-          '''
+    JsonAndObject<Record>(
+      responseBody: '''
           {
             "title": "title",
             "slug": "slug",
@@ -84,17 +77,15 @@ void main() {
             "sections": null
           }
           ''',
-      object: Record(
-        title: "title",
-        slug: "slug",
-        publishedDate: "19110101",
-        photoUrl: "dummy_url",
-        isMemberCheck: false
-      ),
+      object: const Record(
+          title: "title",
+          slug: "slug",
+          publishedDate: "19110101",
+          photoUrl: "dummy_url",
+          isMemberCheck: false),
     ),
     JsonAndObject<Record>(
-      responseBody: 
-          '''
+      responseBody: '''
           {
             "title": "title",
             "slug": "slug",
@@ -112,17 +103,15 @@ void main() {
             "sections": null
           }
           ''',
-      object: Record(
-        title: "title",
-        slug: "slug",
-        publishedDate: "19110101",
-        photoUrl: "dummy_url",
-        isMemberCheck: false
-      ),
+      object: const Record(
+          title: "title",
+          slug: "slug",
+          publishedDate: "19110101",
+          photoUrl: "dummy_url",
+          isMemberCheck: false),
     ),
     JsonAndObject<Record>(
-      responseBody: 
-          '''
+      responseBody: '''
           {
             "slug": "slug",
             "publishTime": "19110101",
@@ -138,17 +127,15 @@ void main() {
             "sections": null
           }
           ''',
-      object: Record(
-        title: "title",
-        slug: "slug",
-        publishedDate: "19110101",
-        photoUrl: "dummy_url",
-        isMemberCheck: false
-      ),
+      object: const Record(
+          title: "title",
+          slug: "slug",
+          publishedDate: "19110101",
+          photoUrl: "dummy_url",
+          isMemberCheck: false),
     ),
     JsonAndObject<Record>(
-      responseBody: 
-          '''
+      responseBody: '''
           {
             "title": "title",
             "slug": "slug",
@@ -165,17 +152,15 @@ void main() {
             "sections": null
           }
           ''',
-      object: Record(
-        title: "title",
-        slug: "slug",
-        publishedDate: "19110101",
-        photoUrl: "dummy_url",
-        isMemberCheck: true
-      ),
+      object: const Record(
+          title: "title",
+          slug: "slug",
+          publishedDate: "19110101",
+          photoUrl: "dummy_url",
+          isMemberCheck: true),
     ),
     JsonAndObject<Record>(
-      responseBody: 
-          '''
+      responseBody: '''
           {
             "title": "title",
             "slug": "slug",
@@ -189,89 +174,74 @@ void main() {
             ]
           }
           ''',
-      object: Record(
-        title: "title",
-        slug: "slug",
-        publishedDate: "19110101",
-        photoUrl: "dummy_url",
-        isMemberCheck: false
-      ),
+      object: const Record(
+          title: "title",
+          slug: "slug",
+          publishedDate: "19110101",
+          photoUrl: "dummy_url",
+          isMemberCheck: false),
     ),
   ];
 
   group('Record model:', () {
-    for(int i=0; i<jsonAndObjectList.length; i++) {
+    for (int i = 0; i < jsonAndObjectList.length; i++) {
       test('fromJson function (JsonAndObject[$i])', () {
         JsonAndObject<Record> jsonAndObject = jsonAndObjectList[i];
         final body = jsonAndObject.responseBody;
         final json = jsonDecode(body);
         Record record = Record.fromJson(json);
-        expect(
-          record, 
-          jsonAndObject.object
-        );
+        expect(record, jsonAndObject.object);
       });
     }
 
     test('recordListFromJson function', () async {
       List<dynamic> jsonList = [];
       List<Record> expectedList = [];
-      jsonAndObjectList.forEach(
-        (jsonAndObject) { 
-          final json = jsonDecode(jsonAndObject.responseBody);
-          jsonList.add(json);
-          expectedList.add(jsonAndObject.object);
-        }
-      );
+      for (var jsonAndObject in jsonAndObjectList) {
+        final json = jsonDecode(jsonAndObject.responseBody);
+        jsonList.add(json);
+        expectedList.add(jsonAndObject.object);
+      }
 
       List<Record> recordList = Record.recordListFromJson(jsonList);
-      expect(
-        recordList,
-        expectedList
-      );
+      expect(recordList, expectedList);
     });
 
     test('filterDuplicatedSlugByAnother function', () async {
       List<Record> baseList = [
-        Record(
-          title: "title1",
-          slug: "slug1",
-          publishedDate: "19110101",
-          photoUrl: "dummy_url",
-          isMemberCheck: false
-        ),
-        Record(
-          title: "title2",
-          slug: "slug2",
-          publishedDate: "19110101",
-          photoUrl: "dummy_url",
-          isMemberCheck: false
-        ),
+        const Record(
+            title: "title1",
+            slug: "slug1",
+            publishedDate: "19110101",
+            photoUrl: "dummy_url",
+            isMemberCheck: false),
+        const Record(
+            title: "title2",
+            slug: "slug2",
+            publishedDate: "19110101",
+            photoUrl: "dummy_url",
+            isMemberCheck: false),
       ];
       List<Record> anotherList = [
-        Record(
-          title: "title1",
-          slug: "slug1",
-          publishedDate: "19110101",
-          photoUrl: "dummy_url",
-          isMemberCheck: false
-        ),
+        const Record(
+            title: "title1",
+            slug: "slug1",
+            publishedDate: "19110101",
+            photoUrl: "dummy_url",
+            isMemberCheck: false),
       ];
       List<Record> expectedList = [
-        Record(
-          title: "title2",
-          slug: "slug2",
-          publishedDate: "19110101",
-          photoUrl: "dummy_url",
-          isMemberCheck: false
-        ),
+        const Record(
+            title: "title2",
+            slug: "slug2",
+            publishedDate: "19110101",
+            photoUrl: "dummy_url",
+            isMemberCheck: false),
       ];
-      List<Record> recordList = Record.filterDuplicatedSlugByAnother(baseList, anotherList);
-      
-      expect(
-        recordList,
-        expectedList
-      );
+      List<Record> recordList =
+          Record.filterDuplicatedSlugByAnother(baseList, anotherList);
+
+      expect(recordList, expectedList);
     });
   });
 }

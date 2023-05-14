@@ -1,9 +1,13 @@
-final String registeredByGoogleMethodWarningMessage = '由於您曾以Google帳號登入，請點擊上方「使用 Google 登入」重試。';
-final String registeredByFacebookMethodWarningMessage = '由於您曾以Facebook帳號登入，請點擊上方「使用 Facebook 登入」重試。';
-final String registeredByAppleMethodWarningMessage = '由於您曾以Apple帳號登入，請點擊上方「使用 Apple 登入」重試。';
-final String registeredByPasswordMethodWarningMessage = '由於您曾以email帳號密碼登入，請輸入下方email重試。';
+const String registeredByGoogleMethodWarningMessage =
+    '由於您曾以Google帳號登入，請點擊上方「使用 Google 登入」重試。';
+const String registeredByFacebookMethodWarningMessage =
+    '由於您曾以Facebook帳號登入，請點擊上方「使用 Facebook 登入」重試。';
+const String registeredByAppleMethodWarningMessage =
+    '由於您曾以Apple帳號登入，請點擊上方「使用 Apple 登入」重試。';
+const String registeredByPasswordMethodWarningMessage =
+    '由於您曾以email帳號密碼登入，請輸入下方email重試。';
 
-abstract class LoginEvents{}
+abstract class LoginEvents {}
 
 class CheckIsLoginOrNot extends LoginEvents {
   @override
@@ -38,13 +42,11 @@ class FetchSignInMethodsForEmail extends LoginEvents {
   FetchSignInMethodsForEmail(
     this.email,
   );
-  
+
   @override
   String toString() => 'FetchSignInMethodsForEmail { "email": $email }';
   String eventName() => 'FetchSignInMethodsForEmail';
-  Map eventParameters() => {
-    'email': email
-  };
+  Map eventParameters() => {'email': email};
 }
 
 class SignOut extends LoginEvents {

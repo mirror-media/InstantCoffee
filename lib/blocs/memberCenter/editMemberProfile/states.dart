@@ -12,7 +12,7 @@ class MemberLoaded extends EditMemberProfileState {
 }
 
 class MemberLoadedError extends EditMemberProfileState {
-  final error;
+  final dynamic error;
   MemberLoadedError({
     this.error,
   });

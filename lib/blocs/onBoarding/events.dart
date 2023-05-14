@@ -1,7 +1,7 @@
 import 'package:readr_app/blocs/onBoarding/states.dart';
-import 'package:readr_app/models/OnBoardingPosition.dart';
+import 'package:readr_app/models/on_boarding_position.dart';
 
-abstract class OnBoardingEvents{}
+abstract class OnBoardingEvents {}
 
 class CheckOnBoarding extends OnBoardingEvents {
   CheckOnBoarding();

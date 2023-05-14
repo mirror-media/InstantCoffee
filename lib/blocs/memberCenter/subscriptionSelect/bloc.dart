@@ -10,14 +10,16 @@ import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
 import 'package:readr_app/helpers/exceptions.dart';
-import 'package:readr_app/helpers/iAPSubscriptionHelper.dart';
-import 'package:readr_app/models/memberSubscriptionType.dart';
+import 'package:readr_app/helpers/iap_subscription_helper.dart';
+import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/models/subscriptionDetail.dart';
-import 'package:readr_app/services/subscriptionSelectService.dart';
+import 'package:readr_app/services/subscription_select_service.dart';
+import 'package:readr_app/widgets/logger.dart';
 
 class SubscriptionSelectBloc
-    extends Bloc<SubscriptionSelectEvents, SubscriptionSelectState> {
-  IAPSubscriptionHelper _iapSubscriptionHelper = IAPSubscriptionHelper();
+    extends Bloc<SubscriptionSelectEvents, SubscriptionSelectState>
+    with Logger {
+  final IAPSubscriptionHelper _iapSubscriptionHelper = IAPSubscriptionHelper();
   final SubscriptionSelectRepos subscriptionSelectRepos;
   final MemberBloc memberBloc;
   final String? storySlug;
@@ -28,7 +30,7 @@ class SubscriptionSelectBloc
       {required this.subscriptionSelectRepos,
       required this.memberBloc,
       required this.storySlug})
-      : super(SubscriptionSelectState.init()) {
+      : super(const SubscriptionSelectState.init()) {
     _iapSubscriptionHelper.verifyPurchaseInBloc = true;
 
     on<FetchSubscriptionProducts>(_fetchSubscriptionProducts);
@@ -52,9 +54,9 @@ class SubscriptionSelectBloc
     FetchSubscriptionProducts event,
     Emitter<SubscriptionSelectState> emit,
   ) async {
-    print(event.toString());
+    debugLog(event.toString());
     try {
-      emit(SubscriptionSelectState.loading());
+      emit(const SubscriptionSelectState.loading());
       SubscriptionDetail subscriptionDetail = SubscriptionDetail(
         subscriptionType: SubscriptionType.none,
         isAutoRenewing: null,
@@ -95,7 +97,7 @@ class SubscriptionSelectBloc
     BuySubscriptionProduct event,
     Emitter<SubscriptionSelectState> emit,
   ) async {
-    print(event.toString());
+    debugLog(event.toString());
     try {
       emit(SubscriptionSelectState.buying(
           subscriptionDetail: state.subscriptionDetail!,
@@ -161,17 +163,17 @@ class SubscriptionSelectBloc
           fontSize: 16.0);
 
       if (isSuccess) {
-        emit(SubscriptionSelectState.buyingSuccess(storySlug: this.storySlug));
+        emit(SubscriptionSelectState.buyingSuccess(storySlug: storySlug));
         memberBloc.add(UpdateSubscriptionType(
             isLogin: true,
             israfelId: '',
             subscriptionType: SubscriptionType.subscribe_monthly));
       } else {
-        emit(SubscriptionSelectState.verifyPurchaseFail());
+        emit(const SubscriptionSelectState.verifyPurchaseFail());
       }
     } else if (purchaseDetails.status == PurchaseStatus.error) {
-      print("error code: ${purchaseDetails.error!.code}");
-      print("error message: ${purchaseDetails.error!.message}");
+      debugLog("error code: ${purchaseDetails.error!.code}");
+      debugLog("error message: ${purchaseDetails.error!.message}");
       Fluttertoast.showToast(
           msg: '購買失敗，請再試一次',
           toastLength: Toast.LENGTH_SHORT,

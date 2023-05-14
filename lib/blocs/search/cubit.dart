@@ -1,14 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/search/states.dart';
-import 'package:readr_app/models/recordListAndAllCount.dart';
-import 'package:readr_app/services/searchService.dart';
+import 'package:readr_app/models/record_list_and_all_count.dart';
+import 'package:readr_app/services/search_service.dart';
+import 'package:readr_app/widgets/logger.dart';
 
-class SearchCubit extends Cubit<SearchState> {
+class SearchCubit extends Cubit<SearchState> with Logger {
   final SearchRepos searchRepos;
   SearchCubit({required this.searchRepos}) : super(SearchState.init());
 
   void searchByKeyword(String keyword) async {
-    print("Searching by keyword: $keyword");
+    debugLog("Searching by keyword: $keyword");
     emit(SearchState.searchLoading());
     try {
       RecordListAndAllCount recordListAndAllCount =
@@ -19,7 +20,7 @@ class SearchCubit extends Cubit<SearchState> {
         searchListTotal: recordListAndAllCount.allCount,
       ));
     } catch (e) {
-      print("Search error: $e");
+      debugLog("Search error: $e");
       emit(SearchState.searchLoadingError(
         errorMessages: e,
       ));
@@ -27,7 +28,7 @@ class SearchCubit extends Cubit<SearchState> {
   }
 
   void searchNextPageByKeyword(String keyword) async {
-    print("Searching next page by keyword: $keyword");
+    debugLog("Searching next page by keyword: $keyword");
     try {
       emit(SearchState.searchLoadingMore());
 
@@ -39,7 +40,7 @@ class SearchCubit extends Cubit<SearchState> {
         searchListTotal: recordListAndAllCount.allCount,
       ));
     } catch (e) {
-      print("Search next page error: $e");
+      debugLog("Search next page error: $e");
       emit(SearchState.searchLoadingMoreFail(
         errorMessages: e,
       ));
