@@ -148,7 +148,9 @@ class _ListeningWidget extends State<ListeningWidget> with Logger {
             Container(),
             Text(
               dateTimeFormat.changeYoutubeStringToDisplayString(
-                  listening.publishedAt, 'yyyy/MM/dd HH:mm:ss'),
+                  listening.publishedAt,
+                  'yyyy/MM/dd HH:mm:ss',
+                  articleDateTimePostfix),
               style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
