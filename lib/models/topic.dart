@@ -140,7 +140,7 @@ class Topic {
         ruleSet.declarationGroup.declarations[0] as Declaration;
     Expressions expressions = declaration.expression as Expressions;
     HexColorTerm hexColorTerm = expressions.expressions[0] as HexColorTerm;
-    String colorString = '0xff' + hexColorTerm.text;
+    String colorString = '0xff${hexColorTerm.text}';
     return Color(int.parse(colorString));
   }
 

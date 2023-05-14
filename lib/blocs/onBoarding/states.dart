@@ -1,5 +1,5 @@
-import 'package:readr_app/models/OnBoardingPosition.dart';
-import 'package:readr_app/models/onBoardingHint.dart';
+import 'package:readr_app/models/on_boarding_position.dart';
+import 'package:readr_app/models/on_boarding_hint.dart';
 
 enum OnBoardingStatus { firstPage, secondPage, thirdPage, fourthPage }
 
@@ -49,11 +49,10 @@ class OnBoardingState {
     required OnBoardingPosition onBoardingPosition,
   }) {
     return OnBoardingState(
-      isOnBoarding: isOnBoarding,
-      status: status,
-      onBoardingPosition: onBoardingPosition,
-      onBoardingHint: onBoardingHintList[status.index]
-    );
+        isOnBoarding: isOnBoarding,
+        status: status,
+        onBoardingPosition: onBoardingPosition,
+        onBoardingHint: onBoardingHintList[status.index]);
   }
 
   @override

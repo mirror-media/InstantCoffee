@@ -25,7 +25,7 @@ class Magazine {
         json['coverPhoto'] != null &&
         json['coverPhoto'].containsKey('image') &&
         json['coverPhoto']['image'] != null &&
-        json['coverPhoto']['image'].containsKey('resizedTargets') && 
+        json['coverPhoto']['image'].containsKey('resizedTargets') &&
         json['coverPhoto']['image']['resizedTargets'] != null) {
       photoUrl = json['coverPhoto']['image']['resizedTargets']['mobile']['url'];
     }
@@ -39,20 +39,21 @@ class Magazine {
     }
 
     String onlineReadingUrl = '';
-    if(type == 'weekly'){
+    if (type == 'weekly') {
       String issue = json['issue'];
       String book;
       String periodsString;
-      if(issue.contains('A')){
+      if (issue.contains('A')) {
         book = 'Book_A';
-        periodsString = issue.replaceAll(new RegExp(r'[^0-9]'),'');
-        periodsString = 'A' + periodsString;
-      }else{
+        periodsString = issue.replaceAll(RegExp(r'[^0-9]'), '');
+        periodsString = 'A$periodsString';
+      } else {
         book = 'Book_B';
-        periodsString = issue.replaceAll(new RegExp(r'[^0-9]'),'');
-        periodsString = 'B' + periodsString;
+        periodsString = issue.replaceAll(RegExp(r'[^0-9]'), '');
+        periodsString = 'B$periodsString';
       }
-      onlineReadingUrl = Environment().config.onlineMagazineUrl + '/$book/$periodsString-Publish/index.html#p=1';
+      onlineReadingUrl =
+          '${Environment().config.onlineMagazineUrl}/$book/$periodsString-Publish/index.html#p=1';
     }
 
     return Magazine(

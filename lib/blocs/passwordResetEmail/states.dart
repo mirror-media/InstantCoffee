@@ -11,6 +11,6 @@ class EmailUserNotFound extends PasswordResetEmailState {}
 class PasswordResetEmailSendingFail extends PasswordResetEmailState {}
 
 class PasswordResetEmailError extends PasswordResetEmailState {
-  final error;
+  final dynamic error;
   PasswordResetEmailError({this.error});
 }

@@ -7,18 +7,19 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/login/states.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
-import 'package:readr_app/helpers/errorLogHelper.dart';
+import 'package:readr_app/helpers/error_log_helper.dart';
 import 'package:readr_app/helpers/exceptions.dart';
-import 'package:readr_app/helpers/routeGenerator.dart';
-import 'package:readr_app/models/firebaseLoginStatus.dart';
-import 'package:readr_app/models/memberSubscriptionType.dart';
-import 'package:readr_app/pages/shared/premiumAnimatePage.dart';
-import 'package:readr_app/services/loginService.dart';
-import 'package:readr_app/services/memberService.dart';
+import 'package:readr_app/helpers/route_generator.dart';
+import 'package:readr_app/models/firebase_login_status.dart';
+import 'package:readr_app/models/member_subscription_type.dart';
+import 'package:readr_app/pages/shared/premium_animate_page.dart';
+import 'package:readr_app/services/login_service.dart';
+import 'package:readr_app/services/member_service.dart';
+import 'package:readr_app/widgets/logger.dart';
 
 enum LoginLoadingType { google, facebook, apple, email }
 
-class LoginBloc extends Bloc<LoginEvents, LoginState> {
+class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
   final LoginRepos loginRepos;
   final MemberBloc memberBloc;
 
@@ -39,9 +40,9 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
     on<SignOut>(_onSignOut);
   }
 
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  MemberService _memberService = MemberService();
-  ErrorLogHelper _errorLogHelper = ErrorLogHelper();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final MemberService _memberService = MemberService();
+  final ErrorLogHelper _errorLogHelper = ErrorLogHelper();
   LoginLoadingType? _loginLoadingType;
 
   Future<void> _handleFirebaseThirdPartyLogin(
@@ -79,7 +80,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
   ) async {
     bool createSuccess = true;
     if (isNewUser) {
-      print('CreateMember');
+      debugLog('CreateMember');
       String token = await _auth.currentUser!.getIdToken();
       createSuccess = await _memberService.createMember(
           _auth.currentUser!.email, _auth.currentUser!.uid, token);
@@ -90,7 +91,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
       try {
         await _auth.currentUser!.delete();
       } catch (e) {
-        print(e);
+        debugLog(e);
         await _auth.signOut();
       }
 
@@ -200,7 +201,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
       _navigateToRouteName(memberIdAndSubscriptionType.subscriptionType!);
     } catch (e) {
       // fetch member subscrition type fail
-      print(e.toString());
+      debugLog(e.toString());
 
       _errorLogHelper.record(
           'FetchMemberSubscriptionTypeToLogin', {}, e.toString());
@@ -233,7 +234,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
 
       if (premiumSubscriptionType.contains(subscriptionType)) {
         // await premium animation pop completed
-        await Future.delayed(Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 1));
       }
 
       if (routeName == RouteGenerator.subscriptionSelect) {
@@ -252,7 +253,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
     CheckIsLoginOrNot event,
     Emitter<LoginState> emit,
   ) async {
-    print(event.toString());
+    debugLog(event.toString());
     if (_auth.currentUser == null) {
       emit(LoginInitState());
     } else {
@@ -280,7 +281,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
           try {
             await _auth.currentUser!.delete();
           } catch (e) {
-            print(e);
+            debugLog(e);
             await _auth.signOut();
           }
         }
@@ -297,7 +298,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
 
         _errorLogHelper.record(
             event.eventName(), event.eventParameters(), e.toString());
-        print(e.toString());
+        debugLog(e.toString());
         emit(LoginFail(
             error: UnknownException('Fetch member subscrition type fail')));
       }
@@ -308,7 +309,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
     SignInWithGoogle event,
     Emitter<LoginState> emit,
   ) async {
-    print(event.toString());
+    debugLog(event.toString());
     try {
       _loginLoadingType = LoginLoadingType.google;
       emit(LoginLoading(loginType: LoginType.google));
@@ -343,7 +344,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
     SignInWithFacebook event,
     Emitter<LoginState> emit,
   ) async {
-    print(event.toString());
+    debugLog(event.toString());
     try {
       _loginLoadingType = LoginLoadingType.facebook;
       emit(LoginLoading(loginType: LoginType.facebook));
@@ -378,7 +379,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
     SignInWithApple event,
     Emitter<LoginState> emit,
   ) async {
-    print(event.toString());
+    debugLog(event.toString());
     try {
       _loginLoadingType = LoginLoadingType.apple;
       emit(LoginLoading(loginType: LoginType.apple));
@@ -414,7 +415,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
     FetchSignInMethodsForEmail event,
     Emitter<LoginState> emit,
   ) async {
-    print(event.toString());
+    debugLog(event.toString());
     try {
       _loginLoadingType = LoginLoadingType.email;
       emit(FetchSignInMethodsForEmailLoading());
@@ -468,7 +469,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> {
     SignOut event,
     Emitter<LoginState> emit,
   ) async {
-    print(event.toString());
+    debugLog(event.toString());
     try {
       emit(LoadingUI());
       await loginRepos.signOut();

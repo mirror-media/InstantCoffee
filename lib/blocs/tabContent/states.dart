@@ -1,6 +1,6 @@
 import 'package:readr_app/models/record.dart';
 
-enum TabContentStatus { 
+enum TabContentStatus {
   initial,
   loading,
   loaded,
@@ -24,15 +24,11 @@ class TabContentState {
   });
 
   factory TabContentState.initial() {
-    return TabContentState(
-      status: TabContentStatus.initial
-    );
+    return const TabContentState(status: TabContentStatus.initial);
   }
 
   factory TabContentState.loading() {
-    return TabContentState(
-      status: TabContentStatus.loading
-    );
+    return const TabContentState(status: TabContentStatus.loading);
   }
 
   factory TabContentState.loaded({
@@ -50,14 +46,10 @@ class TabContentState {
     dynamic errorMessages,
   }) {
     return TabContentState(
-      status: TabContentStatus.loadingError,
-      errorMessages: errorMessages
-    );
+        status: TabContentStatus.loadingError, errorMessages: errorMessages);
   }
 
-  factory TabContentState.loadingMore({
-    required List<Record> recordList
-  }) {
+  factory TabContentState.loadingMore({required List<Record> recordList}) {
     return TabContentState(
       status: TabContentStatus.loadingMore,
       hasNextPage: false,
@@ -70,10 +62,9 @@ class TabContentState {
     dynamic errorMessages,
   }) {
     return TabContentState(
-      status: TabContentStatus.loadingMoreFail,
-      hasNextPage: true,
-      recordList: recordList,
-      errorMessages: errorMessages
-    );
+        status: TabContentStatus.loadingMoreFail,
+        hasNextPage: true,
+        recordList: recordList,
+        errorMessages: errorMessages);
   }
 }

@@ -1,4 +1,4 @@
-import 'package:readr_app/models/magazineList.dart';
+import 'package:readr_app/models/magazine_list.dart';
 
 abstract class MagazineState {}
 
@@ -17,6 +17,6 @@ class MagazineLoaded extends MagazineState {
 }
 
 class MagazineError extends MagazineState {
-  final error;
+  final dynamic error;
   MagazineError({this.error});
 }

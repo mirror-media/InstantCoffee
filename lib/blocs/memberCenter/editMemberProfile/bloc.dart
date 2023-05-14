@@ -4,20 +4,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberProfile/events.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberProfile/states.dart';
-import 'package:readr_app/helpers/errorHelper.dart';
-import 'package:readr_app/helpers/routeGenerator.dart';
+import 'package:readr_app/helpers/error_helper.dart';
+import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/member.dart';
-import 'package:readr_app/services/memberService.dart';
+import 'package:readr_app/services/member_service.dart';
+import 'package:readr_app/widgets/logger.dart';
 
 class EditMemberProfileBloc
-    extends Bloc<EditMemberProfileEvents, EditMemberProfileState> {
+    extends Bloc<EditMemberProfileEvents, EditMemberProfileState> with Logger {
   final MemberRepos memberRepos;
   final FirebaseAuth auth = FirebaseAuth.instance;
   EditMemberProfileBloc({required this.memberRepos})
       : super(EditMemberProfileInitState()) {
     on<FetchMemberProfile>(
       (event, emit) async {
-        print(event.toString());
+        debugLog(event.toString());
         try {
           emit(MemberLoading());
 
@@ -34,7 +35,7 @@ class EditMemberProfileBloc
     );
     on<UpdateMemberProfile>(
       (event, emit) async {
-        print(event.toString());
+        debugLog(event.toString());
         emit(SavingLoading(member: event.editMember));
         String token = await auth.currentUser!.getIdToken();
         bool updateSuccess = await memberRepos.updateMemberProfile(

@@ -1,10 +1,6 @@
-import 'package:readr_app/models/memberSubscriptionType.dart';
+import 'package:readr_app/models/member_subscription_type.dart';
 
-enum MemberStatus { 
-  loading,
-  loaded,
-  error 
-}
+enum MemberStatus { loading, loaded, error }
 
 class MemberState {
   final MemberStatus status;
@@ -22,17 +18,14 @@ class MemberState {
   });
 
   factory MemberState.isNotLogin() {
-    return MemberState(
+    return const MemberState(
       status: MemberStatus.loaded,
       isLogin: false,
     );
   }
 
-
   factory MemberState.loading() {
-    return MemberState(
-      status: MemberStatus.loading
-    );
+    return const MemberState(status: MemberStatus.loading);
   }
 
   factory MemberState.loaded({
@@ -48,9 +41,7 @@ class MemberState {
     );
   }
 
-  factory MemberState.error({
-    dynamic errorMessages
-  }) {
+  factory MemberState.error({dynamic errorMessages}) {
     return MemberState(
       status: MemberStatus.error,
       isLogin: false,
@@ -58,8 +49,8 @@ class MemberState {
     );
   }
 
-  bool get isPremium => 
-      this.isLogin! && 
-      this.subscriptionType != SubscriptionType.none &&
-      this.subscriptionType != SubscriptionType.subscribe_one_time;
+  bool get isPremium =>
+      isLogin! &&
+      subscriptionType != SubscriptionType.none &&
+      subscriptionType != SubscriptionType.subscribe_one_time;
 }

@@ -2,13 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:readr_app/models/section.dart';
-import 'jsonAndObject.dart';
+import 'json_and_object.dart';
 
 void main() {
   final List<JsonAndObject<Section>> jsonAndObjectList = [
     JsonAndObject<Section>(
-      responseBody: 
-          '''
+      responseBody: '''
           {
             "_id": "key",
             "name": "name",
@@ -30,8 +29,7 @@ void main() {
       ),
     ),
     JsonAndObject<Section>(
-      responseBody: 
-          '''
+      responseBody: '''
           {
             "key": "key",
             "name": "name",
@@ -53,8 +51,7 @@ void main() {
       ),
     ),
     JsonAndObject<Section>(
-      responseBody: 
-          '''
+      responseBody: '''
           {
             "_id": "key",
             "name": "name",
@@ -75,8 +72,7 @@ void main() {
       ),
     ),
     JsonAndObject<Section>(
-      responseBody: 
-          '''
+      responseBody: '''
           {
             "_id": "key",
             "name": "name",
@@ -97,9 +93,8 @@ void main() {
         type: 'type',
       ),
     ),
-   JsonAndObject<Section>(
-      responseBody: 
-          '''
+    JsonAndObject<Section>(
+      responseBody: '''
           {
             "_id": "key",
             "name": "name",
@@ -120,8 +115,7 @@ void main() {
       ),
     ),
     JsonAndObject<Section>(
-      responseBody: 
-          '''
+      responseBody: '''
           {
             "_id": "key",
             "name": "name",
@@ -144,35 +138,27 @@ void main() {
   ];
 
   group('Section model:', () {
-    for(int i=0; i<jsonAndObjectList.length; i++) {
+    for (int i = 0; i < jsonAndObjectList.length; i++) {
       test('fromJson function (JsonAndObject[$i])', () {
         JsonAndObject<Section> jsonAndObject = jsonAndObjectList[i];
         final body = jsonAndObject.responseBody;
         final json = jsonDecode(body);
         Section section = Section.fromJson(json);
-        expect(
-          section, 
-          jsonAndObject.object
-        );
+        expect(section, jsonAndObject.object);
       });
-    } 
+    }
 
     test('sectionListFromJson function', () async {
       List<dynamic> jsonList = [];
       List<Section> expectedList = [];
-      jsonAndObjectList.forEach(
-        (jsonAndObject) { 
-          final json = jsonDecode(jsonAndObject.responseBody);
-          jsonList.add(json);
-          expectedList.add(jsonAndObject.object);
-        }
-      );
+      for (var jsonAndObject in jsonAndObjectList) {
+        final json = jsonDecode(jsonAndObject.responseBody);
+        jsonList.add(json);
+        expectedList.add(jsonAndObject.object);
+      }
 
       List<Section> sectionList = Section.sectionListFromJson(jsonList);
-      expect(
-        sectionList,
-        expectedList
-      );
+      expect(sectionList, expectedList);
     });
   });
 }

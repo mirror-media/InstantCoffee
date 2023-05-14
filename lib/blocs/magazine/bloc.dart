@@ -1,18 +1,19 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/magazine/events.dart';
 import 'package:readr_app/blocs/magazine/states.dart';
-import 'package:readr_app/helpers/errorHelper.dart';
-import 'package:readr_app/models/magazineList.dart';
-import 'package:readr_app/services/magazineService.dart';
+import 'package:readr_app/helpers/error_helper.dart';
+import 'package:readr_app/models/magazine_list.dart';
+import 'package:readr_app/services/magazine_service.dart';
+import 'package:readr_app/widgets/logger.dart';
 
-class MagazineBloc extends Bloc<MagazineEvents, MagazineState> {
+class MagazineBloc extends Bloc<MagazineEvents, MagazineState> with Logger {
   final MagazineRepos magazineRepos;
   MagazineList magazineList = MagazineList();
 
   MagazineBloc({required this.magazineRepos}) : super(MagazineInitState()) {
     on<MagazineEvents>(
       (event, emit) async {
-        print(event.toString());
+        debugLog(event.toString());
 
         try {
           if (event is FetchMagazineListByType) {

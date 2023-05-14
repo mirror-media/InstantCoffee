@@ -15,15 +15,11 @@ class SectionState extends Equatable {
   });
 
   factory SectionState.init() {
-    return SectionState(
-      status: SectionStatus.initial
-    );
+    return const SectionState(status: SectionStatus.initial);
   }
 
   factory SectionState.loading() {
-    return SectionState(
-      status: SectionStatus.loading
-    );
+    return const SectionState(status: SectionStatus.loading);
   }
 
   factory SectionState.loaded({
@@ -35,9 +31,7 @@ class SectionState extends Equatable {
     );
   }
 
-  factory SectionState.error({
-    dynamic errorMessages
-  }) {
+  factory SectionState.error({dynamic errorMessages}) {
     return SectionState(
       status: SectionStatus.error,
       errorMessages: errorMessages,
@@ -50,9 +44,5 @@ class SectionState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
-    status, 
-    sectionList, 
-    errorMessages
-  ];
+  List<Object?> get props => [status, sectionList, errorMessages];
 }
