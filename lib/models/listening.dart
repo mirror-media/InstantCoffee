@@ -1,4 +1,4 @@
-import 'package:readr_app/models/storyAd.dart';
+import 'package:readr_app/models/story_ad.dart';
 
 class Listening {
   String slug;
@@ -8,14 +8,13 @@ class Listening {
   String publishedAt;
 
   StoryAd? storyAd;
-  
+
   Listening({
     required this.slug,
     required this.title,
     required this.description,
     required this.photoUrl,
     required this.publishedAt,
-
     this.storyAd,
   });
 

@@ -4,19 +4,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/events.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/states.dart';
-import 'package:readr_app/helpers/errorHelper.dart';
-import 'package:readr_app/helpers/routeGenerator.dart';
+import 'package:readr_app/helpers/error_helper.dart';
+import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/member.dart';
-import 'package:readr_app/services/memberService.dart';
+import 'package:readr_app/services/member_service.dart';
+import 'package:readr_app/widgets/logger.dart';
 
 class EditMemberContactInfoBloc
-    extends Bloc<EditMemberContactInfoEvents, EditMemberContactInfoState> {
+    extends Bloc<EditMemberContactInfoEvents, EditMemberContactInfoState>
+    with Logger {
   final MemberRepos memberRepos;
   EditMemberContactInfoBloc({required this.memberRepos})
       : super(EditMemberContactInfoInitState()) {
     on<FetchMemberContactInfo>(
       (event, emit) async {
-        print(event.toString());
+        debugLog(event.toString());
         try {
           emit(MemberLoading());
           FirebaseAuth auth = FirebaseAuth.instance;
@@ -33,10 +35,10 @@ class EditMemberContactInfoBloc
     );
     on<UpdateMemberContactInfo>(
       (event, emit) async {
-        FirebaseAuth _auth = FirebaseAuth.instance;
-        print(event.toString());
+        FirebaseAuth auth = FirebaseAuth.instance;
+        debugLog(event.toString());
         emit(SavingLoading(member: event.editMember));
-        String token = await _auth.currentUser!.getIdToken();
+        String token = await auth.currentUser!.getIdToken();
         bool updateSuccess = await memberRepos.updateMemberContactInfo(
             event.editMember.israfelId,
             token,
@@ -71,7 +73,7 @@ class EditMemberContactInfoBloc
     );
     on<ChangeMember>(
       (event, emit) {
-        print(event.toString());
+        debugLog(event.toString());
         emit(MemberLoaded(member: event.member));
       },
     );

@@ -3,16 +3,17 @@ import 'package:readr_app/blocs/tabContent/events.dart';
 import 'package:readr_app/blocs/tabContent/states.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/record.dart';
-import 'package:readr_app/services/recordService.dart';
+import 'package:readr_app/services/record_service.dart';
+import 'package:readr_app/widgets/logger.dart';
 
 export 'events.dart';
 export 'states.dart';
 
-class TabContentBloc extends Bloc<TabContentEvents, TabContentState> {
+class TabContentBloc extends Bloc<TabContentEvents, TabContentState>
+    with Logger {
   final RecordRepos recordRepos;
-  TabContentBloc({
-    required this.recordRepos
-  }) : super(TabContentState.initial()){
+  TabContentBloc({required this.recordRepos})
+      : super(TabContentState.initial()) {
     on<FetchFirstRecordList>(_fetchFirstRecordList);
     on<FetchNextPageRecordList>(_fetchNextPageRecordList);
   }
@@ -21,27 +22,26 @@ class TabContentBloc extends Bloc<TabContentEvents, TabContentState> {
     FetchFirstRecordList event,
     Emitter<TabContentState> emit,
   ) async {
-    print(event.toString());
-    try{
+    debugLog(event.toString());
+    try {
       emit(TabContentState.initial());
       String endpoint = Environment().config.latestApi;
       if (event.sectionType == 'section') {
-        endpoint = Environment().config.listingBase + '&where={"sections":{"\$in":["${event.sectionKey}"]}}';
+        endpoint =
+            '${Environment().config.listingBase}&where={"sections":{"\$in":["${event.sectionKey}"]}}';
       } else if (event.sectionKey == 'latest') {
-        endpoint = Environment().config.latestApi + 'post_external01.json';
+        endpoint = '${Environment().config.latestApi}post_external01.json';
       } else if (event.sectionKey == 'popular') {
         endpoint = Environment().config.popularListApi;
       } else if (event.sectionKey == 'personal') {
         endpoint = Environment().config.listingBaseSearchByPersonAndFoodSection;
       }
 
-      List<Record> recordList = await recordRepos.fetchRecordList(
-        endpoint,
-        isLoadingFirstPage: true
-      );
+      List<Record> recordList =
+          await recordRepos.fetchRecordList(endpoint, isLoadingFirstPage: true);
 
       emit(TabContentState.loaded(
-        hasNextPage: recordList.length > 0,
+        hasNextPage: recordList.isNotEmpty,
         recordList: recordList,
       ));
     } catch (e) {
@@ -55,25 +55,24 @@ class TabContentBloc extends Bloc<TabContentEvents, TabContentState> {
     FetchNextPageRecordList event,
     Emitter<TabContentState> emit,
   ) async {
-    print(event.toString());
+    debugLog(event.toString());
     List<Record> recordList = state.recordList!;
-    try{
-      emit(TabContentState.loadingMore(
-        recordList: recordList
-      ));
-      
+    try {
+      emit(TabContentState.loadingMore(recordList: recordList));
+
       late List<Record> newRecordList;
-      if(event.isLatest) {
+      if (event.isLatest) {
         newRecordList = await recordRepos.fetchLatestNextPageRecordList();
       } else {
         newRecordList = await recordRepos.fetchNextPageRecordList();
       }
-      
-      newRecordList = Record.filterDuplicatedSlugByAnother(newRecordList, recordList);
+
+      newRecordList =
+          Record.filterDuplicatedSlugByAnother(newRecordList, recordList);
       recordList.addAll(newRecordList);
 
       emit(TabContentState.loaded(
-        hasNextPage: newRecordList.length > 0,
+        hasNextPage: newRecordList.isNotEmpty,
         recordList: recordList,
       ));
     } catch (e) {

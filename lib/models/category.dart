@@ -36,12 +36,12 @@ class Category {
       };
 
   @override
-  int get hashCode => this.hashCode;
+  int get hashCode => hashCode;
 
   @override
   bool operator ==(covariant Category other) {
     // compare this to other
-    return this.id == other.id;
+    return id == other.id;
   }
 
   static checkOtherParameters(Category a, Category b) {
@@ -50,7 +50,8 @@ class Category {
         a.isCampaign == b.isCampaign;
   }
 
-  static List<Map<dynamic, dynamic>> categoryListToJson(List<Category> categoryList) {
+  static List<Map<dynamic, dynamic>> categoryListToJson(
+      List<Category> categoryList) {
     List<Map> categoryMaps = [];
     for (Category category in categoryList) {
       categoryMaps.add(category.toJson());
@@ -78,25 +79,24 @@ class Category {
 
   static int subscriptionCountInCategoryList(List<Category> categoryList) {
     int count = 0;
-    for(int i=0; i<categoryList.length; i++) {
-      if(categoryList[i].isSubscribed) {
-        count ++;
+    for (int i = 0; i < categoryList.length; i++) {
+      if (categoryList[i].isSubscribed) {
+        count++;
       }
     }
-    
+
     return count;
   }
 
   static bool isTheSame(List<Category> categoryList, List<Category> other) {
-    if(categoryList.length != other.length) {
+    if (categoryList.length != other.length) {
       return false;
     }
-    for(int i=0; i<categoryList.length; i++) {
-      if(categoryList[i].id != other[i].id || 
-        categoryList[i].name != other[i].name ||
-        categoryList[i].title != other[i].title ||
-        categoryList[i].isCampaign != other[i].isCampaign
-      ) {
+    for (int i = 0; i < categoryList.length; i++) {
+      if (categoryList[i].id != other[i].id ||
+          categoryList[i].name != other[i].name ||
+          categoryList[i].title != other[i].title ||
+          categoryList[i].isCampaign != other[i].isCampaign) {
         return false;
       }
     }
@@ -104,19 +104,18 @@ class Category {
     return true;
   }
 
-  static List<Category> getTheNewestCategoryList({
-    required List<Category>? localCategoryList, 
-    required List<Category> onlineCategoryList
-  }) {
+  static List<Category> getTheNewestCategoryList(
+      {required List<Category>? localCategoryList,
+      required List<Category> onlineCategoryList}) {
     if (localCategoryList == null) {
       return onlineCategoryList;
     }
 
-    if(isTheSame(localCategoryList, onlineCategoryList)) {
+    if (isTheSame(localCategoryList, onlineCategoryList)) {
       return localCategoryList;
     }
 
-    if (onlineCategoryList.length != 0) {
+    if (onlineCategoryList.isNotEmpty) {
       List<Category> resultCategoryList = [];
 
       for (int i = 0; i < onlineCategoryList.length; i++) {

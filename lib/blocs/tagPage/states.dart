@@ -1,12 +1,19 @@
 import 'package:readr_app/models/record.dart';
 
-enum TagPageStatus { initial, loading, loaded, loadingMore, loadingMoreFail, error }
+enum TagPageStatus {
+  initial,
+  loading,
+  loaded,
+  loadingMore,
+  loadingMoreFail,
+  error
+}
 
 class TagPageState {
   final TagPageStatus status;
   final List<Record>? tagStoryList;
   final int? tagListTotal;
-  final errorMessages;
+  final dynamic errorMessages;
 
   TagPageState({
     required this.status,
@@ -16,15 +23,11 @@ class TagPageState {
   });
 
   factory TagPageState.init() {
-    return TagPageState(
-      status: TagPageStatus.initial
-    );
+    return TagPageState(status: TagPageStatus.initial);
   }
 
   factory TagPageState.loading() {
-    return TagPageState(
-      status: TagPageStatus.loading
-    );
+    return TagPageState(status: TagPageStatus.loading);
   }
 
   factory TagPageState.loaded({
@@ -38,9 +41,7 @@ class TagPageState {
     );
   }
 
-  factory TagPageState.error({
-    errorMessages
-  }) {
+  factory TagPageState.error({errorMessages}) {
     return TagPageState(
       status: TagPageStatus.error,
       errorMessages: errorMessages,
@@ -58,11 +59,10 @@ class TagPageState {
     );
   }
 
-  factory TagPageState.loadingMoreFail({
-    required List<Record> tagStoryList,
-    required int tagListTotal,
-    required errorMessages
-  }) {
+  factory TagPageState.loadingMoreFail(
+      {required List<Record> tagStoryList,
+      required int tagListTotal,
+      required errorMessages}) {
     return TagPageState(
       status: TagPageStatus.loadingMoreFail,
       tagStoryList: tagStoryList,

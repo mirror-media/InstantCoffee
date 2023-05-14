@@ -38,3 +38,6 @@ android/MirrorMediaDev.jks
 **/.DS_Store
 # Android 
 android/.idea
+
+# fvm
+.fvm/

@@ -1,15 +1,15 @@
 class Error500Exception {
-  var message;
+  dynamic message;
   Error500Exception(this.message);
 }
 
 class Error400Exception {
-  var message;
+  dynamic message;
   Error400Exception(this.message);
 }
 
 class NoInternetException {
-  var message;
+  dynamic message;
   NoInternetException(this.message);
 }
 

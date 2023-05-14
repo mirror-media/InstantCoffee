@@ -1,4 +1,4 @@
-import 'package:readr_app/models/memberSubscriptionType.dart';
+import 'package:readr_app/models/member_subscription_type.dart';
 
 abstract class MemberSubscriptionTypeState {}
 

@@ -7,7 +7,7 @@ class EmailRegisteredLoading extends EmailRegisteredState {}
 class EmailRegisteredSuccess extends EmailRegisteredState {}
 
 class EmailRegisteredFail extends EmailRegisteredState {
-  final error;
+  final dynamic error;
   EmailRegisteredFail({this.error});
 }
 

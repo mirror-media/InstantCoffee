@@ -3,18 +3,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/passwordUpdate/events.dart';
 import 'package:readr_app/blocs/passwordUpdate/states.dart';
-import 'package:readr_app/helpers/errorHelper.dart';
-import 'package:readr_app/helpers/routeGenerator.dart';
-import 'package:readr_app/services/emailSignInService.dart';
+import 'package:readr_app/helpers/error_helper.dart';
+import 'package:readr_app/helpers/route_generator.dart';
+import 'package:readr_app/services/email_sign_in_service.dart';
+import 'package:readr_app/widgets/logger.dart';
 
-class PasswordUpdateBloc
-    extends Bloc<PasswordUpdateEvents, PasswordUpdateState> {
+class PasswordUpdateBloc extends Bloc<PasswordUpdateEvents, PasswordUpdateState>
+    with Logger {
   final EmailSignInRepos emailSignInRepos;
   PasswordUpdateBloc({required this.emailSignInRepos})
       : super(OldPasswordConfirmInitState()) {
     on<PasswordUpdateEvents>(
       (event, emit) async {
-        print(event.toString());
+        debugLog(event.toString());
         try {
           if (event is ConfirmOldPassword) {
             emit(OldPasswordConfirmLoading());
