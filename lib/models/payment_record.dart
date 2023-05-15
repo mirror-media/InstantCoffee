@@ -1,7 +1,7 @@
-enum PaymentType{
+enum PaymentType {
   newebpay,
-  app_store,
-  google_play,
+  app_store, // ignore: constant_identifier_names
+  google_play, // ignore: constant_identifier_names
 }
 
 class PaymentRecord {
@@ -22,7 +22,6 @@ class PaymentRecord {
     required this.paymentMethod,
     required this.paymentDate,
     this.isSuccess = false,
-
     this.paymentCurrency,
     this.paymentAmount,
   });
