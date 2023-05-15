@@ -67,7 +67,7 @@ class StoryService with Logger implements StoryRepos {
       } catch (e) {
         debugLog('error: $e');
       }
-      print('Api get done.');
+      debugLog('Api get done.');
     }
 
     StoryRes storyRes = StoryRes.fromJson(jsonResponse);

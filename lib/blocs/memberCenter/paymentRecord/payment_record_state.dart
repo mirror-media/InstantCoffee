@@ -11,6 +11,6 @@ class PaymentRecordLoaded extends PaymentRecordState {
 }
 
 class PaymentRecordError extends PaymentRecordState {
-  final error;
+  final dynamic error;
   PaymentRecordError({this.error});
 }

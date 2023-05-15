@@ -6,6 +6,7 @@ import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/story_res.dart';
 import 'package:readr_app/pages/storyPage/news/premium_story_widget.dart';
 import 'package:readr_app/pages/storyPage/news/story_widget.dart';
+import 'package:readr_app/widgets/logger.dart';
 
 class BuildStoryPage extends StatefulWidget {
   final bool isMemberCheck;
@@ -15,7 +16,7 @@ class BuildStoryPage extends StatefulWidget {
   _BuildStoryPageState createState() => _BuildStoryPageState();
 }
 
-class _BuildStoryPageState extends State<BuildStoryPage> {
+class _BuildStoryPageState extends State<BuildStoryPage> with Logger {
   late StoryBloc _storyBloc;
 
   _fetchPublishedStoryBySlug(String storySlug, bool isMemberCheck) {
@@ -37,7 +38,7 @@ class _BuildStoryPageState extends State<BuildStoryPage> {
       switch (state.status) {
         case StoryStatus.error:
           final error = state.errorMessages;
-          print('StoryError: ${error.message}');
+          debugLog('StoryError: ${error.message}');
           return Container();
         case StoryStatus.loaded:
           StoryRes storyRes = state.storyRes!;

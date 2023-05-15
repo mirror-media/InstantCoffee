@@ -12,7 +12,7 @@ import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/helpers/iap_subscription_helper.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
-import 'package:readr_app/models/subscriptionDetail.dart';
+import 'package:readr_app/models/subscription_detail.dart';
 import 'package:readr_app/services/subscription_select_service.dart';
 import 'package:readr_app/widgets/logger.dart';
 
