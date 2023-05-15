@@ -8,7 +8,7 @@ import 'package:readr_app/helpers/app_exception.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/graphql_body.dart';
 import 'package:readr_app/models/payment_record.dart';
-import 'package:readr_app/models/subscriptionDetail.dart';
+import 'package:readr_app/models/subscription_detail.dart';
 import 'package:readr_app/services/member_service.dart';
 import 'package:readr_app/widgets/logger.dart';
 

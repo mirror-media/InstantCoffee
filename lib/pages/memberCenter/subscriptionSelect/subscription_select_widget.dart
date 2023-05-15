@@ -13,7 +13,7 @@ import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/models/payment_record.dart';
-import 'package:readr_app/models/subscriptionDetail.dart';
+import 'package:readr_app/models/subscription_detail.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/buying_success_widget.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/verify_purchase_fail_widget.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/hint_to_other_platform.dart';
