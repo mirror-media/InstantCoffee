@@ -188,6 +188,7 @@ flutter:
     - assets/image/ig_icon.png
     - assets/image/line_icon.png
     - assets/image/yt_icon.png
+    - assets/image/mm_logo_for_story.png
     - packages/constants/countries.json
     - packages/constants/taiwan-districts.json
     - assets/data/menu.json

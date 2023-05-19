@@ -86,7 +86,7 @@ class StoryWidget extends StatelessWidget {
             _buildStoryTitle(story.title),
             const SizedBox(height: 8),
             _buildAuthors(context, story),
-            const SizedBox(height: 16),
+            const SizedBox(height: 4),
             _buildBrief(story, sectionColor),
             _buildContent(story, isAdsActivated),
             const SizedBox(height: 16),
@@ -335,9 +335,22 @@ class StoryWidget extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-      child: Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: authorItems,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: Image.asset(
+              'assets/image/mm_logo_for_story.png',
+              width: 32.0,
+              height: 32.0,
+            ),
+          ),
+          Expanded(
+              child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: authorItems))
+        ],
       ),
     );
   }
