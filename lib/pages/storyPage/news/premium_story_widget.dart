@@ -227,9 +227,19 @@ class PremiumStoryWidget extends StatelessWidget {
       ));
     }
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: categoriesName,
-    );
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Image.asset(
+              'assets/image/mm_logo_for_story.png',
+              width: 32.0,
+              height: 32.0,
+            ),
+          ),
+          ...categoriesName
+        ]);
   }
 
   Widget _buildStoryTitle(String title) {
