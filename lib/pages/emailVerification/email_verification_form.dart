@@ -36,8 +36,7 @@ class _EmailVerificationFormState extends State<EmailVerificationForm> {
   }
 
   bool _isEmailValid() {
-    String pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
-    RegExp regex = RegExp(pattern);
+    RegExp regex = RegExp(validEmailPattern);
     return regex.hasMatch(_emailEditingController.text);
   }
 
@@ -152,8 +151,7 @@ class _EmailVerificationFormState extends State<EmailVerificationForm> {
   }
 
   String? _validateEmail(String? value) {
-    String pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
-    RegExp regex = RegExp(pattern);
+    RegExp regex = RegExp(validEmailPattern);
     if (value == null || !regex.hasMatch(value)) {
       return '請輸入有效的 Email 地址';
     } else {
