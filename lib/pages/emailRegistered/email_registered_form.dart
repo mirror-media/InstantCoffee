@@ -58,8 +58,7 @@ class _EmailRegisteredFormState extends State<EmailRegisteredForm> {
   }
 
   bool _isEmailValid() {
-    String pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
-    RegExp regex = RegExp(pattern);
+    RegExp regex = RegExp(validEmailPattern);
     return regex.hasMatch(_emailEditingController.text);
   }
 

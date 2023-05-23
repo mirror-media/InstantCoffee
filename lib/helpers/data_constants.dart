@@ -103,3 +103,8 @@ const Map<String, String> partyLogoMap = {
 
 // misc
 const String articleDateTimePostfix = '臺北時間';
+
+// use same login as browser,
+// ref: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email#basic_validation
+const String validEmailPattern =
+    r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";

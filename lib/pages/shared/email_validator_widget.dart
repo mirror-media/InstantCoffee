@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:readr_app/helpers/data_constants.dart';
 
 class EmailValidatorWidget extends StatefulWidget {
   // need to be disposed by editing controller parent
@@ -16,8 +17,7 @@ class _EmailValidatorWidgetState extends State<EmailValidatorWidget> {
   @override
   void initState() {
     _emailEditingController = widget.editingController;
-    String pattern = r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
-    RegExp regex = RegExp(pattern);
+    RegExp regex = RegExp(validEmailPattern);
     _setEmailHint(_emailEditingController.text, regex);
     _emailEditingController.addListener(() {
       if (!regex.hasMatch(_emailEditingController.text)) {
