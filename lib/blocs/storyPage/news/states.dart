@@ -1,4 +1,4 @@
-import 'package:readr_app/models/storyRes.dart';
+import 'package:readr_app/models/story_res.dart';
 
 enum StoryStatus { initial, loading, loaded, error }
 
@@ -6,7 +6,7 @@ class StoryState {
   final StoryStatus status;
   final String storySlug;
   final StoryRes? storyRes;
-  final errorMessages;
+  final dynamic errorMessages;
 
   const StoryState({
     required this.status,
@@ -15,22 +15,12 @@ class StoryState {
     this.errorMessages,
   });
 
-  factory StoryState.init({
-    required String storySlug
-  }) {
-    return StoryState(
-      status: StoryStatus.initial,
-      storySlug: storySlug
-    );
+  factory StoryState.init({required String storySlug}) {
+    return StoryState(status: StoryStatus.initial, storySlug: storySlug);
   }
 
-  factory StoryState.loading({
-    required String storySlug
-  }) {
-    return StoryState(
-      status: StoryStatus.loading,
-      storySlug: storySlug
-    );
+  factory StoryState.loading({required String storySlug}) {
+    return StoryState(status: StoryStatus.loading, storySlug: storySlug);
   }
 
   factory StoryState.loaded({
@@ -44,10 +34,7 @@ class StoryState {
     );
   }
 
-  factory StoryState.error({
-    required String storySlug,
-    errorMessages
-  }) {
+  factory StoryState.error({required String storySlug, errorMessages}) {
     return StoryState(
       status: StoryStatus.error,
       storySlug: storySlug,

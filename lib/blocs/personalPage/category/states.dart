@@ -1,6 +1,6 @@
 import 'package:readr_app/models/category.dart';
 
-enum PersonalCategoryStatus { 
+enum PersonalCategoryStatus {
   initial,
   subscribedCategoryListLoading,
   subscribedCategoryListLoaded,
@@ -19,15 +19,12 @@ class PersonalCategoryState {
   });
 
   factory PersonalCategoryState.init() {
-    return PersonalCategoryState(
-      status: PersonalCategoryStatus.initial
-    );
+    return const PersonalCategoryState(status: PersonalCategoryStatus.initial);
   }
 
   factory PersonalCategoryState.subscribedCategoryListLoading() {
-    return PersonalCategoryState(
-      status: PersonalCategoryStatus.subscribedCategoryListLoading
-    );
+    return const PersonalCategoryState(
+        status: PersonalCategoryStatus.subscribedCategoryListLoading);
   }
 
   factory PersonalCategoryState.subscribedCategoryListLoaded({
@@ -39,9 +36,8 @@ class PersonalCategoryState {
     );
   }
 
-  factory PersonalCategoryState.subscribedCategoryListLoadingError({
-    required dynamic errorMessages
-  }) {
+  factory PersonalCategoryState.subscribedCategoryListLoadingError(
+      {required dynamic errorMessages}) {
     return PersonalCategoryState(
       status: PersonalCategoryStatus.subscribedCategoryListLoadingError,
       errorMessages: errorMessages,

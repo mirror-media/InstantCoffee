@@ -12,7 +12,7 @@ class MemberLoaded extends EditMemberContactInfoState {
 }
 
 class MemberLoadedError extends EditMemberContactInfoState {
-  final error;
+  final dynamic error;
   MemberLoadedError({
     this.error,
   });

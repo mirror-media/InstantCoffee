@@ -17,6 +17,6 @@ class ListeningStoryLoaded extends ListeningStoryState {
 }
 
 class ListeningStoryError extends ListeningStoryState {
-  final error;
+  final dynamic error;
   ListeningStoryError({this.error});
 }

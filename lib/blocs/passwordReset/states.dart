@@ -9,6 +9,6 @@ class PasswordResetSuccess extends PasswordResetState {}
 class PasswordResetFail extends PasswordResetState {}
 
 class PasswordResetError extends PasswordResetState {
-  final error;
+  final dynamic error;
   PasswordResetError({this.error});
 }

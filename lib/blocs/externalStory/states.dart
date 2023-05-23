@@ -1,11 +1,11 @@
-import 'package:readr_app/models/externalStory.dart';
+import 'package:readr_app/models/external_story.dart';
 
 enum ExternalStoryStatus { initial, loading, loaded, error }
 
 class ExternalStoryState {
   final ExternalStoryStatus status;
   final ExternalStory? externalStory;
-  final errorMessages;
+  final dynamic errorMessages;
 
   const ExternalStoryState({
     required this.status,
@@ -14,15 +14,13 @@ class ExternalStoryState {
   });
 
   factory ExternalStoryState.init() {
-    return ExternalStoryState(
+    return const ExternalStoryState(
       status: ExternalStoryStatus.initial,
     );
   }
 
   factory ExternalStoryState.loading() {
-    return ExternalStoryState(
-      status: ExternalStoryStatus.loading
-    );
+    return const ExternalStoryState(status: ExternalStoryStatus.loading);
   }
 
   factory ExternalStoryState.loaded({
@@ -34,9 +32,7 @@ class ExternalStoryState {
     );
   }
 
-  factory ExternalStoryState.error({
-    errorMessages
-  }) {
+  factory ExternalStoryState.error({errorMessages}) {
     return ExternalStoryState(
       status: ExternalStoryStatus.error,
       errorMessages: errorMessages,

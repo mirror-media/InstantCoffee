@@ -1,4 +1,4 @@
-import 'package:readr_app/models/memberSubscriptionType.dart';
+import 'package:readr_app/models/member_subscription_type.dart';
 
 abstract class LoginState {}
 
@@ -34,6 +34,6 @@ class RegisteredByAnotherMethod extends LoginInitState {
 }
 
 class LoginFail extends LoginState {
-  final error;
+  final dynamic error;
   LoginFail({this.error});
 }

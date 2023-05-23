@@ -1,4 +1,4 @@
-import 'package:readr_app/models/memberSubscriptionType.dart';
+import 'package:readr_app/models/member_subscription_type.dart';
 
 abstract class MemberEvents {}
 
@@ -18,5 +18,6 @@ class UpdateSubscriptionType extends MemberEvents {
   });
 
   @override
-  String toString() => 'UpdateSubscriptionType: { isLogin: $isLogin, subscriptionType: $subscriptionType }';
+  String toString() =>
+      'UpdateSubscriptionType: { isLogin: $isLogin, subscriptionType: $subscriptionType }';
 }

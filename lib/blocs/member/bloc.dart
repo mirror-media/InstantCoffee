@@ -2,17 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/member/events.dart';
 import 'package:readr_app/blocs/member/states.dart';
-import 'package:readr_app/models/memberSubscriptionType.dart';
-import 'package:readr_app/services/memberService.dart';
+import 'package:readr_app/models/member_subscription_type.dart';
+import 'package:readr_app/services/member_service.dart';
+import 'package:readr_app/widgets/logger.dart';
 
 export 'events.dart';
 export 'states.dart';
 
-class MemberBloc extends Bloc<MemberEvents, MemberState> {
+class MemberBloc extends Bloc<MemberEvents, MemberState> with Logger {
   final MemberRepos memberRepos;
-  MemberBloc({
-    required this.memberRepos
-  }) : super(MemberState.loading()) {
+  MemberBloc({required this.memberRepos}) : super(MemberState.loading()) {
     on<FetchMemberSubscriptionType>(_fetchMemberSubscriptionType);
     on<UpdateSubscriptionType>(_updateSubscriptionType);
   }
@@ -20,22 +19,22 @@ class MemberBloc extends Bloc<MemberEvents, MemberState> {
   void _fetchMemberSubscriptionType(
     FetchMemberSubscriptionType event,
     Emitter<MemberState> emit,
-  ) async{
-    print(event.toString());
+  ) async {
+    debugLog(event.toString());
     FirebaseAuth auth = FirebaseAuth.instance;
-    if(auth.currentUser == null) {
+    if (auth.currentUser == null) {
       emit(MemberState.isNotLogin());
     } else {
       try {
-        MemberIdAndSubscriptionType memberIdAndSubscriptionType = await memberRepos.checkSubscriptionType(auth.currentUser!);
+        MemberIdAndSubscriptionType memberIdAndSubscriptionType =
+            await memberRepos.checkSubscriptionType(auth.currentUser!);
         emit(
           MemberState.loaded(
-            isLogin: true,
-            israfelId: memberIdAndSubscriptionType.israfelId,
-            subscriptionType: memberIdAndSubscriptionType.subscriptionType
-          ),
+              isLogin: true,
+              israfelId: memberIdAndSubscriptionType.israfelId,
+              subscriptionType: memberIdAndSubscriptionType.subscriptionType),
         );
-      } catch(e) {
+      } catch (e) {
         emit(MemberState.error(errorMessages: e));
       }
     }
@@ -45,13 +44,12 @@ class MemberBloc extends Bloc<MemberEvents, MemberState> {
     UpdateSubscriptionType event,
     Emitter<MemberState> emit,
   ) {
-    print(event.toString());
+    debugLog(event.toString());
     emit(
       MemberState.loaded(
-        isLogin: event.isLogin,
-        israfelId: event.israfelId,
-        subscriptionType: event.subscriptionType
-      ),
+          isLogin: event.isLogin,
+          israfelId: event.israfelId,
+          subscriptionType: event.subscriptionType),
     );
   }
 }

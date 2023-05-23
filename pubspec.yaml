@@ -17,7 +17,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # iOS and android is the same version
 
-version: 4.5.3+390
+version: 5.2.1+400
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -143,6 +143,11 @@ dependencies:
   #format css
   csslib: ^0.17.1
 
+  bloc: ^8.1.1
+  meta: ^1.8.0
+  device_info_plus: ^4.1.3
+  in_app_purchase_storekit: ^0.3.6+3
+
 dependency_overrides:
 
 dev_dependencies:
@@ -153,7 +158,9 @@ dev_dependencies:
   flutter_native_splash: ^2.2.0+1
   # generated mock classes
   mockito: ^5.0.17
+  
   build_runner: ^2.1.7
+  flutter_lints: ^2.0.1
 
 flutter_icons:
   android: "launcher_icon"
@@ -181,6 +188,7 @@ flutter:
     - assets/image/ig_icon.png
     - assets/image/line_icon.png
     - assets/image/yt_icon.png
+    - assets/image/mm_logo_for_story.png
     - packages/constants/countries.json
     - packages/constants/taiwan-districts.json
     - assets/data/menu.json

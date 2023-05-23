@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:readr_app/models/sectionAd.dart';
+import 'package:readr_app/models/section_ad.dart';
 
 // ignore: must_be_immutable
 class Section extends Equatable {
@@ -21,17 +21,16 @@ class Section extends Equatable {
     required this.order,
     required this.focus,
     required this.type,
-    
     this.sectionAd,
   });
 
   factory Section.fromJson(Map<String, dynamic> json) {
     return Section(
-      key: json["_id"] == null ? json["key"] : json["_id"],
+      key: json["_id"] ?? json["key"],
       name: json["name"],
       title: json["title"],
       description: json["description"] ?? "",
-      order: json["sortOrder"] == null ? json["order"] : json["sortOrder"],
+      order: json["sortOrder"] ?? json["order"],
       focus: json['focus'] ?? false,
       type: json["type"] ?? "section",
     );
@@ -52,14 +51,6 @@ class Section extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
-    key, 
-    name, 
-    title, 
-    description, 
-    focus, 
-    order,
-    type,
-    sectionAd
-  ];
+  List<Object?> get props =>
+      [key, name, title, description, focus, order, type, sectionAd];
 }

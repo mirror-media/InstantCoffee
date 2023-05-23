@@ -1,5 +1,6 @@
 abstract class PasswordUpdateState {}
-class OldPasswordConfirm extends PasswordUpdateState{}
+
+class OldPasswordConfirm extends PasswordUpdateState {}
 
 class OldPasswordConfirmInitState extends OldPasswordConfirm {}
 
@@ -14,6 +15,6 @@ class PasswordUpdateLoading extends PasswordUpdateState {}
 class PasswordUpdateSuccess extends PasswordUpdateState {}
 
 class PasswordUpdateError extends PasswordUpdateState {
-  final error;
+  final dynamic error;
   PasswordUpdateError({this.error});
 }

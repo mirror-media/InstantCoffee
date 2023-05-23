@@ -220,6 +220,7 @@ PODS:
   - GTMSessionFetcher/Core (2.1.0)
   - in_app_purchase_storekit (0.0.1):
     - Flutter
+    - FlutterMacOS
   - just_audio (0.0.1):
     - Flutter
   - nanopb (2.30909.0):
@@ -429,7 +430,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 1d20a6ad97ef46f67bbdec158ce00563a671ebb7
   GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
   GTMSessionFetcher: ffbb25ec00ebcb5201adab0a56d808f6f1902d9f
-  in_app_purchase_storekit: d7fcf4646136ec258e237872755da8ea6c1b6096
+  in_app_purchase_storekit: 4fb7ee9e824b1f09107fbfbbce8c4b276366dc43
   just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c

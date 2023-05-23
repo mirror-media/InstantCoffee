@@ -1,19 +1,20 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/emailVerification/events.dart';
 import 'package:readr_app/blocs/emailVerification/states.dart';
-import 'package:readr_app/helpers/errorHelper.dart';
-import 'package:readr_app/models/firebaseLoginStatus.dart';
-import 'package:readr_app/services/emailSignInService.dart';
+import 'package:readr_app/helpers/error_helper.dart';
+import 'package:readr_app/models/firebase_login_status.dart';
+import 'package:readr_app/services/email_sign_in_service.dart';
+import 'package:readr_app/widgets/logger.dart';
 
 class EmailVerificationBloc
-    extends Bloc<EmailVerificationEvents, EmailVerificationState> {
+    extends Bloc<EmailVerificationEvents, EmailVerificationState> with Logger {
   final EmailSignInRepos emailSignInRepos;
 
   EmailVerificationBloc({required this.emailSignInRepos})
       : super(EmailVerificationInitState()) {
     on<SendEmailVerification>(
       (event, emit) async {
-        print(event.toString());
+        debugLog(event.toString());
         try {
           emit(SendingEmailVerification());
           FirebaseLoginStatus firebaseLoginStatus =

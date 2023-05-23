@@ -9,6 +9,6 @@ class SendingEmailVerificationSuccess extends EmailVerificationState {}
 class SendingEmailVerificationFail extends EmailVerificationState {}
 
 class EmailVerificationError extends EmailVerificationState {
-  final error;
+  final dynamic error;
   EmailVerificationError({this.error});
 }

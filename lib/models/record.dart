@@ -11,7 +11,7 @@ class Record extends Equatable {
   final bool isMemberCheck;
   final String? url;
 
-  Record({
+  const Record({
     required this.title,
     required this.slug,
     required this.publishedDate,
@@ -72,9 +72,9 @@ class Record extends Equatable {
     String? url;
     if (json.containsKey('style')) {
       if (json['style'] == 'projects') {
-        url = Environment().config.mirrorMediaDomain + '/projects/' + origSlug;
+        url = '${Environment().config.mirrorMediaDomain}/projects/$origSlug';
       } else if (json['style'] == 'campaign') {
-        url = Environment().config.mirrorMediaDomain + '/campaigns/' + origSlug;
+        url = '${Environment().config.mirrorMediaDomain}/campaigns/$origSlug';
       }
     }
 
@@ -118,11 +118,11 @@ class Record extends Equatable {
     List<Record> another,
   ) {
     List<Record> records = [];
-    base.forEach((element) {
+    for (var element in base) {
       if (!another.any((record) => record.slug == element.slug)) {
         records.add(element);
       }
-    });
+    }
     return records;
   }
 

@@ -1,5 +1,5 @@
-import 'package:readr_app/helpers/EnumParser.dart';
-import 'package:readr_app/models/contactAddress.dart';
+import 'package:readr_app/helpers/enum_parser.dart';
+import 'package:readr_app/models/contact_address.dart';
 
 class Member {
   final String israfelId;
@@ -17,7 +17,6 @@ class Member {
     this.name,
     this.gender,
     this.birthday,
-
     this.phoneNumber,
     required this.contactAddress,
   });
@@ -25,7 +24,7 @@ class Member {
   factory Member.fromJson(Map<String, dynamic> json) {
     String? genderString = json['gender'];
     String? birthdayString;
-    if(json['birthday'] != null) {
+    if (json['birthday'] != null) {
       birthdayString = json['birthday'].split('T')[0];
     }
 
@@ -33,11 +32,8 @@ class Member {
       israfelId: json['id'],
       email: json['email'],
       name: json['name'],
-      gender: genderString == null 
-      ? null
-      : genderString.toEnum(Gender.values),
+      gender: genderString?.toEnum(Gender.values),
       birthday: birthdayString,
-
       phoneNumber: json['phone'],
       contactAddress: ContactAddress(
         country: json['country'],
@@ -63,10 +59,8 @@ class Member {
 }
 
 enum Gender {
-  //Male,
-  M,
-  //Female,
-  F,
-  //Unknown,
-  NA,
+  M, //Male,
+  F, //Female,
+  // ignore: constant_identifier_names
+  NA, //Unknown,
 }

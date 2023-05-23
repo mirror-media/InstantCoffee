@@ -1,6 +1,6 @@
 import 'package:readr_app/models/record.dart';
 
-enum PersonalArticleStatus { 
+enum PersonalArticleStatus {
   initial,
   subscribedArticleListLoading,
   subscribedArticleListLoaded,
@@ -21,20 +21,17 @@ class PersonalArticleState {
   });
 
   factory PersonalArticleState.init() {
-    return PersonalArticleState(
-      status: PersonalArticleStatus.initial
-    );
+    return const PersonalArticleState(status: PersonalArticleStatus.initial);
   }
 
   factory PersonalArticleState.subscribedArticleListLoading() {
-    return PersonalArticleState(
+    return const PersonalArticleState(
       status: PersonalArticleStatus.subscribedArticleListLoading,
     );
   }
 
-  factory PersonalArticleState.subscribedArticleListLoaded({
-    required List<Record> subscribedArticleList
-  }) {
+  factory PersonalArticleState.subscribedArticleListLoaded(
+      {required List<Record> subscribedArticleList}) {
     return PersonalArticleState(
       status: PersonalArticleStatus.subscribedArticleListLoaded,
       subscribedArticleList: subscribedArticleList,
@@ -45,14 +42,12 @@ class PersonalArticleState {
     dynamic errorMessages,
   }) {
     return PersonalArticleState(
-      status: PersonalArticleStatus.subscribedArticleListLoadingError,
-      errorMessages: errorMessages
-    );
+        status: PersonalArticleStatus.subscribedArticleListLoadingError,
+        errorMessages: errorMessages);
   }
 
-  factory PersonalArticleState.subscribedArticleListLoadingMore({
-    required List<Record> subscribedArticleList
-  }) {
+  factory PersonalArticleState.subscribedArticleListLoadingMore(
+      {required List<Record> subscribedArticleList}) {
     return PersonalArticleState(
       status: PersonalArticleStatus.subscribedArticleListLoadingMore,
       subscribedArticleList: subscribedArticleList,
@@ -64,10 +59,9 @@ class PersonalArticleState {
     dynamic errorMessages,
   }) {
     return PersonalArticleState(
-      status: PersonalArticleStatus.subscribedArticleListLoadingMoreFail,
-      subscribedArticleList: subscribedArticleList,
-      errorMessages: errorMessages
-    );
+        status: PersonalArticleStatus.subscribedArticleListLoadingMoreFail,
+        subscribedArticleList: subscribedArticleList,
+        errorMessages: errorMessages);
   }
 
   @override
