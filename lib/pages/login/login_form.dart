@@ -263,11 +263,7 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   String? validateEmail(String? value) {
-    // use same login as browser,
-    // ref: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email#basic_validation
-    String pattern =
-        r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
-    RegExp regex = RegExp(pattern);
+    RegExp regex = RegExp(validEmailPattern);
     if (value == null || !regex.hasMatch(value)) {
       return 'Email 格式填寫錯誤';
     } else {
