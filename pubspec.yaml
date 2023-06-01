@@ -110,6 +110,8 @@ dependencies:
   google_mobile_ads: ^2.0.1
   # firebase dynamic links 
   firebase_dynamic_links: ^4.0.4
+  # firebase crashlytics
+  firebase_crashlytics: ^2.9.0
 
   # firebase auth
   firebase_auth: ^3.3.16
