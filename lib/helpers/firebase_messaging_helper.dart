@@ -55,20 +55,18 @@ class FirebaseMessangingHelper with Logger {
             RouteGenerator.navigateToStory(fcmData.slug!);
           }
         }
-      } catch (e) {
+      } catch (e, s) {
         String? slug = fcmData?.slug;
         ErrorLogHelper().record(
-          "Firebase Messaging NavigateToStoryPage",
-          {"fcmDataSlug": slug},
-          e.toString(),
-        );
+            Exception(
+                '[Firebase Messaging NavigateToStoryPage] fcmDataSlug: $slug'),
+            s);
       }
     } else {
       ErrorLogHelper().record(
-        "Firebase Messaging NavigateToStoryPage",
-        null,
-        "RemoteMessage is null",
-      );
+          Exception(
+              '[Firebase Messaging NavigateToStoryPage] RemoteMessage is null'),
+          StackTrace.current);
     }
   }
 
