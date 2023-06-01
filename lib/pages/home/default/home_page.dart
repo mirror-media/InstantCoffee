@@ -83,10 +83,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       title: const Text(appTitle),
       actions: <Widget>[
         IconButton(
-          onPressed: () => throw Exception(),
-          icon: const Icon(Icons.error_outline),
-        ),
-        IconButton(
           icon: const Icon(Icons.search),
           tooltip: 'Search',
           onPressed: () => RouteGenerator.navigateToSearch(),

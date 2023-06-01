@@ -1,6 +1,5 @@
 abstract class BaseConfig {
   String get mirrorMediaDomain;
-  String get errorLogName;
 
   String get apiBase;
   String get storyPageApi;
@@ -8,7 +7,6 @@ abstract class BaseConfig {
   String get topicListApi;
   String get memberApi;
   String get tokenStateApi;
-  String get errorLogApi;
 
   String get monthSubscriptionId;
   String get verifyAndroidPurchaseApi;
