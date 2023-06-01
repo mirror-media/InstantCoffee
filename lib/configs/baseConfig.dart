@@ -7,7 +7,6 @@ abstract class BaseConfig {
   String get topicListApi;
   String get memberApi;
   String get tokenStateApi;
-  String get errorLogApi;
 
   String get monthSubscriptionId;
   String get verifyAndroidPurchaseApi;
