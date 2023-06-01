@@ -60,12 +60,8 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> with Logger {
       }
 
       emit(StoryState.loaded(storySlug: event.slug, storyRes: storyRes));
-    } catch (e) {
-      _errorLogHelper.record(
-        event.eventName(),
-        event.eventParameters(),
-        e.toString(),
-      );
+    } catch (e, s) {
+      _errorLogHelper.record(e, s);
       emit(StoryState.error(
           storySlug: event.slug,
           errorMessages: UnknownException(e.toString())));
