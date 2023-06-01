@@ -1,6 +1,5 @@
 abstract class BaseConfig {
   String get mirrorMediaDomain;
-  String get errorLogName;
 
   String get apiBase;
   String get storyPageApi;
