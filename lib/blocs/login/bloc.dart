@@ -46,29 +46,31 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
   LoginLoadingType? _loginLoadingType;
 
   Future<void> _handleFirebaseThirdPartyLogin(
-    FirebaseLoginStatus frebaseLoginStatus,
+    FirebaseLoginStatus firebaseLoginStatus,
     Emitter<LoginState> emit,
   ) async {
-    if (frebaseLoginStatus.status == FirebaseStatus.Cancel) {
+    if (firebaseLoginStatus.status == FirebaseStatus.Cancel) {
       emit(LoginInitState());
-    } else if (frebaseLoginStatus.status == FirebaseStatus.Success) {
+    } else if (firebaseLoginStatus.status == FirebaseStatus.Success) {
       bool isNewUser = false;
-      if (frebaseLoginStatus.message is UserCredential) {
-        UserCredential userCredential = frebaseLoginStatus.message;
+      if (firebaseLoginStatus.message is UserCredential) {
+        UserCredential userCredential = firebaseLoginStatus.message;
         isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
       }
       await _handleCreateMember(isNewUser, emit);
-    } else if (frebaseLoginStatus.status == FirebaseStatus.Error) {
+    } else if (firebaseLoginStatus.status == FirebaseStatus.Error) {
       _errorLogHelper.record(
-          'HandleFirebaseThirdPartyLogin', {}, frebaseLoginStatus.toString());
+          Exception(
+              '[HandleFirebaseThirdPartyLogin] status: ${firebaseLoginStatus.toString()}'),
+          StackTrace.current);
 
-      if (frebaseLoginStatus.message is FirebaseAuthException &&
-          frebaseLoginStatus.message.code ==
+      if (firebaseLoginStatus.message is FirebaseAuthException &&
+          firebaseLoginStatus.message.code ==
               'account-exists-with-different-credential') {
-        await _checkThirdPartyLoginEmail(frebaseLoginStatus, emit);
+        await _checkThirdPartyLoginEmail(firebaseLoginStatus, emit);
       } else {
         emit(LoginFail(
-          error: UnknownException(frebaseLoginStatus.message),
+          error: UnknownException(firebaseLoginStatus.message),
         ));
       }
     }
@@ -96,7 +98,9 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
       }
 
       _errorLogHelper.record(
-          'HandleCreateMember', {'isNewUser': isNewUser}, 'Create member fail');
+          Exception(
+              '[HandleCreateMember] Create member fail, isNewUser: $isNewUser'),
+          StackTrace.current);
 
       emit(LoginFail(
         error: UnknownException('Create member fail'),
@@ -105,11 +109,11 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
   }
 
   Future<void> _checkThirdPartyLoginEmail(
-    FirebaseLoginStatus frebaseLoginStatus,
+    FirebaseLoginStatus firebaseLoginStatus,
     Emitter<LoginState> emit,
   ) async {
     try {
-      String email = frebaseLoginStatus.message.email;
+      String email = firebaseLoginStatus.message.email;
       List<String> signInMethodsStringList =
           await LoginServices().fetchSignInMethodsForEmail(email);
 
@@ -126,7 +130,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         emit(RegisteredByAnotherMethod(
             warningMessage: registeredByPasswordMethodWarningMessage));
       } else {
-        emit(LoginFail(error: UnknownException(frebaseLoginStatus.message)));
+        emit(LoginFail(error: UnknownException(firebaseLoginStatus.message)));
       }
     } on SocketException {
       emit(
@@ -199,12 +203,11 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
           textColor: Colors.white,
           fontSize: 16.0);
       _navigateToRouteName(memberIdAndSubscriptionType.subscriptionType!);
-    } catch (e) {
+    } catch (e, s) {
       // fetch member subscrition type fail
       debugLog(e.toString());
 
-      _errorLogHelper.record(
-          'FetchMemberSubscriptionTypeToLogin', {}, e.toString());
+      _errorLogHelper.record(e, s);
 
       emit(LoginFail(
           error: UnknownException('Fetch member subscrition type fail')));
@@ -275,7 +278,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
             .contains(memberIdAndSubscriptionType.subscriptionType)) {
           await runPremiumAnimation();
         }
-      } catch (e) {
+      } catch (e, s) {
         // there is no member in israfel
         if (e.toString() == "Invalid Request: $memberStateTypeIsNotFound") {
           try {
@@ -296,8 +299,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
           await _auth.signOut();
         }
 
-        _errorLogHelper.record(
-            event.eventName(), event.eventParameters(), e.toString());
+        _errorLogHelper.record(e, s);
         debugLog(e.toString());
         emit(LoginFail(
             error: UnknownException('Fetch member subscrition type fail')));
@@ -313,10 +315,10 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
     try {
       _loginLoadingType = LoginLoadingType.google;
       emit(LoginLoading(loginType: LoginType.google));
-      FirebaseLoginStatus frebaseLoginStatus =
+      FirebaseLoginStatus firebaseLoginStatus =
           await loginRepos.signInWithGoogle();
       await _handleFirebaseThirdPartyLogin(
-        frebaseLoginStatus,
+        firebaseLoginStatus,
         emit,
       );
     } on SocketException {
@@ -331,9 +333,8 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
       emit(
         LoginFail(error: InvalidFormatException('Invalid Response format')),
       );
-    } catch (e) {
-      _errorLogHelper.record(
-          event.eventName(), event.eventParameters(), e.toString());
+    } catch (e, s) {
+      _errorLogHelper.record(e, s);
       emit(
         LoginFail(error: UnknownException(e.toString())),
       );
@@ -348,10 +349,10 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
     try {
       _loginLoadingType = LoginLoadingType.facebook;
       emit(LoginLoading(loginType: LoginType.facebook));
-      FirebaseLoginStatus frebaseLoginStatus =
+      FirebaseLoginStatus firebaseLoginStatus =
           await loginRepos.signInWithFacebook();
       await _handleFirebaseThirdPartyLogin(
-        frebaseLoginStatus,
+        firebaseLoginStatus,
         emit,
       );
     } on SocketException {
@@ -366,9 +367,8 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
       emit(
         LoginFail(error: InvalidFormatException('Invalid Response format')),
       );
-    } catch (e) {
-      _errorLogHelper.record(
-          event.eventName(), event.eventParameters(), e.toString());
+    } catch (e, s) {
+      _errorLogHelper.record(e, s);
       emit(
         LoginFail(error: UnknownException(e.toString())),
       );
@@ -383,10 +383,10 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
     try {
       _loginLoadingType = LoginLoadingType.apple;
       emit(LoginLoading(loginType: LoginType.apple));
-      FirebaseLoginStatus frebaseLoginStatus =
+      FirebaseLoginStatus firebaseLoginStatus =
           await loginRepos.signInWithApple();
       await _handleFirebaseThirdPartyLogin(
-        frebaseLoginStatus,
+        firebaseLoginStatus,
         emit,
       );
     } on SocketException {
@@ -401,9 +401,8 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
       emit(
         LoginFail(error: InvalidFormatException('Invalid Response format')),
       );
-    } catch (e) {
-      _errorLogHelper.record(
-          event.eventName(), event.eventParameters(), e.toString());
+    } catch (e, s) {
+      _errorLogHelper.record(e, s);
       emit(
         LoginFail(error: UnknownException(e.toString())),
       );
@@ -456,9 +455,8 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
       emit(
         LoginFail(error: InvalidFormatException('Invalid Response format')),
       );
-    } catch (e) {
-      _errorLogHelper.record(
-          event.eventName(), event.eventParameters(), e.toString());
+    } catch (e, s) {
+      _errorLogHelper.record(e, s);
       emit(
         LoginFail(error: UnknownException(e.toString())),
       );
@@ -488,9 +486,8 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
       emit(
         LoginFail(error: InvalidFormatException('Invalid Response format')),
       );
-    } catch (e) {
-      _errorLogHelper.record(
-          event.eventName(), event.eventParameters(), e.toString());
+    } catch (e, s) {
+      _errorLogHelper.record(e, s);
       emit(
         LoginFail(error: UnknownException(e.toString())),
       );
