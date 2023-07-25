@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
-import 'package:readr_app/controllers/topic/topic_page_controller.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/topic_image_item.dart';
+import '../topic_page_controller.dart';
 
 class PortraitWallTopicWidget extends GetView<TopicPageController> {
   @override
