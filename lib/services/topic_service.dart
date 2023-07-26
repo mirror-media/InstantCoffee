@@ -73,9 +73,11 @@ class TopicService implements TopicRepos {
     }
 
     topics.sort((a, b) {
-      if (a.isFeatured && b.isFeatured) {
+      final aIsFeatured = a.isFeatured ?? false;
+      final bIsFeatured = b.isFeatured ?? false;
+      if (aIsFeatured && bIsFeatured) {
         return a.sortOrder.compareTo(b.sortOrder);
-      } else if (a.isFeatured) {
+      } else if (aIsFeatured) {
         return -1;
       } else {
         return 1;
