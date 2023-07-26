@@ -11,21 +11,7 @@ import '../topic_page_controller.dart';
 class PortraitWallTopicWidget extends GetView<TopicPageController> {
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<TopicPageController>(
-      builder: (controller) {
-        if (controller.isError) {
-          return const Center(
-            child: Text('發生錯誤，請稍後再試'),
-          );
-        }
-
-        if (!controller.isLoading) {
-          return _buildList(context);
-        }
-
-        return const Center(child: CircularProgressIndicator.adaptive());
-      },
-    );
+    return _buildList(context);
   }
 
   Widget _buildList(BuildContext context) {
