@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:readr_app/blocs/editorChoice/cubit.dart';
 import 'package:readr_app/blocs/editorChoice/state.dart';
 import 'package:readr_app/blocs/election/election_cubit.dart';
@@ -11,6 +13,7 @@ import 'package:readr_app/helpers/remote_config_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section.dart';
+import 'package:readr_app/pages/home/home_controller.dart';
 import 'package:readr_app/pages/tabContent/shared/election/election_widget.dart';
 import 'package:readr_app/pages/tabContent/shared/premium_list_item.dart';
 import 'package:readr_app/pages/tabContent/shared/the_first_item.dart';
@@ -22,15 +25,18 @@ import 'package:readr_app/widgets/error_stateless_widget.dart';
 import 'package:readr_app/widgets/logger.dart';
 import 'package:readr_app/widgets/newsMarquee/news_marquee_persistent_header_delegate.dart';
 
+
 class PremiumTabContent extends StatefulWidget {
   final Section section;
   final ScrollController scrollController;
   final bool needCarousel;
+
   const PremiumTabContent({
+    Key? key,
     required this.section,
     required this.scrollController,
     this.needCarousel = false,
-  });
+  }) : super(key: key);
 
   @override
   _PremiumTabContentState createState() => _PremiumTabContentState();
@@ -38,7 +44,7 @@ class PremiumTabContent extends StatefulWidget {
 
 class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
   final RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
-
+  final HomeController controller=Get.find();
   _fetchFirstRecordList() {
     context.read<TabContentBloc>().add(FetchFirstRecordList(
         sectionKey: widget.section.key, sectionType: widget.section.type));
@@ -154,7 +160,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
                       _buildEditorChoiceList(),
                       if (widget.section.key ==
                           Environment().config.latestSectionKey)
-                        const TopicBlock(
+                        TopicBlock(
                           isPremium: true,
                         ),
                       _buildTagText(),

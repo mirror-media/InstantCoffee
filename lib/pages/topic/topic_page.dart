@@ -2,14 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:readr_app/core/values/string.dart';
-
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/pages/topic/topic_page_controller.dart';
-import 'package:readr_app/pages/topic/widget/group_topic_widget.dart';
 import 'package:readr_app/pages/topic/widget/list_topic_widget.dart';
 import 'package:readr_app/pages/topic/widget/portrait_wall_topic_widget.dart';
-import 'package:readr_app/pages/topic/widget/slideshow_webview_widget.dart';
-
 import '../../data/enum/topic_page_status.dart';
 import '../../data/enum/topic_type.dart';
 
@@ -28,7 +24,7 @@ class TopicPage extends GetView<TopicPageController> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Obx(() {
-          final title = controller.rxCurrentTopic.value?.title ??
+          final title = controller.rxCurrentTopic.value?.name ??
               StringDefault.valueNullDefault;
           return Text(
             title,
@@ -40,17 +36,19 @@ class TopicPage extends GetView<TopicPageController> {
           );
         }),
       ),
-      backgroundColor: controller.topic.bgColor,
+      backgroundColor: controller.rxCurrentTopic.value?.bgColor,
       body: SafeArea(
         child: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
-              if (controller.topic.type != TopicType.slideshow)
+              if (controller.rxCurrentTopic.value?.type != TopicType.slideshow)
                 SliverToBoxAdapter(
                   child: Container(
                     color: const Color(0xFFE2E5E7),
                     child: CachedNetworkImage(
-                      imageUrl: controller.topic.ogImageUrl,
+                      imageUrl:
+                          controller.rxCurrentTopic.value?.originImage!.imageCollection!.w800 ??
+                              '',
                       fit: BoxFit.contain,
                       width: Get.width,
                       height: Get.width / (16 / 9),
@@ -61,18 +59,15 @@ class TopicPage extends GetView<TopicPageController> {
                     ),
                   ),
                 ),
-              if (controller.topic.type == TopicType.slideshow)
-                Obx(() {
-                  final topic = controller.rxCurrentTopic.value;
-                  if (topic == null ||
-                      topic.id == null ||
-                      topic.type != TopicType.slideshow) {
-                    return const SizedBox.shrink();
-                  }
-                  return SliverToBoxAdapter(
-                    child: SlideshowWebviewWidget(topic.id!),
-                  );
-                })
+                /// Todo: 目前沒有slideshow 規格以及測試資料，因此無法進行重構 後續如果有再新增回來
+                // Obx(() {
+                //   final topic = controller.rxCurrentTopic.value;
+                //   return topic == null ||
+                //           topic.id == null ||
+                //           topic.type != TopicType.slideshow
+                //       ? const SizedBox.shrink()
+                //       : SlideshowWebViewWidget(topic.id!);
+                // })
             ];
           },
           body: Obx(() {
@@ -95,17 +90,16 @@ class TopicPage extends GetView<TopicPageController> {
   }
 
   Widget _buildBody() {
-      final topicType =controller.rxCurrentTopic.value?.type;
-      switch (topicType) {
-        case TopicType.list:
-        case TopicType.slideshow:
-          return ListTopicWidget(controller: controller,);
-        case TopicType.group:
-          return GroupTopicWidget();
-        case TopicType.portraitWall:
-          return PortraitWallTopicWidget();
-        default:
-          return const SizedBox.shrink();
-      }
+    final topicType = controller.rxCurrentTopic.value?.type;
+    switch (topicType) {
+      case TopicType.list:
+      case TopicType.slideshow:
+      case TopicType.group:
+        return ListTopicWidget(controller: controller);
+      case TopicType.portraitWall:
+        return PortraitWallTopicWidget();
+      default:
+        return const SizedBox.shrink();
+    }
   }
 }

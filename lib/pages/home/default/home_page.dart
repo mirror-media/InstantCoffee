@@ -5,8 +5,6 @@ import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/pages/home/default/home_widget.dart';
 import 'package:readr_app/pages/home/home_controller.dart';
 
-import '../../../data/providers/articles_api_provider.dart';
-
 class HomePage extends GetView<HomeController> with WidgetsBindingObserver{
   final GlobalKey settingKey;
 
@@ -27,15 +25,6 @@ class HomePage extends GetView<HomeController> with WidgetsBindingObserver{
       centerTitle: true,
       title: const Text(appTitle),
       actions: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.ac_unit),
-          tooltip: 'Test',
-          onPressed: () async {
-            ArticlesApiProvider articlesApiProvider = ArticlesApiProvider();
-            await articlesApiProvider.getRelatedPostsByTopic(
-                topicId: "5a30e6ae4be59110005c5e6b");
-          },
-        ),
         IconButton(
           icon: const Icon(Icons.search),
           tooltip: 'Search',

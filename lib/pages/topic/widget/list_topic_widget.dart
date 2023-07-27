@@ -8,7 +8,7 @@ import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 
-import '../../../models/post/post.dart';
+import '../../../models/post/post_model.dart';
 import '../topic_page_controller.dart';
 
 class ListTopicWidget extends StatelessWidget {
@@ -18,7 +18,7 @@ class ListTopicWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final List<Post> postList = controller.rxRelatedPostList;
+      final List<PostModel> postList = controller.rxRelatedPostList;
       return postList.isEmpty
           ? const Center(child: Text('無資料'))
           : ListView.separated(
@@ -49,7 +49,7 @@ class ListTopicWidget extends StatelessWidget {
     });
   }
 
-  Widget _buildListItem(BuildContext context, Post post) {
+  Widget _buildListItem(BuildContext context, PostModel post) {
     double width = Get.width;
     double imageSize = 25 * (width - 48) / 100;
 

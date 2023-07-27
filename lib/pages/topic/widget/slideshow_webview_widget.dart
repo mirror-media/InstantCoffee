@@ -10,15 +10,15 @@ import 'package:readr_app/helpers/route_generator.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class SlideshowWebviewWidget extends StatefulWidget {
+class SlideshowWebViewWidget extends StatefulWidget {
   final String topicId;
-  const SlideshowWebviewWidget(this.topicId, {Key? key}) : super(key: key);
+  const SlideshowWebViewWidget(this.topicId, {Key? key}) : super(key: key);
 
   @override
-  State<SlideshowWebviewWidget> createState() => _SlideshowWebviewWidgetState();
+  State<SlideshowWebViewWidget> createState() => _SlideshowWebViewWidgetState();
 }
 
-class _SlideshowWebviewWidgetState extends State<SlideshowWebviewWidget> {
+class _SlideshowWebViewWidgetState extends State<SlideshowWebViewWidget> {
   bool _isLoading = true;
   late String url;
   double _aspectRatio = 16 / 9;

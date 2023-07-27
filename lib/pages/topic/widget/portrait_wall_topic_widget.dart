@@ -78,7 +78,7 @@ class PortraitWallTopicWidget extends GetView<TopicPageController> {
             topicImageItem.description,
             style: TextStyle(
               fontSize: 20,
-              color: controller.topic.recordTitleColor,
+              color: controller.rxCurrentTopic.value?.recordTitleColor,
             ),
           ),
         ],
