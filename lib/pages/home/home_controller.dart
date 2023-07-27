@@ -3,17 +3,22 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:readr_app/data/providers/articles_api_provider.dart';
 
 import '../../blocs/onBoarding/bloc.dart';
 import '../../helpers/app_link_helper.dart';
 import '../../helpers/firebase_messaging_helper.dart';
+import '../../models/topic/topic_model.dart';
 import '../termsOfService/m_m_terms_of_service_page.dart';
 
 class HomeController extends GetxController with WidgetsBindingObserver {
+  ArticlesApiProvider articlesApiProvider = Get.find();
+
   late BuildContext? context;
   late OnBoardingBloc onBoardingBloc;
   late PageController pageController;
   final RxInt rxSelectedIndex = 0.obs;
+  final RxList<TopicModel> rxTopicList =RxList();
   final ScrollController premiumArticleBarScrollController = ScrollController();
 
   final LocalStorage _storage = LocalStorage('setting');
@@ -26,7 +31,7 @@ class HomeController extends GetxController with WidgetsBindingObserver {
     initState();
   }
 
-  void initState() {
+  Future<void> initState() async {
     if (context == null) return;
     WidgetsBinding.instance.addObserver(this);
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -37,6 +42,7 @@ class HomeController extends GetxController with WidgetsBindingObserver {
 
     onBoardingBloc = context!.read<OnBoardingBloc>();
     pageController = PageController(initialPage: rxSelectedIndex.value);
+    rxTopicList.value= await articlesApiProvider.getTopicTabList()??[];
     _showTermsOfService();
   }
 

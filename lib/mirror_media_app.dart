@@ -8,6 +8,7 @@ import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/iap_subscription_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
+import 'package:readr_app/pages/home/home_binding.dart';
 import 'package:readr_app/services/member_service.dart';
 
 class MirrorMediaApp extends StatefulWidget {
@@ -59,6 +60,7 @@ class _MirrorMediaAppState extends State<MirrorMediaApp> {
         theme: ThemeData(
           primaryColor: appColor,
         ),
+        initialBinding: HomeBinding(),
         initialRoute: RouteGenerator.root,
         onGenerateRoute: RouteGenerator.generateRoute,
       ),
