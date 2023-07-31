@@ -6,10 +6,12 @@ import 'package:readr_app/models/topic_item.dart';
 import 'package:readr_app/services/topic_service.dart';
 import 'package:readr_app/widgets/logger.dart';
 
-class TopicPageController extends GetxController with Logger {
-  final TopicRepos repository;
-  final Topic topic;
-  TopicPageController(this.repository, this.topic);
+import '../../data/enum/topic_type.dart';
+
+class TopicPageControllerBackup extends GetxController with Logger {
+  late TopicRepos repository;
+  late final Topic topic;
+  TopicPageControllerBackup();
 
   final topicItemList = <TopicItem>[].obs;
   final List<TopicImageItem> portraitWallItemList = [];
@@ -23,7 +25,14 @@ class TopicPageController extends GetxController with Logger {
   void onInit() {
     super.onInit();
     fetchTopicItemList();
+    final argument = Get.arguments as Map<String, dynamic>;
+
+    repository = TopicService();
+    topic = argument['topic'];
+    fetchTopicItemList();
+
   }
+
 
   void fetchTopicItemList() async {
     isLoading = true;

@@ -12,10 +12,8 @@ import '../../models/story_ad.dart';
 import '../../models/topic/topic_model.dart';
 import '../../models/topic_image_item.dart';
 import '../../models/topic_item.dart';
-import '../../services/topic_service.dart';
 
 class TopicPageController extends GetxController {
-  late TopicRepos repository;
   final ArticlesApiProvider articlesApiProvider = Get.find();
 
   final Rxn<TopicModel> rxCurrentTopic = Rxn();
@@ -40,7 +38,6 @@ class TopicPageController extends GetxController {
     if (argument.containsKey('topic')) {
       rxCurrentTopic.value = argument['topic'];
     }
-    repository = TopicService();
     fetchTopicItemList();
     _loadAds();
     scrollController.addListener(scrollEvent);

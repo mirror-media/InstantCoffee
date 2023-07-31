@@ -211,7 +211,7 @@ class _TabContentState extends State<TabContent> with Logger {
                       ),
                       if (widget.section.key ==
                           Environment().config.latestSectionKey) ...[
-                        const TopicBlock(),
+                        TopicBlock(),
                         const SizedBox(
                           height: 16.0,
                         ),

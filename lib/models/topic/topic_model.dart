@@ -4,10 +4,10 @@ import 'package:csslib/visitor.dart';
 
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:readr_app/models/topic/topic_tag.dart';
+import 'package:readr_app/models/topic/children_model/topic_tag.dart';
 
 import '../../data/enum/topic_type.dart';
-import 'origin_image.dart';
+import 'children_model/origin_image.dart';
 
 part 'topic_model.g.dart';
 

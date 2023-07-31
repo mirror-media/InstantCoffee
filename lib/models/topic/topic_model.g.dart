@@ -44,6 +44,7 @@ Map<String, dynamic> _$TopicModelToJson(TopicModel instance) =>
 const _$TopicTypeEnumMap = {
   TopicType.list: 'list',
   TopicType.group: 'group',
-  TopicType.portraitWall: 'portraitWall',
+  TopicType.portraitWall: 'portrait wall',
   TopicType.slideshow: 'slideshow',
+  TopicType.timeline: 'timeline',
 };

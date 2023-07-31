@@ -6,8 +6,10 @@ enum TopicType {
   list,
   @JsonValue('group')
   group,
-  @JsonValue('portraitWall')
+  @JsonValue('portrait wall')
   portraitWall,
   @JsonValue('slideshow')
   slideshow,
+  @JsonValue('timeline')
+  timeline,
 }

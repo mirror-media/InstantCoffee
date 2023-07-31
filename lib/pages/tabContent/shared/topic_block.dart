@@ -5,11 +5,11 @@ import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/pages/home/home_controller.dart';
-import 'package:readr_app/pages/topic/topic_page_binding.dart';
-import 'package:readr_app/pages/topic/top_list_page/topic_list_page.dart';
-import 'package:readr_app/pages/topic/topic_page.dart';
-
+import '../../../helpers/route_generator.dart';
 import '../../../models/topic/topic_model.dart';
+import '../../top_list_page/topic_list_binding.dart';
+import '../../top_list_page/topic_list_page.dart';
+
 
 class TopicBlock extends StatelessWidget {
   final bool isPremium;
@@ -67,7 +67,8 @@ class TopicBlock extends StatelessWidget {
         itemBuilder: (context, index) {
           if (index == topicList.length) {
             return GestureDetector(
-              onTap: () => Get.to(() => TopicListPage()),
+              onTap: () =>
+                  Get.to(const TopicListPage(), binding: TopicListBinding()),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(21),
@@ -107,9 +108,8 @@ class TopicBlock extends StatelessWidget {
           adHelper.checkToShowInterstitialAd();
         }
 
-        ///  Todo 因目前專案沒有routers管理 直接在這邊寫入binding 後續需要統一routers管理
-        Get.to(() => const TopicPage(),
-            binding: TopicPageBinding(), arguments: {'topic': topic});
+
+        RouteGenerator.routerToTopicPage(topic: topic);
       },
       child: Container(
         height: 42,
