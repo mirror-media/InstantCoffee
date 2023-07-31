@@ -12,6 +12,8 @@ import 'package:readr_app/pages/home/home_binding.dart';
 import 'package:readr_app/services/member_service.dart';
 
 class MirrorMediaApp extends StatefulWidget {
+  const MirrorMediaApp({Key? key}) : super(key: key);
+
   @override
   State<MirrorMediaApp> createState() => _MirrorMediaAppState();
 }

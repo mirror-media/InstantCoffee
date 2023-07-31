@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../helpers/environment.dart';
-import 'hero_image.dart';
+import 'children_model/hero_image.dart';
 
 part 'post_model.g.dart';
 

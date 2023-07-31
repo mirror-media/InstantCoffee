@@ -1,7 +1,9 @@
+
 import 'package:json_annotation/json_annotation.dart';
-import 'package:readr_app/models/post/image_collection.dart';
+import '../../post/children_model/image_collection.dart';
 
 part 'hero_image.g.dart';
+
 @JsonSerializable()
 class HeroImage {
   String? id;

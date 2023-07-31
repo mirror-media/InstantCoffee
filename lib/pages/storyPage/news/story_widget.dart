@@ -26,6 +26,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 class StoryWidget extends StatelessWidget {
   final Story story;
+
   const StoryWidget({
     required this.story,
   });

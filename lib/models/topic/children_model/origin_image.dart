@@ -1,6 +1,8 @@
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:readr_app/models/post/image_collection.dart';
+
+import 'image_collection.dart';
+
 
 part 'origin_image.g.dart';
 @JsonSerializable()

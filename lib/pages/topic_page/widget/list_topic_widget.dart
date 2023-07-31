@@ -27,7 +27,6 @@ class ListTopicWidget extends StatelessWidget {
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 if (index == postList.length) {
-                  //controller.loadMoreArticleEvent();
                   Obx(() {
                     final isEnd = controller.rxIsEnd.value;
                     return isEnd
@@ -102,7 +101,7 @@ class ListTopicWidget extends StatelessWidget {
           RouteGenerator.navigateToExternalStory(post.slug!);
         } else {
           RouteGenerator.navigateToStory(
-            post.slug!,
+            post.slug??'',
             isMemberCheck: post.isMember ?? false,
             url: post.getUrl,
           );
