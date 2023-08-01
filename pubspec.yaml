@@ -27,7 +27,9 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-
+  sprintf: ^7.0.0
+  json_annotation: ^4.8.1
+  graphql_flutter: ^5.1.2
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.4
@@ -98,7 +100,7 @@ dependencies:
   app_tracking_transparency: ^2.0.2+1
   # version class
   version: ^3.0.2
-  
+  firebase_core_platform_interface: 4.5.1
   # firebase
   firebase_core: ^1.15.0
   # firebase analytics API
@@ -218,8 +220,6 @@ flutter:
     - assets/image/magazine/book_icon.svg
     # member subscription
     - assets/image/badge.png
-    - assets/image/subscription_icon.png
-    - assets/image/subscribe_banner_mobile.jpg
     # election
     - assets/image/election/
 
