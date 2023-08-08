@@ -106,6 +106,16 @@ class QueryDB {
               publishedDate
               style
               isMember
+              heroImage{
+                resized{
+                    original
+                    w480
+                    w800
+                    w1200
+                    w1600
+                    w2400
+                }
+            }
           }
           heroCaption
           extend_byline
@@ -135,6 +145,8 @@ class QueryDB {
           }
           brief
           apiData
+          content
+          trimmedContent
           categories{
               id
               name

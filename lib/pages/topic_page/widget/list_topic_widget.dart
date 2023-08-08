@@ -72,7 +72,7 @@ class ListTopicWidget extends StatelessWidget {
                 CachedNetworkImage(
                   height: imageSize,
                   width: imageSize,
-                  imageUrl: post.heroImage?.imageCollection?.w800 ?? '',
+                  imageUrl: post.heroImage?.imageCollection?.original ?? '',
                   placeholder: (context, url) => Container(
                     height: imageSize,
                     width: imageSize,

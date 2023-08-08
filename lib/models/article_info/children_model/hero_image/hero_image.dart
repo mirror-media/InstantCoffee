@@ -1,6 +1,6 @@
 
 import 'package:json_annotation/json_annotation.dart';
-import '../../post/children_model/image_collection.dart';
+import '../../../post/children_model/image_collection.dart';
 
 part 'hero_image.g.dart';
 

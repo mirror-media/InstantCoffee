@@ -41,6 +41,9 @@ ArticleInfo _$ArticleInfoFromJson(Map<String, dynamic> json) => ArticleInfo(
       brief: json['brief'] == null
           ? null
           : Brief.fromJson(json['brief'] as Map<String, dynamic>),
+      paragraphList: (json['apiData'] as List<dynamic>?)
+          ?.map((e) => Paragraph.fromJson(e as Map<String, dynamic>))
+          .toList(),
       categories: (json['categories'] as List<dynamic>?)
           ?.map((e) => Category.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -49,7 +52,9 @@ ArticleInfo _$ArticleInfoFromJson(Map<String, dynamic> json) => ArticleInfo(
           .toList(),
       isMember: json['isMember'] as bool?,
       isAdvertised: json['isAdvertised'] as bool?,
-    );
+    )..storyAd = json['storyAd'] == null
+        ? null
+        : StoryAd.fromJson(json['storyAd'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$ArticleInfoToJson(ArticleInfo instance) =>
     <String, dynamic>{
@@ -69,8 +74,10 @@ Map<String, dynamic> _$ArticleInfoToJson(ArticleInfo instance) =>
       'designers': instance.designers,
       'engineers': instance.engineers,
       'brief': instance.brief,
+      'apiData': instance.paragraphList,
       'categories': instance.categories,
       'sections': instance.sections,
       'isMember': instance.isMember,
       'isAdvertised': instance.isAdvertised,
+      'storyAd': instance.storyAd,
     };

@@ -7,6 +7,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:readr_app/models/topic/children_model/topic_tag.dart';
 
 import '../../data/enum/topic_type.dart';
+import '../../helpers/color_serializer.dart';
 import 'children_model/origin_image.dart';
 
 part 'topic_model.g.dart';
@@ -20,20 +21,20 @@ class TopicModel {
   final List<TopicTag>? tags;
   final int? sortOrder;
   final String? style;
-  Color bgColor;
-  Color subTitleColor;
-  Color recordTitleColor;
-  Color dividerColor;
+  @ColorSerializer()
+  Color? bgColor;
+  @ColorSerializer()
+  Color? subTitleColor;
+  @ColorSerializer()
+  Color? recordTitleColor;
+  @ColorSerializer()
+  Color? dividerColor;
 
   @JsonKey(name: 'og_image')
   OriginImage? originImage;
 
   TopicModel(
       {this.id,
-      this.subTitleColor = Colors.white,
-      this.recordTitleColor = Colors.black,
-      this.dividerColor = Colors.grey,
-      this.bgColor = Colors.white,
       this.type,
       this.name,
       this.isFeatured,

@@ -8,10 +8,6 @@ part of 'topic_model.dart';
 
 TopicModel _$TopicModelFromJson(Map<String, dynamic> json) => TopicModel(
       id: json['id'] as String?,
-      subTitleColor: json['subTitleColor'] ?? Colors.white,
-      recordTitleColor: json['recordTitleColor'] ?? Colors.black,
-      dividerColor: json['dividerColor'] ?? Colors.grey,
-      bgColor: json['bgColor'] ?? Colors.white,
       type: $enumDecodeNullable(_$TopicTypeEnumMap, json['type']),
       name: json['name'] as String?,
       isFeatured: json['isFeatured'] as bool?,
@@ -23,7 +19,15 @@ TopicModel _$TopicModelFromJson(Map<String, dynamic> json) => TopicModel(
       originImage: json['og_image'] == null
           ? null
           : OriginImage.fromJson(json['og_image'] as Map<String, dynamic>),
-    );
+    )
+      ..bgColor = _$JsonConverterFromJson<int, Color>(
+          json['bgColor'], const ColorSerializer().fromJson)
+      ..subTitleColor = _$JsonConverterFromJson<int, Color>(
+          json['subTitleColor'], const ColorSerializer().fromJson)
+      ..recordTitleColor = _$JsonConverterFromJson<int, Color>(
+          json['recordTitleColor'], const ColorSerializer().fromJson)
+      ..dividerColor = _$JsonConverterFromJson<int, Color>(
+          json['dividerColor'], const ColorSerializer().fromJson);
 
 Map<String, dynamic> _$TopicModelToJson(TopicModel instance) =>
     <String, dynamic>{
@@ -34,10 +38,14 @@ Map<String, dynamic> _$TopicModelToJson(TopicModel instance) =>
       'tags': instance.tags,
       'sortOrder': instance.sortOrder,
       'style': instance.style,
-      'bgColor': instance.bgColor,
-      'subTitleColor': instance.subTitleColor,
-      'recordTitleColor': instance.recordTitleColor,
-      'dividerColor': instance.dividerColor,
+      'bgColor': _$JsonConverterToJson<int, Color>(
+          instance.bgColor, const ColorSerializer().toJson),
+      'subTitleColor': _$JsonConverterToJson<int, Color>(
+          instance.subTitleColor, const ColorSerializer().toJson),
+      'recordTitleColor': _$JsonConverterToJson<int, Color>(
+          instance.recordTitleColor, const ColorSerializer().toJson),
+      'dividerColor': _$JsonConverterToJson<int, Color>(
+          instance.dividerColor, const ColorSerializer().toJson),
       'og_image': instance.originImage,
     };
 
@@ -48,3 +56,15 @@ const _$TopicTypeEnumMap = {
   TopicType.slideshow: 'slideshow',
   TopicType.timeline: 'timeline',
 };
+
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) =>
+    json == null ? null : fromJson(json as Json);
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) =>
+    value == null ? null : toJson(value);

@@ -127,5 +127,6 @@ class TopicListController extends GetxController with Logger {
     String storyAdString = await rootBundle.loadString(storyAdJsonFileLocation);
     final storyAdMaps = json.decode(storyAdString);
     storyAd = StoryAd.fromJson(storyAdMaps['other']);
+
   }
 }
