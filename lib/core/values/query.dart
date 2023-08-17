@@ -162,7 +162,62 @@ class QueryDB {
           isAdvertised
           
         }
-}
+  }
+  ''';
+  static String getArticleListBySection='''
+    query {
+      posts(
+      take: 12, 
+      skip: %d,
+      orderBy:{publishedDate:desc},
+      where: {
+          isFeatured: {equals:false} 
+          sections:{
+              some:{
+                  slug:{
+                      equals:"%s"
+                  },
+              }
+          }
+      
+    }) 
+    {
+        slug
+        title
+        publishedDate
+        style
+        isMember
+        heroImage{
+            id
+            resized{
+                original
+                w480
+                w800
+                w1200
+                w1600
+                w2400
+            }
+        }    
+    }
+  }
+  ''';
+  static String getSectionList ='''
+  query {
+    sections(
+        take:15
+        orderBy:{order:asc},
+        where:{
+            isFeatured: {equals:true}, 
+          }
+      )
+      {
+            order
+            name
+            slug
+            description
+      }
+    
+  }
   ''';
 
 }

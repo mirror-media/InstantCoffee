@@ -209,7 +209,9 @@ class StoryWidget extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           Text(
-            categories.isNotEmpty ? categories[0].title : '娛樂頭條',
+            (categories.isNotEmpty && categories[0].title != null)
+                ? categories[0].title!
+                : '娛樂頭條',
             style: const TextStyle(fontSize: 20),
           ),
         ],

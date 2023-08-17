@@ -11,6 +11,7 @@ import 'package:readr_app/blocs/personalPage/category/states.dart';
 import 'package:readr_app/blocs/personalPage/article/bloc.dart';
 import 'package:readr_app/blocs/personalPage/article/events.dart';
 import 'package:readr_app/blocs/personalPage/article/states.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/pages/tabContent/personal/premium/premium_member_subscription_type_block.dart';
 import 'package:readr_app/pages/tabContent/personal/premium/premium_unsubscription_category_list.dart';
 import 'package:readr_app/pages/tabContent/shared/premium_list_item.dart';
@@ -233,7 +234,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: _buildCategoryChip(
-                          title: categoryList[index].title,
+                          title: categoryList[index].title ?? StringDefault.valueNullDefault,
                           onTap: () {
                             categoryList[index].isSubscribed =
                                 !categoryList[index].isSubscribed;

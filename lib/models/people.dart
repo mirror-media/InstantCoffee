@@ -9,7 +9,7 @@ class People {
 
   factory People.fromJson(Map<String, dynamic> json) {
     return People(
-      id: json['_id'],
+      id: json['_id']??json['id'],
       name: json['name'],
     );
   }

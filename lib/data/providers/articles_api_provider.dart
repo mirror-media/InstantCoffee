@@ -2,11 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:readr_app/core/extensions/string_extension.dart';
-import 'package:readr_app/models/article_info/article_info.dart';
+import 'package:readr_app/helpers/api_base_helper.dart';
 import 'package:readr_app/models/post/post_model.dart';
+import 'package:readr_app/models/story_res.dart';
 
 import '../../core/values/query.dart';
 import '../../helpers/environment.dart';
+import '../../models/record.dart';
+import '../../models/section.dart';
 import '../../models/topic/topic_model.dart';
 
 class ArticlesApiProvider extends GetConnect {
@@ -18,6 +21,7 @@ class ArticlesApiProvider extends GetConnect {
 
   static const articleTakeCount = 12;
   static const homePageTopicCount = 5;
+  final ApiBaseHelper apiBaseHelper = ApiBaseHelper();
   ValueNotifier<GraphQLClient>? client;
 
   @override
@@ -97,13 +101,75 @@ class ArticlesApiProvider extends GetConnect {
     return urlList;
   }
 
-  Future<ArticleInfo?> getArticleInfoBySlug({required String slug })async{
-    String queryString =QueryDB.getArticleInfoBySlug.format([slug]);
+  Future<StoryRes?> getArticleInfoBySlug({required String slug}) async {
+    String queryString = QueryDB.getArticleInfoBySlug.format([slug]);
     final result =
-      await client?.value.query(QueryOptions(document: gql(queryString)));
-    if(result == null ||  result.data ==null) return null;
-    if(!result.data!.containsKey('post')) return null;
-    return ArticleInfo.fromJson(result.data!['post']);
+        await client?.value.query(QueryOptions(document: gql(queryString)));
+    if (result == null || result.data == null) return null;
+    if (!result.data!.containsKey('post')) return null;
+    return StoryRes.fromJsonK6(result.data!['post']);
   }
 
+  Future<List<Record>> getHomePageChoiceArticle() async {
+    final result = await apiBaseHelper
+        .getByUrl('${Environment().config.latestApi}post_external01.json');
+    return (result['choices'] as List<dynamic>)
+        .map((e) => Record.fromJson(e))
+        .toList();
+  }
+
+  Future<List<Record>> getHomePageLatestArticleList({int page = 1}) async {
+    final result = await apiBaseHelper
+        .getByUrl('${Environment().config.latestApi}post_external0$page.json');
+    return (result['latest'] as List<dynamic>)
+        .map((e) => Record.fromJson(e))
+        .toList();
+  }
+
+  Future<List<Record>> getPopularArticleList() async {
+    final result =
+        await apiBaseHelper.getByUrl(Environment().config.popularListApi);
+
+    final resultList = result as List<dynamic>;
+    List<Record> articleList = [];
+    for (final result in resultList) {
+      if (result != null) {
+        articleList.add(Record.fromJsonK6(result));
+      }
+    }
+    return articleList;
+  }
+
+  Future<List<Record>> getArticleListBySection(
+      {required String section, int page = 0}) async {
+    String queryString =
+        QueryDB.getArticleListBySection.format([page * 12, section]);
+    final result =
+        await client?.value.query(QueryOptions(document: gql(queryString)));
+    List<Record> articleList = [];
+    if (result == null ||
+        result.data == null ||
+        !result.data!.containsKey('posts')) return articleList;
+    final postList = result.data!['posts'];
+    for (final post in postList) {
+      if (post != null) {
+        articleList.add(Record.fromJsonK6(post));
+      }
+    }
+    return articleList;
+  }
+
+  Future<List<Section>> getSectionList() async {
+    String queryString = QueryDB.getSectionList;
+    final result =
+        await client?.value.query(QueryOptions(document: gql(queryString)));
+    List<Section> sectionList = [];
+    if (result == null ||
+        result.data == null ||
+        !result.data!.containsKey('sections')) return sectionList;
+    final resultList = result.data!['sections'] as List<dynamic>;
+    sectionList =
+        resultList.map((element) => Section.fromJsonK6(element)).toList();
+    return sectionList;
+  }
 }

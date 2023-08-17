@@ -1,7 +1,7 @@
 class Category {
-  String id;
-  String name;
-  String title;
+  String? id;
+  String? name;
+  String? title;
   bool isCampaign;
   bool isSubscribed;
   bool isMemberOnly;
@@ -17,9 +17,9 @@ class Category {
 
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
-      id: json['_id'],
-      name: json['name'],
-      title: json['title'],
+      id: json['id'],
+      name: json['slug'],
+      title: json['name'],
       isCampaign: json['isCampaign'] ?? false,
       isSubscribed: json['isSubscribed'] ?? true,
       isMemberOnly: json['isMemberOnly'] ?? false,
@@ -60,7 +60,9 @@ class Category {
   }
 
   static List<Category> categoryListFromJson(List<dynamic> jsonList) {
-    return jsonList.map<Category>((json) => Category.fromJson(json)).toList();
+
+    final a =jsonList.map<Category>((json) => Category.fromJson(json)).toList();
+    return a;
   }
 
   static bool isMemberOnlyInCategoryList(List<Category> categoryList) {
@@ -70,8 +72,8 @@ class Category {
   static List<String> getSubscriptionIdStringList(List<Category> categoryList) {
     List<String> idStringList = [];
     for (Category category in categoryList) {
-      if (category.isSubscribed) {
-        idStringList.add(category.id);
+      if (category.isSubscribed && category.id!=null) {
+        idStringList.add(category.id!);
       }
     }
     return idStringList;

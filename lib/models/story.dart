@@ -67,6 +67,97 @@ class Story {
     this.storyAd,
   });
 
+  factory Story.fromJsonK6(Map<String, dynamic> json) {
+    final String origTitle = json['title'] ?? '';
+    final String title = origTitle.replaceAll('　', "\n");
+
+    List<Paragraph> briefList = [];
+    if (json["brief"] != null && json["brief"]['blocks'] != null) {
+      final list = json["brief"]["blocks"];
+      briefList = Paragraph.paragraphListFromJson(list);
+    }
+
+    List<Paragraph> apiDataList = [];
+    if (json["apiData"] != null ) {
+      apiDataList = Paragraph.paragraphListFromJson(json["apiData"]);
+    }
+
+    String photoUrl = Environment().config.mirrorMediaNotImageUrl;
+    String? videoUrl;
+    List<String> imageUrlList = [];
+
+    if (json.containsKey('heroImage') &&
+        json['heroImage'] != null ) {
+      photoUrl = json['heroImage']['resized']['original'];
+      imageUrlList.add(photoUrl);
+    }
+    if (json.containsKey('heroVideo')) {
+      if (json['heroVideo'] != null) {
+        videoUrl = json['heroVideo']['urlOriginal'];
+      }
+    }
+
+    for (var paragraph in apiDataList) {
+      if (paragraph.contents.isNotEmpty && paragraph.contents[0].data != '') {
+        if (paragraph.type == 'image') {
+          imageUrlList.add(paragraph.contents[0].data!);
+        } else if (paragraph.type == 'slideshow') {
+          var contentList = paragraph.contents;
+          for (var content in contentList) {
+            imageUrlList.add(content.data!);
+          }
+        }
+      }
+    }
+
+    return Story(
+      title: title,
+      subtitle: json['subtitle'] ?? '',
+      slug: json['slug'] ?? '',
+      publishedDate: json['publishedDate'] ?? '',
+      updatedAt: json['updatedAt'] ?? '',
+      createTime: json['createTime'] ?? '',
+      heroImage: photoUrl,
+      heroVideo: videoUrl,
+      heroCaption: json["heroCaption"] ?? '',
+      extendByline: json["extend_byline"],
+      relatedStory: json["relateds"] == null
+          ? []
+          : Record.recordListFromJson(json["relateds"]),
+      brief: briefList,
+      apiDatas: apiDataList,
+      writers: json["writers"] == null
+          ? []
+          : People.peopleListFromJson(json["writers"]),
+      photographers: json["photographers"] == null
+          ? []
+          : People.peopleListFromJson(json["photographers"]),
+      cameraMen: json["camera_man"] == null
+          ? []
+          : People.peopleListFromJson(json["camera_man"]),
+      designers: json["designers"] == null
+          ? []
+          : People.peopleListFromJson(json["designers"]),
+      engineers: json["engineers"] == null
+          ? []
+          : People.peopleListFromJson(json["engineers"]),
+      categories: json["categories"] == null
+          ? []
+          : Category.categoryListFromJson(json["categories"]),
+      sections: json["sections"] == null
+          ? []
+          : Section.sectionListFromJson(json["sections"]),
+      tags: json["tags"] == null ? [] : Tag.tagListFromJson(json["tags"]),
+      state: json["state"],
+      isAdult: json['isAdult'] ?? false,
+      isTruncated: json['isTruncated'] ?? false,
+      isAdvertised: json['isAdvertised'] ?? false,
+      imageUrlList: imageUrlList,
+    );
+  }
+
+
+
   factory Story.fromJson(Map<String, dynamic> json) {
     final String origTitle = json['title'] ?? '';
     final String title = origTitle.replaceAll('　', "\n");

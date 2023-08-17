@@ -13,7 +13,7 @@ class VideoPlayerWidgetController extends GetxController{
 
   Future<void> configVideoPlayer() async {
     if(videoUrl==null)return ;
-    videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(videoUrl!));
+    videoPlayerController = VideoPlayerController.network(videoUrl!);
     await videoPlayerController.initialize();
     chewieController = ChewieController(
       videoPlayerController: videoPlayerController,

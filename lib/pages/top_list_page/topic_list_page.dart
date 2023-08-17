@@ -56,17 +56,20 @@ class TopicListPage extends GetView<TopicListController> {
                           return _buildItem(context, topicList[index]);
                         },
                         separatorBuilder: (context, index) {
-                          if (index == 0) {
-                            return _buildAdItem(controller.storyAd.aT1UnitId);
-                          } else if (index == 5) {
-                            return _buildAdItem(controller.storyAd.aT2UnitId);
-                          } else if (index == 10) {
-                            return _buildAdItem(controller.storyAd.aT3UnitId);
-                          }
-                          return const Divider(
-                            thickness: 1,
-                            color: Colors.grey,
-                          );
+                          return Obx(() {
+                            final storyAd = controller.rxStoryAd.value;
+                            if (index == 0 && storyAd != null) {
+                              return _buildAdItem(storyAd.aT1UnitId);
+                            } else if (index == 5 && storyAd != null) {
+                              return _buildAdItem(storyAd.aT2UnitId);
+                            } else if (index == 10 && storyAd != null) {
+                              return _buildAdItem(storyAd.aT3UnitId);
+                            }
+                            return const Divider(
+                              thickness: 1,
+                              color: Colors.grey,
+                            );
+                          });
                         },
                         itemCount: topicList.length,
                       );
@@ -76,11 +79,16 @@ class TopicListPage extends GetView<TopicListController> {
           BlocBuilder<MemberBloc, MemberState>(
             builder: (context, state) {
               if (state.status == MemberStatus.loaded && !state.isPremium) {
-                return MMAdBanner(
-                  adUnitId: controller.storyAd.stUnitId,
-                  adSize: AdSize.banner,
-                  isKeepAlive: true,
-                );
+                return Obx(() {
+                  final storyAd = controller.rxStoryAd.value;
+                  return storyAd != null
+                      ? MMAdBanner(
+                          adUnitId: storyAd.stUnitId,
+                          adSize: AdSize.banner,
+                          isKeepAlive: true,
+                        )
+                      : const SizedBox.shrink();
+                });
               }
 
               return Container();
@@ -90,6 +98,7 @@ class TopicListPage extends GetView<TopicListController> {
       ),
     );
   }
+
   Widget _buildItem(BuildContext context, TopicModel topic) {
     double width = Get.width;
     double imageSize = 25 * (width - 32) / 100;

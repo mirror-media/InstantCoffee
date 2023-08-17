@@ -26,8 +26,8 @@ class ArticleInfoPageController extends GetxController {
     final argument = Get.arguments as Map<String, dynamic>;
     if (argument.containsKey('slug')) {
       slug = argument['slug'];
-      rxnArticleInfo.value =
-          await articlesApiProvider.getArticleInfoBySlug(slug: slug);
+      // rxnArticleInfo.value =
+      //     await articlesApiProvider.getArticleInfoBySlug(slug: slug);
     }
 
     if (argument.containsKey('isMemberCheck')) {

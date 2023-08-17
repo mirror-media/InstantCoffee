@@ -11,37 +11,33 @@ import 'package:readr_app/initial_app.dart';
 import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/models/tag.dart';
-import 'package:readr_app/pages/article_info_page/article_info_page_controller.dart';
 import 'package:readr_app/pages/emailLogin/email_login_page.dart';
 import 'package:readr_app/pages/emailRegistered/email_registered_page.dart';
 import 'package:readr_app/pages/emailVerification/email_verification_page.dart';
 import 'package:readr_app/pages/login/login_page.dart';
-import 'package:readr_app/pages/magazine_browser.dart';
 import 'package:readr_app/pages/magazine/magazine_page.dart';
+import 'package:readr_app/pages/magazine_browser.dart';
 import 'package:readr_app/pages/memberCenter/deleteMember/delete_member_page.dart';
+import 'package:readr_app/pages/memberCenter/editMemberContactInfo/edit_member_contact_info_page.dart';
+import 'package:readr_app/pages/memberCenter/editMemberProfile/edit_member_profile_page.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/newebpay_change_plan_page.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscription_select_page.dart';
-import 'package:readr_app/pages/settingPage/notification_settings_page.dart';
 import 'package:readr_app/pages/passwordReset/password_reset_page.dart';
 import 'package:readr_app/pages/passwordResetEmail/password_reset_email_page.dart';
 import 'package:readr_app/pages/passwordResetPrompt/password_reset_prompt_page.dart';
 import 'package:readr_app/pages/passwordUpdate/password_update_page.dart';
 import 'package:readr_app/pages/search/search_page.dart';
+import 'package:readr_app/pages/settingPage/notification_settings_page.dart';
 import 'package:readr_app/pages/settingPage/premium_setting_page.dart';
-import 'package:readr_app/pages/article_info_page/article_info_page.dart';
 import 'package:readr_app/pages/storyPage/external/external_story_page.dart';
 import 'package:readr_app/pages/storyPage/listening/listening_story_page.dart';
 import 'package:readr_app/pages/storyPage/news/story_page.dart';
-
-import 'package:readr_app/pages/memberCenter/editMemberProfile/edit_member_profile_page.dart';
-import 'package:readr_app/pages/memberCenter/editMemberContactInfo/edit_member_contact_info_page.dart';
 import 'package:readr_app/pages/tag/tag_page.dart';
 import 'package:readr_app/pages/topic_page/topic_page.dart';
 import 'package:readr_app/widgets/image_viewer_widget.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../models/topic/topic_model.dart';
-import '../pages/article_info_page/article_info_page_binding.dart';
 import '../pages/topic_page/topic_page_binding.dart';
 
 class RouteGenerator {
@@ -424,12 +420,8 @@ class RouteGenerator {
     if (url != null) {
       launchUrlString(url);
     } else {
-      Get.delete<ArticleInfoPagePageBinding>();
-      Get.delete<ArticleInfoPageController>();
-      Get.offAll(
-        () => const ArticleInfoPage(),
-        predicate: (router) => router.settings.name != '/ArticleInfoPage',
-        binding: ArticleInfoPagePageBinding(),
+      navigatorKey.currentState!.pushNamed(
+        story,
         arguments: {
           'slug': slug,
           'isMemberCheck': isMemberCheck,

@@ -21,6 +21,62 @@ class Record extends Equatable {
     this.url,
   });
 
+  factory Record.fromJsonK6(Map<String, dynamic> json) {
+    // check the search json format
+    if (json.containsKey('_source')) {
+      json = json['_source'];
+    }
+
+    String origTitle;
+    if (json.containsKey('snippet')) {
+      origTitle = json['snippet']['title'];
+    } else {
+      origTitle = json['title'];
+    }
+
+    String origSlug = json['slug'];
+
+    String origPublishedDate;
+    if (json.containsKey('publishedDate')) {
+      origPublishedDate = json['publishedDate'] ?? '';
+    } else {
+      origPublishedDate = json['publishTime'] ?? '';
+    }
+
+    String photoUrl = Environment().config.mirrorMediaNotImageUrl;
+    if (json.containsKey('heroImage') && json['heroImage'] != null) {
+      photoUrl = json['heroImage']['resized']['original'];
+    }
+    if (photoUrl == '') {
+      photoUrl = Environment().config.mirrorMediaNotImageUrl;
+    }
+
+    List<Category> categoryBuilder = [];
+
+    categoryBuilder = json["categories"] == null || json["categories"] == ""
+        ? []
+        : Category.categoryListFromJson(json["categories"]);
+
+    String? url;
+    if (json.containsKey('style')) {
+      if (json['style'] == 'projects') {
+        url = '${Environment().config.mirrorMediaDomain}/projects/$origSlug';
+      } else if (json['style'] == 'campaign') {
+        url = '${Environment().config.mirrorMediaDomain}/campaigns/$origSlug';
+      }
+    }
+
+    return Record(
+      title: origTitle,
+      slug: origSlug,
+      publishedDate: origPublishedDate,
+      photoUrl: photoUrl,
+      isExternal: json["partner"] != null && json["partner"] != "",
+      isMemberCheck: Category.isMemberOnlyInCategoryList(categoryBuilder),
+      url: url,
+    );
+  }
+
   factory Record.fromJson(Map<String, dynamic> json) {
     // check the search json format
     if (json.containsKey('_source')) {
@@ -36,7 +92,11 @@ class Record extends Equatable {
 
     String origSlug;
     if (json.containsKey('id')) {
-      origSlug = json['id']['videoId'];
+      if (json['id']['videoId'] != null) {
+        origSlug = json['id']['videoId'];
+      } else {
+        origSlug = json['slug'];
+      }
     } else {
       origSlug = json['slug'];
     }
@@ -60,14 +120,19 @@ class Record extends Equatable {
     } else if (json['photoUrl'] != null) {
       photoUrl = json['photoUrl'];
     }
+    else if(json['heroImage']!=null)
+      {
+        photoUrl = json['heroImage']['resized']['original'];
+      }
     if (photoUrl == '') {
       photoUrl = Environment().config.mirrorMediaNotImageUrl;
     }
 
-    List<Category> categoryBuilder =
-        json["categories"] == null || json["categories"] == ""
-            ? []
-            : Category.categoryListFromJson(json["categories"]);
+    List<Category> categoryBuilder = [];
+
+    categoryBuilder = json["categories"] == null || json["categories"] == ""
+        ? []
+        : Category.categoryListFromJson(json["categories"]);
 
     String? url;
     if (json.containsKey('style')) {
@@ -97,7 +162,10 @@ class Record extends Equatable {
       };
 
   static List<Record> recordListFromJson(List<dynamic> jsonList) {
-    return jsonList.map<Record>((json) => Record.fromJson(json)).toList();
+
+    final a =jsonList.map<Record>((json) => Record.fromJsonK6(json)).toList();
+
+    return a;
   }
 
   static List<Record> recordListFromSearchJson(List<dynamic> jsonList) {

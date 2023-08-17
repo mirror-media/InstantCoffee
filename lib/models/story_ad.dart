@@ -1,7 +1,7 @@
 
 import 'package:json_annotation/json_annotation.dart';
 
-part 'story_ad.g.dart';
+
 
 @JsonSerializable()
 class StoryAd {

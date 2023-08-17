@@ -29,7 +29,7 @@ class TopicListController extends GetxController with Logger {
   final topicList = <Topic>[].obs;
   final isLoadingMore = false.obs;
   final isNoMore = false.obs;
-  late final StoryAd storyAd;
+  final Rxn<StoryAd> rxStoryAd =Rxn();
 
   @override
   void onInit() {
@@ -126,7 +126,7 @@ class TopicListController extends GetxController with Logger {
         : Environment().config.androidStoryAdJsonLocation;
     String storyAdString = await rootBundle.loadString(storyAdJsonFileLocation);
     final storyAdMaps = json.decode(storyAdString);
-    storyAd = StoryAd.fromJson(storyAdMaps['other']);
+    rxStoryAd.value = StoryAd.fromJson(storyAdMaps['other']);
 
   }
 }

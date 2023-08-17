@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:readr_app/blocs/editorChoice/cubit.dart';
 import 'package:readr_app/blocs/editorChoice/state.dart';
 import 'package:readr_app/blocs/election/election_cubit.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/remote_config_helper.dart';
@@ -24,7 +24,6 @@ import 'package:readr_app/widgets/editor_choice_carousel.dart';
 import 'package:readr_app/widgets/error_stateless_widget.dart';
 import 'package:readr_app/widgets/logger.dart';
 import 'package:readr_app/widgets/newsMarquee/news_marquee_persistent_header_delegate.dart';
-
 
 class PremiumTabContent extends StatefulWidget {
   final Section section;
@@ -44,14 +43,18 @@ class PremiumTabContent extends StatefulWidget {
 
 class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
   final RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
-  final HomeController controller=Get.find();
+  final HomeController controller = Get.find();
+
   _fetchFirstRecordList() {
     context.read<TabContentBloc>().add(FetchFirstRecordList(
-        sectionKey: widget.section.key, sectionType: widget.section.type));
+        sectionName: widget.section.name ?? StringDefault.valueNullDefault,
+        sectionKey: widget.section.key ?? StringDefault.valueNullDefault,
+        sectionType: widget.section.type ?? StringDefault.valueNullDefault));
   }
 
   _fetchNextPageRecordList() {
     context.read<TabContentBloc>().add(FetchNextPageRecordList(
+        sectionName: widget.section.name ?? StringDefault.valueNullDefault,
         isLatest: widget.section.key == Environment().config.latestSectionKey));
   }
 

@@ -1,7 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:readr_app/blocs/tabContent/events.dart';
 import 'package:readr_app/blocs/tabContent/states.dart';
-import 'package:readr_app/helpers/environment.dart';
+import 'package:readr_app/data/providers/articles_api_provider.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/services/record_service.dart';
 import 'package:readr_app/widgets/logger.dart';
@@ -11,7 +12,9 @@ export 'states.dart';
 
 class TabContentBloc extends Bloc<TabContentEvents, TabContentState>
     with Logger {
+  final ArticlesApiProvider articlesApiProvider = Get.find();
   final RecordRepos recordRepos;
+
   TabContentBloc({required this.recordRepos})
       : super(TabContentState.initial()) {
     on<FetchFirstRecordList>(_fetchFirstRecordList);
@@ -23,22 +26,20 @@ class TabContentBloc extends Bloc<TabContentEvents, TabContentState>
     Emitter<TabContentState> emit,
   ) async {
     debugLog(event.toString());
+
     try {
       emit(TabContentState.initial());
-      String endpoint = Environment().config.latestApi;
-      if (event.sectionType == 'section') {
-        endpoint =
-            '${Environment().config.listingBase}&where={"sections":{"\$in":["${event.sectionKey}"]}}';
-      } else if (event.sectionKey == 'latest') {
-        endpoint = '${Environment().config.latestApi}post_external01.json';
-      } else if (event.sectionKey == 'popular') {
-        endpoint = Environment().config.popularListApi;
-      } else if (event.sectionKey == 'personal') {
-        endpoint = Environment().config.listingBaseSearchByPersonAndFoodSection;
-      }
 
-      List<Record> recordList =
-          await recordRepos.fetchRecordList(endpoint, isLoadingFirstPage: true);
+      List<Record> recordList = [];
+
+      if (event.sectionType == 'section') {
+        recordList = await articlesApiProvider.getArticleListBySection(
+            section: event.sectionName);
+      } else if (event.sectionKey == 'latest') {
+        recordList = await articlesApiProvider.getHomePageLatestArticleList();
+      } else if (event.sectionKey == 'popular') {
+        recordList = await articlesApiProvider.getPopularArticleList();
+      } else if (event.sectionKey == 'personal') {}
 
       emit(TabContentState.loaded(
         hasNextPage: recordList.isNotEmpty,
@@ -64,7 +65,8 @@ class TabContentBloc extends Bloc<TabContentEvents, TabContentState>
       if (event.isLatest) {
         newRecordList = await recordRepos.fetchLatestNextPageRecordList();
       } else {
-        newRecordList = await recordRepos.fetchNextPageRecordList();
+        newRecordList =
+            await recordRepos.fetchNextPageRecordList(event.sectionName);
       }
 
       newRecordList =
