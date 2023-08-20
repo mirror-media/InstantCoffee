@@ -78,7 +78,7 @@ class Story {
     }
 
     List<Paragraph> apiDataList = [];
-    if (json["apiData"] != null ) {
+    if (json["apiData"] != null) {
       apiDataList = Paragraph.paragraphListFromJson(json["apiData"]);
     }
 
@@ -86,8 +86,7 @@ class Story {
     String? videoUrl;
     List<String> imageUrlList = [];
 
-    if (json.containsKey('heroImage') &&
-        json['heroImage'] != null ) {
+    if (json.containsKey('heroImage') && json['heroImage'] != null) {
       photoUrl = json['heroImage']['resized']['original'];
       imageUrlList.add(photoUrl);
     }
@@ -98,7 +97,9 @@ class Story {
     }
 
     for (var paragraph in apiDataList) {
-      if (paragraph.contents.isNotEmpty && paragraph.contents[0].data != '') {
+      if (paragraph.contents.isNotEmpty &&
+          paragraph.contents[0].data != null &&
+          paragraph.contents[0].data != '') {
         if (paragraph.type == 'image') {
           imageUrlList.add(paragraph.contents[0].data!);
         } else if (paragraph.type == 'slideshow') {
@@ -155,8 +156,6 @@ class Story {
       imageUrlList: imageUrlList,
     );
   }
-
-
 
   factory Story.fromJson(Map<String, dynamic> json) {
     final String origTitle = json['title'] ?? '';

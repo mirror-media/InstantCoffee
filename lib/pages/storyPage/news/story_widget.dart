@@ -1,14 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
 import 'package:readr_app/blocs/storyPage/news/bloc.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
-import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/data_constants.dart';
-import 'package:readr_app/helpers/date_time_format.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/paragraph_format.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/category.dart';
@@ -220,8 +219,6 @@ class StoryWidget extends StatelessWidget {
   }
 
   Widget _buildCategoryAndPublishedDate(Story story, Color sectionColor) {
-    DateTimeFormat dateTimeFormat = DateTimeFormat();
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
       child: Row(
@@ -229,10 +226,7 @@ class StoryWidget extends StatelessWidget {
         children: [
           _buildCategory(story, sectionColor),
           Text(
-            dateTimeFormat.changeDatabaseStringToDisplayString(
-                story.publishedDate,
-                'yyyy.MM.dd HH:mm',
-                articleDateTimePostfix),
+            story.publishedDate,
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[600], /*fontStyle: FontStyle.italic,*/
@@ -521,8 +515,6 @@ class StoryWidget extends StatelessWidget {
   }
 
   _buildUpdateDateWidget(Story story) {
-    DateTimeFormat dateTimeFormat = DateTimeFormat();
-
     // VerticalDivider is broken? so use Container
     var myVerticalDivider = Padding(
       padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
@@ -542,8 +534,7 @@ class StoryWidget extends StatelessWidget {
         ),
         myVerticalDivider,
         Text(
-          dateTimeFormat.changeDatabaseStringToDisplayString(
-              story.updatedAt, 'yyyy.MM.dd HH:mm', articleDateTimePostfix),
+          story.updatedAt,
           style: const TextStyle(fontSize: 16),
         ),
       ],
