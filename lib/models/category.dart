@@ -28,7 +28,7 @@ class Category {
 
   Map<String, dynamic> toJson() => {
         '_id': id,
-        'name': name,
+        'slug': name,
         'title': title,
         'isCampaign': isCampaign,
         'isSubscribed': isSubscribed,
@@ -153,5 +153,12 @@ class Category {
     }
 
     return localCategoryList;
+  }
+}
+
+
+extension CategoryListToString on List<Category> {
+  String toFormattedString() {
+    return '[${map((obj) => '"${obj.name}"').join(",")}]';
   }
 }
