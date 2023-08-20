@@ -45,7 +45,7 @@ class QueryDB {
     }
   ''';
 
-  static String getTopicList = '''
+  static String fetchTopicList = '''
     query {
       topics (
          take:%d,
@@ -74,7 +74,7 @@ class QueryDB {
     }
   ''';
 
-  static String getArticleInfoBySlug ='''
+  static String fetchArticleInfoBySlug = '''
   query {
     post(
       where: {
@@ -164,7 +164,7 @@ class QueryDB {
         }
   }
   ''';
-  static String getArticleListBySection='''
+  static String fetchArticleListBySection = '''
     query {
       posts(
       take: 12, 
@@ -201,7 +201,7 @@ class QueryDB {
     }
   }
   ''';
-  static String getSectionList ='''
+  static String fetchSectionList = '''
   query {
     sections(
         take:15
@@ -219,5 +219,136 @@ class QueryDB {
     
   }
   ''';
+  static const String fetchCategoriesList = '''
+    query {
+      categories(
+          orderBy:{order:asc}
+      ){
+          name
+          slug
+      }
+    }
+  ''';
+
+  static const String fetchArticleListByCategoryList = '''
+    query {
+      posts(
+      take: 12, 
+      skip: %d,
+      orderBy:{publishedDate:desc},
+      where: {
+          categories:{
+              some:{
+                  slug:{
+                      in:%s
+                  }
+              }
+          }
+      }) 
+      {
+          slug
+          title
+          publishedDate
+          style
+          isMember
+          heroImage{
+              id
+              resized{
+                  original
+                  w480
+                  w800
+                  w1200
+                  w1600
+                  w2400
+                  }
+              }    
+          }
+    }
+  ''';
+  static const String fetchArticleListByTags = '''
+  query {
+    posts(
+      take: 12, 
+      skip: %d,
+      orderBy:{updatedAt:desc},
+      where: {
+          isAdult:{equals:false},
+          isAdvertised:{equals:false},
+      tags: {
+          some:{
+              id: {
+                  in: ["%s"]
+                  }
+              }    
+          }
+      }) 
+      {
+          slug
+          title
+          publishedDate
+          style
+          isMember
+          heroImage{
+              id
+              resized{
+                  original
+                  w480
+                  w800
+                  w1200
+                  w1600
+                  w2400
+              }
+          }    
+      }
+  }
+  ''';
+  static const String getExternalArticleBySlug = '''
+  query {
+    external(
+      where: {
+       slug: "%s"})
+      {
+          slug
+          title
+          content
+          brief
+          thumb
+          extend_byline
+          publishedDate
+      }
+  }
+  ''';
+  static const String getMagazinesList ='''
+  query {
+    magazines(
+      take: 8, 
+      skip: %d,
+      orderBy:{publishedDate:desc},
+    ) 
+    {
+        slug
+        title
+        publishedDate
+        type
+        urlOriginal
+        coverPhoto
+        {
+            resized{
+                original
+                w480
+                w800
+                w1200
+                w1600
+                w2400
+            }
+        }
+        pdfFile{
+            url
+        }
+    }
+  }
+  ''';
+
+
 
 }
