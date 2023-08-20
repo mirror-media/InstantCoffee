@@ -227,7 +227,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(categoryList[index].title ??
+                                        Text(categoryList[index].name ??
                                             StringDefault.valueNullDefault),
                                         const SizedBox(width: 4.0),
                                         const Icon(
