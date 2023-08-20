@@ -1,38 +1,32 @@
-import 'package:readr_app/helpers/environment.dart';
-import 'package:readr_app/helpers/api_base_helper.dart';
-import 'package:readr_app/helpers/cache_duration_cache.dart';
+import 'package:get/get.dart';
+import 'package:readr_app/data/providers/articles_api_provider.dart';
 import 'package:readr_app/models/magazine_list.dart';
 
 abstract class MagazineRepos {
   /// type: special or weekly
-  Future<MagazineList> fetchMagazineListByType(String type,
-      {int page = 1, int maxResults = 8});
-  Future<MagazineList> fetchNextMagazineListPageByType(String type,
-      {int maxResults = 8});
+  Future<MagazineList> fetchMagazineListByType(String type);
+
+  Future<MagazineList> fetchNextMagazineListPageByType(String type);
 }
 
 class MagazineServices implements MagazineRepos {
-  final ApiBaseHelper _helper = ApiBaseHelper();
+  final ArticlesApiProvider articlesApiProvider = Get.find();
   int _page = 1;
 
   @override
-  Future<MagazineList> fetchMagazineListByType(String type,
-      {int page = 1, int maxResults = 8}) async {
-    final jsonResponse = await _helper.getByCacheAndAutoCache(
-        '${Environment().config.magazinesApi}?max_results=$maxResults&sort=-publishedDate&page=$page&where={"type":{"\$in":["$type"]}}',
-        maxAge: magazineCacheDuration);
+  Future<MagazineList> fetchMagazineListByType(
+    String type,
+  ) async {
     MagazineList magazineList =
-        MagazineList.fromJson(jsonResponse['_items'], type);
-    magazineList.total = jsonResponse['_meta']['total'];
+        await articlesApiProvider.getMagazinesList(type);
     return magazineList;
   }
 
   @override
-  Future<MagazineList> fetchNextMagazineListPageByType(String type,
-      {int maxResults = 8}) async {
+  Future<MagazineList> fetchNextMagazineListPageByType(String type) async {
     _page = _page + 1;
-    MagazineList magazineList = await fetchMagazineListByType(type,
-        page: _page, maxResults: maxResults);
+    MagazineList magazineList =
+        await articlesApiProvider.getMagazinesList(type, page: _page);
     return magazineList;
   }
 }
