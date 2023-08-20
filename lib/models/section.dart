@@ -41,7 +41,7 @@ class Section extends Equatable {
   factory Section.fromJson(Map<String, dynamic> json) {
 
     return Section(
-      key: json["id"] ?? json["key"],
+      key: json["id"] ?? json["slug"],
       name: json["slug"],
       title: json["name"],
       description: json["description"] ?? "",

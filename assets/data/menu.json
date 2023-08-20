@@ -1,24 +1,21 @@
 [
     {
-        "_id": "latest",
-        "name": "latest",
-        "title": "最新",
+        "slug": "latest",
+        "name": "最新",
         "focus": true,
         "sortOrder": 0,
         "type": "fixed"
     },
     {
-        "_id": "popular",
-        "name": "popular",
-        "title": "熱門",
+        "slug": "popular",
+        "name": "熱門",
         "focus": false,
         "sortOrder": 0,
         "type": "fixed"
     },
     {
-        "_id": "personal",
-        "name": "personal",
-        "title": "個人頁面",
+        "slug": "personal",
+        "name": "個人頁面",
         "focus": false,
         "sortOrder": 0,
         "type": "fixed"
