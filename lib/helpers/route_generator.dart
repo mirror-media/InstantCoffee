@@ -461,54 +461,56 @@ class RouteGenerator {
     // https://github.com/flutter/flutter/issues/48245
     // There is a issue when opening pdf file in webview on android,
     // so change to launch URL on android.
-    String url =
-        magazine.type == 'weekly' ? magazine.onlineReadingUrl : magazine.pdfUrl;
+    if(magazine.type!=null) {
+      String url =
+      magazine.type! == 'weekly' ? magazine.onlineReadingUrl! : magazine.pdfUrl!;
 
-    if (url == '') {
-      Fluttertoast.showToast(
-          msg: '下載失敗，請再試一次',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
-    } else if (magazine.type == 'weekly') {
-      InAppBrowser browser = InAppBrowser();
-      browser.openUrlRequest(
-        urlRequest: URLRequest(
-          url: Uri.parse(url),
-        ),
-        options: InAppBrowserClassOptions(
-          crossPlatform: InAppBrowserOptions(
-            hideUrlBar: true,
-            toolbarTopBackgroundColor: appColor,
-            hideToolbarTop: Platform.isAndroid,
+      if (url == '') {
+        Fluttertoast.showToast(
+            msg: '下載失敗，請再試一次',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      } else if (magazine.type == 'weekly') {
+        InAppBrowser browser = InAppBrowser();
+        browser.openUrlRequest(
+          urlRequest: URLRequest(
+            url: Uri.parse(url),
           ),
-          ios: IOSInAppBrowserOptions(
-            hideToolbarBottom: true,
-            closeButtonColor: Colors.white,
+          options: InAppBrowserClassOptions(
+            crossPlatform: InAppBrowserOptions(
+              hideUrlBar: true,
+              toolbarTopBackgroundColor: appColor,
+              hideToolbarTop: Platform.isAndroid,
+            ),
+            ios: IOSInAppBrowserOptions(
+              hideToolbarBottom: true,
+              closeButtonColor: Colors.white,
+            ),
+            android: AndroidInAppBrowserOptions(
+              closeOnCannotGoBack: false,
+              shouldCloseOnBackButtonPressed: true,
+            ),
           ),
-          android: AndroidInAppBrowserOptions(
-            closeOnCannotGoBack: false,
-            shouldCloseOnBackButtonPressed: true,
-          ),
-        ),
-      );
-    } else {
-      if (Platform.isAndroid) {
-        if (await canLaunchUrlString(url)) {
-          await launchUrlString(url);
-        } else {
-          throw 'Could not launch $url';
-        }
-      } else {
-        navigatorKey.currentState!.pushNamed(
-          magazineBrowser,
-          arguments: {
-            'magazine': magazine,
-          },
         );
+      } else {
+        if (Platform.isAndroid) {
+          if (await canLaunchUrlString(url)) {
+            await launchUrlString(url);
+          } else {
+            throw 'Could not launch $url';
+          }
+        } else {
+          navigatorKey.currentState!.pushNamed(
+            magazineBrowser,
+            arguments: {
+              'magazine': magazine,
+            },
+          );
+        }
       }
     }
   }
