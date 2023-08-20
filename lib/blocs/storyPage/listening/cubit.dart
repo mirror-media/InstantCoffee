@@ -3,7 +3,9 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:readr_app/blocs/storyPage/listening/states.dart';
+import 'package:readr_app/data/providers/articles_api_provider.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/app_exception.dart';
 import 'package:readr_app/helpers/exceptions.dart';
@@ -19,6 +21,8 @@ class ListeningStoryCubit extends Cubit<ListeningStoryState> with Logger {
   ListeningStoryCubit({
     required this.storySlug,
   }) : super(ListeningStoryInitState());
+  final ArticlesApiProvider articlesApiProvider =Get.find();
+
 
   void fetchListeningStoryPageInfo(String slug) async {
     debugLog('Fetch listening story page info { slug: $slug }');
@@ -30,7 +34,7 @@ class ListeningStoryCubit extends Cubit<ListeningStoryState> with Logger {
           ListeningTabContentService();
       Listening listening = await listeningWidgetService.fetchListening(slug);
       List<Record> recordList = await listeningTabContentService.fetchRecordList(
-          '${Environment().config.apiBase}youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw');
+          '${Environment().config.listeningWidgetApi}youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw');
 
       String storyAdJsonFileLocation = Platform.isIOS
           ? Environment().config.iOSStoryAdJsonLocation
