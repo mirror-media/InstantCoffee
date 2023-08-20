@@ -154,7 +154,6 @@ class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
                 index == recordList.length - 1) {
               _fetchNextPageRecordList();
             }
-
             if (index == 0) {
               if (widget.needCarousel) {
                 return Column(

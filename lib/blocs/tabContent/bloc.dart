@@ -29,9 +29,7 @@ class TabContentBloc extends Bloc<TabContentEvents, TabContentState>
 
     try {
       emit(TabContentState.initial());
-
       List<Record> recordList = [];
-
       if (event.sectionType == 'section') {
         recordList = await articlesApiProvider.getArticleListBySection(
             section: event.sectionName);
