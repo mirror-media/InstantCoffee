@@ -33,8 +33,15 @@ class Record extends Equatable {
     } else {
       origTitle = json['title'];
     }
-
-    String origSlug = json['slug'];
+    String origSlug = '';
+    if (json.containsKey('id') &&
+        json['id'] is Map<String, dynamic> &&
+        (json['id'] as Map).containsKey('videoId') &&
+        json['id']['videoId'] != null) {
+      origSlug = json['id']['videoId'];
+    } else {
+      origSlug = json['slug'];
+    }
 
     String origPublishedDate;
     if (json.containsKey('publishedDate')) {
@@ -47,6 +54,10 @@ class Record extends Equatable {
     if (json.containsKey('heroImage') && json['heroImage'] != null) {
       photoUrl = json['heroImage']['resized']['original'];
     }
+    if (json.containsKey('snippet')) {
+      photoUrl = json['snippet']['thumbnails']['medium']['url'];
+    }
+
     if (photoUrl == '') {
       photoUrl = Environment().config.mirrorMediaNotImageUrl;
     }
@@ -119,11 +130,10 @@ class Record extends Equatable {
       photoUrl = json['snippet']['thumbnails']['medium']['url'];
     } else if (json['photoUrl'] != null) {
       photoUrl = json['photoUrl'];
+    } else if (json['heroImage'] != null) {
+      photoUrl = json['heroImage']['resized']['original'];
     }
-    else if(json['heroImage']!=null)
-      {
-        photoUrl = json['heroImage']['resized']['original'];
-      }
+
     if (photoUrl == '') {
       photoUrl = Environment().config.mirrorMediaNotImageUrl;
     }
@@ -162,10 +172,7 @@ class Record extends Equatable {
       };
 
   static List<Record> recordListFromJson(List<dynamic> jsonList) {
-
-    final a =jsonList.map<Record>((json) => Record.fromJsonK6(json)).toList();
-
-    return a;
+    return jsonList.map<Record>((json) => Record.fromJsonK6(json)).toList();
   }
 
   static List<Record> recordListFromSearchJson(List<dynamic> jsonList) {
