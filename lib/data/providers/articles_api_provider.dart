@@ -3,12 +3,16 @@ import 'package:get/get.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:readr_app/core/extensions/string_extension.dart';
 import 'package:readr_app/helpers/api_base_helper.dart';
+import 'package:readr_app/models/external_story.dart';
+import 'package:readr_app/models/magazine_list.dart';
 import 'package:readr_app/models/post/post_model.dart';
 import 'package:readr_app/models/story_res.dart';
 
 import '../../core/values/query.dart';
 import '../../helpers/environment.dart';
+import '../../models/category.dart';
 import '../../models/record.dart';
+import '../../models/record_list_and_all_count.dart';
 import '../../models/section.dart';
 import '../../models/topic/topic_model.dart';
 
@@ -38,7 +42,7 @@ class ArticlesApiProvider extends GetConnect {
   /// 首頁獲得Topic按鈕資訊 預設為5個
   Future<List<TopicModel>?> getTopicTabList(
       {int take = homePageTopicCount, int skip = 0}) async {
-    String queryString = QueryDB.getTopicList.format([take, skip]);
+    String queryString = QueryDB.fetchTopicList.format([take, skip]);
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     List<TopicModel> topicList = <TopicModel>[];
@@ -102,7 +106,7 @@ class ArticlesApiProvider extends GetConnect {
   }
 
   Future<StoryRes?> getArticleInfoBySlug({required String slug}) async {
-    String queryString = QueryDB.getArticleInfoBySlug.format([slug]);
+    String queryString = QueryDB.fetchArticleInfoBySlug.format([slug]);
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     if (result == null || result.data == null) return null;
@@ -143,7 +147,7 @@ class ArticlesApiProvider extends GetConnect {
   Future<List<Record>> getArticleListBySection(
       {required String section, int page = 0}) async {
     String queryString =
-        QueryDB.getArticleListBySection.format([page * 12, section]);
+        QueryDB.fetchArticleListBySection.format([page * 12, section]);
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     List<Record> articleList = [];
@@ -160,7 +164,7 @@ class ArticlesApiProvider extends GetConnect {
   }
 
   Future<List<Section>> getSectionList() async {
-    String queryString = QueryDB.getSectionList;
+    String queryString = QueryDB.fetchSectionList;
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     List<Section> sectionList = [];
@@ -171,5 +175,82 @@ class ArticlesApiProvider extends GetConnect {
     sectionList =
         resultList.map((element) => Section.fromJsonK6(element)).toList();
     return sectionList;
+  }
+
+  Future<List<Category>> getCategoriesList() async {
+    String queryString = QueryDB.fetchCategoriesList;
+    final result =
+        await client?.value.query(QueryOptions(document: gql(queryString)));
+    List<Category> categoryList = [];
+    if (result == null ||
+        result.data == null ||
+        !result.data!.containsKey('categories')) return categoryList;
+    final list = result.data!['categories'] as List<dynamic>;
+    categoryList
+        .addAll(list.map((element) => Category.fromJson(element)).toList());
+    return categoryList;
+  }
+
+  Future<List<Record>> getArticleListByCategoryList(
+      {required List<Category> list, int page = 0}) async {
+    if (list.isEmpty) return [];
+    String queryString = QueryDB.fetchArticleListByCategoryList
+        .format([page, list.toFormattedString()]);
+    final result =
+        await client?.value.query(QueryOptions(document: gql(queryString)));
+    List<Record> articleList = [];
+    if (result == null ||
+        result.data == null ||
+        !result.data!.containsKey('posts')) return articleList;
+    final postList = result.data!['posts'];
+    for (final post in postList) {
+      if (post != null) {
+        articleList.add(Record.fromJsonK6(post));
+      }
+    }
+    return articleList;
+  }
+
+  Future<RecordListAndAllCount> getArticleListByTag(
+      {required String tag, int page = 1}) async {
+    String queryString = QueryDB.fetchArticleListByTags.format([page, tag]);
+    final result =
+        await client?.value.query(QueryOptions(document: gql(queryString)));
+    List<Record> articleList = [];
+    if (result == null ||
+        result.data == null ||
+        !result.data!.containsKey('posts')) {
+      return RecordListAndAllCount(
+          recordList: articleList, allCount: articleList.length);
+    }
+    final postList = result.data!['posts'];
+    for (final post in postList) {
+      if (post != null) {
+        articleList.add(Record.fromJsonK6(post));
+      }
+    }
+    return RecordListAndAllCount(
+        recordList: articleList, allCount: articleList.length);
+  }
+
+  Future<ExternalStory> getExternalArticleBySlug({required String slug}) async {
+    String queryString = QueryDB.getExternalArticleBySlug.format([slug]);
+    final result =
+        await client?.value.query(QueryOptions(document: gql(queryString)));
+    if (result == null ||
+        result.data == null ||
+        !result.data!.containsKey('external')) return ExternalStory();
+    return ExternalStory.fromJsonK6(result.data!['external']);
+  }
+
+  Future<MagazineList> getMagazinesList(String type, {int page = 1}) async {
+    String queryString = QueryDB.getMagazinesList.format([page]);
+    final result =
+        await client?.value.query(QueryOptions(document: gql(queryString)));
+    if (result == null ||
+        result.data == null ||
+        !result.data!.containsKey('magazines')) return MagazineList();
+
+    return MagazineList.fromJson(result.data!['magazines'], type, isK6: true);
   }
 }

@@ -56,4 +56,5 @@ abstract class BaseConfig {
   String get iOSStoryAdJsonLocation;
   String get androidStoryAdJsonLocation;
   String get graphqlApi;
+  String get graphqlRoot;
 }
