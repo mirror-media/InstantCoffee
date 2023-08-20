@@ -21,8 +21,6 @@ class MagazineBloc extends Bloc<MagazineEvents, MagazineState> with Logger {
             emit(MagazineLoading());
             magazineList = await magazineRepos.fetchMagazineListByType(
               event.type,
-              page: event.page,
-              maxResults: event.maxResult,
             );
             emit(MagazineLoaded(magazineList: magazineList));
           }
@@ -32,7 +30,6 @@ class MagazineBloc extends Bloc<MagazineEvents, MagazineState> with Logger {
             MagazineList newMagazineList =
                 await magazineRepos.fetchNextMagazineListPageByType(
               event.type,
-              maxResults: event.maxResult,
             );
             magazineList.addAll(newMagazineList);
             emit(MagazineLoaded(magazineList: magazineList));
