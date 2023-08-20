@@ -13,6 +13,7 @@ import 'package:readr_app/widgets/logger.dart';
 
 class TagWidget extends StatefulWidget {
   final Tag tag;
+
   const TagWidget(this.tag);
 
   @override
@@ -31,7 +32,7 @@ class _TagWidgetState extends State<TagWidget> with Logger {
   }
 
   _fetchNextPage() async {
-    context.read<TagPageCubit>().fetchNextPage();
+    context.read<TagPageCubit>().fetchNextPage(widget.tag.id);
   }
 
   @override
@@ -85,8 +86,6 @@ class _TagWidgetState extends State<TagWidget> with Logger {
     int totalTagList, {
     bool isLoadingMore = false,
   }) {
-    bool isAll = tagRecordList.length == totalTagList;
-
     return ListView.separated(
       itemCount: tagRecordList.length + 1,
       padding: const EdgeInsets.only(top: 24, left: 24, right: 24),
@@ -105,9 +104,8 @@ class _TagWidgetState extends State<TagWidget> with Logger {
       itemBuilder: (context, index) {
         if (index == tagRecordList.length) {
           if (!isLoadingMore) {
-            if (!isAll) {
-              _fetchNextPage();
-            }
+            _fetchNextPage();
+
             return Container(
               padding: const EdgeInsets.only(bottom: 24),
             );
