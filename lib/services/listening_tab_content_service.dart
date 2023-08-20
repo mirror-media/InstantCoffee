@@ -9,6 +9,7 @@ class ListeningTabContentService {
   int page = 1;
 
   String _nextPageUrl = '';
+
   String get getNextUrl => _nextPageUrl;
 
   Future<List<Record>> fetchRecordList(String url) async {
@@ -19,10 +20,14 @@ class ListeningTabContentService {
     } else {
       jsonResponse = await _helper.getByUrl(url);
     }
-
+    if (jsonResponse == null) {
+      return [];
+    }
     _nextPageUrl =
-        '${Environment().config.listeningWidgetApi}&pageToken=${jsonResponse['nextPageToken']}';
+        '${Environment().config.graphqlRoot}youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw&pageToken=${jsonResponse['nextPageToken']}';
     List<Record> records = Record.recordListFromJson(jsonResponse['items']);
+
+
     return records;
   }
 
