@@ -6,11 +6,12 @@ class TagService {
   final ArticlesApiProvider articlesApiProvider = Get.find();
   int page = 1;
   String _nextPageUrl = '';
+
   String get getNextUrl => _nextPageUrl;
 
   Future<RecordListAndAllCount> fetchRecordList(String tagId) async {
-    return  await articlesApiProvider.getArticleListByTag(tag: tagId,page:  page);
-
+    return await articlesApiProvider.getArticleListByTag(
+        tag: tagId, page: page);
   }
 
   int initialPage() {

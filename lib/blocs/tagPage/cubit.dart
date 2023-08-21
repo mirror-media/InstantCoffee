@@ -17,9 +17,10 @@ class TagPageCubit extends Cubit<TagPageState> with Logger {
     emit(TagPageState.loading());
 
     _tagService.initialPage();
-    RecordListAndAllCount recordListAndAllCount =
-    await _tagService.fetchRecordList(tagId);
+
     try {
+      RecordListAndAllCount recordListAndAllCount =
+          await _tagService.fetchRecordList(tagId);
 
       emit(TagPageState.loaded(
           tagStoryList: recordListAndAllCount.recordList,
