@@ -16,7 +16,6 @@ class PremiumBody extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = width / 16 * 9;
-
     return ListView(padding: const EdgeInsets.only(top: 24), children: [
       _buildCategoryText(),
       const SizedBox(height: 8),
@@ -37,7 +36,7 @@ class PremiumBody extends StatelessWidget {
             children: [
               _buildTimeTile(
                   '發布時間',
-                  externalStory.publishedDate?.formattedDateTime() ??
+                  externalStory.publishedDate ??
                       StringDefault.valueNullDefault),
               const SizedBox(
                 height: 16,
@@ -110,14 +109,13 @@ class PremiumBody extends StatelessWidget {
     if (time == '' || time == ' ') {
       return Container();
     }
-
     return Row(
       children: [
         Text(title,
             style: const TextStyle(color: Colors.black54, fontSize: 13)),
         const SizedBox(width: 8),
         Text(
-          time.formattedDateTime(),
+          time.formattedDateTime() ?? StringDefault.valueNullDefault,
           style: const TextStyle(
             fontSize: 13,
             color: Colors.black87,

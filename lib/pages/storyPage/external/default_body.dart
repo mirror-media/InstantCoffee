@@ -82,7 +82,7 @@ class DefaultBody extends StatelessWidget {
         children: [
           _buildCategory(),
           Text(
-            publishedDate.formattedDateTime(),
+            publishedDate.formattedDateTime() ?? StringDefault.valueNullDefault,
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[600], /*fontStyle: FontStyle.italic,*/

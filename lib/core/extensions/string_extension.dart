@@ -6,12 +6,15 @@ extension StringFormatExtension on String {
 }
 
 extension DateTimeExtensions on String {
-  String formattedDateTime() {
+  String? formattedDateTime() {
     final inputFormat = DateFormat('yyyy-MM-ddTHH:mm:ss.SSSZ');
     final outputFormat = DateFormat('yyyy.MM.dd HH:mm');
 
-    final dateTime = inputFormat.parse(this).toLocal();
-
-    return outputFormat.format(dateTime);
+    try {
+      final dateTime = inputFormat.parse(this).toLocal();
+      return outputFormat.format(dateTime);
+    } catch (e) {
+      return null;
+    }
   }
 }

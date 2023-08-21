@@ -326,7 +326,7 @@ class PremiumStoryWidget extends StatelessWidget {
         const SizedBox(width: 8),
 
         Text(
-          time.formattedDateTime(),
+          time.formattedDateTime() ?? StringDefault.valueNullDefault,
           style: const TextStyle(
             fontSize: 13,
             color: Colors.black87,
