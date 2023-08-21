@@ -253,4 +253,16 @@ class ArticlesApiProvider extends GetConnect {
 
     return MagazineList.fromJson(result.data!['magazines'], type, isK6: true);
   }
+
+  Future<List<Record>> getNewsletterList() async {
+    final result = await apiBaseHelper
+            .getByUrl('${Environment().config.latestApi}header_posts.json')
+        as Map<String, dynamic>;
+    List<Record> articlesList = [];
+    if (!result.containsKey('posts') || result['posts'] is! List<dynamic>) {
+      return articlesList;
+    }
+    final postsList = result['posts'] as List<dynamic>;
+    return postsList.map((e) => Record.fromJsonK6(e)).toList();
+  }
 }

@@ -11,11 +11,13 @@ import 'package:readr_app/widgets/logger.dart';
 
 class ApiBaseHelper with Logger {
   http.Client _client = http.Client();
+
   void setClient(http.Client client) {
     _client = client;
   }
 
   BaseCacheManager? _mMCacheManager;
+
   void setCacheManager(BaseCacheManager cacheManager) {
     _mMCacheManager = cacheManager;
   }
@@ -174,9 +176,9 @@ dynamic returnResponse(http.Response response) {
     case 200:
       String utf8Json = utf8.decode(response.bodyBytes);
       var responseJson = json.decode(utf8Json);
-      if (responseJson is Map<String , dynamic>) {
+      if (responseJson is Map<String, dynamic>) {
         bool hasData = (responseJson.containsKey('_items') &&
-            responseJson['_items'].length > 0) ||
+                responseJson['_items'].length > 0) ||
             (responseJson.containsKey('items') &&
                 responseJson['items'].length > 0) ||
             // properties responded by popular tab content api
@@ -202,7 +204,8 @@ dynamic returnResponse(http.Response response) {
             // Google custom search
             responseJson.containsKey('searchInformation') ||
             // election widget
-            responseJson.containsKey('polling');
+            responseJson.containsKey('polling') ||
+            responseJson.containsKey('posts');
 
         if (!hasData) {
           throw BadRequestException(response.body.toString());
