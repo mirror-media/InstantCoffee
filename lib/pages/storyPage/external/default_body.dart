@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:readr_app/core/extensions/string_extension.dart';
 import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/data_constants.dart';
-import 'package:readr_app/helpers/date_time_format.dart';
 import 'package:readr_app/models/external_story.dart';
 
 class DefaultBody extends StatelessWidget {
@@ -75,8 +75,6 @@ class DefaultBody extends StatelessWidget {
   }
 
   Widget _buildCategoryAndPublishedDate(String publishedDate) {
-    DateTimeFormat dateTimeFormat = DateTimeFormat();
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
       child: Row(
@@ -84,8 +82,7 @@ class DefaultBody extends StatelessWidget {
         children: [
           _buildCategory(),
           Text(
-            dateTimeFormat.changeDatabaseStringToDisplayString(
-                publishedDate, 'yyyy.MM.dd HH:mm', articleDateTimePostfix),
+            publishedDate.formattedDateTime(),
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[600], /*fontStyle: FontStyle.italic,*/

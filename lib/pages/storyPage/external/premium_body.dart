@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:readr_app/core/extensions/string_extension.dart';
 import 'package:readr_app/helpers/data_constants.dart';
-import 'package:readr_app/helpers/date_time_format.dart';
 import 'package:readr_app/models/external_story.dart';
 
 import '../../../core/values/string.dart';
@@ -37,7 +37,7 @@ class PremiumBody extends StatelessWidget {
             children: [
               _buildTimeTile(
                   '發布時間',
-                  externalStory.publishedDate ??
+                  externalStory.publishedDate?.formattedDateTime() ??
                       StringDefault.valueNullDefault),
               const SizedBox(
                 height: 16,
@@ -110,15 +110,14 @@ class PremiumBody extends StatelessWidget {
     if (time == '' || time == ' ') {
       return Container();
     }
-    DateTimeFormat dateTimeFormat = DateTimeFormat();
+
     return Row(
       children: [
         Text(title,
             style: const TextStyle(color: Colors.black54, fontSize: 13)),
         const SizedBox(width: 8),
         Text(
-          dateTimeFormat.changeDatabaseStringToDisplayString(
-              time, 'yyyy.MM.dd HH:mm', articleDateTimePostfix),
+          time.formattedDateTime(),
           style: const TextStyle(
             fontSize: 13,
             color: Colors.black87,
