@@ -117,6 +117,7 @@ class ArticlesApiProvider extends GetConnect {
   Future<List<Record>> getHomePageChoiceArticle() async {
     final result = await apiBaseHelper
         .getByUrl('${Environment().config.latestApi}post_external01.json');
+
     return (result['choices'] as List<dynamic>)
         .map((e) => Record.fromJson(e))
         .toList();
@@ -125,6 +126,7 @@ class ArticlesApiProvider extends GetConnect {
   Future<List<Record>> getHomePageLatestArticleList({int page = 1}) async {
     final result = await apiBaseHelper
         .getByUrl('${Environment().config.latestApi}post_external0$page.json');
+
     return (result['latest'] as List<dynamic>)
         .map((e) => Record.fromJson(e))
         .toList();

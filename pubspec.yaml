@@ -27,6 +27,8 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+
+  get_storage: ^2.1.1
   sprintf: ^7.0.0
   json_annotation: ^4.8.1
   graphql_flutter: ^5.1.2

@@ -143,8 +143,8 @@ class QueryDB {
               id
               name
           }
-          brief
           apiData
+          apiDataBrief
           content
           trimmedContent
           categories{

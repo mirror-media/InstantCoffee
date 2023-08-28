@@ -72,8 +72,8 @@ class Story {
     final String title = origTitle.replaceAll('　', "\n");
 
     List<Paragraph> briefList = [];
-    if (json["brief"] != null && json["brief"]['blocks'] != null) {
-      final list = json["brief"]["blocks"];
+    if (json["apiDataBrief"] != null) {
+      final list = json["apiDataBrief"];
       briefList = Paragraph.paragraphListFromJson(list);
     }
 
