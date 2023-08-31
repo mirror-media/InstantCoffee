@@ -19,7 +19,7 @@ class MagazineItemWidget extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     double imageWidth = (width - padding * 2) / 4.5;
     double imageHeight = imageWidth / 0.75;
-    String publishedDate = magazine.publishedDate?.formattedDateTime() ??
+    String publishedDate = magazine.publishedDate?.formattedTaipeiDateTime() ??
         StringDefault.valueNullDefault;
 
     return Padding(

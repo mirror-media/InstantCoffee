@@ -115,7 +115,7 @@ class PremiumBody extends StatelessWidget {
             style: const TextStyle(color: Colors.black54, fontSize: 13)),
         const SizedBox(width: 8),
         Text(
-          time.formattedDateTime() ?? StringDefault.valueNullDefault,
+          time.formattedTaipeiDateTime() ?? StringDefault.valueNullDefault,
           style: const TextStyle(
             fontSize: 13,
             color: Colors.black87,

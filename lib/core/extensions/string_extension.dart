@@ -6,13 +6,15 @@ extension StringFormatExtension on String {
 }
 
 extension DateTimeExtensions on String {
-  String? formattedDateTime() {
+  String? formattedTaipeiDateTime() {
     final inputFormat = DateFormat('yyyy-MM-ddTHH:mm:ss.SSSZ');
     final outputFormat = DateFormat('yyyy.MM.dd HH:mm');
 
     try {
       final dateTime = inputFormat.parse(this).toLocal();
-      return outputFormat.format(dateTime);
+      final taipeiDateTime = dateTime.add(const Duration(hours: 8)); // 台北時間在 GMT+8
+
+      return '${outputFormat.format(taipeiDateTime)} 台北時間';
     } catch (e) {
       return null;
     }
