@@ -197,7 +197,7 @@ class ArticlesApiProvider extends GetConnect {
       {required List<Category> list, int page = 0}) async {
     if (list.isEmpty) return [];
     String queryString = QueryDB.fetchArticleListByCategoryList
-        .format([page, list.toFormattedString()]);
+        .format([page * articleTakeCount, list.toFormattedString()]);
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     List<Record> articleList = [];
@@ -215,7 +215,8 @@ class ArticlesApiProvider extends GetConnect {
 
   Future<RecordListAndAllCount> getArticleListByTag(
       {required String tag, int page = 1}) async {
-    String queryString = QueryDB.fetchArticleListByTags.format([page, tag]);
+    String queryString =
+        QueryDB.fetchArticleListByTags.format([page * articleTakeCount, tag]);
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     List<Record> articleList = [];
@@ -246,7 +247,7 @@ class ArticlesApiProvider extends GetConnect {
   }
 
   Future<MagazineList> getMagazinesList(String type, {int page = 1}) async {
-    String queryString = QueryDB.getMagazinesList.format([page]);
+    String queryString = QueryDB.getMagazinesList.format([page * 8]);
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     if (result == null ||
