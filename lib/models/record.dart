@@ -52,7 +52,7 @@ class Record extends Equatable {
 
     String photoUrl = Environment().config.mirrorMediaNotImageUrl;
     if (json.containsKey('heroImage') && json['heroImage'] != null) {
-      photoUrl = json['heroImage']['resized']['original'];
+      photoUrl = json['heroImage']['resized']['w800'];
     }
     if (json.containsKey('snippet')) {
       photoUrl = json['snippet']['thumbnails']['medium']['url'];

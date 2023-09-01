@@ -87,7 +87,7 @@ class Story {
     List<String> imageUrlList = [];
 
     if (json.containsKey('heroImage') && json['heroImage'] != null) {
-      photoUrl = json['heroImage']['resized']['original'];
+      photoUrl = json['heroImage']['resized']['w800'];
       imageUrlList.add(photoUrl);
     }
     if (json.containsKey('heroVideo')) {
