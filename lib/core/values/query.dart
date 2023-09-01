@@ -7,8 +7,6 @@ class QueryDB {
           {
             id
             name
-            imageFile{
-                url
           }
         }
     }

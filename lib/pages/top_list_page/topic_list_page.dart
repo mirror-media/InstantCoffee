@@ -21,7 +21,7 @@ class TopicListPage extends GetView<TopicListController> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: appColor,
-        title: const Text('Topic List'),
+        // title: const Text('Topic List'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
