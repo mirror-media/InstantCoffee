@@ -222,6 +222,8 @@ flutter:
     - assets/image/magazine/book_icon.svg
     # member subscription
     - assets/image/badge.png
+    - assets/image/member/subscription_icon.png
+    - assets/image/member/subscribe_banner_mobile.jpg
     # election
     - assets/image/election/
 
