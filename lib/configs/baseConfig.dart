@@ -2,7 +2,6 @@ abstract class BaseConfig {
   String get mirrorMediaDomain;
 
   String get apiBase;
-  String get storyPageApi;
   String get memberApi;
   String get tokenStateApi;
 
