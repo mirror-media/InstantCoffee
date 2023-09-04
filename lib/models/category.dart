@@ -15,11 +15,11 @@ class Category {
     this.isMemberOnly = false,
   });
 
-  factory Category.fromJson(Map<String, dynamic> json) {
+  factory Category.fromJson(Map<String, dynamic> json, bool isK6) {
     return Category(
       id: json['id'],
-      name: json['slug'],
-      title: json['name'],
+      name: isK6 ? json['slug'] :json['name'],
+      title: isK6 ? json['name'] : json['title'],
       isCampaign: json['isCampaign'] ?? false,
       isSubscribed: json['isSubscribed'] ?? true,
       isMemberOnly: json['isMemberOnly'] ?? false,
@@ -61,8 +61,7 @@ class Category {
 
   static List<Category> categoryListFromJson(List<dynamic> jsonList) {
 
-    final a =jsonList.map<Category>((json) => Category.fromJson(json)).toList();
-    return a;
+    return jsonList.map<Category>((json) => Category.fromJson(json,false)).toList();
   }
 
   static bool isMemberOnlyInCategoryList(List<Category> categoryList) {

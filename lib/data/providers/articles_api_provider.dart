@@ -189,7 +189,7 @@ class ArticlesApiProvider extends GetConnect {
         !result.data!.containsKey('categories')) return categoryList;
     final list = result.data!['categories'] as List<dynamic>;
     categoryList
-        .addAll(list.map((element) => Category.fromJson(element)).toList());
+        .addAll(list.map((element) => Category.fromJson(element,true)).toList());
     return categoryList;
   }
 
