@@ -24,7 +24,7 @@ class ListeningTabContentService {
       return [];
     }
     _nextPageUrl =
-        '${Environment().config.graphqlRoot}youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw&pageToken=${jsonResponse['nextPageToken']}';
+        '${Environment().config.weeklyAPIServer}youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw&pageToken=${jsonResponse['nextPageToken']}';
     List<Record> records = Record.recordListFromJson(jsonResponse['items']);
 
 

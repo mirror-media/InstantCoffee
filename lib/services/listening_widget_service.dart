@@ -11,7 +11,7 @@ class ListeningWidgetService {
 
   Future<Listening> fetchListening(String youtubeId) async {
     String endpoint =
-        '${Environment().config.graphqlRoot}youtube/videos?part=snippet&maxResults=1&id=$youtubeId';
+        '${Environment().config.weeklyAPIServer}youtube/videos?part=snippet&maxResults=1&id=$youtubeId';
 
     final jsonResponse = await _helper.getByCacheAndAutoCache(endpoint,
         maxAge: listeningWidgetCacheDuration);

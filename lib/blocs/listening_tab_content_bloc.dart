@@ -55,7 +55,7 @@ class ListeningTabContentBloc with Logger {
 
     try {
       List<Record> latests = await _listeningTabContentService.fetchRecordList(
-          '${Environment().config.graphqlRoot}youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw');
+          '${Environment().config.weeklyAPIServer}youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw');
       _needLoadingMore = latests.isNotEmpty;
 
       if (_listeningTabContentService.page == 1) {

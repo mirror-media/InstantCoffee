@@ -30,7 +30,7 @@ class ArticlesApiProvider extends GetConnect {
 
   @override
   void onInit() {
-    final Link link = HttpLink(Environment().config.graphqlApi);
+    final Link link = HttpLink(Environment().config.weeklyAPIPath);
     client = ValueNotifier(
       GraphQLClient(
         cache: GraphQLCache(),
