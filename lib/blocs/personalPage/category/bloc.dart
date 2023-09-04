@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/blocs/personalPage/category/events.dart';
 import 'package:readr_app/blocs/personalPage/category/states.dart';
 import 'package:readr_app/data/providers/articles_api_provider.dart';
@@ -21,6 +22,7 @@ class PersonalCategoryBloc
 
   final ArticlesApiProvider articlesApiProvider = Get.find();
   final LocalStorageProvider localStorageProvider = Get.find();
+  final LocalStorage _storage = LocalStorage('setting');
 
   void _fetchSubscribedCategoryList(
     FetchSubscribedCategoryList event,
@@ -32,6 +34,14 @@ class PersonalCategoryBloc
       emit(PersonalCategoryState.subscribedCategoryListLoading());
       List<Category>? localCategoryList =
           await localStorageProvider.loadCategoryList();
+
+      if (await _storage.ready &&  localCategoryList ==null) {
+        if (_storage.getItem("categoryList") != null) {
+          localCategoryList =
+              Category.categoryListFromJson(_storage.getItem("categoryList"));
+          _storage.deleteItem('categoryList');
+        }
+      }
       List<Category> onlineCategoryList =
           await articlesApiProvider.getCategoriesList();
 

@@ -227,7 +227,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(categoryList[index].name ??
+                                        Text(categoryList[index].title ??
                                             StringDefault.valueNullDefault),
                                         const SizedBox(width: 4.0),
                                         const Icon(
@@ -315,7 +315,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
                         _subscribedCategoryList));
               }
 
-              return _buildSubscribtoinList(
+              return _buildSubscriptionList(
                   context, subscribedArticleList, index);
             },
             childCount: subscribedArticleList.length,
@@ -331,7 +331,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
             (BuildContext context, int index) {
               if (index == subscribedArticleList.length - 1) {
                 return Column(children: [
-                  _buildSubscribtoinList(context, subscribedArticleList, index),
+                  _buildSubscriptionList(context, subscribedArticleList, index),
                   const Padding(
                     padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
                     child: Center(child: CupertinoActivityIndicator()),
@@ -339,7 +339,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
                 ]);
               }
 
-              return _buildSubscribtoinList(
+              return _buildSubscriptionList(
                   context, subscribedArticleList, index);
             },
             childCount: subscribedArticleList.length,
@@ -363,7 +363,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              return _buildSubscribtoinList(
+              return _buildSubscriptionList(
                   context, subscribedArticleList, index);
             },
             childCount: subscribedArticleList.length,
@@ -376,7 +376,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
     });
   }
 
-  _buildSubscribtoinList(
+  _buildSubscriptionList(
       BuildContext context, List<Record> recordList, int index) {
     Record record = recordList[index];
 
