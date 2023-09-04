@@ -34,7 +34,7 @@ class ListeningStoryCubit extends Cubit<ListeningStoryState> with Logger {
           ListeningTabContentService();
       Listening listening = await listeningWidgetService.fetchListening(slug);
       List<Record> recordList = await listeningTabContentService.fetchRecordList(
-          '${Environment().config.listeningWidgetApi}youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw');
+          Environment().config.listeningWidgetApi);
 
       String storyAdJsonFileLocation = Platform.isIOS
           ? Environment().config.iOSStoryAdJsonLocation
