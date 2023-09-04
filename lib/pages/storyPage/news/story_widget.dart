@@ -228,7 +228,8 @@ class StoryWidget extends StatelessWidget {
         children: [
           _buildCategory(story, sectionColor),
           Text(
-            story.publishedDate,
+            story.publishedDate.formattedTaipeiDateTime() ??
+                StringDefault.valueNullDefault,
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[600], /*fontStyle: FontStyle.italic,*/
@@ -536,7 +537,8 @@ class StoryWidget extends StatelessWidget {
         ),
         myVerticalDivider,
         Text(
-          story.updatedAt,
+          story.updatedAt.formattedTaipeiDateTime() ??
+              StringDefault.valueNullDefault,
           style: const TextStyle(fontSize: 16),
         ),
       ],
