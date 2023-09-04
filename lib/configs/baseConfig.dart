@@ -3,8 +3,6 @@ abstract class BaseConfig {
 
   String get apiBase;
   String get storyPageApi;
-  String get externalStoryPageApi;
-  String get topicListApi;
   String get memberApi;
   String get tokenStateApi;
 
@@ -14,20 +12,14 @@ abstract class BaseConfig {
 
   String get mirrorMediaNotImageUrl;
   String get latestApi;
-  String get sectionApi;
-  String get listingBase;
 
   String get listeningWidgetApi;
 
   String get newsMarqueeApi;
   String get editorChoiceApi;
-
-  String get listingBaseSearchByPersonAndFoodSection;
   String get popularListApi;
 
   String get searchApi;
-
-  String get magazinesApi;
   String get onlineMagazineUrl;
 
   String get latestSectionKey;
