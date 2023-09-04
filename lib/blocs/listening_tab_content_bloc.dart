@@ -53,6 +53,21 @@ class ListeningTabContentBloc with Logger {
       sinkToAdd(ApiResponse.loadingMore('Loading More Listening Tab Content'));
     }
 
+    List<Record> latests = await _listeningTabContentService.fetchRecordList(
+        '${Environment().config.weeklyAPIServer}youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw');
+    _needLoadingMore = latests.isNotEmpty;
+
+    if (_listeningTabContentService.page == 1) {
+      _records.clear();
+    }
+
+    latests = Record.filterDuplicatedSlugByAnother(latests, _records);
+    _records.addAll(latests);
+
+
+    _isLoading = false;
+    sinkToAdd(ApiResponse.completed(_records));
+
     try {
       List<Record> latests = await _listeningTabContentService.fetchRecordList(
           '${Environment().config.weeklyAPIServer}youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw');
@@ -80,8 +95,8 @@ class ListeningTabContentBloc with Logger {
     fetchRecordList();
   }
 
-  loadingMore(int index) {
-    if (_needLoadingMore && !_isLoading && index == _records.length - 5) {
+  loadingMore() {
+    if (_needLoadingMore && !_isLoading) {
       _listeningTabContentService.nextPage();
 
       fetchRecordList();

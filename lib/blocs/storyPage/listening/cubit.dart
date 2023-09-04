@@ -3,11 +3,9 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:readr_app/blocs/storyPage/listening/states.dart';
-import 'package:readr_app/data/providers/articles_api_provider.dart';
-import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/app_exception.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/models/listening.dart';
 import 'package:readr_app/models/record.dart';
@@ -21,8 +19,6 @@ class ListeningStoryCubit extends Cubit<ListeningStoryState> with Logger {
   ListeningStoryCubit({
     required this.storySlug,
   }) : super(ListeningStoryInitState());
-  final ArticlesApiProvider articlesApiProvider =Get.find();
-
 
   void fetchListeningStoryPageInfo(String slug) async {
     debugLog('Fetch listening story page info { slug: $slug }');

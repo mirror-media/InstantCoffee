@@ -18,7 +18,7 @@ class ListeningTabContentService {
       jsonResponse = await _helper.getByCacheAndAutoCache(url,
           maxAge: listeningTabContentCacheDuration);
     } else {
-      jsonResponse = await _helper.getByUrl(url);
+      jsonResponse = await _helper.getByUrl(_nextPageUrl);
     }
     if (jsonResponse == null) {
       return [];
