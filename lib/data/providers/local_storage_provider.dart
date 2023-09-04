@@ -33,6 +33,10 @@ class LocalStorageProvider extends GetxController {
     _storage.remove(key);
   }
 
+  void cleanCategoryList() {
+    removeData(categoryListKey);
+  }
+
   void saveCategoryList(List<Category> list) {
     _storage.write(categoryListKey, list);
   }
@@ -41,16 +45,30 @@ class LocalStorageProvider extends GetxController {
     if (!_storage.hasData(categoryListKey)) {
       return [];
     }
+    final categoryList = _storage.read(categoryListKey) as List<dynamic>;
 
-    return (_storage.read(categoryListKey) as List<dynamic>)
-        .map((item) => Category(
-              name: item['slug'],
-              id: item['slug'],
-              title: item['title'],
-              isCampaign: item['isCampaign'],
-              isSubscribed: item['isSubscribed'],
-              isMemberOnly: item['isMemberOnly'],
-            ))
-        .toList();
+    return categoryList.map((category) {
+      if (category is Map<String, dynamic>) {
+        return Category(
+          name: category['name'],
+          id: category['id'],
+          title: category['title'],
+          isCampaign: category['isCampaign'],
+          isSubscribed: category['isSubscribed'],
+          isMemberOnly: category['isMemberOnly'],
+        );
+      }
+      if (category is Category) {
+        return Category(
+          name: category.name,
+          id: category.id,
+          title: category.title,
+          isCampaign: category.isCampaign,
+          isSubscribed: category.isSubscribed,
+          isMemberOnly: category.isMemberOnly,
+        );
+      }
+      return Category(id: '', name: '', title: '');
+    }).toList();
   }
 }

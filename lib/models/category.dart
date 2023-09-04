@@ -28,7 +28,7 @@ class Category {
 
   Map<String, dynamic> toJson() => {
         '_id': id,
-        'slug': name,
+        'name': name,
         'title': title,
         'isCampaign': isCampaign,
         'isSubscribed': isSubscribed,
@@ -158,7 +158,9 @@ class Category {
 
 
 extension CategoryListToString on List<Category> {
-  String toFormattedString() {
-    return '[${map((obj) => '"${obj.name}"').join(",")}]';
+  String toSubscriptionStringList() {
+    final subscribedCategories = where((obj) => obj.isSubscribed == true);
+    final subscriptionNames = subscribedCategories.map((obj) => '"${obj.name}"');
+    return '[${subscriptionNames.join(",")}]';
   }
 }

@@ -311,7 +311,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
                         _subscribedCategoryList));
               }
 
-              return _buildSubscribtoinList(
+              return _buildSubscriptionList(
                   context, subscribedArticleList, index);
             },
             childCount: subscribedArticleList.length,
@@ -327,7 +327,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
             (BuildContext context, int index) {
               if (index == subscribedArticleList.length - 1) {
                 return Column(children: [
-                  _buildSubscribtoinList(context, subscribedArticleList, index),
+                  _buildSubscriptionList(context, subscribedArticleList, index),
                   const Padding(
                     padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
                     child: Center(child: CupertinoActivityIndicator()),
@@ -335,7 +335,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
                 ]);
               }
 
-              return _buildSubscribtoinList(
+              return _buildSubscriptionList(
                   context, subscribedArticleList, index);
             },
             childCount: subscribedArticleList.length,
@@ -359,7 +359,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              return _buildSubscribtoinList(
+              return _buildSubscriptionList(
                   context, subscribedArticleList, index);
             },
             childCount: subscribedArticleList.length,
@@ -372,7 +372,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
     });
   }
 
-  _buildSubscribtoinList(
+  _buildSubscriptionList(
       BuildContext context, List<Record> recordList, int index) {
     Record record = recordList[index];
 
@@ -414,6 +414,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
             ),
           ),
         ),
+
         const Divider(
           thickness: 1,
           color: Colors.grey,

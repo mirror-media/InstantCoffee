@@ -197,7 +197,7 @@ class ArticlesApiProvider extends GetConnect {
       {required List<Category> list, int page = 0}) async {
     if (list.isEmpty) return [];
     String queryString = QueryDB.fetchArticleListByCategoryList
-        .format([page * articleTakeCount, list.toFormattedString()]);
+        .format([page * articleTakeCount, list.toSubscriptionStringList()]);
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     List<Record> articleList = [];
