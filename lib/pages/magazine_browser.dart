@@ -4,8 +4,11 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/models/magazine.dart';
 
+import '../core/values/string.dart';
+
 class MagazineBrowser extends StatefulWidget {
   final Magazine magazine;
+
   const MagazineBrowser({
     required this.magazine,
   });
@@ -35,7 +38,8 @@ class _MagazineBrowserState extends State<MagazineBrowser> {
     if (type == 'weekly') {
       _browser = InAppWebView(
         initialUrlRequest: URLRequest(
-          url: Uri.parse(widget.magazine.onlineReadingUrl),
+          url: Uri.parse(widget.magazine.onlineReadingUrl ??
+              StringDefault.valueNullDefault),
         ),
         initialOptions: options,
         onLoadError: (controller, url, code, message) =>
@@ -46,7 +50,8 @@ class _MagazineBrowserState extends State<MagazineBrowser> {
     } else {
       _browser = InAppWebView(
         initialUrlRequest: URLRequest(
-          url: Uri.parse(widget.magazine.pdfUrl),
+          url: Uri.parse(
+              widget.magazine.pdfUrl ?? StringDefault.valueNullDefault),
         ),
         initialOptions: options,
         onLoadError: (controller, url, code, message) =>
@@ -66,7 +71,7 @@ class _MagazineBrowserState extends State<MagazineBrowser> {
       DeviceOrientation.portraitDown,
     ]);
 
-    _setBrowser(widget.magazine.type);
+    _setBrowser(widget.magazine.type ?? StringDefault.valueNullDefault);
     super.initState();
   }
 
@@ -122,7 +127,7 @@ class _MagazineBrowserState extends State<MagazineBrowser> {
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop()),
       centerTitle: true,
-      title: Text(widget.magazine.issue),
+      title: Text(widget.magazine.issue ?? StringDefault.valueNullDefault),
       backgroundColor: appColor,
     );
   }

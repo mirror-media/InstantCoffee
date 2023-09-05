@@ -1,3 +1,9 @@
+
+import 'package:json_annotation/json_annotation.dart';
+
+
+
+@JsonSerializable()
 class StoryAd {
   final String hDUnitId;
   final String fTUnitId;

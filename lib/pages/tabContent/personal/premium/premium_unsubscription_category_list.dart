@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/personalPage/category/bloc.dart';
 import 'package:readr_app/blocs/personalPage/category/events.dart';
 import 'package:readr_app/blocs/personalPage/category/states.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/models/category.dart';
 
@@ -53,7 +54,7 @@ class _PremiumUnsubscriptionCategoryListState
                         padding: const EdgeInsets.all(4.0),
                         child: unsubscriptionCategoryList[index].isSubscribed
                             ? _buildSubscribedCategoryChip(
-                                unsubscriptionCategoryList[index].title,
+                                unsubscriptionCategoryList[index].title ?? StringDefault.valueNullDefault,
                                 () {
                                   unsubscriptionCategoryList[index]
                                           .isSubscribed =
@@ -65,7 +66,7 @@ class _PremiumUnsubscriptionCategoryListState
                                 },
                               )
                             : _buildUnSubscribedCategoryChip(
-                                unsubscriptionCategoryList[index].title,
+                                unsubscriptionCategoryList[index].title ?? StringDefault.valueNullDefault,
                                 () {
                                   unsubscriptionCategoryList[index]
                                           .isSubscribed =

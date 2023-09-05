@@ -1,12 +1,13 @@
-import 'dart:convert';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:readr_app/blocs/personalPage/article/events.dart';
 import 'package:readr_app/blocs/personalPage/article/states.dart';
 import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/services/personal_subscription_service.dart';
 import 'package:readr_app/widgets/logger.dart';
+
+import '../../../data/providers/articles_api_provider.dart';
 
 class PersonalArticleBloc
     extends Bloc<PersonalArticleEvents, PersonalArticleState> with Logger {
@@ -18,23 +19,21 @@ class PersonalArticleBloc
   }
 
   bool isNextPageEmpty = false;
+  final ArticlesApiProvider articleApiProvider =Get.find();
 
   void _fetchSubscribedArticleList(
     FetchSubscribedArticleList event,
     Emitter<PersonalArticleState> emit,
   ) async {
     debugLog(event.toString());
+    List<Record> subscribedArticleList = [];
+    List<Category> subscriptionIdStringList = event.subscribedCategoryList;
+    if (subscriptionIdStringList.isNotEmpty) {
+      subscribedArticleList = await personalSubscriptionRepos
+          .fetchRecordList(subscriptionIdStringList, page: 1);
+    }
     try {
       emit(PersonalArticleState.subscribedArticleListLoading());
-
-      List<Record> subscribedArticleList = [];
-      List<String> subscriptionIdStringList =
-          Category.getSubscriptionIdStringList(event.subscribedCategoryList);
-      if (subscriptionIdStringList.isNotEmpty) {
-        String categoryListJson = json.encode(subscriptionIdStringList);
-        subscribedArticleList = await personalSubscriptionRepos
-            .fetchRecordList(categoryListJson, page: 1);
-      }
 
       emit(PersonalArticleState.subscribedArticleListLoaded(
         subscribedArticleList: subscribedArticleList,
@@ -52,16 +51,13 @@ class PersonalArticleBloc
   ) async {
     debugLog(event.toString());
     List<Record> subscribedArticleList = state.subscribedArticleList!;
+    List<Category> subscriptionIdStringList = event.subscribedCategoryList;
     try {
       emit(PersonalArticleState.subscribedArticleListLoadingMore(
           subscribedArticleList: subscribedArticleList));
-
-      List<String> subscriptionIdStringList =
-          Category.getSubscriptionIdStringList(event.subscribedCategoryList);
       if (subscriptionIdStringList.isNotEmpty) {
-        String categoryListJson = json.encode(subscriptionIdStringList);
         List<Record> newSubscribedArticleList = await personalSubscriptionRepos
-            .fetchNextRecordList(categoryListJson);
+            .fetchNextRecordList(subscriptionIdStringList);
         isNextPageEmpty = newSubscribedArticleList.isEmpty;
         subscribedArticleList.addAll(newSubscribedArticleList);
       }

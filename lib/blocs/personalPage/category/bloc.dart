@@ -1,7 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:readr_app/blocs/personalPage/category/states.dart';
 import 'package:readr_app/blocs/personalPage/category/events.dart';
+import 'package:readr_app/blocs/personalPage/category/states.dart';
+import 'package:readr_app/data/providers/articles_api_provider.dart';
+import 'package:readr_app/data/providers/local_storage_provider.dart';
 import 'package:readr_app/models/category.dart';
 import 'package:readr_app/services/category_service.dart';
 import 'package:readr_app/widgets/logger.dart';
@@ -9,6 +12,7 @@ import 'package:readr_app/widgets/logger.dart';
 class PersonalCategoryBloc
     extends Bloc<PersonalCategoryEvents, PersonalCategoryState> with Logger {
   final CategoryRepos categoryRepos;
+
   PersonalCategoryBloc({
     required this.categoryRepos,
   }) : super(PersonalCategoryState.init()) {
@@ -16,6 +20,8 @@ class PersonalCategoryBloc
     on<SetCategoryListInStorage>(_setCategoryListInStorage);
   }
 
+  final ArticlesApiProvider articlesApiProvider = Get.find();
+  final LocalStorageProvider localStorageProvider = Get.find();
   final LocalStorage _storage = LocalStorage('setting');
 
   void _fetchSubscribedCategoryList(
@@ -23,25 +29,29 @@ class PersonalCategoryBloc
     Emitter<PersonalCategoryState> emit,
   ) async {
     debugLog(event.toString());
+
     try {
       emit(PersonalCategoryState.subscribedCategoryListLoading());
+      List<Category>? localCategoryList =
+          await localStorageProvider.loadCategoryList();
 
-      List<Category>? localCategoryList;
-      List<Category> onlineCategoryList =
-          await categoryRepos.fetchCategoryList();
-      if (await _storage.ready) {
+      if (await _storage.ready &&  localCategoryList ==null) {
         if (_storage.getItem("categoryList") != null) {
           localCategoryList =
               Category.categoryListFromJson(_storage.getItem("categoryList"));
+          _storage.deleteItem('categoryList');
         }
       }
+      List<Category> onlineCategoryList =
+          await articlesApiProvider.getCategoriesList();
 
-      List<Category> theNewestCategoryList = Category.getTheNewestCategoryList(
-          localCategoryList: localCategoryList,
-          onlineCategoryList: onlineCategoryList);
+      if (localCategoryList == null || localCategoryList.isEmpty) {
+        localStorageProvider.saveCategoryList(onlineCategoryList);
+        localCategoryList = onlineCategoryList;
+      }
 
       emit(PersonalCategoryState.subscribedCategoryListLoaded(
-        subscribedCategoryList: theNewestCategoryList,
+        subscribedCategoryList: localCategoryList,
       ));
     } catch (e) {
       emit(PersonalCategoryState.subscribedCategoryListLoadingError(
@@ -55,8 +65,7 @@ class PersonalCategoryBloc
     Emitter<PersonalCategoryState> emit,
   ) {
     debugLog(event.toString());
-    _storage.setItem(
-        "categoryList", Category.categoryListToJson(event.categoryList));
+    localStorageProvider.saveCategoryList(event.categoryList);
     emit(PersonalCategoryState.subscribedCategoryListLoaded(
       subscribedCategoryList: event.categoryList,
     ));

@@ -6,32 +6,30 @@ import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
 import 'package:readr_app/blocs/onBoarding/events.dart';
 import 'package:readr_app/blocs/onBoarding/states.dart';
-
-import 'package:readr_app/blocs/personalPage/category/bloc.dart';
-import 'package:readr_app/blocs/personalPage/category/events.dart';
-import 'package:readr_app/blocs/personalPage/category/states.dart';
-
 import 'package:readr_app/blocs/personalPage/article/bloc.dart';
 import 'package:readr_app/blocs/personalPage/article/events.dart';
 import 'package:readr_app/blocs/personalPage/article/states.dart';
+import 'package:readr_app/blocs/personalPage/category/bloc.dart';
+import 'package:readr_app/blocs/personalPage/category/events.dart';
+import 'package:readr_app/blocs/personalPage/category/states.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
-import 'package:readr_app/models/on_boarding_position.dart';
-import 'package:readr_app/pages/tabContent/personal/default/unsubscription_category_list.dart';
-
-import 'package:readr_app/services/category_service.dart';
-import 'package:readr_app/services/personal_subscription_service.dart';
-
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/remote_config_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/category.dart';
+import 'package:readr_app/models/on_boarding_position.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/pages/tabContent/personal/default/member_subscription_type_block.dart';
+import 'package:readr_app/pages/tabContent/personal/default/unsubscription_category_list.dart';
 import 'package:readr_app/pages/tabContent/shared/list_item.dart';
+import 'package:readr_app/services/category_service.dart';
+import 'package:readr_app/services/personal_subscription_service.dart';
 import 'package:readr_app/widgets/newsMarquee/news_marquee_persistent_header_delegate.dart';
 
 class PersonalTabContent extends StatefulWidget {
   final ScrollController scrollController;
+
   const PersonalTabContent({
     required this.scrollController,
   });
@@ -229,7 +227,8 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(categoryList[index].title),
+                                        Text(categoryList[index].title ??
+                                            StringDefault.valueNullDefault),
                                         const SizedBox(width: 4.0),
                                         const Icon(
                                           Icons.remove_circle_outline,
@@ -316,7 +315,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
                         _subscribedCategoryList));
               }
 
-              return _buildSubscribtoinList(
+              return _buildSubscriptionList(
                   context, subscribedArticleList, index);
             },
             childCount: subscribedArticleList.length,
@@ -332,7 +331,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
             (BuildContext context, int index) {
               if (index == subscribedArticleList.length - 1) {
                 return Column(children: [
-                  _buildSubscribtoinList(context, subscribedArticleList, index),
+                  _buildSubscriptionList(context, subscribedArticleList, index),
                   const Padding(
                     padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
                     child: Center(child: CupertinoActivityIndicator()),
@@ -340,7 +339,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
                 ]);
               }
 
-              return _buildSubscribtoinList(
+              return _buildSubscriptionList(
                   context, subscribedArticleList, index);
             },
             childCount: subscribedArticleList.length,
@@ -364,7 +363,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              return _buildSubscribtoinList(
+              return _buildSubscriptionList(
                   context, subscribedArticleList, index);
             },
             childCount: subscribedArticleList.length,
@@ -377,7 +376,7 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
     });
   }
 
-  _buildSubscribtoinList(
+  _buildSubscriptionList(
       BuildContext context, List<Record> recordList, int index) {
     Record record = recordList[index];
 

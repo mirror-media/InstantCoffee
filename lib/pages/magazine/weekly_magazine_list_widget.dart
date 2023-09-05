@@ -8,6 +8,8 @@ import 'package:readr_app/models/magazine_list.dart';
 import 'package:readr_app/pages/magazine/magazine_item_widget.dart';
 import 'package:readr_app/pages/magazine/magazine_list_label.dart';
 
+import '../../core/values/string.dart';
+
 class WeeklyMagazineListWidget extends StatefulWidget {
   final MagazineList magazineList;
   const WeeklyMagazineListWidget({
@@ -100,7 +102,7 @@ class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
     return CachedNetworkImage(
       height: imageHeight,
       width: imageWidth,
-      imageUrl: magazine.photoUrl,
+      imageUrl: magazine.photoUrl ?? StringDefault.valueNullDefault,
       placeholder: (context, url) => Container(
         height: imageHeight,
         width: imageWidth,
@@ -136,7 +138,7 @@ class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    magazine.issue,
+                    magazine.issue ?? StringDefault.valueNullDefault,
                     style: const TextStyle(
                       fontSize: 15,
                       color: appColor,

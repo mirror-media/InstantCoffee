@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/firebase_analytics_helper.dart';
 import 'package:readr_app/models/section.dart';
@@ -9,6 +10,7 @@ class SectionDropDownMenu extends StatefulWidget with EasyPopupChild {
   final double tabBarHeight;
   final TabController tabController;
   final List<Section> sectionList;
+
   SectionDropDownMenu({
     this.topPadding = 0.0,
     required this.tabBarHeight,
@@ -144,7 +146,7 @@ class _SectionDropDownMenuState extends State<SectionDropDownMenu>
     Color labelColor = const Color(0xffA3A3A3),
     Color backgroundColor = Colors.white,
   }) {
-    String title = section.title;
+    String title = section.title ?? StringDefault.valueNullDefault;
     if (section.name == 'member') {
       title = 'Premium文章';
       labelColor = Colors.black87;
@@ -174,7 +176,7 @@ class _SectionDropDownMenuState extends State<SectionDropDownMenu>
       onPressed: () {
         if (targetIndex >= 5) {
           FirebaseAnalyticsHelper.logTabBarAfterTheSixthClick(
-              sectiontitle: section.title);
+              sectiontitle: section.title ?? StringDefault.valueNullDefault);
         }
 
         widget.tabController.animateTo(targetIndex);

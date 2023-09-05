@@ -35,6 +35,14 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
   void initState() {
     _listeningTabContentBloc =
         ListeningTabContentBloc(widget.section.sectionAd!);
+    widget.scrollController.addListener(() {
+      if (widget.scrollController.position.pixels ==
+          widget.scrollController.position.maxScrollExtent) {
+        // 滾動到底部，觸發加載操作
+        _listeningTabContentBloc.loadingMore();
+      }
+    });
+    
     super.initState();
   }
 
@@ -113,7 +121,7 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              listeningTabContentBloc.loadingMore(index);
+
 
               if (index == 0) {
                 return TheFirstItem(

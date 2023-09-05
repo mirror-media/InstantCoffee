@@ -5,6 +5,8 @@ import 'package:readr_app/models/story_res.dart';
 import 'package:readr_app/pages/termsOfService/terms_of_service_widget.dart';
 import 'package:readr_app/widgets/logger.dart';
 
+import '../../data/enum/story_status.dart';
+
 class MMTermsOfServiceWidget extends StatefulWidget {
   @override
   _MMTermsOfServiceWidgetState createState() => _MMTermsOfServiceWidgetState();

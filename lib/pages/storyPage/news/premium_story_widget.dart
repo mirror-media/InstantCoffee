@@ -4,9 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
 import 'package:readr_app/blocs/storyPage/news/bloc.dart';
+import 'package:readr_app/core/extensions/string_extension.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/data_constants.dart';
-import 'package:readr_app/helpers/date_time_format.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/paragraph_format.dart';
 import 'package:readr_app/helpers/route_generator.dart';
@@ -195,7 +196,7 @@ class PremiumStoryWidget extends StatelessWidget {
     bool hasMemberSectoin = sections.any((section) => section.name == 'member');
     String sectionTitle = '會員專區';
     if (!hasMemberSectoin && sections.isNotEmpty) {
-      sectionTitle = sections[0].title;
+      sectionTitle = sections[0].title ??StringDefault.valueNullDefault;
     }
 
     List<Widget> categoriesName = [];
@@ -221,7 +222,7 @@ class PremiumStoryWidget extends StatelessWidget {
       categoriesName.add(GestureDetector(
         onTap: null,
         child: Text(
-          categories[0].title,
+          categories[0].title ?? StringDefault.valueNullDefault,
           style: const TextStyle(fontSize: 15, color: appColor),
         ),
       ));
@@ -318,15 +319,14 @@ class PremiumStoryWidget extends StatelessWidget {
     if (time == '' || time == ' ') {
       return Container();
     }
-    DateTimeFormat dateTimeFormat = DateTimeFormat();
     return Row(
       children: [
         Text(title,
             style: const TextStyle(color: Colors.black54, fontSize: 13)),
         const SizedBox(width: 8),
+
         Text(
-          dateTimeFormat.changeDatabaseStringToDisplayString(
-              time, 'yyyy.MM.dd HH:mm', articleDateTimePostfix),
+          time.formattedTaipeiDateTime() ?? StringDefault.valueNullDefault,
           style: const TextStyle(
             fontSize: 13,
             color: Colors.black87,

@@ -8,6 +8,8 @@ import 'package:readr_app/pages/storyPage/news/premium_story_widget.dart';
 import 'package:readr_app/pages/storyPage/news/story_widget.dart';
 import 'package:readr_app/widgets/logger.dart';
 
+import '../../../data/enum/story_status.dart';
+
 class BuildStoryPage extends StatefulWidget {
   final bool isMemberCheck;
   const BuildStoryPage({key, required this.isMemberCheck}) : super(key: key);

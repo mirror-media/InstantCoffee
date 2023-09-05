@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/initial_app.dart';
@@ -14,27 +15,30 @@ import 'package:readr_app/pages/emailLogin/email_login_page.dart';
 import 'package:readr_app/pages/emailRegistered/email_registered_page.dart';
 import 'package:readr_app/pages/emailVerification/email_verification_page.dart';
 import 'package:readr_app/pages/login/login_page.dart';
-import 'package:readr_app/pages/magazine_browser.dart';
 import 'package:readr_app/pages/magazine/magazine_page.dart';
+import 'package:readr_app/pages/magazine_browser.dart';
 import 'package:readr_app/pages/memberCenter/deleteMember/delete_member_page.dart';
+import 'package:readr_app/pages/memberCenter/editMemberContactInfo/edit_member_contact_info_page.dart';
+import 'package:readr_app/pages/memberCenter/editMemberProfile/edit_member_profile_page.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/newebpay_change_plan_page.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/subscription_select_page.dart';
-import 'package:readr_app/pages/settingPage/notification_settings_page.dart';
 import 'package:readr_app/pages/passwordReset/password_reset_page.dart';
 import 'package:readr_app/pages/passwordResetEmail/password_reset_email_page.dart';
 import 'package:readr_app/pages/passwordResetPrompt/password_reset_prompt_page.dart';
 import 'package:readr_app/pages/passwordUpdate/password_update_page.dart';
 import 'package:readr_app/pages/search/search_page.dart';
+import 'package:readr_app/pages/settingPage/notification_settings_page.dart';
 import 'package:readr_app/pages/settingPage/premium_setting_page.dart';
 import 'package:readr_app/pages/storyPage/external/external_story_page.dart';
 import 'package:readr_app/pages/storyPage/listening/listening_story_page.dart';
 import 'package:readr_app/pages/storyPage/news/story_page.dart';
-
-import 'package:readr_app/pages/memberCenter/editMemberProfile/edit_member_profile_page.dart';
-import 'package:readr_app/pages/memberCenter/editMemberContactInfo/edit_member_contact_info_page.dart';
 import 'package:readr_app/pages/tag/tag_page.dart';
+import 'package:readr_app/pages/topic_page/topic_page.dart';
 import 'package:readr_app/widgets/image_viewer_widget.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+import '../models/topic/topic_model.dart';
+import '../pages/topic_page/topic_page_binding.dart';
 
 class RouteGenerator {
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
@@ -457,54 +461,56 @@ class RouteGenerator {
     // https://github.com/flutter/flutter/issues/48245
     // There is a issue when opening pdf file in webview on android,
     // so change to launch URL on android.
-    String url =
-        magazine.type == 'weekly' ? magazine.onlineReadingUrl : magazine.pdfUrl;
+    if(magazine.type!=null) {
+      String url =
+      magazine.type! == 'weekly' ? magazine.onlineReadingUrl! : magazine.pdfUrl!;
 
-    if (url == '') {
-      Fluttertoast.showToast(
-          msg: '下載失敗，請再試一次',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
-    } else if (magazine.type == 'weekly') {
-      InAppBrowser browser = InAppBrowser();
-      browser.openUrlRequest(
-        urlRequest: URLRequest(
-          url: Uri.parse(url),
-        ),
-        options: InAppBrowserClassOptions(
-          crossPlatform: InAppBrowserOptions(
-            hideUrlBar: true,
-            toolbarTopBackgroundColor: appColor,
-            hideToolbarTop: Platform.isAndroid,
+      if (url == '') {
+        Fluttertoast.showToast(
+            msg: '下載失敗，請再試一次',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      } else if (magazine.type == 'weekly') {
+        InAppBrowser browser = InAppBrowser();
+        browser.openUrlRequest(
+          urlRequest: URLRequest(
+            url: Uri.parse(url),
           ),
-          ios: IOSInAppBrowserOptions(
-            hideToolbarBottom: true,
-            closeButtonColor: Colors.white,
+          options: InAppBrowserClassOptions(
+            crossPlatform: InAppBrowserOptions(
+              hideUrlBar: true,
+              toolbarTopBackgroundColor: appColor,
+              hideToolbarTop: Platform.isAndroid,
+            ),
+            ios: IOSInAppBrowserOptions(
+              hideToolbarBottom: true,
+              closeButtonColor: Colors.white,
+            ),
+            android: AndroidInAppBrowserOptions(
+              closeOnCannotGoBack: false,
+              shouldCloseOnBackButtonPressed: true,
+            ),
           ),
-          android: AndroidInAppBrowserOptions(
-            closeOnCannotGoBack: false,
-            shouldCloseOnBackButtonPressed: true,
-          ),
-        ),
-      );
-    } else {
-      if (Platform.isAndroid) {
-        if (await canLaunchUrlString(url)) {
-          await launchUrlString(url);
-        } else {
-          throw 'Could not launch $url';
-        }
-      } else {
-        navigatorKey.currentState!.pushNamed(
-          magazineBrowser,
-          arguments: {
-            'magazine': magazine,
-          },
         );
+      } else {
+        if (Platform.isAndroid) {
+          if (await canLaunchUrlString(url)) {
+            await launchUrlString(url);
+          } else {
+            throw 'Could not launch $url';
+          }
+        } else {
+          navigatorKey.currentState!.pushNamed(
+            magazineBrowser,
+            arguments: {
+              'magazine': magazine,
+            },
+          );
+        }
       }
     }
   }
@@ -556,5 +562,11 @@ class RouteGenerator {
       debugPrint('route name: ${route.settings.name}');
       debugPrint('route arg: ${route.settings.arguments.toString()}');
     }
+  }
+
+  /// 目前Router管理很亂，需要全部換成一個方式才能整合，目前先用這方式 下下策
+  static void routerToTopicPage({required TopicModel topic}) {
+    Get.to(const TopicPage(),
+        binding: TopicPageBinding(), arguments: {'topic': topic});
   }
 }

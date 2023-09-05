@@ -11,6 +11,7 @@ import 'package:readr_app/blocs/personalPage/category/states.dart';
 import 'package:readr_app/blocs/personalPage/article/bloc.dart';
 import 'package:readr_app/blocs/personalPage/article/events.dart';
 import 'package:readr_app/blocs/personalPage/article/states.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/pages/tabContent/personal/premium/premium_member_subscription_type_block.dart';
 import 'package:readr_app/pages/tabContent/personal/premium/premium_unsubscription_category_list.dart';
 import 'package:readr_app/pages/tabContent/shared/premium_list_item.dart';
@@ -233,7 +234,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: _buildCategoryChip(
-                          title: categoryList[index].title,
+                          title: categoryList[index].title ?? StringDefault.valueNullDefault,
                           onTap: () {
                             categoryList[index].isSubscribed =
                                 !categoryList[index].isSubscribed;
@@ -310,7 +311,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
                         _subscribedCategoryList));
               }
 
-              return _buildSubscribtoinList(
+              return _buildSubscriptionList(
                   context, subscribedArticleList, index);
             },
             childCount: subscribedArticleList.length,
@@ -326,7 +327,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
             (BuildContext context, int index) {
               if (index == subscribedArticleList.length - 1) {
                 return Column(children: [
-                  _buildSubscribtoinList(context, subscribedArticleList, index),
+                  _buildSubscriptionList(context, subscribedArticleList, index),
                   const Padding(
                     padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
                     child: Center(child: CupertinoActivityIndicator()),
@@ -334,7 +335,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
                 ]);
               }
 
-              return _buildSubscribtoinList(
+              return _buildSubscriptionList(
                   context, subscribedArticleList, index);
             },
             childCount: subscribedArticleList.length,
@@ -358,7 +359,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              return _buildSubscribtoinList(
+              return _buildSubscriptionList(
                   context, subscribedArticleList, index);
             },
             childCount: subscribedArticleList.length,
@@ -371,7 +372,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
     });
   }
 
-  _buildSubscribtoinList(
+  _buildSubscriptionList(
       BuildContext context, List<Record> recordList, int index) {
     Record record = recordList[index];
 
@@ -413,6 +414,7 @@ class _PremiumPersonalTabContentState extends State<PremiumPersonalTabContent> {
             ),
           ),
         ),
+
         const Divider(
           thickness: 1,
           color: Colors.grey,

@@ -9,6 +9,13 @@ class StoryRes {
     required this.story,
   });
 
+  factory StoryRes.fromJsonK6(Map<String, dynamic> json) {
+    return StoryRes(
+      isMember: json['isMember'],
+      story: Story.fromJsonK6(json),
+    );
+  }
+
   factory StoryRes.fromJson(Map<String, dynamic> json) {
     return StoryRes(
       isMember: json['tokenState'] == 'OK',
