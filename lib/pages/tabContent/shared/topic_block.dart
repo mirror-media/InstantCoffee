@@ -2,29 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
-import 'package:readr_app/controllers/topic/topic_list_controller.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/data_constants.dart';
-import 'package:readr_app/models/topic.dart';
-import 'package:readr_app/pages/topic/topic_list_page.dart';
-import 'package:readr_app/pages/topic/topic_page.dart';
-import 'package:readr_app/services/topic_service.dart';
+import 'package:readr_app/pages/home/home_controller.dart';
+import '../../../helpers/route_generator.dart';
+import '../../../models/topic/topic_model.dart';
+import '../../top_list_page/topic_list_binding.dart';
+import '../../top_list_page/topic_list_page.dart';
 
-class TopicBlock extends GetView<TopicListController> {
+
+class TopicBlock extends StatelessWidget {
   final bool isPremium;
-  const TopicBlock({this.isPremium = false});
+  final HomeController controller = Get.find();
+
+  TopicBlock({Key? key, this.isPremium = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Get.put(TopicListController(TopicService()));
-    return Obx(
-      () {
-        if (controller.topicList.isNotEmpty) {
-          return _buildTopicBlock(context);
-        }
-        return Container();
-      },
-    );
+    return _buildTopicBlock(context);
   }
 
   Widget _buildTopicBlock(BuildContext context) {
@@ -63,60 +58,58 @@ class TopicBlock extends GetView<TopicListController> {
   }
 
   Widget _buildList(BuildContext context) {
-    List<Topic> topicList = [];
-    for (int i = 0; i < controller.topicList.length; i++) {
-      topicList.addIf(
-          controller.topicList[i].isFeatured, controller.topicList[i]);
-      if (topicList.length == 5) {
-        break;
-      }
-    }
-
-    return ListView.separated(
-      scrollDirection: Axis.horizontal,
-      shrinkWrap: true,
-      padding: const EdgeInsets.fromLTRB(12, 20, 12, 24),
-      itemBuilder: (context, index) {
-        if (index == topicList.length) {
-          return GestureDetector(
-            onTap: () => Get.to(() => TopicListPage()),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(21),
-                color: Colors.white,
-                border: Border.all(
-                  color: appColor,
-                  width: 1.0,
+    return Obx(() {
+      final topicList = controller.rxTopicList;
+      return ListView.separated(
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        padding: const EdgeInsets.fromLTRB(12, 20, 12, 24),
+        itemBuilder: (context, index) {
+          if (index == topicList.length) {
+            return GestureDetector(
+              onTap: () =>
+                  Get.to(const TopicListPage(), binding: TopicListBinding()),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(21),
+                  color: Colors.white,
+                  border: Border.all(
+                    color: appColor,
+                    width: 1.0,
+                  ),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                child: const Text(
+                  '更多',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w400,
+                    color: Color.fromRGBO(0, 0, 0, 0.66),
+                  ),
                 ),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-              child: const Text(
-                '更多',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w400,
-                  color: Color.fromRGBO(0, 0, 0, 0.66),
-                ),
-              ),
-            ),
-          );
-        }
+            );
+          }
 
-        return _buildListItem(context, topicList[index]);
-      },
-      separatorBuilder: (context, index) => const SizedBox(width: 12),
-      itemCount: topicList.length + 1,
-    );
+          return _buildListItem(context, topicList[index]);
+        },
+        separatorBuilder: (context, index) => const SizedBox(width: 12),
+        itemCount: topicList.length + 1,
+      );
+    });
   }
 
-  Widget _buildListItem(BuildContext context, Topic topic) {
+  Widget _buildListItem(BuildContext context, TopicModel topic) {
     return GestureDetector(
       onTap: () {
         if (!context.read<MemberBloc>().state.isPremium) {
           AdHelper adHelper = AdHelper();
           adHelper.checkToShowInterstitialAd();
         }
-        Get.to(() => TopicPage(topic));
+
+
+        RouteGenerator.routerToTopicPage(topic: topic);
       },
       child: Container(
         height: 42,
@@ -130,7 +123,7 @@ class TopicBlock extends GetView<TopicListController> {
         ),
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         child: Text(
-          '#${topic.title}',
+          '#${topic.name}',
           style: const TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w400,

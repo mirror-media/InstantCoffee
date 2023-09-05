@@ -3,29 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
-import 'package:readr_app/controllers/topic/topic_page_controller.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/topic_image_item.dart';
+import '../topic_page_controller.dart';
 
 class PortraitWallTopicWidget extends GetView<TopicPageController> {
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<TopicPageController>(
-      builder: (controller) {
-        if (controller.isError) {
-          return const Center(
-            child: Text('發生錯誤，請稍後再試'),
-          );
-        }
-
-        if (!controller.isLoading) {
-          return _buildList(context);
-        }
-
-        return const Center(child: CircularProgressIndicator.adaptive());
-      },
-    );
+    return _buildList(context);
   }
 
   Widget _buildList(BuildContext context) {
@@ -92,7 +78,7 @@ class PortraitWallTopicWidget extends GetView<TopicPageController> {
             topicImageItem.description,
             style: TextStyle(
               fontSize: 20,
-              color: controller.topic.recordTitleColor,
+              color: controller.rxCurrentTopic.value?.recordTitleColor,
             ),
           ),
         ],

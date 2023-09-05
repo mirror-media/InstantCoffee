@@ -1,19 +1,24 @@
-import 'package:readr_app/helpers/environment.dart';
-import 'package:readr_app/helpers/api_base_helper.dart';
+import 'package:get/get.dart';
+import 'package:readr_app/data/providers/articles_api_provider.dart';
 import 'package:readr_app/models/record.dart';
+
+import '../models/category.dart';
 
 abstract class PersonalSubscriptionRepos {
   int initialPage();
+
   int nextPage();
+
   int previousPage();
 
-  Future<List<Record>> fetchRecordList(String categoryListJson, {int page = 1});
-  Future<List<Record>> fetchNextRecordList(String categoryListJson);
+  Future<List<Record>> fetchRecordList(List<Category> categoryList,
+      {int page = 1});
+
+  Future<List<Record>> fetchNextRecordList(List<Category> categoryList);
 }
 
 class PersonalSubscriptionService implements PersonalSubscriptionRepos {
-  final ApiBaseHelper _helper = ApiBaseHelper();
-
+  final ArticlesApiProvider articlesApiProvider = Get.find();
   int page = 1;
 
   @override
@@ -36,19 +41,16 @@ class PersonalSubscriptionService implements PersonalSubscriptionRepos {
   }
 
   @override
-  Future<List<Record>> fetchRecordList(String categoryListJson,
+  Future<List<Record>> fetchRecordList(List<Category> categoryList,
       {int page = 1}) async {
-    String url =
-        '${Environment().config.apiBase}meta?where={"categories":{"\$in":$categoryListJson},"device":{"\$in":["all","app"]}}&page=$page&sort=-publishedDate&utm_source=app&utm_medium=news&max_results=20';
-
-    final jsonResponse = await _helper.getByUrl(url);
-    List<Record> records = Record.recordListFromJson(jsonResponse['_items']);
+    List<Record> records = await articlesApiProvider
+        .getArticleListByCategoryList(list: categoryList, page: page - 1);
     return records;
   }
 
   @override
-  Future<List<Record>> fetchNextRecordList(String categoryListJson) async {
+  Future<List<Record>> fetchNextRecordList(List<Category> categoryList) async {
     nextPage();
-    return await fetchRecordList(categoryListJson, page: page);
+    return await fetchRecordList(categoryList, page: page);
   }
 }

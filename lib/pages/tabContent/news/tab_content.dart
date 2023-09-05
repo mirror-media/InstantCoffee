@@ -7,6 +7,7 @@ import 'package:readr_app/blocs/editorChoice/cubit.dart';
 import 'package:readr_app/blocs/editorChoice/state.dart';
 import 'package:readr_app/blocs/election/election_cubit.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/environment.dart';
@@ -31,6 +32,7 @@ class TabContent extends StatefulWidget {
   final Section section;
   final ScrollController scrollController;
   final bool needCarousel;
+
   const TabContent({
     required this.section,
     required this.scrollController,
@@ -47,11 +49,14 @@ class _TabContentState extends State<TabContent> with Logger {
 
   _fetchFirstRecordList() {
     context.read<TabContentBloc>().add(FetchFirstRecordList(
-        sectionKey: widget.section.key, sectionType: widget.section.type));
+        sectionName: widget.section.name ?? StringDefault.valueNullDefault,
+        sectionKey: widget.section.key ?? StringDefault.valueNullDefault,
+        sectionType: widget.section.type ?? StringDefault.valueNullDefault));
   }
 
   _fetchNextPageRecordList() {
     context.read<TabContentBloc>().add(FetchNextPageRecordList(
+        sectionName: widget.section.name ?? StringDefault.valueNullDefault,
         isLatest: widget.section.key == Environment().config.latestSectionKey));
   }
 
@@ -211,7 +216,7 @@ class _TabContentState extends State<TabContent> with Logger {
                       ),
                       if (widget.section.key ==
                           Environment().config.latestSectionKey) ...[
-                        const TopicBlock(),
+                        TopicBlock(),
                         const SizedBox(
                           height: 16.0,
                         ),

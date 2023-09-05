@@ -3,17 +3,14 @@ import 'package:csslib/parser.dart' as csslib;
 import 'package:csslib/visitor.dart';
 import 'package:readr_app/helpers/environment.dart';
 
-enum TopicType {
-  list,
-  group,
-  portraitWall,
-  slideshow,
-}
+import '../data/enum/topic_type.dart';
+
+
 
 class Topic {
-  final String id;
-  final String title;
-  final bool isFeatured;
+  final String? id;
+  final String? title;
+  final bool? isFeatured;
   final int sortOrder;
   final TopicType type;
   final String ogImageUrl;

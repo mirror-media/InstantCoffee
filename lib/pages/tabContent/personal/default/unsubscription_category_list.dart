@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/personalPage/category/bloc.dart';
 import 'package:readr_app/blocs/personalPage/category/events.dart';
 import 'package:readr_app/blocs/personalPage/category/states.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/models/category.dart';
 
@@ -68,7 +69,7 @@ class _UnsubscriptionCategoryListState
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(unsubscriptionCategoryList[index].title),
+                                Text(unsubscriptionCategoryList[index].title ?? StringDefault.valueNullDefault),
                                 const SizedBox(width: 4.0),
                                 const Icon(
                                   Icons.add_circle_outline,
