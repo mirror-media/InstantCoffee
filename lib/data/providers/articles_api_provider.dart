@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:readr_app/core/extensions/string_extension.dart';
+import 'package:readr_app/data/providers/auth_provider.dart';
 import 'package:readr_app/helpers/api_base_helper.dart';
 import 'package:readr_app/models/external_story.dart';
 import 'package:readr_app/models/magazine_list.dart';
@@ -26,11 +27,24 @@ class ArticlesApiProvider extends GetConnect {
   static const articleTakeCount = 12;
   static const homePageTopicCount = 5;
   final ApiBaseHelper apiBaseHelper = ApiBaseHelper();
+  final AuthProvider _authProvider = Get.find();
   ValueNotifier<GraphQLClient>? client;
+  Worker? accessTokeWorker;
 
   @override
   void onInit() {
-    final Link link = HttpLink(Environment().config.weeklyAPIPath);
+    initGraphQLLink(_authProvider.accessToken.value);
+    accessTokeWorker = ever<String?>(_authProvider.accessToken, (accessToken) {
+      initGraphQLLink(accessToken);
+    });
+  }
+
+  void initGraphQLLink(String? accessToken) {
+    Map<String, String> header =
+        accessToken != null ? {'authorization': 'Bearer $accessToken'} : {};
+    final Link link =
+        HttpLink(Environment().config.weeklyAPIPath, defaultHeaders: header);
+
     client = ValueNotifier(
       GraphQLClient(
         cache: GraphQLCache(),
@@ -107,10 +121,12 @@ class ArticlesApiProvider extends GetConnect {
 
   Future<StoryRes?> getArticleInfoBySlug({required String slug}) async {
     String queryString = QueryDB.fetchArticleInfoBySlug.format([slug]);
+
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     if (result == null || result.data == null) return null;
     if (!result.data!.containsKey('post')) return null;
+
     return StoryRes.fromJsonK6(result.data!['post']);
   }
 
@@ -188,8 +204,8 @@ class ArticlesApiProvider extends GetConnect {
         result.data == null ||
         !result.data!.containsKey('categories')) return categoryList;
     final list = result.data!['categories'] as List<dynamic>;
-    categoryList
-        .addAll(list.map((element) => Category.fromJson(element,true)).toList());
+    categoryList.addAll(
+        list.map((element) => Category.fromJson(element, true)).toList());
     return categoryList;
   }
 
@@ -267,5 +283,10 @@ class ArticlesApiProvider extends GetConnect {
     }
     final postsList = result['posts'] as List<dynamic>;
     return postsList.map((e) => Record.fromJsonK6(e)).toList();
+  }
+
+  @override
+  void onClose() {
+    accessTokeWorker?.dispose();
   }
 }

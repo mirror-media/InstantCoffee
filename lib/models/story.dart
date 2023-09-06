@@ -26,7 +26,8 @@ class Story {
   List<People> designers;
   List<People> engineers;
   List<Paragraph> brief;
-  List<Paragraph> apiDatas;
+  List<Paragraph> apiData;
+  List<Paragraph> trimmedApiData;
   List<Category> categories;
   List<Section> sections;
   bool isAdult;
@@ -51,7 +52,8 @@ class Story {
     required this.extendByline,
     required this.tags,
     required this.brief,
-    required this.apiDatas,
+    required this.apiData,
+    required this.trimmedApiData,
     required this.writers,
     required this.photographers,
     required this.cameraMen,
@@ -80,6 +82,11 @@ class Story {
     List<Paragraph> apiDataList = [];
     if (json["apiData"] != null) {
       apiDataList = Paragraph.paragraphListFromJson(json["apiData"]);
+    }
+
+    List<Paragraph> trimmedApiDataList = [];
+    if (json["content"] != null && json["content"]["trimmedApiData"] != null) {
+      apiDataList = Paragraph.paragraphListFromJson(json["content"]["trimmedApiData"]);
     }
 
     String photoUrl = Environment().config.mirrorMediaNotImageUrl;
@@ -126,7 +133,8 @@ class Story {
           ? []
           : Record.recordListFromJson(json["relateds"]),
       brief: briefList,
-      apiDatas: apiDataList,
+      apiData: apiDataList,
+      trimmedApiData: trimmedApiDataList,
       writers: json["writers"] == null
           ? []
           : People.peopleListFromJson(json["writers"]),
@@ -151,7 +159,7 @@ class Story {
       tags: json["tags"] == null ? [] : Tag.tagListFromJson(json["tags"]),
       state: json["state"],
       isAdult: json['isAdult'] ?? false,
-      isTruncated: json['isTruncated'] ?? false,
+      isTruncated: apiDataList.isEmpty,
       isAdvertised: json['isAdvertised'] ?? false,
       imageUrlList: imageUrlList,
     );
@@ -170,6 +178,13 @@ class Story {
     if (json["content"] != null && json["content"]["apiData"] != null) {
       apiDataList = Paragraph.paragraphListFromJson(json["content"]["apiData"]);
     }
+
+    List<Paragraph> trimmedApiDataList = [];
+    if (json["content"] != null && json["content"]["trimmedApiData"] != null) {
+      apiDataList = Paragraph.paragraphListFromJson(json["content"]["trimmedApiData"]);
+    }
+
+
 
     String photoUrl = Environment().config.mirrorMediaNotImageUrl;
     String? videoUrl;
@@ -218,7 +233,8 @@ class Story {
           ? []
           : Record.recordListFromJson(json["relateds"]),
       brief: briefList,
-      apiDatas: apiDataList,
+      apiData: apiDataList,
+      trimmedApiData: trimmedApiDataList,
       writers: json["writers"] == null
           ? []
           : People.peopleListFromJson(json["writers"]),

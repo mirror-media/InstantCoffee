@@ -142,6 +142,7 @@ class QueryDB {
               name
           }
           apiData
+          trimmedApiData
           apiDataBrief
           content
           trimmedContent

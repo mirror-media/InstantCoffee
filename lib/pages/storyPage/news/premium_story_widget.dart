@@ -28,6 +28,7 @@ import 'package:readr_app/widgets/m_m_video_player.dart';
 class PremiumStoryWidget extends StatelessWidget {
   final bool isLogin;
   final Story story;
+
   const PremiumStoryWidget({
     required this.isLogin,
     required this.story,
@@ -196,7 +197,7 @@ class PremiumStoryWidget extends StatelessWidget {
     bool hasMemberSectoin = sections.any((section) => section.name == 'member');
     String sectionTitle = '會員專區';
     if (!hasMemberSectoin && sections.isNotEmpty) {
-      sectionTitle = sections[0].title ??StringDefault.valueNullDefault;
+      sectionTitle = sections[0].title ?? StringDefault.valueNullDefault;
     }
 
     List<Widget> categoriesName = [];
@@ -324,7 +325,6 @@ class PremiumStoryWidget extends StatelessWidget {
         Text(title,
             style: const TextStyle(color: Colors.black54, fontSize: 13)),
         const SizedBox(width: 8),
-
         Text(
           time.formattedTaipeiDateTime() ?? StringDefault.valueNullDefault,
           style: const TextStyle(
@@ -533,15 +533,16 @@ class PremiumStoryWidget extends StatelessWidget {
     ParagraphFormat paragraphFormat = ParagraphFormat();
     int unStyleParagraphCount = 0;
     bool aT1IsActivated = false;
-
+    final paragraphList =
+        story.apiData.isEmpty ? story.apiData : story.trimmedApiData;
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: story.apiDatas.length,
+      itemCount: paragraphList.length,
       separatorBuilder: (BuildContext context, int index) =>
           const SizedBox(height: 16.0),
       itemBuilder: (context, index) {
-        Paragraph paragraph = story.apiDatas[index];
+        Paragraph paragraph = paragraphList[index];
         if (paragraph.contents.isNotEmpty && paragraph.contents[0].data != '') {
           if (unStyleParagraphCount == storyAT1AdIndex) {
             aT1IsActivated = true;
@@ -554,7 +555,7 @@ class PremiumStoryWidget extends StatelessWidget {
             children: [
               CustomPaint(
                 foregroundPainter:
-                    (isNeedFadding && index == story.apiDatas.length - 1)
+                    (isNeedFadding && index == paragraphList.length - 1)
                         ? FadingEffect()
                         : null,
                 child: paragraphFormat.parseTheParagraph(
