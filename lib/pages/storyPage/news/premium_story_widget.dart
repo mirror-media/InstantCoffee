@@ -111,6 +111,7 @@ class PremiumStoryWidget extends StatelessWidget {
           const SizedBox(height: 16),
         ],
         _buildCategoryText(story.sections, story.categories),
+
         const SizedBox(
           height: 8,
         ),
@@ -223,7 +224,7 @@ class PremiumStoryWidget extends StatelessWidget {
       categoriesName.add(GestureDetector(
         onTap: null,
         child: Text(
-          categories[0].title ?? StringDefault.valueNullDefault,
+          categories[0].name ?? StringDefault.valueNullDefault,
           style: const TextStyle(fontSize: 15, color: appColor),
         ),
       ));
@@ -534,7 +535,7 @@ class PremiumStoryWidget extends StatelessWidget {
     int unStyleParagraphCount = 0;
     bool aT1IsActivated = false;
     final paragraphList =
-        story.apiData.isEmpty ? story.apiData : story.trimmedApiData;
+        story.apiData.isNotEmpty ? story.apiData : story.trimmedApiData;
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),

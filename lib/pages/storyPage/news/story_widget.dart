@@ -409,7 +409,7 @@ class StoryWidget extends StatelessWidget {
     bool aT1IsActivated = false;
     bool aT2IsActivated = false;
     final paragraphList =
-        story.apiData.isEmpty ? story.apiData : story.trimmedApiData;
+        story.apiData.isNotEmpty ? story.apiData : story.trimmedApiData;
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: ListView.builder(
