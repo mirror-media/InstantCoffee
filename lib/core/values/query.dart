@@ -51,12 +51,14 @@ class QueryDB {
          orderBy:{sortOrder:asc})
          {
             id
+            slug
             type
             name
             isFeatured
             tags{
               id
             }
+            slideshow_imagesCount
             sortOrder
             og_image{
             resized{

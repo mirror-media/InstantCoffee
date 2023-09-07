@@ -6,6 +6,7 @@ import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/pages/topic_page/topic_page_controller.dart';
 import 'package:readr_app/pages/topic_page/widget/list_topic_widget.dart';
 import 'package:readr_app/pages/topic_page/widget/portrait_wall_topic_widget.dart';
+import 'package:readr_app/pages/topic_page/widget/slideshow_webview_widget.dart';
 import '../../data/enum/topic_page_status.dart';
 import '../../data/enum/topic_type.dart';
 
@@ -41,33 +42,29 @@ class TopicPage extends GetView<TopicPageController> {
         child: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
-              if (controller.rxCurrentTopic.value?.type != TopicType.slideshow)
-                SliverToBoxAdapter(
-                  child: Container(
-                    color: const Color(0xFFE2E5E7),
-                    child: CachedNetworkImage(
-                      imageUrl:
-                          controller.rxCurrentTopic.value?.originImage!.imageCollection!.w800 ??
+              controller.rxCurrentTopic.value?.type != TopicType.slideshow
+                  ? SliverToBoxAdapter(
+                      child: Container(
+                        color: const Color(0xFFE2E5E7),
+                        child: CachedNetworkImage(
+                          imageUrl: controller.rxCurrentTopic.value
+                                  ?.originImage!.imageCollection!.w800 ??
                               '',
-                      fit: BoxFit.contain,
-                      width: Get.width,
-                      height: Get.width / (16 / 9),
-                      placeholder: (context, url) => const Center(
-                        child: CircularProgressIndicator.adaptive(),
+                          fit: BoxFit.contain,
+                          width: Get.width,
+                          height: Get.width / (16 / 9),
+                          placeholder: (context, url) => const Center(
+                            child: CircularProgressIndicator.adaptive(),
+                          ),
+                          errorWidget: (context, url, error) => Container(),
+                        ),
                       ),
-                      errorWidget: (context, url, error) => Container(),
-                    ),
+                    )
+                  : SliverToBoxAdapter(
+                    child: SlideshowWebViewWidget(
+                        controller.rxCurrentTopic.value?.slug ??
+                            StringDefault.valueNullDefault),
                   ),
-                ),
-                /// Todo: 目前沒有slideshow 規格以及測試資料，因此無法進行重構 後續如果有再新增回來
-                // Obx(() {
-                //   final topic = controller.rxCurrentTopic.value;
-                //   return topic == null ||
-                //           topic.id == null ||
-                //           topic.type != TopicType.slideshow
-                //       ? const SizedBox.shrink()
-                //       : SlideshowWebViewWidget(topic.id!);
-                // })
             ];
           },
           body: Obx(() {
