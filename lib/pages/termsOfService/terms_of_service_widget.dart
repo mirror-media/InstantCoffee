@@ -7,9 +7,11 @@ import 'package:readr_app/models/story.dart';
 
 class TermsOfServiceWidget extends StatefulWidget {
   final Story story;
+
   const TermsOfServiceWidget({
+    Key? key,
     required this.story,
-  });
+  }) : super(key: key);
 
   @override
   _TermsOfServiceWidgetState createState() => _TermsOfServiceWidgetState();
@@ -102,15 +104,16 @@ class _TermsOfServiceWidgetState extends State<TermsOfServiceWidget> {
 
   _buildContent(Story story) {
     ParagraphFormat paragraphFormat = ParagraphFormat();
-
+    final paragraphList =
+        story.apiData.isEmpty ? story.apiData : story.trimmedApiData;
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: story.apiDatas.length,
+          itemCount: paragraphList.length,
           itemBuilder: (context, index) {
-            Paragraph paragraph = story.apiDatas[index];
+            Paragraph paragraph = paragraphList[index];
             if (paragraph.contents.isNotEmpty &&
                 paragraph.contents[0].data != '') {
               return Padding(

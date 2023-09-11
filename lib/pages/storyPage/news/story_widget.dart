@@ -29,8 +29,9 @@ class StoryWidget extends StatelessWidget {
   final Story story;
 
   const StoryWidget({
+    Key? key,
     required this.story,
-  });
+  }) : super(key: key);
 
   _fetchPublishedStoryBySlug(
       BuildContext context, String storySlug, bool isMemberCheck) {
@@ -407,15 +408,16 @@ class StoryWidget extends StatelessWidget {
     int unStyleParagraphCount = 0;
     bool aT1IsActivated = false;
     bool aT2IsActivated = false;
-
+    final paragraphList =
+        story.apiData.isNotEmpty ? story.apiData : story.trimmedApiData;
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: story.apiDatas.length,
+          itemCount: paragraphList.length,
           itemBuilder: (context, index) {
-            Paragraph paragraph = story.apiDatas[index];
+            Paragraph paragraph = paragraphList[index];
             if (paragraph.contents.isNotEmpty &&
                 paragraph.contents[0].data != '') {
               if (unStyleParagraphCount == storyAT1AdIndex) {

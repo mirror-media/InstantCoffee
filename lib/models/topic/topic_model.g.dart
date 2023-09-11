@@ -8,12 +8,14 @@ part of 'topic_model.dart';
 
 TopicModel _$TopicModelFromJson(Map<String, dynamic> json) => TopicModel(
       id: json['id'] as String?,
+      slug: json['slug'] as String?,
       type: $enumDecodeNullable(_$TopicTypeEnumMap, json['type']),
       name: json['name'] as String?,
       isFeatured: json['isFeatured'] as bool?,
       tags: (json['tags'] as List<dynamic>?)
           ?.map((e) => TopicTag.fromJson(e as Map<String, dynamic>))
           .toList(),
+      slideShowImagesCount: json['slideshow_imagesCount'] as int?,
       sortOrder: json['sortOrder'] as int?,
       style: json['style'] as String?,
       originImage: json['og_image'] == null
