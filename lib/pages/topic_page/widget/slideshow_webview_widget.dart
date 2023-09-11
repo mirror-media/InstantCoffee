@@ -62,10 +62,10 @@ class _SlideshowWebViewWidgetState extends State<SlideshowWebViewWidget> {
                         "document.getElementsByClassName('the-gdpr')[0].style.display = 'none';");
                     final String width =
                         await _webViewController.runJavascriptReturningResult(
-                            "document.getElementsByClassName('topic-wrapper')[0].offsetWidth");
+                            "document.getElementsByClassName('topic-list__Topic-sc-820f3557-1 kIKGxx topic')[0].offsetWidth");
                     final String height =
                         await _webViewController.runJavascriptReturningResult(
-                            "document.getElementsByClassName('topic-wrapper')[0].offsetHeight");
+                            "document.getElementsByClassName('topic-list__Topic-sc-820f3557-1 kIKGxx topic')[0].offsetHeight");
                     setState(() {
                       _aspectRatio = int.parse(width) / int.parse(height);
                       _isLoading = false;

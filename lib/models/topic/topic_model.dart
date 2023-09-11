@@ -15,9 +15,11 @@ part 'topic_model.g.dart';
 @JsonSerializable()
 class TopicModel {
   final String? id;
-  final TopicType? type;
+  final String? slug;
+  late TopicType? type;
   final String? name;
   final bool? isFeatured;
+  final int? slideShowImagesCount;
   final List<TopicTag>? tags;
   final int? sortOrder;
   final String? style;
@@ -35,16 +37,18 @@ class TopicModel {
 
   TopicModel(
       {this.id,
+      this.slug,
       this.type,
       this.name,
       this.isFeatured,
+      this.slideShowImagesCount,
       this.tags,
       this.sortOrder,
       this.style,
       this.originImage});
 
   factory TopicModel.fromJson(Map<String, dynamic> json) {
-    final model = _$TopicModelFromJson(json);
+    var model = _$TopicModelFromJson(json);
     Color bgColor = Colors.white;
     Color subTitleColor = Colors.white;
     Color recordTitleColor = Colors.black;
@@ -100,6 +104,9 @@ class TopicModel {
         model.recordTitleColor = recordTitleColor;
         model.subTitleColor = subTitleColor;
       }
+    }
+    if (model.slideShowImagesCount != 0) {
+      model.type = TopicType.slideshow;
     }
     return model;
   }

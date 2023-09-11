@@ -45,14 +45,19 @@ class _MMTermsOfServiceWidgetState extends State<MMTermsOfServiceWidget>
         case StoryStatus.loaded:
           StoryRes storyRes = state.storyRes!;
 
-          if (storyRes.story.apiDatas.isEmpty) {
+          if (storyRes.story.apiData.isEmpty) {
             _delayNavigatorPop();
           }
 
           // change font size
-          for (int i = 0; i < storyRes.story.apiDatas.length; i++) {
-            if (storyRes.story.apiDatas[i].type == 'header-two') {
-              storyRes.story.apiDatas[i].type = 'unstyled';
+          for (int i = 0; i < storyRes.story.apiData.length; i++) {
+            if (storyRes.story.apiData[i].type == 'header-two') {
+              storyRes.story.apiData[i].type = 'unstyled';
+            }
+          }
+          for (int i = 0; i < storyRes.story.trimmedApiData.length; i++) {
+            if (storyRes.story.trimmedApiData[i].type == 'header-two') {
+              storyRes.story.trimmedApiData[i].type = 'unstyled';
             }
           }
 

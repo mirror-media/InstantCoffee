@@ -15,11 +15,11 @@ class StoryRes {
       story: Story.fromJsonK6(json),
     );
   }
-
-  factory StoryRes.fromJson(Map<String, dynamic> json) {
-    return StoryRes(
-      isMember: json['tokenState'] == 'OK',
-      story: Story.fromJson(json["data"]["_items"][0]),
-    );
-  }
+  /// K3 fromJson 已棄用
+  // factory StoryRes.fromJson(Map<String, dynamic> json) {
+  //   return StoryRes(
+  //     isMember: json['tokenState'] == 'OK',
+  //     story: Story.fromJson(json["data"]["_items"][0]),
+  //   );
+  // }
 }
