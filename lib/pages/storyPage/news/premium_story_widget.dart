@@ -155,7 +155,7 @@ class PremiumStoryWidget extends StatelessWidget {
         ),
         _buildBrief(
             story.brief,
-            Category.isMemberOnlyInCategoryList(story.categories),
+            story.isMember,
             sectionColor),
         const SizedBox(
           height: 32,

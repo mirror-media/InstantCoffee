@@ -32,7 +32,9 @@ class Story {
   List<Section> sections;
   bool isAdult;
   bool isAdvertised;
+  bool isMember;
   bool isTruncated;
+
   String? state;
   List<String> imageUrlList;
 
@@ -63,6 +65,7 @@ class Story {
     required this.sections,
     required this.isAdult,
     required this.isAdvertised,
+    required this.isMember,
     required this.isTruncated,
     required this.state,
     required this.imageUrlList,
@@ -86,7 +89,8 @@ class Story {
 
     List<Paragraph> trimmedApiDataList = [];
     if (json["content"] != null && json["content"]["trimmedApiData"] != null) {
-      apiDataList = Paragraph.paragraphListFromJson(json["content"]["trimmedApiData"]);
+      trimmedApiDataList =
+          Paragraph.paragraphListFromJson(json["content"]["trimmedApiData"]);
     }
 
     String photoUrl = Environment().config.mirrorMediaNotImageUrl;
@@ -160,6 +164,7 @@ class Story {
       state: json["state"],
       isAdult: json['isAdult'] ?? false,
       isTruncated: apiDataList.isEmpty,
+      isMember:json['isMember'] ?? false,
       isAdvertised: json['isAdvertised'] ?? false,
       imageUrlList: imageUrlList,
     );
@@ -181,10 +186,9 @@ class Story {
 
     List<Paragraph> trimmedApiDataList = [];
     if (json["content"] != null && json["content"]["trimmedApiData"] != null) {
-      apiDataList = Paragraph.paragraphListFromJson(json["content"]["trimmedApiData"]);
+      apiDataList =
+          Paragraph.paragraphListFromJson(json["content"]["trimmedApiData"]);
     }
-
-
 
     String photoUrl = Environment().config.mirrorMediaNotImageUrl;
     String? videoUrl;
@@ -261,7 +265,7 @@ class Story {
       isAdult: json['isAdult'] ?? false,
       isTruncated: json['isTruncated'] ?? false,
       isAdvertised: json['isAdvertised'] ?? false,
-      imageUrlList: imageUrlList,
+      imageUrlList: imageUrlList, isMember: false,
     );
   }
 

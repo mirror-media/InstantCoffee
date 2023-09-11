@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/storyPage/news/bloc.dart';
-import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/story_res.dart';
 import 'package:readr_app/pages/storyPage/news/premium_story_widget.dart';
 import 'package:readr_app/pages/storyPage/news/story_widget.dart';
@@ -12,6 +11,7 @@ import '../../../data/enum/story_status.dart';
 
 class BuildStoryPage extends StatefulWidget {
   final bool isMemberCheck;
+
   const BuildStoryPage({key, required this.isMemberCheck}) : super(key: key);
 
   @override
@@ -44,8 +44,7 @@ class _BuildStoryPageState extends State<BuildStoryPage> with Logger {
           return Container();
         case StoryStatus.loaded:
           StoryRes storyRes = state.storyRes!;
-          bool isMemberOnlyStory =
-              Category.isMemberOnlyInCategoryList(storyRes.story.categories);
+          bool isMemberOnlyStory = storyRes.story.isMember;
 
           if (context.read<MemberBloc>().state.isPremium || isMemberOnlyStory) {
             return PremiumStoryWidget(

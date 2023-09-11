@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:readr_app/helpers/environment.dart';
 
 import '../../helpers/api_base_helper.dart';
 
@@ -13,7 +14,7 @@ class AuthApiProvider extends GetConnect {
 
   Future<String?> getAccessTokenByIdToken(String idToken) async {
     final result = await apiBaseHelper.postByUrl(
-        'https://adam-weekly-api-server-dev-ufaummkd5q-de.a.run.app/access-token',
+        '${Environment().config.weeklyAPIServer}/access-token',
         null,
         headers: {'authorization': 'Bearer $idToken'});
 
