@@ -88,9 +88,9 @@ class Story {
     }
 
     List<Paragraph> trimmedApiDataList = [];
-    if (json["content"] != null && json["content"]["trimmedApiData"] != null) {
+    if (json["trimmedApiData"] != null) {
       trimmedApiDataList =
-          Paragraph.paragraphListFromJson(json["content"]["trimmedApiData"]);
+          Paragraph.paragraphListFromJson(json["trimmedApiData"]);
     }
 
     String photoUrl = Environment().config.mirrorMediaNotImageUrl;
