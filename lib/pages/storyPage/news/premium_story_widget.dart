@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -21,6 +20,7 @@ import 'package:readr_app/models/story_ad.dart';
 import 'package:readr_app/models/tag.dart';
 import 'package:readr_app/pages/storyPage/news/shared/download_magazine_widget.dart';
 import 'package:readr_app/pages/storyPage/news/shared/join_member_block.dart';
+import 'package:readr_app/widgets/custom_cached_network_image.dart';
 import 'package:readr_app/widgets/fading_effect_painter.dart';
 import 'package:readr_app/widgets/m_m_ad_banner.dart';
 import 'package:readr_app/widgets/m_m_video_player.dart';
@@ -111,7 +111,6 @@ class PremiumStoryWidget extends StatelessWidget {
           const SizedBox(height: 16),
         ],
         _buildCategoryText(story.sections, story.categories),
-
         const SizedBox(
           height: 8,
         ),
@@ -153,10 +152,7 @@ class PremiumStoryWidget extends StatelessWidget {
         const SizedBox(
           height: 24,
         ),
-        _buildBrief(
-            story.brief,
-            story.isMember,
-            sectionColor),
+        _buildBrief(story.brief, story.isMember, sectionColor),
         const SizedBox(
           height: 32,
         ),
@@ -277,23 +273,8 @@ class PremiumStoryWidget extends StatelessWidget {
                 RouteGenerator.navigateToImageViewer(story.imageUrlList);
               }
             },
-            child: CachedNetworkImage(
-              height: height,
-              width: width,
-              imageUrl: story.heroImage,
-              placeholder: (context, url) => Container(
-                height: height,
-                width: width,
-                color: Colors.grey,
-              ),
-              errorWidget: (context, url, error) => Container(
-                height: height,
-                width: width,
-                color: Colors.grey,
-                child: const Icon(Icons.error),
-              ),
-              fit: BoxFit.cover,
-            ),
+            child: CustomCachedNetworkImage(
+                height: height, width: width, imageUrl: story.heroImage),
           ),
         if (story.heroCaption != null && story.heroCaption != '')
           const Padding(
@@ -664,23 +645,10 @@ class PremiumStoryWidget extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CachedNetworkImage(
-              height: imageHeight,
-              width: imageWidth,
-              imageUrl: relatedItem.photoUrl,
-              placeholder: (context, url) => Container(
+            CustomCachedNetworkImage(
                 height: imageHeight,
                 width: imageWidth,
-                color: Colors.grey,
-              ),
-              errorWidget: (context, url, error) => Container(
-                height: imageHeight,
-                width: imageWidth,
-                color: Colors.grey,
-                child: const Icon(Icons.error),
-              ),
-              fit: BoxFit.cover,
-            ),
+                imageUrl: relatedItem.photoUrl),
             const SizedBox(
               width: 16,
             ),

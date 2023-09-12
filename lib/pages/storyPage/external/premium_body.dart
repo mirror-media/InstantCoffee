@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:readr_app/core/extensions/string_extension.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/models/external_story.dart';
+import 'package:readr_app/widgets/custom_cached_network_image.dart';
 
 import '../../../core/values/string.dart';
 
@@ -86,23 +86,8 @@ class PremiumBody extends StatelessWidget {
   }
 
   Widget _buildHeroImage(double width, double height, String imageUrl) {
-    return CachedNetworkImage(
-      height: height,
-      width: width,
-      imageUrl: imageUrl,
-      placeholder: (context, url) => Container(
-        height: height,
-        width: width,
-        color: Colors.grey,
-      ),
-      errorWidget: (context, url, error) => Container(
-        height: height,
-        width: width,
-        color: Colors.grey,
-        child: const Icon(Icons.error),
-      ),
-      fit: BoxFit.cover,
-    );
+    return CustomCachedNetworkImage(
+        height: height, width: width, imageUrl: imageUrl);
   }
 
   Widget _buildTimeTile(String title, String time) {

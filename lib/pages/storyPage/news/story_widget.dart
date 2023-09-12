@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +20,7 @@ import 'package:readr_app/models/story_ad.dart';
 import 'package:readr_app/models/tag.dart';
 import 'package:readr_app/pages/storyPage/news/shared/download_magazine_widget.dart';
 import 'package:readr_app/pages/storyPage/news/shared/facebook_iframe_widget.dart';
+import 'package:readr_app/widgets/custom_cached_network_image.dart';
 import 'package:readr_app/widgets/m_m_ad_banner.dart';
 import 'package:readr_app/widgets/m_m_video_player.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -163,22 +163,10 @@ class StoryWidget extends StatelessWidget {
                 RouteGenerator.navigateToImageViewer(story.imageUrlList);
               }
             },
-            child: CachedNetworkImage(
+            child: CustomCachedNetworkImage(
               height: height,
               width: width,
               imageUrl: story.heroImage,
-              placeholder: (context, url) => Container(
-                height: height,
-                width: width,
-                color: Colors.grey,
-              ),
-              errorWidget: (context, url, error) => Container(
-                height: height,
-                width: width,
-                color: Colors.grey,
-                child: const Icon(Icons.error),
-              ),
-              fit: BoxFit.cover,
             ),
           ),
         if (story.heroCaption != '')
@@ -606,22 +594,10 @@ class StoryWidget extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
         child: Row(
           children: [
-            CachedNetworkImage(
+            CustomCachedNetworkImage(
               height: imageHeight,
               width: imageWidth,
               imageUrl: relatedItem.photoUrl,
-              placeholder: (context, url) => Container(
-                height: imageHeight,
-                width: imageWidth,
-                color: Colors.grey,
-              ),
-              errorWidget: (context, url, error) => Container(
-                height: imageHeight,
-                width: imageWidth,
-                color: Colors.grey,
-                child: const Icon(Icons.error),
-              ),
-              fit: BoxFit.cover,
             ),
             const SizedBox(
               width: 16,

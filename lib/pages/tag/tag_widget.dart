@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +8,7 @@ import 'package:readr_app/blocs/tagPage/states.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/tag.dart';
+import 'package:readr_app/widgets/custom_cached_network_image.dart';
 import 'package:readr_app/widgets/logger.dart';
 
 class TagWidget extends StatefulWidget {
@@ -139,22 +139,10 @@ class _TagWidgetState extends State<TagWidget> with Logger {
           const SizedBox(
             width: 16,
           ),
-          CachedNetworkImage(
+          CustomCachedNetworkImage(
             height: imageHeight,
             width: imageWidth,
             imageUrl: record.photoUrl,
-            placeholder: (context, url) => Container(
-              height: imageHeight,
-              width: imageWidth,
-              color: Colors.grey,
-            ),
-            errorWidget: (context, url, error) => Container(
-              height: imageHeight,
-              width: imageWidth,
-              color: Colors.grey,
-              child: const Icon(Icons.error),
-            ),
-            fit: BoxFit.cover,
           ),
         ],
       ),

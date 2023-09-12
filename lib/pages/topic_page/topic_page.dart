@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:readr_app/core/values/string.dart';
@@ -7,6 +6,8 @@ import 'package:readr_app/pages/topic_page/topic_page_controller.dart';
 import 'package:readr_app/pages/topic_page/widget/list_topic_widget.dart';
 import 'package:readr_app/pages/topic_page/widget/portrait_wall_topic_widget.dart';
 import 'package:readr_app/pages/topic_page/widget/slideshow_webview_widget.dart';
+import 'package:readr_app/widgets/custom_cached_network_image.dart';
+
 import '../../data/enum/topic_page_status.dart';
 import '../../data/enum/topic_type.dart';
 
@@ -46,25 +47,19 @@ class TopicPage extends GetView<TopicPageController> {
                   ? SliverToBoxAdapter(
                       child: Container(
                         color: const Color(0xFFE2E5E7),
-                        child: CachedNetworkImage(
-                          imageUrl: controller.rxCurrentTopic.value
-                                  ?.originImage!.imageCollection!.w800 ??
-                              '',
-                          fit: BoxFit.contain,
-                          width: Get.width,
-                          height: Get.width / (16 / 9),
-                          placeholder: (context, url) => const Center(
-                            child: CircularProgressIndicator.adaptive(),
-                          ),
-                          errorWidget: (context, url, error) => Container(),
-                        ),
+                        child: CustomCachedNetworkImage(
+                            imageUrl: controller.rxCurrentTopic.value?.originImage!
+                                    .imageCollection!.w800 ??
+                                '',
+                            width: Get.width,
+                            height: Get.width / (16 / 9)),
                       ),
                     )
                   : SliverToBoxAdapter(
-                    child: SlideshowWebViewWidget(
-                        controller.rxCurrentTopic.value?.slug ??
-                            StringDefault.valueNullDefault),
-                  ),
+                      child: SlideshowWebViewWidget(
+                          controller.rxCurrentTopic.value?.slug ??
+                              StringDefault.valueNullDefault),
+                    ),
             ];
           },
           body: Obx(() {

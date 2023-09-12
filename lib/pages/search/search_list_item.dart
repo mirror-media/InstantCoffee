@@ -1,10 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/record.dart';
 
+import '../../widgets/custom_cached_network_image.dart';
+
 class SearchListItem extends StatelessWidget {
   final Record record;
+
   const SearchListItem({
     required this.record,
   });
@@ -31,22 +33,10 @@ class SearchListItem extends StatelessWidget {
                 const SizedBox(
                   width: 16,
                 ),
-                CachedNetworkImage(
+                CustomCachedNetworkImage(
                   height: imageSize,
                   width: imageSize,
                   imageUrl: record.photoUrl,
-                  placeholder: (context, url) => Container(
-                    height: imageSize,
-                    width: imageSize,
-                    color: Colors.grey,
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    height: imageSize,
-                    width: imageSize,
-                    color: Colors.grey,
-                    child: const Icon(Icons.error),
-                  ),
-                  fit: BoxFit.cover,
                 ),
               ],
             ),
