@@ -11,11 +11,13 @@ import 'package:readr_app/widgets/logger.dart';
 
 class ApiBaseHelper with Logger {
   http.Client _client = http.Client();
+
   void setClient(http.Client client) {
     _client = client;
   }
 
   BaseCacheManager? _mMCacheManager;
+
   void setCacheManager(BaseCacheManager cacheManager) {
     _mMCacheManager = cacheManager;
   }
@@ -174,38 +176,40 @@ dynamic returnResponse(http.Response response) {
     case 200:
       String utf8Json = utf8.decode(response.bodyBytes);
       var responseJson = json.decode(utf8Json);
+      if (responseJson is Map<String, dynamic>) {
+        bool hasData = (responseJson.containsKey('_items') &&
+                responseJson['_items'].length > 0) ||
+            (responseJson.containsKey('items') &&
+                responseJson['items'].length > 0) ||
+            // properties responded by popular tab content api
+            (responseJson.containsKey('report') &&
+                responseJson['report'].length > 0) ||
+            // properties responded by latest tab content api
+            (responseJson.containsKey('latest') &&
+                responseJson['latest'] is List) ||
+            // properties responded by editor choice api
+            (responseJson.containsKey('choices') &&
+                responseJson['choices'] is List) ||
+            // properties responded by search api
+            (responseJson.containsKey('hits') &&
+                responseJson['hits'].containsKey('hits')) ||
+            // properties responded by member graphql
+            (responseJson.containsKey('data') ||
+                responseJson.containsKey('tokenState')) ||
+            responseJson.containsKey('status') ||
+            // error log
+            responseJson.containsKey('msg') ||
+            // topic list
+            responseJson.containsKey('_endpoints') ||
+            // Google custom search
+            responseJson.containsKey('searchInformation') ||
+            // election widget
+            responseJson.containsKey('polling') ||
+            responseJson.containsKey('posts');
 
-      bool hasData = (responseJson.containsKey('_items') &&
-              responseJson['_items'].length > 0) ||
-          (responseJson.containsKey('items') &&
-              responseJson['items'].length > 0) ||
-          // properties responded by popular tab content api
-          (responseJson.containsKey('report') &&
-              responseJson['report'].length > 0) ||
-          // properties responded by latest tab content api
-          (responseJson.containsKey('latest') &&
-              responseJson['latest'] is List) ||
-          // properties responded by editor choice api
-          (responseJson.containsKey('choices') &&
-              responseJson['choices'] is List) ||
-          // properties responded by search api
-          (responseJson.containsKey('hits') &&
-              responseJson['hits'].containsKey('hits')) ||
-          // properties responded by member graphql
-          (responseJson.containsKey('data') ||
-              responseJson.containsKey('tokenState')) ||
-          responseJson.containsKey('status') ||
-          // error log
-          responseJson.containsKey('msg') ||
-          // topic list
-          responseJson.containsKey('_endpoints') ||
-          // Google custom search
-          responseJson.containsKey('searchInformation') ||
-          // election widget
-          responseJson.containsKey('polling');
-
-      if (!hasData) {
-        throw BadRequestException(response.body.toString());
+        if (!hasData) {
+          throw BadRequestException(response.body.toString());
+        }
       }
 
       return responseJson;

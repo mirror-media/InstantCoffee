@@ -11,6 +11,18 @@ class Paragraph {
     this.type,
   });
 
+
+  factory Paragraph.fromJsonK6(Map<String, dynamic> json) {
+    List<Content> contents = json["content"] == null
+        ? []
+        : Content.contentListFromJson(json["content"]);
+
+    return Paragraph(
+      contents: contents,
+      type: json['type'],
+    );
+  }
+
   factory Paragraph.fromJson(Map<String, dynamic> json) {
     List<Content> contents = json["content"] == null 
     ? []
@@ -23,8 +35,8 @@ class Paragraph {
   }
 
   static List<Paragraph> paragraphListFromJson(List<dynamic> jsonList) {
-    List<Paragraph> paragraphList = jsonList.map<Paragraph>((json) => Paragraph.fromJson(json)).toList();
-    paragraphList.removeWhere((paragraph) => paragraph.contents.isEmpty);
+    List<Paragraph> paragraphList = jsonList.map<Paragraph>((json) => Paragraph.fromJsonK6(json)).toList();
+     paragraphList.removeWhere((paragraph) => paragraph.contents.isEmpty);
     return paragraphList;
   }
 }

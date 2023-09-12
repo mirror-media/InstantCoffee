@@ -1,15 +1,17 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:readr_app/core/extensions/string_extension.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/data_constants.dart';
-import 'package:readr_app/helpers/date_time_format.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/magazine.dart';
+import 'package:readr_app/widgets/custom_cached_network_image.dart';
 
 class MagazineItemWidget extends StatelessWidget {
   final Magazine magazine;
   final double padding;
+
   const MagazineItemWidget({required this.magazine, this.padding = 24.0});
 
   @override
@@ -17,10 +19,8 @@ class MagazineItemWidget extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     double imageWidth = (width - padding * 2) / 4.5;
     double imageHeight = imageWidth / 0.75;
-
-    DateTimeFormat dateTimeFormat = DateTimeFormat();
-    String publishedDate = dateTimeFormat.changeDatabaseStringToDisplayString(
-        magazine.publishedDate, 'yyyy/MM/dd');
+    String publishedDate = magazine.publishedDate?.formattedTaipeiDateTime() ??
+        StringDefault.valueNullDefault;
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -40,7 +40,7 @@ class MagazineItemWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    magazine.issue,
+                    magazine.issue ?? StringDefault.valueNullDefault,
                     style: const TextStyle(
                       fontSize: 13,
                       color: appColor,
@@ -58,7 +58,7 @@ class MagazineItemWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 8.0),
                   AutoSizeText(
-                    magazine.title,
+                    magazine.title ?? StringDefault.valueNullDefault,
                     maxLines: 2,
                     minFontSize: 15,
                     style: const TextStyle(
@@ -104,22 +104,9 @@ class MagazineItemWidget extends StatelessWidget {
 
   Widget _displayMagazineImage(
       double imageWidth, double imageHeight, Magazine magazine) {
-    return CachedNetworkImage(
-      height: imageHeight,
-      width: imageWidth,
-      imageUrl: magazine.photoUrl,
-      placeholder: (context, url) => Container(
+    return CustomCachedNetworkImage(
         height: imageHeight,
         width: imageWidth,
-        color: Colors.grey,
-      ),
-      errorWidget: (context, url, error) => Container(
-        height: imageHeight,
-        width: imageWidth,
-        color: Colors.grey,
-        child: const Icon(Icons.error),
-      ),
-      fit: BoxFit.cover,
-    );
+        imageUrl: magazine.photoUrl ?? StringDefault.valueNullDefault);
   }
 }

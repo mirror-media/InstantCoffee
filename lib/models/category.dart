@@ -1,7 +1,7 @@
 class Category {
-  String id;
-  String name;
-  String title;
+  String? id;
+  String? name;
+  String? title;
   bool isCampaign;
   bool isSubscribed;
   bool isMemberOnly;
@@ -15,11 +15,11 @@ class Category {
     this.isMemberOnly = false,
   });
 
-  factory Category.fromJson(Map<String, dynamic> json) {
+  factory Category.fromJson(Map<String, dynamic> json, bool isK6) {
     return Category(
-      id: json['_id'],
-      name: json['name'],
-      title: json['title'],
+      id: json['id'],
+      name: isK6 ? json['slug'] :json['name'],
+      title: isK6 ? json['name'] : json['title'],
       isCampaign: json['isCampaign'] ?? false,
       isSubscribed: json['isSubscribed'] ?? true,
       isMemberOnly: json['isMemberOnly'] ?? false,
@@ -60,7 +60,8 @@ class Category {
   }
 
   static List<Category> categoryListFromJson(List<dynamic> jsonList) {
-    return jsonList.map<Category>((json) => Category.fromJson(json)).toList();
+
+    return jsonList.map<Category>((json) => Category.fromJson(json,false)).toList();
   }
 
   static bool isMemberOnlyInCategoryList(List<Category> categoryList) {
@@ -70,8 +71,8 @@ class Category {
   static List<String> getSubscriptionIdStringList(List<Category> categoryList) {
     List<String> idStringList = [];
     for (Category category in categoryList) {
-      if (category.isSubscribed) {
-        idStringList.add(category.id);
+      if (category.isSubscribed && category.id!=null) {
+        idStringList.add(category.id!);
       }
     }
     return idStringList;
@@ -151,5 +152,14 @@ class Category {
     }
 
     return localCategoryList;
+  }
+}
+
+
+extension CategoryListToString on List<Category> {
+  String toSubscriptionStringList() {
+    final subscribedCategories = where((obj) => obj.isSubscribed == true);
+    final subscriptionNames = subscribedCategories.map((obj) => '"${obj.name}"');
+    return '[${subscriptionNames.join(",")}]';
   }
 }

@@ -5,12 +5,17 @@ import 'package:readr_app/models/magazine.dart';
 
 class MagazineList extends CustomizedList<Magazine> {
   int total = 0;
+
   // constructor
   MagazineList();
 
-  factory MagazineList.fromJson(List<dynamic> parsedJson, String type) {
+  factory MagazineList.fromJson(List<dynamic> parsedJson, String type,
+      {bool isK6 = false}) {
     MagazineList magazines = MagazineList();
-    List parseList = parsedJson.map((i) => Magazine.fromJson(i, type)).toList();
+    List parseList = parsedJson
+        .map((i) =>
+            isK6 ? Magazine.fromJsonK6(i, type) : Magazine.fromJson(i, type))
+        .toList();
     for (var element in parseList) {
       magazines.l.add(element);
     }

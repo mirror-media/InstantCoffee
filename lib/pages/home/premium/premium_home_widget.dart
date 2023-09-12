@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/section/cubit.dart';
 import 'package:readr_app/blocs/section/states.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/firebase_analytics_helper.dart';
@@ -54,7 +55,7 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget>
 
     for (int i = 0; i < sectionItems.length; i++) {
       Section section = sectionItems[i];
-      String title = section.title;
+      String title = section.title ?? StringDefault.valueNullDefault;
       Color? color;
       if (section.name == 'member') {
         title = 'Premium文章';
@@ -106,7 +107,7 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget>
         _tabs.clear();
         for (int i = 0; i < sectionItems.length; i++) {
           Section section = sectionItems[i];
-          String title = section.title;
+          String title = section.title?? StringDefault.valueNullDefault;
           Color? color;
           if (section.name == 'member') {
             title = 'Premium文章';
@@ -196,7 +197,7 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget>
                     onTap: (int index) {
                       if (index >= 5) {
                         FirebaseAnalyticsHelper.logTabBarAfterTheSixthClick(
-                            sectiontitle: sections[index].title);
+                            sectiontitle: sections[index].title??StringDefault.valueNullDefault);
                       }
 
                       if (_initialTabIndex == index) {

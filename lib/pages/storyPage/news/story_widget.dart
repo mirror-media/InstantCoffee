@@ -1,14 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
 import 'package:readr_app/blocs/storyPage/news/bloc.dart';
+import 'package:readr_app/core/extensions/string_extension.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
-import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/data_constants.dart';
-import 'package:readr_app/helpers/date_time_format.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/paragraph_format.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/category.dart';
@@ -20,15 +20,18 @@ import 'package:readr_app/models/story_ad.dart';
 import 'package:readr_app/models/tag.dart';
 import 'package:readr_app/pages/storyPage/news/shared/download_magazine_widget.dart';
 import 'package:readr_app/pages/storyPage/news/shared/facebook_iframe_widget.dart';
+import 'package:readr_app/widgets/custom_cached_network_image.dart';
 import 'package:readr_app/widgets/m_m_ad_banner.dart';
 import 'package:readr_app/widgets/m_m_video_player.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class StoryWidget extends StatelessWidget {
   final Story story;
+
   const StoryWidget({
+    Key? key,
     required this.story,
-  });
+  }) : super(key: key);
 
   _fetchPublishedStoryBySlug(
       BuildContext context, String storySlug, bool isMemberCheck) {
@@ -160,22 +163,10 @@ class StoryWidget extends StatelessWidget {
                 RouteGenerator.navigateToImageViewer(story.imageUrlList);
               }
             },
-            child: CachedNetworkImage(
+            child: CustomCachedNetworkImage(
               height: height,
               width: width,
               imageUrl: story.heroImage,
-              placeholder: (context, url) => Container(
-                height: height,
-                width: width,
-                color: Colors.grey,
-              ),
-              errorWidget: (context, url, error) => Container(
-                height: height,
-                width: width,
-                color: Colors.grey,
-                child: const Icon(Icons.error),
-              ),
-              fit: BoxFit.cover,
             ),
           ),
         if (story.heroCaption != '')
@@ -208,7 +199,9 @@ class StoryWidget extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           Text(
-            categories.isNotEmpty ? categories[0].title : '娛樂頭條',
+            (categories.isNotEmpty && categories[0].title != null)
+                ? categories[0].title!
+                : '娛樂頭條',
             style: const TextStyle(fontSize: 20),
           ),
         ],
@@ -217,8 +210,6 @@ class StoryWidget extends StatelessWidget {
   }
 
   Widget _buildCategoryAndPublishedDate(Story story, Color sectionColor) {
-    DateTimeFormat dateTimeFormat = DateTimeFormat();
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
       child: Row(
@@ -226,10 +217,8 @@ class StoryWidget extends StatelessWidget {
         children: [
           _buildCategory(story, sectionColor),
           Text(
-            dateTimeFormat.changeDatabaseStringToDisplayString(
-                story.publishedDate,
-                'yyyy.MM.dd HH:mm',
-                articleDateTimePostfix),
+            story.publishedDate.formattedTaipeiDateTime() ??
+                StringDefault.valueNullDefault,
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[600], /*fontStyle: FontStyle.italic,*/
@@ -407,15 +396,16 @@ class StoryWidget extends StatelessWidget {
     int unStyleParagraphCount = 0;
     bool aT1IsActivated = false;
     bool aT2IsActivated = false;
-
+    final paragraphList =
+        story.apiData.isNotEmpty ? story.apiData : story.trimmedApiData;
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: story.apiDatas.length,
+          itemCount: paragraphList.length,
           itemBuilder: (context, index) {
-            Paragraph paragraph = story.apiDatas[index];
+            Paragraph paragraph = paragraphList[index];
             if (paragraph.contents.isNotEmpty &&
                 paragraph.contents[0].data != '') {
               if (unStyleParagraphCount == storyAT1AdIndex) {
@@ -518,8 +508,6 @@ class StoryWidget extends StatelessWidget {
   }
 
   _buildUpdateDateWidget(Story story) {
-    DateTimeFormat dateTimeFormat = DateTimeFormat();
-
     // VerticalDivider is broken? so use Container
     var myVerticalDivider = Padding(
       padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
@@ -539,8 +527,8 @@ class StoryWidget extends StatelessWidget {
         ),
         myVerticalDivider,
         Text(
-          dateTimeFormat.changeDatabaseStringToDisplayString(
-              story.updatedAt, 'yyyy.MM.dd HH:mm', articleDateTimePostfix),
+          story.updatedAt.formattedTaipeiDateTime() ??
+              StringDefault.valueNullDefault,
           style: const TextStyle(fontSize: 16),
         ),
       ],
@@ -606,22 +594,10 @@ class StoryWidget extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
         child: Row(
           children: [
-            CachedNetworkImage(
+            CustomCachedNetworkImage(
               height: imageHeight,
               width: imageWidth,
               imageUrl: relatedItem.photoUrl,
-              placeholder: (context, url) => Container(
-                height: imageHeight,
-                width: imageWidth,
-                color: Colors.grey,
-              ),
-              errorWidget: (context, url, error) => Container(
-                height: imageHeight,
-                width: imageWidth,
-                color: Colors.grey,
-                child: const Icon(Icons.error),
-              ),
-              fit: BoxFit.cover,
             ),
             const SizedBox(
               width: 16,

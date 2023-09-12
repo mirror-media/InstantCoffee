@@ -3,8 +3,10 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:readr_app/blocs/storyPage/news/events.dart';
 import 'package:readr_app/blocs/storyPage/news/states.dart';
+import 'package:readr_app/data/providers/articles_api_provider.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/error_log_helper.dart';
 import 'package:readr_app/helpers/exceptions.dart';
@@ -25,7 +27,7 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> with Logger {
   }
 
   final ErrorLogHelper _errorLogHelper = ErrorLogHelper();
-
+  final ArticlesApiProvider articlesApiProvider=Get.find();
   _fetchPublishedStoryBySlug(
     FetchPublishedStoryBySlug event,
     Emitter<StoryState> emit,
@@ -35,31 +37,33 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> with Logger {
     try {
       emit(StoryState.loading(storySlug: event.slug));
 
-      StoryRes storyRes =
-          await storyRepos.fetchStory(event.slug, event.isMemberCheck);
-      Story story = storyRes.story;
+      StoryRes? storyRes =
+          await articlesApiProvider.getArticleInfoBySlug(slug: event.slug);
+      if (storyRes!=null) {
+        Story story = storyRes.story;
 
-      String storyAdJsonFileLocation = Platform.isIOS
-          ? Environment().config.iOSStoryAdJsonLocation
-          : Environment().config.androidStoryAdJsonLocation;
-      // String storyAdJsonFileLocation = Platform.isIOS
-      // ? 'assets/data/iOSTestStoryAd.json'
-      // : 'assets/data/androidTestStoryAd.json';
-      String storyAdString =
-          await rootBundle.loadString(storyAdJsonFileLocation);
-      final storyAdMaps = json.decode(storyAdString);
+        String storyAdJsonFileLocation = Platform.isIOS
+            ? Environment().config.iOSStoryAdJsonLocation
+            : Environment().config.androidStoryAdJsonLocation;
+        // String storyAdJsonFileLocation = Platform.isIOS
+        // ? 'assets/data/iOSTestStoryAd.json'
+        // : 'assets/data/androidTestStoryAd.json';
+        String storyAdString =
+        await rootBundle.loadString(storyAdJsonFileLocation);
+        final storyAdMaps = json.decode(storyAdString);
 
-      story.storyAd = StoryAd.fromJson(storyAdMaps['other']);
-      for (int i = 0; i < story.sections.length; i++) {
-        String? sectionName = story.getSectionName();
+        story.storyAd = StoryAd.fromJson(storyAdMaps['other']);
+        for (int i = 0; i < story.sections.length; i++) {
+          String? sectionName = story.getSectionName();
 
-        if (sectionName != null && storyAdMaps[sectionName] != null) {
-          story.storyAd = StoryAd.fromJson(storyAdMaps[sectionName]);
-          break;
+          if (sectionName != null && storyAdMaps[sectionName] != null) {
+            story.storyAd = StoryAd.fromJson(storyAdMaps[sectionName]);
+            break;
+          }
         }
-      }
 
-      emit(StoryState.loaded(storySlug: event.slug, storyRes: storyRes));
+        emit(StoryState.loaded(storySlug: event.slug, storyRes: storyRes));
+      }
     } catch (e, s) {
       _errorLogHelper.record(e, s);
       emit(StoryState.error(

@@ -33,6 +33,13 @@ class _PremiumListeningTabContentState
   void initState() {
     _listeningTabContentBloc =
         ListeningTabContentBloc(widget.section.sectionAd!);
+    widget.scrollController.addListener(() {
+      if (widget.scrollController.position.pixels ==
+          widget.scrollController.position.maxScrollExtent) {
+        // 滾動到底部，觸發加載操作
+        _listeningTabContentBloc.loadingMore();
+      }
+    });
     super.initState();
   }
 
@@ -99,7 +106,6 @@ class _PremiumListeningTabContentState
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              listeningTabContentBloc.loadingMore(index);
 
               if (index == 0) {
                 return TheFirstItem(
@@ -111,6 +117,7 @@ class _PremiumListeningTabContentState
 
               return Column(
                 children: [
+
                   Padding(
                       padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
                       child: PremiumListItem(

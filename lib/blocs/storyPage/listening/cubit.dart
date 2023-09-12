@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/storyPage/listening/states.dart';
-import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/app_exception.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/models/listening.dart';
 import 'package:readr_app/models/record.dart';
@@ -30,7 +30,7 @@ class ListeningStoryCubit extends Cubit<ListeningStoryState> with Logger {
           ListeningTabContentService();
       Listening listening = await listeningWidgetService.fetchListening(slug);
       List<Record> recordList = await listeningTabContentService.fetchRecordList(
-          '${Environment().config.apiBase}youtube/search?maxResults=7&order=date&part=snippet&channelId=UCYkldEK001GxR884OZMFnRw');
+          Environment().config.listeningWidgetApi);
 
       String storyAdJsonFileLocation = Platform.isIOS
           ? Environment().config.iOSStoryAdJsonLocation

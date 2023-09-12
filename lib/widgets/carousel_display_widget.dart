@@ -1,18 +1,19 @@
-import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
-
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/record.dart';
+
+import 'custom_cached_network_image.dart';
 
 class CarouselDisplayWidget extends StatelessWidget {
   final Record record;
   final double width;
   final double aspectRatio;
+
   const CarouselDisplayWidget({
     required this.record,
     required this.width,
@@ -53,23 +54,8 @@ class CarouselDisplayWidget extends StatelessWidget {
   }
 
   Widget _displayImage(double width, Record record) {
-    return CachedNetworkImage(
-      height: width / aspectRatio,
-      width: width,
-      imageUrl: record.photoUrl,
-      placeholder: (context, url) => Container(
-        height: width / aspectRatio,
-        width: width,
-        color: Colors.grey,
-      ),
-      errorWidget: (context, url, error) => Container(
-        height: width / aspectRatio,
-        width: width,
-        color: Colors.grey,
-        child: const Icon(Icons.error),
-      ),
-      fit: BoxFit.cover,
-    );
+    return CustomCachedNetworkImage(
+        imageUrl: record.photoUrl, width: width, height: width / aspectRatio);
   }
 
   Widget _displayTag(Record record) {

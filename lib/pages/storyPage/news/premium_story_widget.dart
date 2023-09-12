@@ -1,12 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
 import 'package:readr_app/blocs/storyPage/news/bloc.dart';
+import 'package:readr_app/core/extensions/string_extension.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/data_constants.dart';
-import 'package:readr_app/helpers/date_time_format.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/paragraph_format.dart';
 import 'package:readr_app/helpers/route_generator.dart';
@@ -20,6 +20,7 @@ import 'package:readr_app/models/story_ad.dart';
 import 'package:readr_app/models/tag.dart';
 import 'package:readr_app/pages/storyPage/news/shared/download_magazine_widget.dart';
 import 'package:readr_app/pages/storyPage/news/shared/join_member_block.dart';
+import 'package:readr_app/widgets/custom_cached_network_image.dart';
 import 'package:readr_app/widgets/fading_effect_painter.dart';
 import 'package:readr_app/widgets/m_m_ad_banner.dart';
 import 'package:readr_app/widgets/m_m_video_player.dart';
@@ -27,6 +28,7 @@ import 'package:readr_app/widgets/m_m_video_player.dart';
 class PremiumStoryWidget extends StatelessWidget {
   final bool isLogin;
   final Story story;
+
   const PremiumStoryWidget({
     required this.isLogin,
     required this.story,
@@ -150,10 +152,7 @@ class PremiumStoryWidget extends StatelessWidget {
         const SizedBox(
           height: 24,
         ),
-        _buildBrief(
-            story.brief,
-            Category.isMemberOnlyInCategoryList(story.categories),
-            sectionColor),
+        _buildBrief(story.brief, story.isMember, sectionColor),
         const SizedBox(
           height: 32,
         ),
@@ -195,7 +194,7 @@ class PremiumStoryWidget extends StatelessWidget {
     bool hasMemberSectoin = sections.any((section) => section.name == 'member');
     String sectionTitle = '會員專區';
     if (!hasMemberSectoin && sections.isNotEmpty) {
-      sectionTitle = sections[0].title;
+      sectionTitle = sections[0].title ?? StringDefault.valueNullDefault;
     }
 
     List<Widget> categoriesName = [];
@@ -221,7 +220,7 @@ class PremiumStoryWidget extends StatelessWidget {
       categoriesName.add(GestureDetector(
         onTap: null,
         child: Text(
-          categories[0].title,
+          categories[0].name ?? StringDefault.valueNullDefault,
           style: const TextStyle(fontSize: 15, color: appColor),
         ),
       ));
@@ -274,23 +273,8 @@ class PremiumStoryWidget extends StatelessWidget {
                 RouteGenerator.navigateToImageViewer(story.imageUrlList);
               }
             },
-            child: CachedNetworkImage(
-              height: height,
-              width: width,
-              imageUrl: story.heroImage,
-              placeholder: (context, url) => Container(
-                height: height,
-                width: width,
-                color: Colors.grey,
-              ),
-              errorWidget: (context, url, error) => Container(
-                height: height,
-                width: width,
-                color: Colors.grey,
-                child: const Icon(Icons.error),
-              ),
-              fit: BoxFit.cover,
-            ),
+            child: CustomCachedNetworkImage(
+                height: height, width: width, imageUrl: story.heroImage),
           ),
         if (story.heroCaption != null && story.heroCaption != '')
           const Padding(
@@ -318,15 +302,13 @@ class PremiumStoryWidget extends StatelessWidget {
     if (time == '' || time == ' ') {
       return Container();
     }
-    DateTimeFormat dateTimeFormat = DateTimeFormat();
     return Row(
       children: [
         Text(title,
             style: const TextStyle(color: Colors.black54, fontSize: 13)),
         const SizedBox(width: 8),
         Text(
-          dateTimeFormat.changeDatabaseStringToDisplayString(
-              time, 'yyyy.MM.dd HH:mm', articleDateTimePostfix),
+          time.formattedTaipeiDateTime() ?? StringDefault.valueNullDefault,
           style: const TextStyle(
             fontSize: 13,
             color: Colors.black87,
@@ -533,15 +515,16 @@ class PremiumStoryWidget extends StatelessWidget {
     ParagraphFormat paragraphFormat = ParagraphFormat();
     int unStyleParagraphCount = 0;
     bool aT1IsActivated = false;
-
+    final paragraphList =
+        story.apiData.isNotEmpty ? story.apiData : story.trimmedApiData;
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: story.apiDatas.length,
+      itemCount: paragraphList.length,
       separatorBuilder: (BuildContext context, int index) =>
           const SizedBox(height: 16.0),
       itemBuilder: (context, index) {
-        Paragraph paragraph = story.apiDatas[index];
+        Paragraph paragraph = paragraphList[index];
         if (paragraph.contents.isNotEmpty && paragraph.contents[0].data != '') {
           if (unStyleParagraphCount == storyAT1AdIndex) {
             aT1IsActivated = true;
@@ -554,7 +537,7 @@ class PremiumStoryWidget extends StatelessWidget {
             children: [
               CustomPaint(
                 foregroundPainter:
-                    (isNeedFadding && index == story.apiDatas.length - 1)
+                    (isNeedFadding && index == paragraphList.length - 1)
                         ? FadingEffect()
                         : null,
                 child: paragraphFormat.parseTheParagraph(
@@ -662,23 +645,10 @@ class PremiumStoryWidget extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CachedNetworkImage(
-              height: imageHeight,
-              width: imageWidth,
-              imageUrl: relatedItem.photoUrl,
-              placeholder: (context, url) => Container(
+            CustomCachedNetworkImage(
                 height: imageHeight,
                 width: imageWidth,
-                color: Colors.grey,
-              ),
-              errorWidget: (context, url, error) => Container(
-                height: imageHeight,
-                width: imageWidth,
-                color: Colors.grey,
-                child: const Icon(Icons.error),
-              ),
-              fit: BoxFit.cover,
-            ),
+                imageUrl: relatedItem.photoUrl),
             const SizedBox(
               width: 16,
             ),

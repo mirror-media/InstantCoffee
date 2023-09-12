@@ -1,12 +1,14 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:readr_app/core/extensions/string_extension.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/data_constants.dart';
-import 'package:readr_app/helpers/date_time_format.dart';
 import 'package:readr_app/models/external_story.dart';
+import 'package:readr_app/widgets/custom_cached_network_image.dart';
 
 class DefaultBody extends StatelessWidget {
   final ExternalStory externalStory;
+
   const DefaultBody({Key? key, required this.externalStory}) : super(key: key);
 
   @override
@@ -15,16 +17,19 @@ class DefaultBody extends StatelessWidget {
     double height = width / 16 * 9;
 
     return ListView(children: [
-      _buildHeroImage(width, height, externalStory.heroImage),
+      _buildHeroImage(width, height,
+          externalStory.heroImage ?? StringDefault.valueNullDefault),
       const SizedBox(height: 32),
-      _buildCategoryAndPublishedDate(externalStory.publishedDate),
+      _buildCategoryAndPublishedDate(
+          externalStory.publishedDate ?? StringDefault.valueNullDefault),
       const SizedBox(height: 8),
-      _buildStoryTitle(externalStory.title),
+      _buildStoryTitle(externalStory.title ?? StringDefault.valueNullDefault),
       const SizedBox(height: 8),
-      _buildAuthors(externalStory.extendByLine),
+      _buildAuthors(
+          externalStory.extendByLine ?? StringDefault.valueNullDefault),
       const SizedBox(height: 16),
       HtmlWidget(
-        externalStory.content,
+        externalStory.content ?? StringDefault.valueNullDefault,
         customStylesBuilder: (element) {
           if (element.localName == 'a') {
             return {'padding': '0px 0px 0px 0px'};
@@ -37,23 +42,8 @@ class DefaultBody extends StatelessWidget {
   }
 
   Widget _buildHeroImage(double width, double height, String imageUrl) {
-    return CachedNetworkImage(
-      height: height,
-      width: width,
-      imageUrl: imageUrl,
-      placeholder: (context, url) => Container(
-        height: height,
-        width: width,
-        color: Colors.grey,
-      ),
-      errorWidget: (context, url, error) => Container(
-        height: height,
-        width: width,
-        color: Colors.grey,
-        child: const Icon(Icons.error),
-      ),
-      fit: BoxFit.cover,
-    );
+    return CustomCachedNetworkImage(
+        height: height, width: width, imageUrl: imageUrl);
   }
 
   Widget _buildCategory() {
@@ -70,8 +60,6 @@ class DefaultBody extends StatelessWidget {
   }
 
   Widget _buildCategoryAndPublishedDate(String publishedDate) {
-    DateTimeFormat dateTimeFormat = DateTimeFormat();
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
       child: Row(
@@ -79,8 +67,8 @@ class DefaultBody extends StatelessWidget {
         children: [
           _buildCategory(),
           Text(
-            dateTimeFormat.changeDatabaseStringToDisplayString(
-                publishedDate, 'yyyy.MM.dd HH:mm', articleDateTimePostfix),
+            publishedDate.formattedTaipeiDateTime() ??
+                StringDefault.valueNullDefault,
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[600], /*fontStyle: FontStyle.italic,*/

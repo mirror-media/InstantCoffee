@@ -1,6 +1,6 @@
 import 'package:readr_app/models/story_res.dart';
 
-enum StoryStatus { initial, loading, loaded, error }
+import '../../../data/enum/story_status.dart';
 
 class StoryState {
   final StoryStatus status;

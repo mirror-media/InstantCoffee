@@ -5,6 +5,8 @@ import 'package:readr_app/models/story_res.dart';
 import 'package:readr_app/pages/termsOfService/terms_of_service_widget.dart';
 import 'package:readr_app/widgets/logger.dart';
 
+import '../../data/enum/story_status.dart';
+
 class MMTermsOfServiceWidget extends StatefulWidget {
   @override
   _MMTermsOfServiceWidgetState createState() => _MMTermsOfServiceWidgetState();
@@ -43,14 +45,19 @@ class _MMTermsOfServiceWidgetState extends State<MMTermsOfServiceWidget>
         case StoryStatus.loaded:
           StoryRes storyRes = state.storyRes!;
 
-          if (storyRes.story.apiDatas.isEmpty) {
+          if (storyRes.story.apiData.isEmpty) {
             _delayNavigatorPop();
           }
 
           // change font size
-          for (int i = 0; i < storyRes.story.apiDatas.length; i++) {
-            if (storyRes.story.apiDatas[i].type == 'header-two') {
-              storyRes.story.apiDatas[i].type = 'unstyled';
+          for (int i = 0; i < storyRes.story.apiData.length; i++) {
+            if (storyRes.story.apiData[i].type == 'header-two') {
+              storyRes.story.apiData[i].type = 'unstyled';
+            }
+          }
+          for (int i = 0; i < storyRes.story.trimmedApiData.length; i++) {
+            if (storyRes.story.trimmedApiData[i].type == 'header-two') {
+              storyRes.story.trimmedApiData[i].type = 'unstyled';
             }
           }
 

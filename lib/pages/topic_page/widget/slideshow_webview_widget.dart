@@ -10,15 +10,15 @@ import 'package:readr_app/helpers/route_generator.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class SlideshowWebviewWidget extends StatefulWidget {
+class SlideshowWebViewWidget extends StatefulWidget {
   final String topicId;
-  const SlideshowWebviewWidget(this.topicId, {Key? key}) : super(key: key);
+  const SlideshowWebViewWidget(this.topicId, {Key? key}) : super(key: key);
 
   @override
-  State<SlideshowWebviewWidget> createState() => _SlideshowWebviewWidgetState();
+  State<SlideshowWebViewWidget> createState() => _SlideshowWebViewWidgetState();
 }
 
-class _SlideshowWebviewWidgetState extends State<SlideshowWebviewWidget> {
+class _SlideshowWebViewWidgetState extends State<SlideshowWebViewWidget> {
   bool _isLoading = true;
   late String url;
   double _aspectRatio = 16 / 9;
@@ -62,10 +62,10 @@ class _SlideshowWebviewWidgetState extends State<SlideshowWebviewWidget> {
                         "document.getElementsByClassName('the-gdpr')[0].style.display = 'none';");
                     final String width =
                         await _webViewController.runJavascriptReturningResult(
-                            "document.getElementsByClassName('topic-wrapper')[0].offsetWidth");
+                            "document.getElementsByClassName('topic-list__Topic-sc-820f3557-1 kIKGxx topic')[0].offsetWidth");
                     final String height =
                         await _webViewController.runJavascriptReturningResult(
-                            "document.getElementsByClassName('topic-wrapper')[0].offsetHeight");
+                            "document.getElementsByClassName('topic-list__Topic-sc-820f3557-1 kIKGxx topic')[0].offsetHeight");
                     setState(() {
                       _aspectRatio = int.parse(width) / int.parse(height);
                       _isLoading = false;

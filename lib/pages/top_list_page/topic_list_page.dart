@@ -1,23 +1,27 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
-import 'package:readr_app/controllers/topic/topic_list_controller.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/data_constants.dart';
-import 'package:readr_app/models/topic.dart';
-import 'package:readr_app/pages/topic/topic_page.dart';
+import 'package:readr_app/widgets/custom_cached_network_image.dart';
 import 'package:readr_app/widgets/m_m_ad_banner.dart';
 
+import '../../helpers/route_generator.dart';
+import '../../models/topic/topic_model.dart';
+import 'topic_list_controller.dart';
+
 class TopicListPage extends GetView<TopicListController> {
+  const TopicListPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: appColor,
+        // title: const Text('Topic List'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
@@ -27,45 +31,64 @@ class TopicListPage extends GetView<TopicListController> {
         children: [
           Expanded(
             child: Obx(
-              () => ListView.separated(
-                padding: const EdgeInsets.only(bottom: 20),
-                itemBuilder: (context, index) {
-                  if (index == controller.topicList.length) {
-                    return _loadMoreWidget();
-                  }
+              () {
+                final topicList = controller.rxTopicList;
+                return topicList.isEmpty
+                    ? const Center(child: Text('無資料'))
+                    : ListView.separated(
+                        controller: controller.scrollController,
+                        padding: const EdgeInsets.only(bottom: 20),
+                        itemBuilder: (context, index) {
+                          if (index == topicList.length) {
+                            Obx(() {
+                              final isEnd = controller.rxIsEnd.value;
+                              return isEnd
+                                  ? const SizedBox.shrink()
+                                  : const Center(
+                                      child:
+                                          CircularProgressIndicator.adaptive());
+                            });
+                          }
+                          if (index == 0) {
+                            return _buildFirstItem(context, topicList[index]);
+                          }
 
-                  if (index == 0) {
-                    return _buildFirstItem(
-                        context, controller.topicList[index]);
-                  }
-
-                  return _buildItem(context, controller.topicList[index]);
-                },
-                separatorBuilder: (context, index) {
-                  if (index == 0) {
-                    return _buildAdItem(controller.storyAd.aT1UnitId);
-                  } else if (index == 5) {
-                    return _buildAdItem(controller.storyAd.aT2UnitId);
-                  } else if (index == 10) {
-                    return _buildAdItem(controller.storyAd.aT3UnitId);
-                  }
-                  return const Divider(
-                    thickness: 1,
-                    color: Colors.grey,
-                  );
-                },
-                itemCount: controller.topicList.length + 1,
-              ),
+                          return _buildItem(context, topicList[index]);
+                        },
+                        separatorBuilder: (context, index) {
+                          return Obx(() {
+                            final storyAd = controller.rxStoryAd.value;
+                            if (index == 0 && storyAd != null) {
+                              return _buildAdItem(storyAd.aT1UnitId);
+                            } else if (index == 5 && storyAd != null) {
+                              return _buildAdItem(storyAd.aT2UnitId);
+                            } else if (index == 10 && storyAd != null) {
+                              return _buildAdItem(storyAd.aT3UnitId);
+                            }
+                            return const Divider(
+                              thickness: 1,
+                              color: Colors.grey,
+                            );
+                          });
+                        },
+                        itemCount: topicList.length,
+                      );
+              },
             ),
           ),
           BlocBuilder<MemberBloc, MemberState>(
             builder: (context, state) {
               if (state.status == MemberStatus.loaded && !state.isPremium) {
-                return MMAdBanner(
-                  adUnitId: controller.storyAd.stUnitId,
-                  adSize: AdSize.banner,
-                  isKeepAlive: true,
-                );
+                return Obx(() {
+                  final storyAd = controller.rxStoryAd.value;
+                  return storyAd != null
+                      ? MMAdBanner(
+                          adUnitId: storyAd.stUnitId,
+                          adSize: AdSize.banner,
+                          isKeepAlive: true,
+                        )
+                      : const SizedBox.shrink();
+                });
               }
 
               return Container();
@@ -76,25 +99,7 @@ class TopicListPage extends GetView<TopicListController> {
     );
   }
 
-  Widget _loadMoreWidget() {
-    return Obx(
-      () {
-        if (controller.isNoMore.isTrue) {
-          return Container();
-        }
-
-        if (controller.isLoadingMore.isFalse) {
-          controller.fetchMoreTopics();
-        }
-
-        return const Center(
-          child: CircularProgressIndicator.adaptive(),
-        );
-      },
-    );
-  }
-
-  Widget _buildItem(BuildContext context, Topic topic) {
+  Widget _buildItem(BuildContext context, TopicModel topic) {
     double width = Get.width;
     double imageSize = 25 * (width - 32) / 100;
 
@@ -108,29 +113,17 @@ class TopicListPage extends GetView<TopicListController> {
               children: [
                 Expanded(
                   child: Text(
-                    topic.title,
+                    topic.name ?? '',
                     style: const TextStyle(fontSize: 20),
                   ),
                 ),
                 const SizedBox(
                   width: 16,
                 ),
-                CachedNetworkImage(
+                CustomCachedNetworkImage(
                   height: imageSize,
                   width: imageSize,
-                  imageUrl: topic.ogImageUrl,
-                  placeholder: (context, url) => Container(
-                    height: imageSize,
-                    width: imageSize,
-                    color: Colors.grey,
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    height: imageSize,
-                    width: imageSize,
-                    color: Colors.grey,
-                    child: const Icon(Icons.error),
-                  ),
-                  fit: BoxFit.cover,
+                  imageUrl: topic.originImage?.imageCollection?.w800 ?? '',
                 ),
               ],
             ),
@@ -142,7 +135,7 @@ class TopicListPage extends GetView<TopicListController> {
           AdHelper adHelper = AdHelper();
           adHelper.checkToShowInterstitialAd();
         }
-        Get.to(() => TopicPage(topic));
+        RouteGenerator.routerToTopicPage(topic: topic);
       },
     );
   }
@@ -181,33 +174,21 @@ class TopicListPage extends GetView<TopicListController> {
     );
   }
 
-  Widget _buildFirstItem(BuildContext context, Topic topic) {
+  Widget _buildFirstItem(BuildContext context, TopicModel topic) {
     double width = Get.width;
 
     return InkWell(
       child: Column(
         children: [
-          CachedNetworkImage(
+          CustomCachedNetworkImage(
             height: width / 16 * 9,
             width: width,
-            imageUrl: topic.ogImageUrl,
-            placeholder: (context, url) => Container(
-              height: width / 16 * 9,
-              width: width,
-              color: Colors.grey,
-            ),
-            errorWidget: (context, url, error) => Container(
-              height: width / 16 * 9,
-              width: width,
-              color: Colors.grey,
-              child: const Icon(Icons.error),
-            ),
-            fit: BoxFit.cover,
+            imageUrl: topic.originImage?.imageCollection?.w800 ?? '',
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
             child: Text(
-              topic.title,
+              topic.name ?? '',
               style: const TextStyle(fontSize: 20),
             ),
           ),
@@ -218,7 +199,7 @@ class TopicListPage extends GetView<TopicListController> {
           AdHelper adHelper = AdHelper();
           adHelper.checkToShowInterstitialAd();
         }
-        Get.to(() => TopicPage(topic));
+        RouteGenerator.routerToTopicPage(topic: topic);
       },
     );
   }

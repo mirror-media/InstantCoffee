@@ -1,16 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:readr_app/blocs/editorChoice/cubit.dart';
 import 'package:readr_app/blocs/editorChoice/state.dart';
 import 'package:readr_app/blocs/election/election_cubit.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/remote_config_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section.dart';
+import 'package:readr_app/pages/home/home_controller.dart';
 import 'package:readr_app/pages/tabContent/shared/election/election_widget.dart';
 import 'package:readr_app/pages/tabContent/shared/premium_list_item.dart';
 import 'package:readr_app/pages/tabContent/shared/the_first_item.dart';
@@ -26,11 +29,13 @@ class PremiumTabContent extends StatefulWidget {
   final Section section;
   final ScrollController scrollController;
   final bool needCarousel;
+
   const PremiumTabContent({
+    Key? key,
     required this.section,
     required this.scrollController,
     this.needCarousel = false,
-  });
+  }) : super(key: key);
 
   @override
   _PremiumTabContentState createState() => _PremiumTabContentState();
@@ -38,14 +43,18 @@ class PremiumTabContent extends StatefulWidget {
 
 class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
   final RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
+  final HomeController controller = Get.find();
 
   _fetchFirstRecordList() {
     context.read<TabContentBloc>().add(FetchFirstRecordList(
-        sectionKey: widget.section.key, sectionType: widget.section.type));
+        sectionName: widget.section.name ?? StringDefault.valueNullDefault,
+        sectionKey: widget.section.key ?? StringDefault.valueNullDefault,
+        sectionType: widget.section.type ?? StringDefault.valueNullDefault));
   }
 
   _fetchNextPageRecordList() {
     context.read<TabContentBloc>().add(FetchNextPageRecordList(
+        sectionName: widget.section.name ?? StringDefault.valueNullDefault,
         isLatest: widget.section.key == Environment().config.latestSectionKey));
   }
 
@@ -145,7 +154,6 @@ class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
                 index == recordList.length - 1) {
               _fetchNextPageRecordList();
             }
-
             if (index == 0) {
               if (widget.needCarousel) {
                 return Column(
@@ -154,7 +162,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
                       _buildEditorChoiceList(),
                       if (widget.section.key ==
                           Environment().config.latestSectionKey)
-                        const TopicBlock(
+                        TopicBlock(
                           isPremium: true,
                         ),
                       _buildTagText(),
