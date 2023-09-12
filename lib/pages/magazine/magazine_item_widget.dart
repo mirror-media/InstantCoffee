@@ -1,5 +1,4 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:readr_app/core/extensions/string_extension.dart';
@@ -7,6 +6,7 @@ import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/magazine.dart';
+import 'package:readr_app/widgets/custom_cached_network_image.dart';
 
 class MagazineItemWidget extends StatelessWidget {
   final Magazine magazine;
@@ -104,22 +104,9 @@ class MagazineItemWidget extends StatelessWidget {
 
   Widget _displayMagazineImage(
       double imageWidth, double imageHeight, Magazine magazine) {
-    return CachedNetworkImage(
-      height: imageHeight,
-      width: imageWidth,
-      imageUrl: magazine.photoUrl ?? StringDefault.valueNullDefault,
-      placeholder: (context, url) => Container(
+    return CustomCachedNetworkImage(
         height: imageHeight,
         width: imageWidth,
-        color: Colors.grey,
-      ),
-      errorWidget: (context, url, error) => Container(
-        height: imageHeight,
-        width: imageWidth,
-        color: Colors.grey,
-        child: const Icon(Icons.error),
-      ),
-      fit: BoxFit.cover,
-    );
+        imageUrl: magazine.photoUrl ?? StringDefault.valueNullDefault);
   }
 }

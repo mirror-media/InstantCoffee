@@ -1,12 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:readr_app/blocs/memberCenter/subscribedArticles/subscribed_articles_cubit.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/route_generator.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/models/subscribed_article.dart';
 import 'package:readr_app/pages/memberCenter/shared/state_error_widget.dart';
+import 'package:readr_app/widgets/custom_cached_network_image.dart';
 
 class MemberSubscribedArticlePage extends StatefulWidget {
   @override
@@ -94,22 +94,10 @@ class _MemberSubscribedArticlePageState
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CachedNetworkImage(
+            CustomCachedNetworkImage(
               height: imageSize,
               width: imageSize,
               imageUrl: subscribedArticle.photoUrl!,
-              placeholder: (context, url) => Container(
-                height: imageSize,
-                width: imageSize,
-                color: Colors.grey,
-              ),
-              errorWidget: (context, url, error) => Container(
-                height: imageSize,
-                width: imageSize,
-                color: Colors.grey,
-                child: const Icon(Icons.error),
-              ),
-              fit: BoxFit.cover,
             ),
             const SizedBox(
               width: 16,

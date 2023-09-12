@@ -1,10 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/models/record.dart';
+import 'package:readr_app/widgets/custom_cached_network_image.dart';
 
 class ListItem extends StatelessWidget {
   final Record record;
   final GestureTapCallback? onTap;
+
   const ListItem({
     required this.record,
     this.onTap,
@@ -33,23 +34,10 @@ class ListItem extends StatelessWidget {
                   const SizedBox(
                     width: 16,
                   ),
-                  CachedNetworkImage(
-                    height: imageSize,
-                    width: imageSize,
-                    imageUrl: record.photoUrl,
-                    placeholder: (context, url) => Container(
+                  CustomCachedNetworkImage(
                       height: imageSize,
                       width: imageSize,
-                      color: Colors.grey,
-                    ),
-                    errorWidget: (context, url, error) => Container(
-                      height: imageSize,
-                      width: imageSize,
-                      color: Colors.grey,
-                      child: const Icon(Icons.error),
-                    ),
-                    fit: BoxFit.cover,
-                  ),
+                      imageUrl: record.photoUrl),
                 ],
               ),
             ],

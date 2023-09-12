@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -6,6 +5,8 @@ import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/topic_image_item.dart';
+import 'package:readr_app/widgets/custom_cached_network_image.dart';
+
 import '../topic_page_controller.dart';
 
 class PortraitWallTopicWidget extends GetView<TopicPageController> {
@@ -56,23 +57,10 @@ class PortraitWallTopicWidget extends GetView<TopicPageController> {
       },
       child: Column(
         children: [
-          CachedNetworkImage(
-            height: imageSize,
-            width: imageSize,
-            imageUrl: topicImageItem.imageUrl,
-            placeholder: (context, url) => Container(
+          CustomCachedNetworkImage(
               height: imageSize,
               width: imageSize,
-              color: Colors.grey,
-            ),
-            errorWidget: (context, url, error) => Container(
-              height: imageSize,
-              width: imageSize,
-              color: Colors.grey,
-              child: const Icon(Icons.error),
-            ),
-            fit: BoxFit.cover,
-          ),
+              imageUrl: topicImageItem.imageUrl),
           const SizedBox(height: 12),
           Text(
             topicImageItem.description,
