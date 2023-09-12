@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:readr_app/helpers/data_constants.dart';
@@ -7,11 +6,13 @@ import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/magazine_list.dart';
 import 'package:readr_app/pages/magazine/magazine_item_widget.dart';
 import 'package:readr_app/pages/magazine/magazine_list_label.dart';
+import 'package:readr_app/widgets/custom_cached_network_image.dart';
 
 import '../../core/values/string.dart';
 
 class WeeklyMagazineListWidget extends StatefulWidget {
   final MagazineList magazineList;
+
   const WeeklyMagazineListWidget({
     required this.magazineList,
   });
@@ -99,23 +100,10 @@ class _WeeklyMagazineListWidgetState extends State<WeeklyMagazineListWidget> {
 
   Widget _displayMagazineImage(
       double imageWidth, double imageHeight, Magazine magazine) {
-    return CachedNetworkImage(
-      height: imageHeight,
-      width: imageWidth,
-      imageUrl: magazine.photoUrl ?? StringDefault.valueNullDefault,
-      placeholder: (context, url) => Container(
+    return CustomCachedNetworkImage(
         height: imageHeight,
         width: imageWidth,
-        color: Colors.grey,
-      ),
-      errorWidget: (context, url, error) => Container(
-        height: imageHeight,
-        width: imageWidth,
-        color: Colors.grey,
-        child: const Icon(Icons.error),
-      ),
-      fit: BoxFit.cover,
-    );
+        imageUrl: magazine.photoUrl ?? StringDefault.valueNullDefault);
   }
 
   Widget _buildTheFirstMagazine(

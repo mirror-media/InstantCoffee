@@ -1,14 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/core/values/string.dart';
-
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 
 import '../../../models/post/post_model.dart';
+import '../../../widgets/custom_cached_network_image.dart';
 import '../topic_page_controller.dart';
 
 class ListTopicWidget extends StatelessWidget {
@@ -69,23 +68,10 @@ class ListTopicWidget extends StatelessWidget {
                 const SizedBox(
                   width: 16,
                 ),
-                CachedNetworkImage(
-                  height: imageSize,
-                  width: imageSize,
-                  imageUrl: post.heroImage?.imageCollection?.original ?? '',
-                  placeholder: (context, url) => Container(
+                CustomCachedNetworkImage(
                     height: imageSize,
                     width: imageSize,
-                    color: Colors.grey,
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    height: imageSize,
-                    width: imageSize,
-                    color: Colors.grey,
-                    child: const Icon(Icons.error),
-                  ),
-                  fit: BoxFit.cover,
-                ),
+                    imageUrl: post.heroImage?.imageCollection?.original ?? ''),
               ],
             ),
           ],
@@ -101,7 +87,7 @@ class ListTopicWidget extends StatelessWidget {
           RouteGenerator.navigateToExternalStory(post.slug!);
         } else {
           RouteGenerator.navigateToStory(
-            post.slug??'',
+            post.slug ?? '',
             isMemberCheck: post.isMember ?? false,
             url: post.getUrl,
           );

@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/route_generator.dart';
+import 'package:readr_app/widgets/custom_cached_network_image.dart';
 
 class ImageDescriptionWidget extends StatelessWidget {
   final String imageUrl;
@@ -10,6 +10,7 @@ class ImageDescriptionWidget extends StatelessWidget {
   final double textSize;
   final bool isMemberContent;
   final List<String> imageUrlList;
+
   const ImageDescriptionWidget({
     required this.imageUrl,
     required this.description,
@@ -40,21 +41,10 @@ class ImageDescriptionWidget extends StatelessWidget {
                 RouteGenerator.navigateToImageViewer(imageUrlList,
                     openIndex: index);
               },
-              child: CachedNetworkImage(
+              child: CustomCachedNetworkImage(
                 width: width,
+                height: height,
                 imageUrl: imageUrl,
-                placeholder: (context, url) => Container(
-                  height: height,
-                  width: width,
-                  color: Colors.grey,
-                ),
-                errorWidget: (context, url, error) => Container(
-                  height: height,
-                  width: width,
-                  color: Colors.grey,
-                  child: const Icon(Icons.error),
-                ),
-                fit: BoxFit.cover,
               ),
             ),
           if (description != '') ...[
@@ -85,23 +75,8 @@ class ImageDescriptionWidget extends StatelessWidget {
         //direction: Axis.vertical,
         children: [
           if (imageUrl != '')
-            CachedNetworkImage(
-              //height: imageHeight,
-              width: width,
-              imageUrl: imageUrl,
-              placeholder: (context, url) => Container(
-                height: height,
-                width: width,
-                color: Colors.grey,
-              ),
-              errorWidget: (context, url, error) => Container(
-                height: height,
-                width: width,
-                color: Colors.grey,
-                child: const Icon(Icons.error),
-              ),
-              fit: BoxFit.cover,
-            ),
+            CustomCachedNetworkImage(
+                imageUrl: imageUrl, width: width, height: height),
           if (description != '')
             Padding(
               padding: const EdgeInsets.only(top: 8.0),

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -6,6 +5,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/widgets/custom_cached_network_image.dart';
 import 'package:readr_app/widgets/m_m_ad_banner.dart';
 
 import '../../helpers/route_generator.dart';
@@ -120,22 +120,10 @@ class TopicListPage extends GetView<TopicListController> {
                 const SizedBox(
                   width: 16,
                 ),
-                CachedNetworkImage(
+                CustomCachedNetworkImage(
                   height: imageSize,
                   width: imageSize,
                   imageUrl: topic.originImage?.imageCollection?.w800 ?? '',
-                  placeholder: (context, url) => Container(
-                    height: imageSize,
-                    width: imageSize,
-                    color: Colors.grey,
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    height: imageSize,
-                    width: imageSize,
-                    color: Colors.grey,
-                    child: const Icon(Icons.error),
-                  ),
-                  fit: BoxFit.cover,
                 ),
               ],
             ),
@@ -192,22 +180,10 @@ class TopicListPage extends GetView<TopicListController> {
     return InkWell(
       child: Column(
         children: [
-          CachedNetworkImage(
+          CustomCachedNetworkImage(
             height: width / 16 * 9,
             width: width,
             imageUrl: topic.originImage?.imageCollection?.w800 ?? '',
-            placeholder: (context, url) => Container(
-              height: width / 16 * 9,
-              width: width,
-              color: Colors.grey,
-            ),
-            errorWidget: (context, url, error) => Container(
-              height: width / 16 * 9,
-              width: width,
-              color: Colors.grey,
-              child: const Icon(Icons.error),
-            ),
-            fit: BoxFit.cover,
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),

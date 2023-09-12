@@ -1,7 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/storyPage/listening/cubit.dart';
 import 'package:readr_app/blocs/storyPage/listening/states.dart';
@@ -10,6 +9,7 @@ import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/date_time_format.dart';
 import 'package:readr_app/models/listening.dart';
 import 'package:readr_app/models/record.dart';
+import 'package:readr_app/widgets/custom_cached_network_image.dart';
 import 'package:readr_app/widgets/logger.dart';
 import 'package:readr_app/widgets/m_m_ad_banner.dart';
 import 'package:readr_app/widgets/youtube_widget.dart';
@@ -193,22 +193,10 @@ class _ListeningWidget extends State<ListeningWidget> with Logger {
               return InkWell(
                 child: Column(
                   children: [
-                    CachedNetworkImage(
+                    CustomCachedNetworkImage(
                       height: imageHeight,
                       width: imageWidth,
                       imageUrl: recordList[index].photoUrl,
-                      placeholder: (context, url) => Container(
-                        height: imageHeight,
-                        width: imageWidth,
-                        color: Colors.grey,
-                      ),
-                      errorWidget: (context, url, error) => Container(
-                        height: imageHeight,
-                        width: imageWidth,
-                        color: Colors.grey,
-                        child: const Icon(Icons.error),
-                      ),
-                      fit: BoxFit.cover,
                     ),
                     const SizedBox(
                       height: 8,
