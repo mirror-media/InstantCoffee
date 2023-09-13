@@ -50,6 +50,7 @@ class _TagWidgetState extends State<TagWidget> with Logger {
         return _buildList(
           state.tagStoryList!,
           state.tagListTotal!,
+          isFinish: state.isFinish!,
         );
       }
 
@@ -85,6 +86,7 @@ class _TagWidgetState extends State<TagWidget> with Logger {
     List<Record> tagRecordList,
     int totalTagList, {
     bool isLoadingMore = false,
+    bool isFinish = false,
   }) {
     return ListView.separated(
       itemCount: tagRecordList.length + 1,
@@ -103,6 +105,11 @@ class _TagWidgetState extends State<TagWidget> with Logger {
       },
       itemBuilder: (context, index) {
         if (index == tagRecordList.length) {
+          if (!isFinish) {
+            return Container(
+              padding: const EdgeInsets.only(bottom: 24),
+            );
+          }
           if (!isLoadingMore) {
             _fetchNextPage();
 
