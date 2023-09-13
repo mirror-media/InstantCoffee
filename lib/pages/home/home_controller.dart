@@ -18,7 +18,7 @@ class HomeController extends GetxController with WidgetsBindingObserver {
   late OnBoardingBloc onBoardingBloc;
   late PageController pageController;
   final RxInt rxSelectedIndex = 0.obs;
-  final RxList<TopicModel> rxTopicList =RxList();
+  final RxList<TopicModel> rxTopicList = RxList();
   final ScrollController premiumArticleBarScrollController = ScrollController();
 
   final LocalStorage _storage = LocalStorage('setting');
@@ -29,6 +29,12 @@ class HomeController extends GetxController with WidgetsBindingObserver {
   void setContext(BuildContext context) {
     this.context = context;
     initState();
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    _showTermsOfService();
   }
 
   Future<void> initState() async {
@@ -42,8 +48,7 @@ class HomeController extends GetxController with WidgetsBindingObserver {
 
     onBoardingBloc = context!.read<OnBoardingBloc>();
     pageController = PageController(initialPage: rxSelectedIndex.value);
-    rxTopicList.value= await articlesApiProvider.getTopicTabList()??[];
-    _showTermsOfService();
+    rxTopicList.value = await articlesApiProvider.getTopicTabList() ?? [];
   }
 
   _showTermsOfService() async {
