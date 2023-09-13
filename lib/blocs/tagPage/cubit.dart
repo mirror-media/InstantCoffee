@@ -23,8 +23,10 @@ class TagPageCubit extends Cubit<TagPageState> with Logger {
           await _tagService.fetchRecordList(tagId);
 
       emit(TagPageState.loaded(
-          tagStoryList: recordListAndAllCount.recordList,
-          tagListTotal: recordListAndAllCount.allCount));
+        tagStoryList: recordListAndAllCount.recordList,
+        tagListTotal: recordListAndAllCount.allCount,
+        isFinish: recordListAndAllCount.recordList.length < 12,
+      ));
     } catch (e) {
       debugLog(e.toString());
       emit(TagPageState.error(errorMessages: e));
@@ -33,17 +35,22 @@ class TagPageCubit extends Cubit<TagPageState> with Logger {
 
   void fetchNextPage(String tagId) async {
     debugLog('Fetch tag story list next page');
+    if (state.isFinish == true) return;
     try {
       List<Record> recordList = state.tagStoryList!;
       emit(TagPageState.loadingMore(
           tagStoryList: recordList, tagListTotal: state.tagListTotal!));
       _tagService.nextPage();
+
       RecordListAndAllCount recordListAndAllCount =
           await _tagService.fetchRecordList(tagId);
+
       recordList.addAll(recordListAndAllCount.recordList);
+
       emit(TagPageState.loaded(
           tagStoryList: recordList,
-          tagListTotal: recordListAndAllCount.allCount));
+          tagListTotal: recordListAndAllCount.allCount,
+          isFinish: recordListAndAllCount.recordList.length < 12));
     } catch (e) {
       debugLog(e.toString());
       _tagService.page = _tagService.page - 1;
