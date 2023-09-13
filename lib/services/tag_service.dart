@@ -11,7 +11,7 @@ class TagService {
 
   Future<RecordListAndAllCount> fetchRecordList(String tagId) async {
     return await articlesApiProvider.getArticleListByTag(
-        tag: tagId, page: page);
+        tag: tagId, page: page-1);
   }
 
   int initialPage() {

@@ -35,7 +35,7 @@ class PersonalCategoryBloc
       List<Category>? localCategoryList =
           await localStorageProvider.loadCategoryList();
 
-      if (await _storage.ready &&  localCategoryList ==null) {
+      if (await _storage.ready ) {
         if (_storage.getItem("categoryList") != null) {
           localCategoryList =
               Category.categoryListFromJson(_storage.getItem("categoryList"));
