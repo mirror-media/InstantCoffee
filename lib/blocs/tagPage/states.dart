@@ -14,12 +14,14 @@ class TagPageState {
   final List<Record>? tagStoryList;
   final int? tagListTotal;
   final dynamic errorMessages;
+  final bool? isFinish;
 
   TagPageState({
     required this.status,
     this.tagStoryList,
     this.tagListTotal,
     this.errorMessages,
+    this.isFinish = false,
   });
 
   factory TagPageState.init() {
@@ -30,14 +32,15 @@ class TagPageState {
     return TagPageState(status: TagPageStatus.loading);
   }
 
-  factory TagPageState.loaded({
-    required List<Record> tagStoryList,
-    required int tagListTotal,
-  }) {
+  factory TagPageState.loaded(
+      {required List<Record> tagStoryList,
+      required int tagListTotal,
+      bool? isFinish = false}) {
     return TagPageState(
       status: TagPageStatus.loaded,
       tagStoryList: tagStoryList,
       tagListTotal: tagListTotal,
+      isFinish: isFinish,
     );
   }
 
@@ -53,10 +56,9 @@ class TagPageState {
     required int tagListTotal,
   }) {
     return TagPageState(
-      status: TagPageStatus.loadingMore,
-      tagStoryList: tagStoryList,
-      tagListTotal: tagListTotal,
-    );
+        status: TagPageStatus.loadingMore,
+        tagStoryList: tagStoryList,
+        tagListTotal: tagListTotal);
   }
 
   factory TagPageState.loadingMoreFail(
