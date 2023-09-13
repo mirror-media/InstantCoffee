@@ -6,12 +6,12 @@ import 'package:get/get.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/environment.dart';
-import 'package:readr_app/helpers/route_generator.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class SlideshowWebViewWidget extends StatefulWidget {
   final String topicId;
+
   const SlideshowWebViewWidget(this.topicId, {Key? key}) : super(key: key);
 
   @override
@@ -28,6 +28,7 @@ class _SlideshowWebViewWidgetState extends State<SlideshowWebViewWidget> {
   void initState() {
     super.initState();
     url = '${Environment().config.mirrorMediaDomain}/topic/${widget.topicId}';
+    print(url);
     if (Platform.isAndroid) {
       WebView.platform = SurfaceAndroidWebView();
     }
@@ -53,6 +54,8 @@ class _SlideshowWebViewWidgetState extends State<SlideshowWebViewWidget> {
                   gestureRecognizers: null,
                   onPageFinished: (e) async {
                     _webViewController.runJavascript(
+                        "document.getElementsByClassName('gdpr__Wrapper-sc-f0ad663b-0 dZwCMJ')[0].style.display = 'none';");
+                    _webViewController.runJavascript(
                         "document.getElementsByTagName('header')[0].style.display = 'none';");
                     _webViewController.runJavascript(
                         "document.getElementsByTagName('footer')[0].style.display = 'none';");
@@ -74,18 +77,18 @@ class _SlideshowWebViewWidgetState extends State<SlideshowWebViewWidget> {
                   navigationDelegate: (navigation) async {
                     if (!_isLoading) {
                       final url = navigation.url;
-                      if (url.contains('story') &&
-                          url.contains(
-                              Environment().config.mirrorMediaDomain)) {
+                      if (url
+                          .contains(Environment().config.mirrorMediaDomain)) {
                         if (!context.read<MemberBloc>().state.isPremium) {
                           AdHelper adHelper = AdHelper();
                           adHelper.checkToShowInterstitialAd();
                         }
+                        /// PM:先註解掉 後續再確認是否真的有這個情境
                         final startIndex = url.indexOf('story/');
-                        String storySlug = url.replaceRange(0, startIndex, '');
-                        storySlug = storySlug.replaceAll('story/', '');
-                        storySlug = storySlug.replaceAll('/', '');
-                        RouteGenerator.navigateToStory(storySlug);
+                        // String storySlug = url.replaceRange(0, startIndex, '');
+                        // storySlug = storySlug.replaceAll('story/', '');
+                        // storySlug = storySlug.replaceAll('/', '');
+                        // RouteGenerator.navigateToStory(storySlug);
                       } else {
                         launchUrlString(url);
                       }
