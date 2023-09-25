@@ -55,8 +55,8 @@ class StoryWidget extends StatelessWidget {
 
   bool _isWineCategory(List<Category> categories) {
     return categories.any((category) =>
-        (category.id == Environment().config.wineSectionKey ||
-            category.id == Environment().config.wine1SectionKey));
+        (category.name == Environment().config.wineSectionKey ||
+            category.name == Environment().config.wine1SectionKey));
   }
 
   @override

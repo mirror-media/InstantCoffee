@@ -43,10 +43,9 @@ class PremiumStoryWidget extends StatelessWidget {
 
   bool _isWineCategory(List<Category> categories) {
     return categories.any((category) =>
-        (category.id == Environment().config.wineSectionKey ||
-            category.id == Environment().config.wine1SectionKey));
+        (category.name == Environment().config.wineSectionKey ||
+            category.name == Environment().config.wine1SectionKey));
   }
-
   Color _getSectionColor(Story? story) {
     String? sectionName;
     if (story != null) {
@@ -65,6 +64,7 @@ class PremiumStoryWidget extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     double height = width / 16 * 9;
     StoryAd storyAd = story.storyAd!;
+
     bool isWineCategory = _isWineCategory(story.categories);
     bool isTruncated = story.isTruncated;
     bool isAdsActivated = isStoryWidgetAdsActivated && isTruncated;
@@ -88,6 +88,7 @@ class PremiumStoryWidget extends StatelessWidget {
             adSize: AdSize.banner,
             isKeepAlive: true,
           ),
+
       ],
     );
   }
