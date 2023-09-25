@@ -61,7 +61,7 @@ class Category {
 
   static List<Category> categoryListFromJson(List<dynamic> jsonList) {
 
-    return jsonList.map<Category>((json) => Category.fromJson(json,false)).toList();
+    return jsonList.map<Category>((json) => Category.fromJson(json,true)).toList();
   }
 
   static bool isMemberOnlyInCategoryList(List<Category> categoryList) {
