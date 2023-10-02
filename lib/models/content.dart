@@ -1,4 +1,3 @@
-
 class Content {
   String? data;
   double? aspectRatio;
@@ -33,11 +32,12 @@ class Content {
       } else if (json['embeddedCode'] != null) {
         double? aspectRatio;
 
-        if(json['width'] != null && 
-          json['height'] != null && 
-          json['width'] is String && 
-          json['height'] is String) {
-          aspectRatio = double.parse(json['width'])/double.parse(json['height']);
+        if (json['width'] != null &&
+            json['height'] != null &&
+            json['width'] is String &&
+            json['height'] is String) {
+          aspectRatio =
+              double.parse(json['width']) / double.parse(json['height']);
         }
 
         return Content(
@@ -57,6 +57,11 @@ class Content {
           aspectRatio: null,
           description: json['quoteBy'],
         );
+      } else if (json['resized'] != null) {
+        return Content(
+            data: json['resized']['w800'],
+            aspectRatio: 16/9,
+            description: json['desc']);
       }
 
       return Content(data: null, aspectRatio: null, description: null);
@@ -71,12 +76,12 @@ class Content {
 
   static List<Content> contentListFromJson(List<dynamic> jsonList) {
     List<Content> contentList = [];
-    for(dynamic json in jsonList) {
-      if(json != null && json != '') {
+    for (dynamic json in jsonList) {
+      if (json != null && json != '') {
         contentList.add(Content.fromJson(json));
       }
     }
-    
+
     return contentList;
   }
 }
