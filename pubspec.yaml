@@ -17,7 +17,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # iOS and android is the same version
 
-version: 6.0.6+408
+version: 6.0.7+409
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -35,6 +35,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.4
+
+  youtube_player_flutter: ^8.1.2
   # being able to compare objects 
   equatable: ^2.0.3
   # http ajax call
@@ -48,7 +50,7 @@ dependencies:
   # webview
   webview_flutter: ^3.0.4
   # mirrormedia embedded code
-  flutter_embedded_webview: 
+  flutter_embedded_webview:
     git:
       url: https://github.com/mirror-media/flutter_embedded_webview.git
       ref: master
@@ -86,7 +88,7 @@ dependencies:
   # app link
   uni_links: ^0.5.1
   # mirrormedia constants
-  constants: 
+  constants:
     git:
       url: https://github.com/mirror-media/constants.git
       ref: master
@@ -140,7 +142,7 @@ dependencies:
   # svg loader
   flutter_svg: ^1.0.1
   
-  file: ^6.1.2 
+  file: ^6.1.2
   intl: ^0.17.0
   get: ^4.6.3
   visibility_detector: ^0.3.3
