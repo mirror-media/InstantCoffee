@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/data/providers/articles_api_provider.dart';
+import 'package:readr_app/models/live_stream_model.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../blocs/onBoarding/bloc.dart';
 import '../../helpers/app_link_helper.dart';
@@ -13,22 +15,24 @@ import '../termsOfService/m_m_terms_of_service_page.dart';
 
 class HomeController extends GetxController with WidgetsBindingObserver {
   ArticlesApiProvider articlesApiProvider = Get.find();
-
   late BuildContext? context;
   late OnBoardingBloc onBoardingBloc;
   late PageController pageController;
   final RxInt rxSelectedIndex = 0.obs;
   final RxList<TopicModel> rxTopicList = RxList();
   final ScrollController premiumArticleBarScrollController = ScrollController();
-
+  final Rxn<LiveStreamModel> rxLiveStreamModel = Rxn();
   final LocalStorage _storage = LocalStorage('setting');
   final AppLinkHelper _appLinkHelper = AppLinkHelper();
   final FirebaseMessangingHelper _firebaseMessageHelper =
       FirebaseMessangingHelper();
+  YoutubePlayerController ytStreamController =
+      YoutubePlayerController(initialVideoId: '');
 
   void setContext(BuildContext context) {
     this.context = context;
     initState();
+    configLiveStream();
   }
 
   @override
@@ -77,6 +81,18 @@ class HomeController extends GetxController with WidgetsBindingObserver {
       rxSelectedIndex.value = index;
     }
     pageController.jumpToPage(index);
+  }
+
+  void configLiveStream() async {
+    rxLiveStreamModel.value = await articlesApiProvider.getLiveStreamModel();
+    final link = rxLiveStreamModel.value?.link;
+    if (link == null) return;
+    String? videoId;
+    videoId = YoutubePlayer.convertUrlToId(link);
+    if (videoId == null) return;
+    ytStreamController = YoutubePlayerController(
+        initialVideoId: videoId,
+        flags: const YoutubePlayerFlags(isLive: false, autoPlay: false));
   }
 
   @override

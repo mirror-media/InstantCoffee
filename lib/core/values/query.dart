@@ -350,6 +350,26 @@ class QueryDB {
   }
   ''';
 
-
+  static const String getLiveStreamLink = '''
+   query{
+      events(
+        orderBy:{updatedAt:desc}
+        take:1
+        where: {
+            state:{equals:"published"}
+            eventType:{in:["mod"]}
+            isFeatured: {equals:true}
+        }
+            ) 
+          {
+            id
+            name
+            updatedAt
+            startDate
+            endDate
+            link
+          }
+        }
+  ''';
 
 }

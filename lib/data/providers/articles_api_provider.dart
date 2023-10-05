@@ -5,6 +5,7 @@ import 'package:readr_app/core/extensions/string_extension.dart';
 import 'package:readr_app/data/providers/auth_provider.dart';
 import 'package:readr_app/helpers/api_base_helper.dart';
 import 'package:readr_app/models/external_story.dart';
+import 'package:readr_app/models/live_stream_model.dart';
 import 'package:readr_app/models/magazine_list.dart';
 import 'package:readr_app/models/post/post_model.dart';
 import 'package:readr_app/models/story_res.dart';
@@ -283,6 +284,29 @@ class ArticlesApiProvider extends GetConnect {
     }
     final postsList = result['posts'] as List<dynamic>;
     return postsList.map((e) => Record.fromJsonK6(e)).toList();
+  }
+
+  Future<LiveStreamModel?> getLiveStreamModel() async {
+    String queryString = QueryDB.getLiveStreamLink;
+    final result =
+        await client?.value.query(QueryOptions(document: gql(queryString)));
+    if (result == null ||
+        result.data == null ||
+        !result.data!.containsKey('events')) return null;
+    final eventList = result.data!['events'] as List<dynamic>;
+    if (eventList.isNotEmpty) {
+      final liveStreamModel = LiveStreamModel.fromJson(eventList[0]);
+      if (liveStreamModel.startDate != null ||
+          liveStreamModel.endDate != null) {
+        DateTime start = DateTime.parse(liveStreamModel.startDate!);
+        DateTime end = DateTime.parse(liveStreamModel.endDate!);
+        DateTime now = DateTime.now();
+        if (now.isAfter(start) && now.isBefore(end)) {
+          return liveStreamModel;
+        }
+      }
+    }
+    return null;
   }
 
   @override
