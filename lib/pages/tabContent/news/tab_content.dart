@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/editorChoice/cubit.dart';
 import 'package:readr_app/blocs/editorChoice/state.dart';
@@ -16,6 +17,8 @@ import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/models/section_ad.dart';
+import 'package:readr_app/pages/home/home_controller.dart';
+import 'package:readr_app/pages/tabContent/news/widget/live_stream_widget.dart';
 import 'package:readr_app/pages/tabContent/shared/election/election_widget.dart';
 import 'package:readr_app/pages/tabContent/shared/list_item.dart';
 import 'package:readr_app/pages/tabContent/shared/the_first_item.dart';
@@ -46,6 +49,7 @@ class TabContent extends StatefulWidget {
 class _TabContentState extends State<TabContent> with Logger {
   final RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
   late SectionAd? _sectionAd;
+  final HomeController controller = Get.find();
 
   _fetchFirstRecordList() {
     context.read<TabContentBloc>().add(FetchFirstRecordList(
@@ -217,6 +221,19 @@ class _TabContentState extends State<TabContent> with Logger {
                       if (widget.section.key ==
                           Environment().config.latestSectionKey) ...[
                         TopicBlock(),
+                        const SizedBox(height: 24),
+                        Obx(() {
+                          final liveStreamModel =
+                              controller.rxLiveStreamModel.value;
+                          final ytController = controller.ytStreamController;
+                          return liveStreamModel != null && ytController != null
+                              ? LiveStreamWidget(
+                                  title: liveStreamModel.name ??
+                                      StringDefault.valueNullDefault,
+                                  ytPlayer: ytController,
+                                )
+                              : Container();
+                        }),
                         const SizedBox(
                           height: 16.0,
                         ),
