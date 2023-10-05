@@ -14,6 +14,7 @@ import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/home/home_controller.dart';
+import 'package:readr_app/pages/tabContent/news/widget/live_stream_widget.dart';
 import 'package:readr_app/pages/tabContent/shared/election/election_widget.dart';
 import 'package:readr_app/pages/tabContent/shared/premium_list_item.dart';
 import 'package:readr_app/pages/tabContent/shared/the_first_item.dart';
@@ -161,10 +162,27 @@ class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
                     children: [
                       _buildEditorChoiceList(),
                       if (widget.section.key ==
-                          Environment().config.latestSectionKey)
+                          Environment().config.latestSectionKey) ...[
                         TopicBlock(
                           isPremium: true,
                         ),
+                        const SizedBox(height: 24),
+                        Obx(() {
+                          final liveStreamModel =
+                              controller.rxLiveStreamModel.value;
+                          final ytController = controller.ytStreamController;
+                          return liveStreamModel != null && ytController != null
+                              ? LiveStreamWidget(
+                                  title: liveStreamModel.name ??
+                                      StringDefault.valueNullDefault,
+                                  ytPlayer: ytController,
+                                )
+                              : Container();
+                        }),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                      ],
                       _buildTagText(),
                       Padding(
                           padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
