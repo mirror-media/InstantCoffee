@@ -4,6 +4,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/storyPage/listening/cubit.dart';
 import 'package:readr_app/blocs/storyPage/listening/states.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/date_time_format.dart';
@@ -33,7 +34,10 @@ class _ListeningWidget extends State<ListeningWidget> with Logger {
     super.initState();
   }
 
-  _fetchListeningStoryPageInfo(String storySlug) {
+  _fetchListeningStoryPageInfo(String? storySlug) {
+    if (storySlug == null) {
+      return;
+    }
     context.read<ListeningStoryCubit>().fetchListeningStoryPageInfo(storySlug);
   }
 
@@ -202,7 +206,7 @@ class _ListeningWidget extends State<ListeningWidget> with Logger {
                       height: 8,
                     ),
                     Text(
-                      recordList[index].title,
+                      recordList[index].title ?? StringDefault.valueNullDefault,
                       style: const TextStyle(color: Colors.grey),
                     ),
                     const SizedBox(

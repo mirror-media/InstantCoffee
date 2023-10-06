@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/tagPage/cubit.dart';
 import 'package:readr_app/blocs/tagPage/states.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/tag.dart';
@@ -139,7 +140,7 @@ class _TagWidgetState extends State<TagWidget> with Logger {
         children: [
           Expanded(
             child: Text(
-              record.title,
+              record.title ?? StringDefault.valueNullDefault,
               style: const TextStyle(fontSize: 20),
             ),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/widgets/custom_cached_network_image.dart';
 
@@ -27,7 +28,7 @@ class TheFirstItem extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
               child: Text(
-                record.title,
+                record.title ?? StringDefault.valueNullDefault,
                 style: const TextStyle(fontSize: 20),
               ),
             ),

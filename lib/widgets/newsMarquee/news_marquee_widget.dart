@@ -2,9 +2,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
-import 'package:readr_app/helpers/firebase_analytics_helper.dart';
 import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/helpers/firebase_analytics_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/widgets/newsMarquee/marquee_widget.dart';
@@ -63,7 +64,7 @@ class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
               child: MarqueeWidget(
                 animationDuration: const Duration(milliseconds: 4000),
                 child: Text(
-                  recordList[i].title,
+                  recordList[i].title ?? StringDefault.valueNullDefault,
                   style: const TextStyle(fontSize: 18, color: appColor),
                 ),
               ),
@@ -71,7 +72,8 @@ class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
           ),
           onTap: () {
             FirebaseAnalyticsHelper.logNewsMarqueeOpen(
-                slug: recordList[i].slug, title: recordList[i].title);
+                slug: recordList[i].slug,
+                title: recordList[i].title ?? StringDefault.valueNullDefault);
             if (!context.read<MemberBloc>().state.isPremium) {
               AdHelper adHelper = AdHelper();
               adHelper.checkToShowInterstitialAd();

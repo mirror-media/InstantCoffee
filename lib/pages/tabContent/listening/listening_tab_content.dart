@@ -18,6 +18,7 @@ import 'package:readr_app/widgets/newsMarquee/news_marquee_persistent_header_del
 class ListeningTabContent extends StatefulWidget {
   final Section section;
   final ScrollController scrollController;
+
   const ListeningTabContent({
     required this.section,
     required this.scrollController,
@@ -42,7 +43,7 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
         _listeningTabContentBloc.loadingMore();
       }
     });
-    
+
     super.initState();
   }
 
@@ -121,8 +122,6 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-
-
               if (index == 0) {
                 return TheFirstItem(
                   record: recordList[index],
@@ -176,7 +175,10 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
     );
   }
 
-  void _navigateToListeningStory(String slug) {
+  void _navigateToListeningStory(String? slug) {
+    if (slug == null) {
+      return;
+    }
     AdHelper adHelper = AdHelper();
     adHelper.checkToShowInterstitialAd();
 

@@ -8,20 +8,21 @@ class FirebaseAnalyticsHelper {
   }
 
   static logNewsMarqueeOpen({
-    required String slug,
+    required String? slug,
     required String title,
   }) async {
-    await analytics.logEvent(name: 'news_marquee_open', parameters: {
-      'slug': slug,
-      'title': title
-    });
+    if (slug == null) {
+      return;
+    }
+    await analytics.logEvent(
+        name: 'news_marquee_open', parameters: {'slug': slug, 'title': title});
   }
 
   static logTabBarAfterTheSixthClick({
     required String sectiontitle,
   }) async {
-    await analytics.logEvent(name: 'tab_bar_after_the_sixth_click', parameters: {
-      'title': sectiontitle
-    });
+    await analytics.logEvent(
+        name: 'tab_bar_after_the_sixth_click',
+        parameters: {'title': sectiontitle});
   }
 }
