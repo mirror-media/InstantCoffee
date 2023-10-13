@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/record.dart';
 
@@ -26,7 +27,7 @@ class SearchListItem extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    record.title,
+                    record.title ?? StringDefault.valueNullDefault,
                     style: const TextStyle(fontSize: 20),
                   ),
                 ),

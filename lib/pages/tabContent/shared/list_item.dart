@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/widgets/custom_cached_network_image.dart';
 
@@ -27,7 +28,7 @@ class ListItem extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      record.title,
+                      record.title ?? StringDefault.valueNullDefault,
                       style: const TextStyle(fontSize: 20),
                     ),
                   ),

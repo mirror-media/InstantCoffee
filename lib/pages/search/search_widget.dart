@@ -20,6 +20,7 @@ class _SearchWidgetState extends State<SearchWidget> {
   _searchByKeyword(String keyword) async {
     _searchList.clear();
     FocusScope.of(context).requestFocus(FocusNode());
+
     context.read<SearchCubit>().searchByKeyword(keyword);
   }
 

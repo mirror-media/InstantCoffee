@@ -34,7 +34,10 @@ class StoryWidget extends StatelessWidget {
   }) : super(key: key);
 
   _fetchPublishedStoryBySlug(
-      BuildContext context, String storySlug, bool isMemberCheck) {
+      BuildContext context, String? storySlug, bool isMemberCheck) {
+    if (storySlug == null) {
+      return;
+    }
     context
         .read<StoryBloc>()
         .add(FetchPublishedStoryBySlug(storySlug, isMemberCheck));
@@ -604,7 +607,7 @@ class StoryWidget extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                relatedItem.title,
+                relatedItem.title ?? StringDefault.valueNullDefault,
                 style: const TextStyle(fontSize: 20),
               ),
             ),
