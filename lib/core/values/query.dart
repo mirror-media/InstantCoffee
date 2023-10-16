@@ -117,6 +117,24 @@ class QueryDB {
                 }
             }
           }
+          relatedsInInputOrder{
+              id
+              slug
+              title
+              publishedDate
+              style
+              isMember
+              heroImage{
+                resized{
+                    original
+                    w480
+                    w800
+                    w1200
+                    w1600
+                    w2400
+                }
+            }
+          }
           heroCaption
           extend_byline
           tags{
@@ -127,6 +145,10 @@ class QueryDB {
               id
               name
           }
+          writersInInputOrder{
+            id
+            name,
+          } 
           photographers{
               id
               name
@@ -154,10 +176,21 @@ class QueryDB {
               slug
               isMemberOnly
           }
+          categoriesInInputOrder{
+              id
+              name
+              slug
+              isMemberOnly
+          }
           sections{
               name
               slug
               description
+          }
+          sectionsInInputOrder{
+            name
+            slug
+            description
           }
           isMember
           isAdvertised
@@ -319,7 +352,7 @@ class QueryDB {
       }
   }
   ''';
-  static const String getMagazinesList ='''
+  static const String getMagazinesList = '''
   query {
     magazines(
       take: 8, 
@@ -371,5 +404,4 @@ class QueryDB {
           }
         }
   ''';
-
 }
