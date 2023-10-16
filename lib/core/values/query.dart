@@ -18,7 +18,8 @@ class QueryDB {
         skip: %d,
         orderBy:{publishedDate:desc},
         where: {
-        isFeatured: {equals:false}, 
+          state:{equals:"published"}
+          isFeatured: {equals:false}, 
         topics: {id: {in: ["%s"]}}}) 
       {
         slug
@@ -205,6 +206,7 @@ class QueryDB {
       skip: %d,
       orderBy:{publishedDate:desc},
       where: {
+          state:{equals:"published"}
           isFeatured: {equals:false} 
           sections:{
               some:{
@@ -271,6 +273,7 @@ class QueryDB {
       skip: %d,
       orderBy:{publishedDate:desc},
       where: {
+          state:{equals:"published"}
           categories:{
               some:{
                   slug:{
@@ -306,6 +309,7 @@ class QueryDB {
       skip: %d,
       orderBy:{updatedAt:desc},
       where: {
+          state:{equals:"published"}
           isAdult:{equals:false},
           isAdvertised:{equals:false},
       tags: {
