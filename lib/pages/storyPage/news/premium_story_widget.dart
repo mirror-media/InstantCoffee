@@ -35,7 +35,10 @@ class PremiumStoryWidget extends StatelessWidget {
   });
 
   _fetchPublishedStoryBySlug(
-      BuildContext context, String storySlug, bool isMemberCheck) {
+      BuildContext context, String? storySlug, bool isMemberCheck) {
+    if (storySlug == null) {
+      return;
+    }
     context
         .read<StoryBloc>()
         .add(FetchPublishedStoryBySlug(storySlug, isMemberCheck));
@@ -46,6 +49,7 @@ class PremiumStoryWidget extends StatelessWidget {
         (category.name == Environment().config.wineSectionKey ||
             category.name == Environment().config.wine1SectionKey));
   }
+
   Color _getSectionColor(Story? story) {
     String? sectionName;
     if (story != null) {
@@ -88,7 +92,6 @@ class PremiumStoryWidget extends StatelessWidget {
             adSize: AdSize.banner,
             isKeepAlive: true,
           ),
-
       ],
     );
   }
@@ -221,7 +224,7 @@ class PremiumStoryWidget extends StatelessWidget {
       categoriesName.add(GestureDetector(
         onTap: null,
         child: Text(
-          categories[0].name ?? StringDefault.valueNullDefault,
+          categories[0].title ?? StringDefault.valueNullDefault,
           style: const TextStyle(fontSize: 15, color: appColor),
         ),
       ));
@@ -655,7 +658,7 @@ class PremiumStoryWidget extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                relatedItem.title,
+                relatedItem.title ?? StringDefault.valueNullDefault,
                 style: const TextStyle(
                   fontSize: 17,
                   color: Color.fromRGBO(0, 0, 0, 0.66),

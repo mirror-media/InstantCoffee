@@ -3,9 +3,9 @@ import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/category.dart';
 
 class Record extends Equatable {
-  final String title;
-  final String slug;
-  final String publishedDate;
+  final String? title;
+  final String? slug;
+  final String? publishedDate;
   final String photoUrl;
   final bool isExternal;
   final bool isMemberCheck;

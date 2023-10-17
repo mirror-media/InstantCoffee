@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/route_generator.dart';
@@ -86,7 +87,7 @@ class CarouselDisplayWidget extends StatelessWidget {
           height: 56,
           child: Center(
             child: AutoSizeText(
-              record.title,
+              record.title ?? StringDefault.valueNullDefault,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
               minFontSize: 20,
