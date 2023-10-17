@@ -415,11 +415,14 @@ class RouteGenerator {
     navigatorKey.currentState!.pushNamed(premiumSettings);
   }
 
-  static void navigateToStory(String slug,
+  static void navigateToStory(String? slug,
       {bool isMemberCheck = true, String? url}) {
     if (url != null) {
       launchUrlString(url);
     } else {
+      if (slug == null) {
+        return;
+      }
       navigatorKey.currentState!.pushNamed(
         story,
         arguments: {
@@ -430,8 +433,11 @@ class RouteGenerator {
     }
   }
 
-  static void navigateToExternalStory(String slug,
+  static void navigateToExternalStory(String? slug,
       {bool isPremiumMode = false}) {
+    if (slug == null) {
+      return;
+    }
     navigatorKey.currentState!.pushNamed(
       externalStory,
       arguments: {
@@ -441,7 +447,10 @@ class RouteGenerator {
     );
   }
 
-  static void navigateToListeningStory(String slug) {
+  static void navigateToListeningStory(String? slug) {
+    if (slug == null) {
+      return;
+    }
     navigatorKey.currentState!.pushNamed(
       listeningStory,
       arguments: {'slug': slug},
@@ -461,9 +470,10 @@ class RouteGenerator {
     // https://github.com/flutter/flutter/issues/48245
     // There is a issue when opening pdf file in webview on android,
     // so change to launch URL on android.
-    if(magazine.type!=null) {
-      String url =
-      magazine.type! == 'weekly' ? magazine.onlineReadingUrl! : magazine.pdfUrl!;
+    if (magazine.type != null) {
+      String url = magazine.type! == 'weekly'
+          ? magazine.onlineReadingUrl!
+          : magazine.pdfUrl!;
 
       if (url == '') {
         Fluttertoast.showToast(

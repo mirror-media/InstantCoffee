@@ -250,11 +250,14 @@ class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
   }
 
   void _navigateToStoryPage(Record record) {
+    if (record.slug == null) {
+      return;
+    }
     if (record.isExternal) {
-      RouteGenerator.navigateToExternalStory(record.slug, isPremiumMode: true);
+      RouteGenerator.navigateToExternalStory(record.slug!, isPremiumMode: true);
     } else {
       RouteGenerator.navigateToStory(
-        record.slug,
+        record.slug!,
         isMemberCheck: record.isMemberCheck,
         url: record.url,
       );

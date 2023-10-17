@@ -43,13 +43,14 @@ class TopicPage extends GetView<TopicPageController> {
         child: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
-              controller.rxCurrentTopic.value?.type != TopicType.slideshow
+              controller.rxCurrentTopic.value?.type != TopicType.slideshow &&
+                      controller.rxCurrentTopic.value?.originImage != null
                   ? SliverToBoxAdapter(
                       child: Container(
                         color: const Color(0xFFE2E5E7),
                         child: CustomCachedNetworkImage(
-                            imageUrl: controller.rxCurrentTopic.value?.originImage!
-                                    .imageCollection!.w800 ??
+                            imageUrl: controller.rxCurrentTopic.value
+                                    ?.originImage!.imageCollection!.w800 ??
                                 '',
                             width: Get.width,
                             height: Get.width / (16 / 9)),

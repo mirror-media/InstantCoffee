@@ -345,14 +345,17 @@ class _TabContentState extends State<TabContent> with Logger {
   }
 
   void _navigateToStoryPage(Record record) {
+    if (record.slug == null) {
+      return;
+    }
     AdHelper adHelper = AdHelper();
     adHelper.checkToShowInterstitialAd();
 
     if (record.isExternal) {
-      RouteGenerator.navigateToExternalStory(record.slug);
+      RouteGenerator.navigateToExternalStory(record.slug!);
     } else {
       RouteGenerator.navigateToStory(
-        record.slug,
+        record.slug!,
         isMemberCheck: record.isMemberCheck,
         url: record.url,
       );

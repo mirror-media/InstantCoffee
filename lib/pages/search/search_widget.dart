@@ -18,8 +18,10 @@ class _SearchWidgetState extends State<SearchWidget> {
   bool _isNeedToLoadMore = true;
 
   _searchByKeyword(String keyword) async {
+    if (keyword.isEmpty) return;
     _searchList.clear();
     FocusScope.of(context).requestFocus(FocusNode());
+
     context.read<SearchCubit>().searchByKeyword(keyword);
   }
 
