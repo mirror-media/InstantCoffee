@@ -121,6 +121,40 @@ class Story {
         }
       }
     }
+    List<Record> relatedList = [];
+    if (json["relatedsInInputOrder"] != null) {
+      relatedList = Record.recordListFromJson(json["relatedsInInputOrder"]);
+    } else {
+      if (json["relateds"] != null) {
+        relatedList = Record.recordListFromJson(json["relateds"]);
+      }
+    }
+
+    List<Category> categoriesList = [];
+    if (json["categoriesInInputOrder"] != null) {
+      categoriesList =
+          Category.categoryListFromJson(json["categoriesInInputOrder"]);
+    } else {
+      if (json["categories"] != null) {
+        categoriesList = Category.categoryListFromJson(json["categories"]);
+      }
+    }
+    List<Section> sectionList = [];
+    if (json["sectionsInInputOrder"] != null) {
+      sectionList = Section.sectionListFromJson(json["sectionsInInputOrder"]);
+    } else {
+      if (json["sections"] != null) {
+        sectionList = Section.sectionListFromJson(json["sections"]);
+      }
+    }
+    List<People> writerList = [];
+    if (json["writersInInputOrder"] != null) {
+      writerList = People.peopleListFromJson(json["writersInInputOrder"]);
+    } else {
+      if (json["writers"] != null) {
+        writerList = People.peopleListFromJson(json["writers"]);
+      }
+    }
 
     return Story(
       title: title,
@@ -133,15 +167,11 @@ class Story {
       heroVideo: videoUrl,
       heroCaption: json["heroCaption"] ?? '',
       extendByline: json["extend_byline"],
-      relatedStory: json["relateds"] == null
-          ? []
-          : Record.recordListFromJson(json["relateds"]),
+      relatedStory: relatedList,
       brief: briefList,
       apiData: apiDataList,
       trimmedApiData: trimmedApiDataList,
-      writers: json["writers"] == null
-          ? []
-          : People.peopleListFromJson(json["writers"]),
+      writers: writerList,
       photographers: json["photographers"] == null
           ? []
           : People.peopleListFromJson(json["photographers"]),
@@ -154,22 +184,17 @@ class Story {
       engineers: json["engineers"] == null
           ? []
           : People.peopleListFromJson(json["engineers"]),
-      categories: json["categories"] == null
-          ? []
-          : Category.categoryListFromJson(json["categories"]),
-      sections: json["sections"] == null
-          ? []
-          : Section.sectionListFromJson(json["sections"]),
+      categories: categoriesList,
+      sections: sectionList,
       tags: json["tags"] == null ? [] : Tag.tagListFromJson(json["tags"]),
       state: json["state"],
       isAdult: json['isAdult'] ?? false,
       isTruncated: apiDataList.isEmpty,
-      isMember:json['isMember'] ?? false,
+      isMember: json['isMember'] ?? false,
       isAdvertised: json['isAdvertised'] ?? false,
       imageUrlList: imageUrlList,
     );
   }
-
 
   ///K3 fromJson 已棄用
   //factory Story.fromJson(Map<String, dynamic> json) {

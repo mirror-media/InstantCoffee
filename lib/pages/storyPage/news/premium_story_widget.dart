@@ -224,7 +224,7 @@ class PremiumStoryWidget extends StatelessWidget {
       categoriesName.add(GestureDetector(
         onTap: null,
         child: Text(
-          categories[0].name ?? StringDefault.valueNullDefault,
+          categories[0].title ?? StringDefault.valueNullDefault,
           style: const TextStyle(fontSize: 15, color: appColor),
         ),
       ));
