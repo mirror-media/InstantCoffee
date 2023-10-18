@@ -89,6 +89,7 @@ class QueryDB {
           updatedAt
           heroVideo{
               urlOriginal
+              videoSrc
           }
           heroImage{
               id
