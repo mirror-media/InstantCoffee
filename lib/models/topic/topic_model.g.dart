@@ -18,6 +18,7 @@ TopicModel _$TopicModelFromJson(Map<String, dynamic> json) => TopicModel(
       slideShowImagesCount: json['slideshow_imagesCount'] as int?,
       sortOrder: json['sortOrder'] as int?,
       style: json['style'] as String?,
+      heroUrl: json['heroUrl'] as String?,
       originImage: json['og_image'] == null
           ? null
           : OriginImage.fromJson(json['og_image'] as Map<String, dynamic>),

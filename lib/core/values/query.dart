@@ -55,6 +55,7 @@ class QueryDB {
             slug
             type
             name
+            heroUrl
             isFeatured
             tags{
               id
