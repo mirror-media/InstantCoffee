@@ -9,8 +9,16 @@ class Content {
     this.description,
   });
 
-  factory Content.fromJson(dynamic json) {
+  factory Content.fromJson(dynamic json, String? type) {
     if (json is Map<String, dynamic>) {
+      switch (type) {
+        case 'infobox':
+          return Content(
+            data: json['body'],
+            aspectRatio: null,
+            description: json['title'],
+          );
+      }
       if (json['mobile'] != null) {
         return Content(
           data: json['mobile']['url'],
@@ -60,7 +68,7 @@ class Content {
       } else if (json['resized'] != null) {
         return Content(
             data: json['resized']['w800'],
-            aspectRatio: 16/9,
+            aspectRatio: 16 / 9,
             description: json['desc']);
       }
 
@@ -74,11 +82,12 @@ class Content {
     );
   }
 
-  static List<Content> contentListFromJson(List<dynamic> jsonList) {
+  static List<Content> contentListFromJson(
+      List<dynamic> jsonList, String? type) {
     List<Content> contentList = [];
     for (dynamic json in jsonList) {
       if (json != null && json != '') {
-        contentList.add(Content.fromJson(json));
+        contentList.add(Content.fromJson(json, type));
       }
     }
 
