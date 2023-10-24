@@ -12,12 +12,9 @@ class Paragraph {
   });
   ///為了避免相依性導致其他元件的Bug,因此將infobox獨立出來修改,後續3.0建議都用type作為資料的判讀
   factory Paragraph.fromJsonK6(Map<String, dynamic> json) {
-    List<Content> contents = [];
-    if (json['type'] == 'infobox') {
-      contents = (json["content"] as List<dynamic>).isEmpty
-          ? []
-          : Content.contentListFromJson(json["content"], json['type']);
-    }
+    List<Content> contents = json["content"] == null
+        ? []
+        : Content.contentListFromJson(json["content"], json['type']);
 
     return Paragraph(
       contents: contents,
