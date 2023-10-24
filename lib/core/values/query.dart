@@ -55,6 +55,7 @@ class QueryDB {
             slug
             type
             name
+            heroUrl
             isFeatured
             tags{
               id
@@ -88,6 +89,7 @@ class QueryDB {
           updatedAt
           heroVideo{
               urlOriginal
+              videoSrc
           }
           heroImage{
               id

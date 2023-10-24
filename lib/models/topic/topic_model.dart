@@ -21,6 +21,7 @@ class TopicModel {
   final bool? isFeatured;
   final int? slideShowImagesCount;
   final List<TopicTag>? tags;
+  final String? heroUrl;
   final int? sortOrder;
   final String? style;
   @ColorSerializer()
@@ -45,6 +46,7 @@ class TopicModel {
       this.tags,
       this.sortOrder,
       this.style,
+      this.heroUrl,
       this.originImage});
 
   factory TopicModel.fromJson(Map<String, dynamic> json) {

@@ -103,7 +103,7 @@ class Story {
     }
     if (json.containsKey('heroVideo')) {
       if (json['heroVideo'] != null) {
-        videoUrl = json['heroVideo']['urlOriginal'];
+        videoUrl = json['heroVideo']['videoSrc'];
       }
     }
 
