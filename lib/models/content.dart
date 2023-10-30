@@ -18,6 +18,12 @@ class Content {
             aspectRatio: null,
             description: json['title'],
           );
+        case 'video-v2':
+          return Content(
+            data: json['video']['videoSrc'],
+            aspectRatio: null,
+            description: json['name'],
+          );
       }
       if (json['mobile'] != null) {
         return Content(

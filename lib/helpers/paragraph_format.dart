@@ -160,6 +160,7 @@ class ParagraphFormat {
           return Container();
         }
       case 'video':
+      case 'video-v2':
         {
           if (isParagraphFirstContentsAvailable(paragraph.contents)) {
             Widget video = MMVideoPlayer(
