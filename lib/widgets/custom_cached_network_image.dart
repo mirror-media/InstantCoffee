@@ -6,10 +6,10 @@ import '../helpers/environment.dart';
 class CustomCachedNetworkImage extends StatelessWidget {
   final String imageUrl;
   final double width;
-  final double height;
+  final double? height;
 
   const CustomCachedNetworkImage(
-      {Key? key, required this.imageUrl, required this.width, required this.height})
+      {Key? key, required this.imageUrl, required this.width, this.height})
       : super(key: key);
 
   @override

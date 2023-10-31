@@ -167,7 +167,6 @@ class StoryWidget extends StatelessWidget {
               }
             },
             child: CustomCachedNetworkImage(
-              height: height,
               width: width,
               imageUrl: story.heroImage,
             ),
