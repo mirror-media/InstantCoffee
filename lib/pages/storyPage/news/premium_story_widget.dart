@@ -278,7 +278,7 @@ class PremiumStoryWidget extends StatelessWidget {
               }
             },
             child: CustomCachedNetworkImage(
-                height: height, width: width, imageUrl: story.heroImage),
+                 width: width, imageUrl: story.heroImage),
           ),
         if (story.heroCaption != null && story.heroCaption != '')
           const Padding(

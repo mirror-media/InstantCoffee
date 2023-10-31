@@ -23,8 +23,6 @@ class ImageDescriptionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = width / aspectRatio;
-
     if (isMemberContent) {
       return ListView(
         physics: const NeverScrollableScrollPhysics(),
@@ -43,7 +41,6 @@ class ImageDescriptionWidget extends StatelessWidget {
               },
               child: CustomCachedNetworkImage(
                 width: width,
-                height: height,
                 imageUrl: imageUrl,
               ),
             ),
@@ -75,8 +72,7 @@ class ImageDescriptionWidget extends StatelessWidget {
         //direction: Axis.vertical,
         children: [
           if (imageUrl != '')
-            CustomCachedNetworkImage(
-                imageUrl: imageUrl, width: width, height: height),
+            CustomCachedNetworkImage(imageUrl: imageUrl, width: width),
           if (description != '')
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
