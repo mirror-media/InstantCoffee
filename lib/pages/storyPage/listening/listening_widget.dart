@@ -80,56 +80,72 @@ class _ListeningWidget extends State<ListeningWidget> with Logger {
     Listening listening,
     List<Record> recordList,
   ) {
-    return Column(
+    return Stack(
       children: [
-        Expanded(
-          child: ListView(children: [
-            YoutubeWidget(
-              width: width,
-              youtubeId: listening.slug,
+        Column(
+          children: [
+            Expanded(
+              child: ListView(children: [
+                YoutubeWidget(
+                  width: width,
+                  youtubeId: listening.slug,
+                ),
+                const SizedBox(height: 16.0),
+                if (isListeningWidgetAdsActivated && !_isPremium) ...[
+                  MMAdBanner(
+                    adUnitId: listening.storyAd!.hDUnitId,
+                    adSize: AdSize.mediumRectangle,
+                    isKeepAlive: true,
+                  ),
+                  const SizedBox(height: 16),
+                ],
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+                  child: _buildTitleAndDescription(listening),
+                ),
+                const SizedBox(height: 16.0),
+                if (isListeningWidgetAdsActivated && !_isPremium) ...[
+                  MMAdBanner(
+                    adUnitId: listening.storyAd!.aT1UnitId,
+                    adSize: AdSize.mediumRectangle,
+                    isKeepAlive: true,
+                  ),
+                  const SizedBox(height: 16),
+                ],
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+                  child: _buildTheNewestVideos(width, recordList),
+                ),
+                if (isListeningWidgetAdsActivated && !_isPremium) ...[
+                  MMAdBanner(
+                    adUnitId: listening.storyAd!.fTUnitId,
+                    adSize: AdSize.mediumRectangle,
+                    isKeepAlive: true,
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ]),
             ),
-            const SizedBox(height: 16.0),
-            if (isListeningWidgetAdsActivated && !_isPremium) ...[
-              MMAdBanner(
-                adUnitId: listening.storyAd!.hDUnitId,
-                adSize: AdSize.mediumRectangle,
-                isKeepAlive: true,
-              ),
-              const SizedBox(height: 16),
-            ],
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-              child: _buildTitleAndDescription(listening),
-            ),
-            const SizedBox(height: 16.0),
-            if (isListeningWidgetAdsActivated && !_isPremium) ...[
-              MMAdBanner(
-                adUnitId: listening.storyAd!.aT1UnitId,
-                adSize: AdSize.mediumRectangle,
-                isKeepAlive: true,
-              ),
-              const SizedBox(height: 16),
-            ],
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-              child: _buildTheNewestVideos(width, recordList),
-            ),
-            if (isListeningWidgetAdsActivated && !_isPremium) ...[
-              MMAdBanner(
-                adUnitId: listening.storyAd!.fTUnitId,
-                adSize: AdSize.mediumRectangle,
-                isKeepAlive: true,
-              ),
-              const SizedBox(height: 16),
-            ],
-          ]),
+          ],
         ),
-        if (isListeningWidgetAdsActivated && !_isPremium)
-          MMAdBanner(
-            adUnitId: listening.storyAd!.stUnitId,
-            adSize: AdSize.banner,
-            isKeepAlive: true,
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: SafeArea(
+            child: StatefulBuilder(builder: (context, setState) {
+              return isListeningWidgetAdsActivated && !_isPremium
+                  ? SizedBox(
+                      height: AdSize.banner.height.toDouble(),
+                      width: AdSize.banner.width.toDouble(),
+                      child: MMAdBanner(
+                        adUnitId: listening.storyAd!.stUnitId,
+                        adSize: AdSize.banner,
+                        isKeepAlive: true,
+                      ),
+                    )
+                  : const SizedBox.shrink();
+            }),
           ),
+        ),
       ],
     );
   }

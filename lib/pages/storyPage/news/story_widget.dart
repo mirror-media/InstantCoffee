@@ -72,79 +72,101 @@ class StoryWidget extends StatelessWidget {
     StoryAd storyAd = story.storyAd!;
     Color sectionColor = _getSectionColor(story);
 
-    return Column(
+    return Stack(
       children: [
-        Expanded(
-          child: ListView(children: [
-            if (isAdsActivated) ...[
-              const SizedBox(height: 16),
-              MMAdBanner(
-                adUnitId: storyAd.hDUnitId,
-                adSize: AdSize.mediumRectangle,
-                isKeepAlive: true,
+        Column(
+          children: [
+            Expanded(
+              child: ListView(children: [
+                if (isAdsActivated) ...[
+                  const SizedBox(height: 16),
+                  MMAdBanner(
+                    adUnitId: storyAd.hDUnitId,
+                    adSize: AdSize.mediumRectangle,
+                    isKeepAlive: true,
+                  ),
+                  const SizedBox(height: 16),
+                ],
+                _buildHeroWidget(width, height, story),
+                const SizedBox(height: 32),
+                _buildCategoryAndPublishedDate(story, sectionColor),
+                const SizedBox(height: 8),
+                _buildStoryTitle(story.title),
+                const SizedBox(height: 8),
+                _buildAuthors(context, story),
+                const SizedBox(height: 4),
+                _buildBrief(story, sectionColor),
+                _buildContent(story, isAdsActivated),
+                const SizedBox(height: 16),
+                if (isAdsActivated)
+                  MMAdBanner(
+                    adUnitId: storyAd.aT3UnitId,
+                    adSize: AdSize.mediumRectangle,
+                    isKeepAlive: true,
+                  ),
+                const SizedBox(height: 16),
+                _buildUpdateDateWidget(story),
+                const SizedBox(height: 24),
+                FacebookIframeWidget(),
+                const SizedBox(height: 16),
+                _socialButtons(),
+                _buildRelatedWidget(context, story.relatedStory),
+                const SizedBox(height: 16),
+                if (isAdsActivated) ...[
+                  MMAdBanner(
+                    adUnitId: storyAd.e1UnitId,
+                    adSize: AdSize.mediumRectangle,
+                    isKeepAlive: true,
+                  ),
+                  const SizedBox(height: 16),
+                ],
+                _buildMoreContentWidget(),
+                const SizedBox(height: 24),
+                _downloadMagazinesWidget(),
+                const SizedBox(height: 16),
+                _buildTagWidget(context, story.tags),
+                const SizedBox(height: 16),
+                if (isAdsActivated) ...[
+                  MMAdBanner(
+                    adUnitId: storyAd.fTUnitId,
+                    adSize: AdSize.mediumRectangle,
+                    isKeepAlive: true,
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ]),
+            ),
+            if (isWineCategory)
+              Image.asset(
+                "assets/image/wine_warning.png",
+                height: 50.0,
               ),
-              const SizedBox(height: 16),
-            ],
-            _buildHeroWidget(width, height, story),
-            const SizedBox(height: 32),
-            _buildCategoryAndPublishedDate(story, sectionColor),
-            const SizedBox(height: 8),
-            _buildStoryTitle(story.title),
-            const SizedBox(height: 8),
-            _buildAuthors(context, story),
-            const SizedBox(height: 4),
-            _buildBrief(story, sectionColor),
-            _buildContent(story, isAdsActivated),
-            const SizedBox(height: 16),
-            if (isAdsActivated)
-              MMAdBanner(
-                adUnitId: storyAd.aT3UnitId,
-                adSize: AdSize.mediumRectangle,
-                isKeepAlive: true,
-              ),
-            const SizedBox(height: 16),
-            _buildUpdateDateWidget(story),
-            const SizedBox(height: 24),
-            FacebookIframeWidget(),
-            const SizedBox(height: 16),
-            _socialButtons(),
-            _buildRelatedWidget(context, story.relatedStory),
-            const SizedBox(height: 16),
-            if (isAdsActivated) ...[
-              MMAdBanner(
-                adUnitId: storyAd.e1UnitId,
-                adSize: AdSize.mediumRectangle,
-                isKeepAlive: true,
-              ),
-              const SizedBox(height: 16),
-            ],
-            _buildMoreContentWidget(),
-            const SizedBox(height: 24),
-            _downloadMagazinesWidget(),
-            const SizedBox(height: 16),
-            _buildTagWidget(context, story.tags),
-            const SizedBox(height: 16),
-            if (isAdsActivated) ...[
-              MMAdBanner(
-                adUnitId: storyAd.fTUnitId,
-                adSize: AdSize.mediumRectangle,
-                isKeepAlive: true,
-              ),
-              const SizedBox(height: 16),
-            ],
-          ]),
+            // if (isAdsActivated && !isWineCategory)
+            //   MMAdBanner(
+            //     adUnitId: storyAd.stUnitId,
+            //     adSize: AdSize.banner,
+            //     isKeepAlive: true,
+            //   ),
+          ],
         ),
-        if (isWineCategory)
-          Image.asset(
-            "assets/image/wine_warning.png",
-            height: 50.0,
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: SafeArea(
+            child: StatefulBuilder(builder: (context, setState) {
+              return isAdsActivated && !isWineCategory
+                  ? SizedBox(
+                      height: AdSize.banner.height.toDouble(),
+                      width: AdSize.banner.width.toDouble(),
+                      child: MMAdBanner(
+                        adUnitId: storyAd.stUnitId,
+                        adSize: AdSize.banner,
+                        isKeepAlive: true,
+                      ),
+                    )
+                  : const SizedBox.shrink();
+            }),
           ),
-        if (isAdsActivated && !isWineCategory)
-          MMAdBanner(
-            adUnitId: storyAd.stUnitId,
-            adSize: AdSize.banner,
-            isKeepAlive: true,
-          ),
+        ),
       ],
     );
   }

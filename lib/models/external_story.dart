@@ -8,21 +8,27 @@ class ExternalStory {
   String? extendByLine;
   String? heroImage;
   String? content;
+  bool? showOnIndex;
 
-  ExternalStory({
-    this.title,
-    this.subtitle,
-    this.slug,
-    this.publishedDate,
-    this.extendByLine,
-    this.heroImage,
-    this.content,
-  });
+  ExternalStory(
+      {this.title,
+      this.subtitle,
+      this.slug,
+      this.publishedDate,
+      this.extendByLine,
+      this.heroImage,
+      this.content,
+      this.showOnIndex});
 
   factory ExternalStory.fromJsonK6(Map<String, dynamic> json) {
     String photoUrl = Environment().config.mirrorMediaNotImageUrl;
     if (json.containsKey('thumb')) {
       photoUrl = json['thumb'];
+    }
+
+    bool showOnIndex = false;
+    if (json.containsKey('partner')) {
+      showOnIndex = json['partner']['showOnIndex'];
     }
 
     return ExternalStory(
@@ -32,6 +38,7 @@ class ExternalStory {
       extendByLine: json['extend_byline'],
       heroImage: photoUrl,
       content: json['content'],
+      showOnIndex: showOnIndex,
     );
   }
 
