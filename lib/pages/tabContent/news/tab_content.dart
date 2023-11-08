@@ -77,61 +77,78 @@ class _TabContentState extends State<TabContent> with Logger {
       onRefresh: () async {
         _fetchFirstRecordList();
       },
-      child: Column(
+      child: Stack(
         children: [
-          if (widget.section.name == 'member')
-            GestureDetector(
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 37.5),
-                child: Image.asset(subscribeBannerJpg),
+          Column(
+            children: [
+              if (widget.section.name == 'member')
+                GestureDetector(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 37.5),
+                    child: Image.asset(subscribeBannerJpg),
+                  ),
+                  onTap: () => RouteGenerator.navigateToSubscriptionSelect(),
+                ),
+              Expanded(
+                child: BlocBuilder<TabContentBloc, TabContentState>(
+                    builder: (BuildContext context, TabContentState state) {
+                  switch (state.status) {
+                    case TabContentStatus.loadingError:
+                      final error = state.errorMessages;
+                      debugLog('TabContent: ${error.message}');
+                      return ErrorStatelessWidget(
+                        errorMessage: error.message,
+                        onRetryPressed: () => _fetchFirstRecordList(),
+                      );
+                    case TabContentStatus.loaded:
+                    case TabContentStatus.loadingMore:
+                      List<Record> recordList = state.recordList!;
+
+                      return _buildTheRecordList(recordList,
+                          hasNextPage: state.hasNextPage!,
+                          isLoadingMore:
+                              state.status == TabContentStatus.loadingMore);
+                    case TabContentStatus.loadingMoreFail:
+                      Fluttertoast.showToast(
+                          msg: '加載更多失敗',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0);
+                      List<Record> recordList = state.recordList!;
+
+                      return _buildTheRecordList(
+                        recordList,
+                      );
+                    default:
+                      // state is Init, Loading
+                      return _loadingWidget();
+                  }
+                }),
               ),
-              onTap: () => RouteGenerator.navigateToSubscriptionSelect(),
-            ),
-          Expanded(
-            child: BlocBuilder<TabContentBloc, TabContentState>(
-                builder: (BuildContext context, TabContentState state) {
-              switch (state.status) {
-                case TabContentStatus.loadingError:
-                  final error = state.errorMessages;
-                  debugLog('TabContent: ${error.message}');
-                  return ErrorStatelessWidget(
-                    errorMessage: error.message,
-                    onRetryPressed: () => _fetchFirstRecordList(),
-                  );
-                case TabContentStatus.loaded:
-                case TabContentStatus.loadingMore:
-                  List<Record> recordList = state.recordList!;
-
-                  return _buildTheRecordList(recordList,
-                      hasNextPage: state.hasNextPage!,
-                      isLoadingMore:
-                          state.status == TabContentStatus.loadingMore);
-                case TabContentStatus.loadingMoreFail:
-                  Fluttertoast.showToast(
-                      msg: '加載更多失敗',
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.red,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
-                  List<Record> recordList = state.recordList!;
-
-                  return _buildTheRecordList(
-                    recordList,
-                  );
-                default:
-                  // state is Init, Loading
-                  return _loadingWidget();
-              }
-            }),
+            ],
           ),
-          if (isTabContentAdsActivated && _sectionAd != null)
-            MMAdBanner(
-              adUnitId: _sectionAd!.stUnitId,
-              adSize: AdSize.banner,
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: SafeArea(
+              child: StatefulBuilder(builder: (context, setState) {
+                return isTabContentAdsActivated && _sectionAd != null
+                    ? SizedBox(
+                        height: AdSize.banner.height.toDouble(),
+                        width: AdSize.banner.width.toDouble(),
+                        child: MMAdBanner(
+                          adUnitId: _sectionAd!.stUnitId,
+                          adSize: AdSize.banner,
+                          isKeepAlive: true,
+                        ),
+                      )
+                    : const SizedBox.shrink();
+              }),
             ),
+          ),
         ],
       ),
     );
