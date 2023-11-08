@@ -29,6 +29,7 @@ import 'package:readr_app/pages/passwordUpdate/password_update_page.dart';
 import 'package:readr_app/pages/search/search_page.dart';
 import 'package:readr_app/pages/settingPage/notification_settings_page.dart';
 import 'package:readr_app/pages/settingPage/premium_setting_page.dart';
+import 'package:readr_app/pages/storyPage/external/external_story_controller.dart';
 import 'package:readr_app/pages/storyPage/external/external_story_page.dart';
 import 'package:readr_app/pages/storyPage/listening/listening_story_page.dart';
 import 'package:readr_app/pages/storyPage/news/story_page.dart';
@@ -216,11 +217,15 @@ class RouteGenerator {
         Map args = settings.arguments as Map;
         // Validation of correct data type
         if (args['slug'] is String) {
+          Get.delete<ExternalStoryController>();
+          Get.put(ExternalStoryController(
+              slug: args['slug'], isMember: args['isPremiumMode']));
           return MaterialPageRoute(
-              builder: (context) => ExternalStoryPage(
-                    slug: args['slug'],
-                    isPremiumMode: args['isPremiumMode'],
-                  ));
+            builder: (context) => ExternalStoryPage(
+              slug: args['slug'],
+              isPremiumMode: args['isPremiumMode'],
+            ),
+          );
         }
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.

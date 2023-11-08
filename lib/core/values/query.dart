@@ -355,6 +355,11 @@ class QueryDB {
           thumb
           extend_byline
           publishedDate
+          partner{
+            name
+            showOnIndex
+
+        }
       }
   }
   ''';
