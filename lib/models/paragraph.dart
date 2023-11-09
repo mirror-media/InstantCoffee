@@ -4,13 +4,10 @@ class Paragraph {
   String? styles;
   List<Content> contents;
   String? type;
+  String? id;
 
-  Paragraph({
-    this.styles,
-    required this.contents,
-    this.type,
-  });
-  ///為了避免相依性導致其他元件的Bug,因此將infobox獨立出來修改,後續3.0建議都用type作為資料的判讀
+  Paragraph({this.styles, required this.contents, this.type, this.id});
+
   factory Paragraph.fromJsonK6(Map<String, dynamic> json) {
     List<Content> contents = json["content"] == null
         ? []
@@ -19,6 +16,7 @@ class Paragraph {
     return Paragraph(
       contents: contents,
       type: json['type'],
+      id: json['id'],
     );
   }
 

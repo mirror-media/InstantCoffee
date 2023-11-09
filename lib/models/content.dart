@@ -91,6 +91,19 @@ class Content {
   static List<Content> contentListFromJson(
       List<dynamic> jsonList, String? type) {
     List<Content> contentList = [];
+
+    if (type == 'slideshow-v2') {
+      final imagesList = jsonList[0]['images'] as List<dynamic>;
+      return imagesList
+          .map((json) => Content(
+                data: json['resized']['w800'],
+                description: json['desc'],
+                aspectRatio:
+                    json['imageFile']['width'] / json['imageFile']['height'],
+              ))
+          .toList();
+    }
+
     for (dynamic json in jsonList) {
       if (json != null && json != '') {
         contentList.add(Content.fromJson(json, type));
