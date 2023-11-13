@@ -183,6 +183,7 @@ class ParagraphFormat {
           }
           return Container();
         }
+      case 'audio-v2':
       case 'audio':
         {
           if (isParagraphFirstContentsAvailable(paragraph.contents)) {

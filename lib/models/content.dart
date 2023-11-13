@@ -36,6 +36,11 @@ class Content {
             aspectRatio: null,
             description: json['name'],
           );
+        case 'audio-v2':
+          return Content (
+            data:json['audio']['audioSrc'],
+            description: json['audio']['name'],
+          );
       }
       if (json['mobile'] != null) {
         return Content(
