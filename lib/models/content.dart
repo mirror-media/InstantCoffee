@@ -2,14 +2,26 @@ class Content {
   String? data;
   double? aspectRatio;
   String? description;
+  List<List<String>>? tableData;
 
   Content({
     this.data,
     this.aspectRatio,
     this.description,
+    this.tableData,
   });
 
   factory Content.fromJson(dynamic json, String? type) {
+    if (type == 'table') {
+      final rowList = json as List<dynamic>;
+      final result = rowList.map((row) {
+        final columList = row as List<dynamic>;
+        return columList.map((colum) => colum['html'].toString()).toList();
+      }).toList();
+
+      return Content(tableData: result);
+    }
+
     if (json is Map<String, dynamic>) {
       switch (type) {
         case 'infobox':
@@ -102,11 +114,14 @@ class Content {
                     json['imageFile']['width'] / json['imageFile']['height'],
               ))
           .toList();
-    }
-
-    for (dynamic json in jsonList) {
-      if (json != null && json != '') {
-        contentList.add(Content.fromJson(json, type));
+    } else if (type == 'table') {
+      final content = Content.fromJson(jsonList, type);
+      contentList.add(content);
+    } else {
+      for (dynamic json in jsonList) {
+        if (json != null && json != '') {
+          contentList.add(Content.fromJson(json, type));
+        }
       }
     }
 

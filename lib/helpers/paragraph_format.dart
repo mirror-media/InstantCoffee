@@ -17,6 +17,7 @@ import 'package:readr_app/widgets/m_m_video_player.dart';
 import 'package:readr_app/widgets/quote_by_widget.dart';
 import 'package:readr_app/widgets/slideshow_widget/slideshow_controller.dart';
 import 'package:readr_app/widgets/slideshow_widget/slideshow_widget.dart';
+import 'package:readr_app/widgets/table_widget.dart';
 import 'package:readr_app/widgets/youtube_widget.dart';
 
 class ParagraphFormat {
@@ -116,6 +117,8 @@ class ParagraphFormat {
               htmlFontSize: htmlFontSize);
           return _addPaddingIfNeeded(unOrderedListItem);
         }
+      case 'table':
+        return TableWidget(data: paragraph.contents[0].tableData ?? []);
       case 'image':
         {
           double width;
