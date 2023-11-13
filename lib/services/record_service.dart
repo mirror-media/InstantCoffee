@@ -16,14 +16,14 @@ abstract class RecordRepos {
 
 class RecordService implements RecordRepos {
   final ApiBaseHelper _helper = ApiBaseHelper();
-  int _page = 1;
+  int _page = 0;
   final ArticlesApiProvider articlesApiProvider = Get.find();
 
   @override
   Future<List<Record>> fetchRecordList(String url,
       {bool isLoadingFirstPage = false}) async {
     if (isLoadingFirstPage) {
-      _page = 1;
+      _page = 0;
     }
 
     dynamic jsonResponse;
