@@ -22,7 +22,9 @@ class RecordService implements RecordRepos {
   @override
   Future<List<Record>> fetchRecordList(String url,
       {bool isLoadingFirstPage = false}) async {
-
+    if (isLoadingFirstPage) {
+      _page = 0;
+    }
 
     dynamic jsonResponse;
     if (_page <= 2) {
@@ -65,9 +67,9 @@ class RecordService implements RecordRepos {
 
   @override
   Future<List<Record>> fetchLatestNextPageRecordList() async {
-    if (_page < 4) {
+    if (_page+1 < 4) {
       _page++;
-      return articlesApiProvider.getHomePageLatestArticleList(page: _page);
+      return articlesApiProvider.getHomePageLatestArticleList(page: _page+1);
     }
     return [];
   }
