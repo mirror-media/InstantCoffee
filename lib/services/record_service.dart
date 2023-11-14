@@ -22,9 +22,7 @@ class RecordService implements RecordRepos {
   @override
   Future<List<Record>> fetchRecordList(String url,
       {bool isLoadingFirstPage = false}) async {
-    if (isLoadingFirstPage) {
-      _page = 0;
-    }
+
 
     dynamic jsonResponse;
     if (_page <= 2) {
