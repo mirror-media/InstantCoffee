@@ -59,17 +59,34 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
       onRefresh: () async {
         _listeningTabContentBloc.refreshTheList();
       },
-      child: Column(
+      child: Stack(
         children: [
-          Expanded(
-            child: _buildListeningTabContentBody(),
+          Column(
+            children: [
+              Expanded(
+                child: _buildListeningTabContentBody(),
+              ),
+            ],
           ),
-          if (isListeningTabContentAdsActivated &&
-              _listeningTabContentBloc.sectionAd.stUnitId != '')
-            MMAdBanner(
-              adUnitId: _listeningTabContentBloc.sectionAd.stUnitId,
-              adSize: AdSize.banner,
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: SafeArea(
+              child: StatefulBuilder(builder: (context, setState) {
+                return isListeningTabContentAdsActivated &&
+                        _listeningTabContentBloc.sectionAd.stUnitId != ''
+                    ? SizedBox(
+                        height: AdSize.banner.height.toDouble(),
+                        width: AdSize.banner.width.toDouble(),
+                        child: MMAdBanner(
+                          adUnitId: _listeningTabContentBloc.sectionAd.stUnitId,
+                          adSize: AdSize.banner,
+                          isKeepAlive: true,
+                        ),
+                      )
+                    : const SizedBox.shrink();
+              }),
             ),
+          ),
         ],
       ),
     );

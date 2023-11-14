@@ -27,73 +27,81 @@ class TopicListPage extends GetView<TopicListController> {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: Obx(
-              () {
-                final topicList = controller.rxTopicList;
-                return topicList.isEmpty
-                    ? const Center(child: Text('無資料'))
-                    : ListView.separated(
-                        controller: controller.scrollController,
-                        padding: const EdgeInsets.only(bottom: 20),
-                        itemBuilder: (context, index) {
-                          if (index == topicList.length) {
-                            Obx(() {
-                              final isEnd = controller.rxIsEnd.value;
-                              return isEnd
-                                  ? const SizedBox.shrink()
-                                  : const Center(
-                                      child:
-                                          CircularProgressIndicator.adaptive());
-                            });
-                          }
-                          if (index == 0) {
-                            return _buildFirstItem(context, topicList[index]);
-                          }
+          Column(
+            children: [
+              Expanded(
+                child: Obx(
+                  () {
+                    final topicList = controller.rxTopicList;
+                    return topicList.isEmpty
+                        ? const Center(child: Text('無資料'))
+                        : ListView.separated(
+                            controller: controller.scrollController,
+                            padding: const EdgeInsets.only(bottom: 20),
+                            itemBuilder: (context, index) {
+                              if (index == topicList.length) {
+                                Obx(() {
+                                  final isEnd = controller.rxIsEnd.value;
+                                  return isEnd
+                                      ? const SizedBox.shrink()
+                                      : const Center(
+                                          child: CircularProgressIndicator
+                                              .adaptive());
+                                });
+                              }
+                              if (index == 0) {
+                                return _buildFirstItem(
+                                    context, topicList[index]);
+                              }
 
-                          return _buildItem(context, topicList[index]);
-                        },
-                        separatorBuilder: (context, index) {
-                          return Obx(() {
-                            final storyAd = controller.rxStoryAd.value;
-                            if (index == 0 && storyAd != null) {
-                              return _buildAdItem(storyAd.aT1UnitId);
-                            } else if (index == 5 && storyAd != null) {
-                              return _buildAdItem(storyAd.aT2UnitId);
-                            } else if (index == 10 && storyAd != null) {
-                              return _buildAdItem(storyAd.aT3UnitId);
-                            }
-                            return const Divider(
-                              thickness: 1,
-                              color: Colors.grey,
-                            );
-                          });
-                        },
-                        itemCount: topicList.length,
-                      );
-              },
+                              return _buildItem(context, topicList[index]);
+                            },
+                            separatorBuilder: (context, index) {
+                              return Obx(() {
+                                final storyAd = controller.rxnStoryAd.value;
+                                if (index == 0 && storyAd != null) {
+                                  return _buildAdItem(storyAd.aT1UnitId);
+                                } else if (index == 5 && storyAd != null) {
+                                  return _buildAdItem(storyAd.aT2UnitId);
+                                } else if (index == 10 && storyAd != null) {
+                                  return _buildAdItem(storyAd.aT3UnitId);
+                                }
+                                return const Divider(
+                                  thickness: 1,
+                                  color: Colors.grey,
+                                );
+                              });
+                            },
+                            itemCount: topicList.length,
+                          );
+                  },
+                ),
+              ),
+            ],
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: SafeArea(
+              child: StatefulBuilder(builder: (context, setState) {
+                return SizedBox(
+                  height: AdSize.banner.height.toDouble(),
+                  width: AdSize.banner.width.toDouble(),
+                  child: Obx(() {
+                    final storyAd = controller.rxnStoryAd.value;
+                    return storyAd != null
+                        ? MMAdBanner(
+                            adUnitId: controller.rxnStoryAd.value!.stUnitId,
+                            adSize: AdSize.banner,
+                            isKeepAlive: true,
+                          )
+                        : const SizedBox.shrink();
+                  }),
+                );
+              }),
             ),
           ),
-          BlocBuilder<MemberBloc, MemberState>(
-            builder: (context, state) {
-              if (state.status == MemberStatus.loaded && !state.isPremium) {
-                return Obx(() {
-                  final storyAd = controller.rxStoryAd.value;
-                  return storyAd != null
-                      ? MMAdBanner(
-                          adUnitId: storyAd.stUnitId,
-                          adSize: AdSize.banner,
-                          isKeepAlive: true,
-                        )
-                      : const SizedBox.shrink();
-                });
-              }
-
-              return Container();
-            },
-          )
         ],
       ),
     );
