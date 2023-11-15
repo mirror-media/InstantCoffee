@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter_embedded_webview/flutter_embedded_webview.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/models/content.dart';
@@ -14,6 +15,9 @@ import 'package:readr_app/widgets/info_box_widget.dart';
 import 'package:readr_app/widgets/m_m_audio_player.dart';
 import 'package:readr_app/widgets/m_m_video_player.dart';
 import 'package:readr_app/widgets/quote_by_widget.dart';
+import 'package:readr_app/widgets/slideshow_widget/slideshow_controller.dart';
+import 'package:readr_app/widgets/slideshow_widget/slideshow_widget.dart';
+import 'package:readr_app/widgets/table_widget.dart';
 import 'package:readr_app/widgets/youtube_widget.dart';
 
 class ParagraphFormat {
@@ -113,6 +117,8 @@ class ParagraphFormat {
               htmlFontSize: htmlFontSize);
           return _addPaddingIfNeeded(unOrderedListItem);
         }
+      case 'table':
+        return TableWidget(data: paragraph.contents[0].tableData ?? []);
       case 'image':
         {
           double width;
@@ -142,6 +148,12 @@ class ParagraphFormat {
             imageUrlList: imageUrlList,
           );
         }
+      case 'slideshow-v2':
+        Get.delete<SlideShowController>(tag: paragraph.id);
+        Get.put(SlideShowController(paragraph.contents), tag: paragraph.id);
+        return SlideShowWidget(
+          id: paragraph.id.toString(),
+        );
       case 'youtube':
         {
           double width;
@@ -171,6 +183,7 @@ class ParagraphFormat {
           }
           return Container();
         }
+      case 'audio-v2':
       case 'audio':
         {
           if (isParagraphFirstContentsAvailable(paragraph.contents)) {
