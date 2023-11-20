@@ -159,6 +159,12 @@ class DefaultBody extends GetView<ExternalStoryController> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(children: [
+        Image.asset(
+          'assets/image/mm_logo_for_story.png',
+          width: 32.0,
+          height: 32.0,
+        ),
+        const SizedBox(width: 12),
         const Text("文"),
         myVerticalDivider,
         Text(extendByline),
