@@ -13,6 +13,7 @@ class AuthProvider extends GetxController {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final AuthApiProvider authApiProvider = Get.find();
+  final RxBool isLogin =false.obs;
   late String? idToken;
   final RxnString accessToken = RxnString();
   User? userIndex;
@@ -32,9 +33,11 @@ class AuthProvider extends GetxController {
 
   void authStateChangesEvent(User? user) {
     if (user != null) {
+      isLogin.value=true;
       updateUserInfo(user);
       userIndex = user;
     } else {
+      isLogin.value=false;
       idToken = null;
       accessToken.value = null;
     }

@@ -1,8 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:readr_app/core/extensions/string_extension.dart';
 import 'package:readr_app/models/podcast_info/enclosures.dart';
 
-
 part 'podcast_info.g.dart';
+
 @JsonSerializable()
 class PodcastInfo {
   String? published;
@@ -14,19 +15,30 @@ class PodcastInfo {
   String? guid;
   String? title;
   String? duration;
+  int? imageHeight;
 
-  PodcastInfo({this.published,
-    this.author,
-    this.description,
-    this.heroImage,
-    this.enclosures,
-    this.link,
-    this.guid,
-    this.title,
-    this.duration});
+  PodcastInfo(
+      {this.published,
+      this.author,
+      this.description,
+      this.heroImage,
+      this.enclosures,
+      this.link,
+      this.guid,
+      this.title,
+      this.duration});
 
-  factory PodcastInfo.fromJson(Map<String, dynamic> json) => _$PodcastInfoFromJson(json);
+  String? get timeFormat => published ?? ''.convertToCustomFormat();
+
+  factory PodcastInfo.fromJson(Map<String, dynamic> json) =>
+      _$PodcastInfoFromJson(json);
 
   Map<String, dynamic> toJson() => _$PodcastInfoToJson(this);
 
+  @override
+  bool operator ==(Object other) =>
+      other is PodcastInfo && other.title == title;
+
+  @override
+  int get hashCode => hashCode;
 }
