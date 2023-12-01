@@ -19,5 +19,15 @@
         "focus": false,
         "sortOrder": 0,
         "type": "fixed"
+    },
+    {
+        "slug": "podcast",
+        "name": "podcast",
+        "focus": false,
+        "sortOrder": 0,
+        "type": "fixed"
     }
+
+
+
 ]

@@ -30,9 +30,8 @@ class PodcastStickyPanelController extends GetxController {
       rxnPodcastInfo.value = podcastInfo;
       if (rxnPodcastInfo.value != null) {
         playAudio(rxnPodcastInfo.value?.enclosures![0].url);
-      }
-      else{
-       audioPlayer?.stop();
+      } else {
+        audioPlayer?.stop();
       }
     });
   }
@@ -68,6 +67,7 @@ class PodcastStickyPanelController extends GetxController {
       rxPodcastPanelStatus.value = PodcastPanelStatus.error;
       return;
     }
+
     await audioPlayer?.play(UrlSource(source));
   }
 
@@ -107,7 +107,6 @@ class PodcastStickyPanelController extends GetxController {
 
   void slideBarValueChangeEvent(double value) {
     rxSlideBarValue.value = value;
-
     Duration newDuration = Duration(seconds: value.toInt());
     audioPlayer?.seek(newDuration);
   }
