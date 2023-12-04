@@ -48,4 +48,5 @@ abstract class BaseConfig {
   String get androidStoryAdJsonLocation;
   String get weeklyAPIServer;
   String get weeklyAPIPath;
+  String get podcastAPIPath;
 }
