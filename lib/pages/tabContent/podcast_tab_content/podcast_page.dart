@@ -24,7 +24,7 @@ class PodcastPage extends GetView<PodcastPageController> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text(
-                            'Pdcast',
+                            'Podcast',
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w500),
                           ),
