@@ -7,6 +7,7 @@ import 'package:readr_app/helpers/api_base_helper.dart';
 import 'package:readr_app/models/external_story.dart';
 import 'package:readr_app/models/live_stream_model.dart';
 import 'package:readr_app/models/magazine_list.dart';
+import 'package:readr_app/models/podcast_info/podcast_info.dart';
 import 'package:readr_app/models/post/post_model.dart';
 import 'package:readr_app/models/story_res.dart';
 
@@ -307,6 +308,14 @@ class ArticlesApiProvider extends GetConnect {
       }
     }
     return null;
+  }
+
+  Future<List<PodcastInfo>> getPodcastInfo() async {
+    final result = await apiBaseHelper
+        .getByUrl(Environment().config.podcastAPIPath) as List<dynamic>;
+
+    if (result.isEmpty) return [];
+    return result.map((e) => PodcastInfo.fromJson(e)).toList();
   }
 
   @override
