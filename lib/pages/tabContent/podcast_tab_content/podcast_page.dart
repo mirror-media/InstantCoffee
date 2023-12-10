@@ -11,6 +11,9 @@ class PodcastPage extends GetView<PodcastPageController> {
 
   @override
   Widget build(BuildContext context) {
+    if (!Get.isRegistered<PodcastPageController>()) {
+      Get.put(PodcastPageController());
+    }
     return Stack(
       children: [
         Obx(() {

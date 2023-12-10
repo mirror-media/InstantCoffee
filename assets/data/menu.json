@@ -21,8 +21,8 @@
         "type": "fixed"
     },
     {
-        "slug": "podcast",
-        "name": "podcast",
+        "slug": "Podcasts",
+        "name": "Podcasts",
         "focus": false,
         "sortOrder": 0,
         "type": "fixed"

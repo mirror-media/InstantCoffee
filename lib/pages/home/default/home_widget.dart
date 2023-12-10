@@ -67,7 +67,7 @@ class _HomeWidgetState extends State<HomeWidget>
     _scrollControllerList.clear();
 
     int indexToMove =
-        sectionItems.indexWhere((section) => section.title == 'podcast');
+        sectionItems.indexWhere((section) => section.title == 'Podcasts');
 
     // 找到 '生活' 的 Section
     int indexAfter =
@@ -113,7 +113,7 @@ class _HomeWidgetState extends State<HomeWidget>
           //onBoardingBloc: widget.onBoardingBloc,
           scrollController: _scrollControllerList[i],
         ));
-      } else if (section.key == 'podcast') {
+      } else if (section.key == 'Podcasts') {
         _tabWidgets.add(const PodcastPage());
       } else {
         _tabWidgets.add(BlocProvider(
@@ -137,7 +137,7 @@ class _HomeWidgetState extends State<HomeWidget>
     )..addListener(() {
         _tabs.clear();
 
-        if (sectionItems[_tabController!.index].title == 'podcast') {
+        if (sectionItems[_tabController!.index].title == 'Podcasts') {
           if (!Get.isRegistered<PodcastPageController>()) {
             Get.put(PodcastPageController());
           }
