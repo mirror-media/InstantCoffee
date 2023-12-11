@@ -55,8 +55,8 @@ class PodcastStickyPanel extends GetView<PodcastStickyPanelController> {
                     final status = controller.rxPodcastPanelStatus.value;
                     return Image.asset(
                       status == PodcastPanelStatus.play
-                          ? 'assets/image/podcast_panel_stop_icon.png'
-                          : 'assets/image/podcast_panel_play_icon.png',
+                          ? 'assets/image/podcast/podcast_panel_stop_icon.png'
+                          : 'assets/image/podcast/podcast_panel_play_icon.png',
                       width: 22,
                       height: 22,
                     );
@@ -106,8 +106,8 @@ class PodcastStickyPanel extends GetView<PodcastStickyPanelController> {
                     final isMute = controller.rxIsMute.value;
                     return Image.asset(
                       isMute
-                          ? 'assets/image/volume_mute.png'
-                          : 'assets/image/volume.png',
+                          ? 'assets/image/podcast/volume_mute.png'
+                          : 'assets/image/podcast/volume.png',
                       width: 22,
                       height: 22,
                     );

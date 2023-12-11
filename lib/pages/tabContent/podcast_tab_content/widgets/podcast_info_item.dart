@@ -38,8 +38,8 @@ class PodcastInfoItem extends StatelessWidget {
               Center(
                   child: Image.asset(
                 isPlaying
-                    ? 'assets/image/stop_icon.png'
-                    : 'assets/image/play_icon.png',
+                    ? 'assets/image/podcast/stop_icon.png'
+                    : 'assets/image/podcast/play_icon.png',
                 width: 52,
                 height: 52,
               )),
@@ -98,7 +98,7 @@ class PodcastInfoItem extends StatelessWidget {
           width: double.infinity,
           height: 87,
           color: Colors.white,
-          padding: EdgeInsets.symmetric(horizontal: 50),
+          padding: const EdgeInsets.symmetric(horizontal: 50),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
