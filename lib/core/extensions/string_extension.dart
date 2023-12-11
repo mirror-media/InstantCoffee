@@ -12,9 +12,22 @@ extension DateTimeExtensions on String {
 
     try {
       final dateTime = inputFormat.parse(this).toLocal();
-      final taipeiDateTime = dateTime.add(const Duration(hours: 8)); // 台北時間在 GMT+8
+      final taipeiDateTime =
+          dateTime.add(const Duration(hours: 8)); // 台北時間在 GMT+8
 
       return '${outputFormat.format(taipeiDateTime)} 台北時間';
+    } catch (e) {
+      return null;
+    }
+  }
+
+  String? convertToCustomFormat() {
+    try {
+      DateTime dateTime = DateTime.parse(this);
+
+      final customFormat = DateFormat('E, dd MMM yyyy HH:mm:ss');
+
+      return customFormat.format(dateTime);
     } catch (e) {
       return null;
     }

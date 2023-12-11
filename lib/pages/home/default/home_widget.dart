@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
 import 'package:readr_app/blocs/onBoarding/events.dart';
 import 'package:readr_app/blocs/onBoarding/states.dart';
@@ -18,6 +19,9 @@ import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/tabContent/listening/listening_tab_content.dart';
 import 'package:readr_app/pages/tabContent/news/tab_content.dart';
 import 'package:readr_app/pages/tabContent/personal/default/personal_tab_content.dart';
+import 'package:readr_app/pages/tabContent/podcast_tab_content/podcast_page.dart';
+import 'package:readr_app/pages/tabContent/podcast_tab_content/podcast_page_controller.dart';
+import 'package:readr_app/pages/tabContent/podcast_tab_content/widgets/podcast_sticky_panel/podcast_sticky_panel_controller.dart';
 import 'package:readr_app/services/record_service.dart';
 import 'package:readr_app/widgets/logger.dart';
 import 'package:readr_app/widgets/newsMarquee/news_marquee.dart';
@@ -62,6 +66,22 @@ class _HomeWidgetState extends State<HomeWidget>
     _tabWidgets.clear();
     _scrollControllerList.clear();
 
+    int indexToMove =
+        sectionItems.indexWhere((section) => section.title == 'Podcasts');
+
+    // 找到 '生活' 的 Section
+    int indexAfter =
+        sectionItems.indexWhere((section) => section.title == '生活');
+
+    // 如果找到了 'podcast' 和 '生活'，而且 'podcast' 在 '生活' 之前
+    if (indexToMove != -1 && indexAfter != -1 && indexToMove < indexAfter) {
+      // 取出 'podcast'
+      Section sectionToMove = sectionItems.removeAt(indexToMove);
+
+      // 插入到 '生活' 的後面
+      sectionItems.insert(indexAfter, sectionToMove);
+    }
+
     for (int i = 0; i < sectionItems.length; i++) {
       _tabKeys.add(GlobalKey());
       Section section = sectionItems[i];
@@ -93,6 +113,8 @@ class _HomeWidgetState extends State<HomeWidget>
           //onBoardingBloc: widget.onBoardingBloc,
           scrollController: _scrollControllerList[i],
         ));
+      } else if (section.key == 'Podcasts') {
+        _tabWidgets.add(const PodcastPage());
       } else {
         _tabWidgets.add(BlocProvider(
             create: (context) => TabContentBloc(recordRepos: RecordService()),
@@ -114,6 +136,20 @@ class _HomeWidgetState extends State<HomeWidget>
           _tabController == null ? _initialTabIndex : _tabController!.index,
     )..addListener(() {
         _tabs.clear();
+
+        if (sectionItems[_tabController!.index].title == 'Podcasts') {
+          if (!Get.isRegistered<PodcastPageController>()) {
+            Get.put(PodcastPageController());
+          }
+          if (!Get.isRegistered<PodcastStickyPanelController>()) {
+            Get.put(PodcastStickyPanelController());
+          }
+        } else {
+          final PodcastPageController podcastPageController = Get.find();
+          podcastPageController.rxnSelectPodcastInfo.value = null;
+          podcastPageController.animationController.reverse();
+        }
+
         for (int i = 0; i < sectionItems.length; i++) {
           Section section = sectionItems[i];
           String title = section.title ?? StringDefault.valueNullDefault;
@@ -191,6 +227,7 @@ class _HomeWidgetState extends State<HomeWidget>
         return Container();
       } else if (status == SectionStatus.loaded) {
         _initializeTabController(state.sectionList!);
+
         return _buildTabs(
             state.sectionList!, _tabs, _tabWidgets, _tabController!);
       }
