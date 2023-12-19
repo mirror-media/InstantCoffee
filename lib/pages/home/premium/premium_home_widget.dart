@@ -81,6 +81,7 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget>
         color = const Color(0xff707070);
       }
 
+
       _tabs.add(
         Tab(
           child: Text(

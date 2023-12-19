@@ -215,6 +215,7 @@ flutter:
     - assets/image/podcast/podcast_panel_stop_icon.png
     - assets/image/podcast/volume.png
     - assets/image/podcast/volume_mute.png
+    - assets/image/mirror_media_logo.png
 
     # section ad data
     - assets/adJson/dev/iOSSectionAd.json

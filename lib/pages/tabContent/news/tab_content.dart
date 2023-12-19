@@ -29,6 +29,7 @@ import 'package:readr_app/widgets/m_m_ad_banner.dart';
 import 'package:readr_app/widgets/newsMarquee/news_marquee_persistent_header_delegate.dart';
 import 'package:real_time_invoice_widget/real_time_invoice/real_time_invoice_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:real_time_invoice_widget/widget/real_time_invoice_widget.dart';
 
 class TabContent extends StatefulWidget {
   final Section section;
