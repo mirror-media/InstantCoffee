@@ -6,7 +6,7 @@ class RemoteConfigHelper with Logger {
 
   Future<bool> initialize({
     Duration fetchTimeout = const Duration(seconds: 10),
-    Duration minimumFetchInterval = const Duration(hours: 1),
+    Duration minimumFetchInterval = const Duration(seconds: 10),
   }) async {
     await _remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: fetchTimeout,
