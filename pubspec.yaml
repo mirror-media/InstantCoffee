@@ -93,7 +93,10 @@ dependencies:
       url: https://github.com/mirror-media/constants.git
       ref: master
       version: ^2.0.0
-  
+  # custom real time invoice widget
+  real_time_invoice_widget:
+    git:
+      url: https://github.com/mirror-media/RealTimeInvoiceWidget.git
   # force app to upgrade
   upgrader: ^4.1.2
   # android in app update
