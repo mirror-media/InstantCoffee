@@ -22,6 +22,8 @@ import 'package:readr_app/widgets/editor_choice_carousel.dart';
 import 'package:readr_app/widgets/error_stateless_widget.dart';
 import 'package:readr_app/widgets/logger.dart';
 import 'package:readr_app/widgets/newsMarquee/news_marquee_persistent_header_delegate.dart';
+import 'package:real_time_invoice_widget/real_time_invoice/real_time_invoice_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PremiumTabContent extends StatefulWidget {
   final Section section;
@@ -131,7 +133,6 @@ class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
     return CustomScrollView(
       controller: widget.scrollController,
       slivers: [
-
         if (!_remoteConfigHelper.isNewsMarqueePin)
           SliverPersistentHeader(
             delegate: NewsMarqueePersistentHeaderDelegate(),
@@ -150,6 +151,21 @@ class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
                 return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      if (_remoteConfigHelper.isElectionShow) ...[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 27),
+                          child: RealTimeInvoiceWidget(
+                              getMoreButtonClick: () async {
+                            if (!await launchUrl(Uri.parse(
+                                'https://www.mirrormedia.mg/projects/election2024/index.html'))) {
+                              throw Exception('Could not launch');
+                            }
+                          }),
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                      ],
                       _buildEditorChoiceList(),
                       if (widget.section.key ==
                           Environment().config.latestSectionKey) ...[
