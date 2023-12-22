@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/editorChoice/cubit.dart';
 import 'package:readr_app/blocs/editorChoice/state.dart';
-import 'package:readr_app/blocs/election/election_cubit.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
 import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
@@ -19,17 +18,16 @@ import 'package:readr_app/models/section.dart';
 import 'package:readr_app/models/section_ad.dart';
 import 'package:readr_app/pages/home/home_controller.dart';
 import 'package:readr_app/pages/tabContent/news/widget/live_stream_widget.dart';
-import 'package:readr_app/pages/tabContent/shared/election/election_widget.dart';
 import 'package:readr_app/pages/tabContent/shared/list_item.dart';
 import 'package:readr_app/pages/tabContent/shared/the_first_item.dart';
 import 'package:readr_app/pages/tabContent/shared/topic_block.dart';
 import 'package:readr_app/services/editor_choice_service.dart';
-import 'package:readr_app/services/election_service.dart';
 import 'package:readr_app/widgets/editor_choice_carousel.dart';
 import 'package:readr_app/widgets/error_stateless_widget.dart';
 import 'package:readr_app/widgets/logger.dart';
 import 'package:readr_app/widgets/m_m_ad_banner.dart';
 import 'package:readr_app/widgets/newsMarquee/news_marquee_persistent_header_delegate.dart';
+import 'package:real_time_invoice_widget/real_time_invoice/real_time_invoice_widget.dart';
 
 class TabContent extends StatefulWidget {
   final Section section;
@@ -192,14 +190,7 @@ class _TabContentState extends State<TabContent> with Logger {
     return CustomScrollView(
       controller: widget.scrollController,
       slivers: [
-        if (_remoteConfigHelper.election != null &&
-            widget.section.key == Environment().config.latestSectionKey)
-          SliverToBoxAdapter(
-            child: BlocProvider(
-              create: (context) => ElectionCubit(ElectionService()),
-              child: const ElectionWidget(),
-            ),
-          ),
+
         if (!_remoteConfigHelper.isNewsMarqueePin)
           SliverPersistentHeader(
             delegate: NewsMarqueePersistentHeaderDelegate(),
@@ -255,6 +246,7 @@ class _TabContentState extends State<TabContent> with Logger {
                           height: 16.0,
                         ),
                       ],
+                      const RealTimeInvoiceWidget(),
                       Padding(
                         padding:
                             const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
