@@ -97,6 +97,9 @@ dependencies:
   real_time_invoice_widget:
     git:
       url: https://github.com/mirror-media/RealTimeInvoiceWidget.git
+      ref: main
+      version: ^1.0.0
+
   # force app to upgrade
   upgrader: ^4.1.2
   # android in app update
