@@ -240,14 +240,7 @@ flutter:
     - assets/image/badge.png
     - assets/image/member/subscription_icon.png
     - assets/image/member/subscribe_banner_mobile.jpg
-    # election
-    - assets/image/election/
-    - assets/image/election/dpp_logo.png
-    - assets/image/election/tpp_logo.png
-    - assets/image/election/kmt_logo.png
-    - assets/image/election/number1_icon.png
-    - assets/image/election/number2_icon.png
-    - assets/image/election/number3_icon.png
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

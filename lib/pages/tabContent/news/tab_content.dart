@@ -214,6 +214,7 @@ class _TabContentState extends State<TabContent> with Logger {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 27),
                           child: RealTimeInvoiceWidget(
+                              isPackage:true,
                               getMoreButtonClick: () async {
                             if (!await launchUrl(Uri.parse(
                                 'https://www.mirrormedia.mg/projects/election2024/index.html'))) {

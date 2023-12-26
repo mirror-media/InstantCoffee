@@ -155,12 +155,13 @@ class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 27),
                           child: RealTimeInvoiceWidget(
+                              isPackage: true,
                               getMoreButtonClick: () async {
-                            if (!await launchUrl(Uri.parse(
-                                'https://www.mirrormedia.mg/projects/election2024/index.html'))) {
-                              throw Exception('Could not launch');
-                            }
-                          }),
+                                if (!await launchUrl(Uri.parse(
+                                    'https://www.mirrormedia.mg/projects/election2024/index.html'))) {
+                                  throw Exception('Could not launch');
+                                }
+                              }),
                         ),
                         const SizedBox(
                           height: 16.0,
