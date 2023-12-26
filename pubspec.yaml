@@ -147,6 +147,8 @@ dependencies:
   photo_view: ^0.14.0
   # svg loader
   flutter_svg: ^1.0.1
+
+  audio_session: ^0.1.18
   
   file: ^6.1.2
   intl: ^0.17.0
