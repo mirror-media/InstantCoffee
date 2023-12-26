@@ -1,3 +1,4 @@
+import 'package:audio_session/audio_session.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:get/get.dart';
 import 'package:readr_app/data/enum/playback_status.dart';
@@ -68,7 +69,10 @@ class PodcastStickyPanelController extends GetxController {
       return;
     }
 
-    await audioPlayer?.play(UrlSource(source));
+    AudioSession.instance.then((audioSession) async {
+      await audioSession.configure(const AudioSessionConfiguration.music());
+      await audioPlayer?.play(UrlSource(source));
+    });
   }
 
   void playButtonClick() {

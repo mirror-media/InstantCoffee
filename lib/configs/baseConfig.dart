@@ -49,4 +49,5 @@ abstract class BaseConfig {
   String get weeklyAPIServer;
   String get weeklyAPIPath;
   String get podcastAPIPath;
+  String get electionPath;
 }
