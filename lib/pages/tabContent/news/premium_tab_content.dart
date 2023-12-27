@@ -158,7 +158,9 @@ class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
                               isPackage: true,
                               getMoreButtonClick: () async {
                                 if (!await launchUrl(Uri.parse(
-                                    'https://www.mirrormedia.mg/projects/election2024/index.html'))) {
+                                    Environment()
+                                    .config
+                                    .electionGetMoreLink))) {
                                   throw Exception('Could not launch');
                                 }
                               }),
