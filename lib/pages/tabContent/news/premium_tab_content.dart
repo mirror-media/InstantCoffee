@@ -163,7 +163,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
                                     .electionGetMoreLink))) {
                                   throw Exception('Could not launch');
                                 }
-                              }),
+                              }, width: Get.width-54,),
                         ),
                         const SizedBox(
                           height: 16.0,
