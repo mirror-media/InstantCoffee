@@ -14,7 +14,7 @@ const String memberStateTypeIsNotFound = 'Member state type is not found';
 const String memberStateTypeIsNotActive = 'Member state type is not active';
 
 abstract class MemberRepos {
-  Future<MemberIdAndSubscriptionType> checkSubscriptionType(User user);
+  Future<MemberIdAndSubscriptionType?> checkSubscriptionType(User user);
   Future<bool> createMember(String email, String firebaseId, String token);
   Future<Member> fetchMemberInformation(String firebaseId, String token);
   Future<MemberSubscriptionDetail> fetchMemberSubscriptionDetail(
@@ -47,8 +47,10 @@ class MemberService implements MemberRepos {
   }
 
   @override
-  Future<MemberIdAndSubscriptionType> checkSubscriptionType(User user) async {
-    String token = await user.getIdToken();
+  Future<MemberIdAndSubscriptionType?> checkSubscriptionType(User user) async {
+    String? token = await user.getIdToken();
+    if(token ==null)
+      return null;
 
     String query = """
     query checkSubscriptionType(\$firebaseId: String!) {

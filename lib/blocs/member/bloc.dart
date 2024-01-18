@@ -11,6 +11,7 @@ export 'states.dart';
 
 class MemberBloc extends Bloc<MemberEvents, MemberState> with Logger {
   final MemberRepos memberRepos;
+
   MemberBloc({required this.memberRepos}) : super(MemberState.loading()) {
     on<FetchMemberSubscriptionType>(_fetchMemberSubscriptionType);
     on<UpdateSubscriptionType>(_updateSubscriptionType);
@@ -26,14 +27,16 @@ class MemberBloc extends Bloc<MemberEvents, MemberState> with Logger {
       emit(MemberState.isNotLogin());
     } else {
       try {
-        MemberIdAndSubscriptionType memberIdAndSubscriptionType =
+        MemberIdAndSubscriptionType? memberIdAndSubscriptionType =
             await memberRepos.checkSubscriptionType(auth.currentUser!);
-        emit(
-          MemberState.loaded(
-              isLogin: true,
-              israfelId: memberIdAndSubscriptionType.israfelId,
-              subscriptionType: memberIdAndSubscriptionType.subscriptionType),
-        );
+        if (memberIdAndSubscriptionType != null) {
+          emit(
+            MemberState.loaded(
+                isLogin: true,
+                israfelId: memberIdAndSubscriptionType.israfelId,
+                subscriptionType: memberIdAndSubscriptionType.subscriptionType),
+          );
+        }
       } catch (e) {
         emit(MemberState.error(errorMessages: e));
       }
