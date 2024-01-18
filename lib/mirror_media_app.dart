@@ -61,6 +61,15 @@ class _MirrorMediaAppState extends State<MirrorMediaApp> {
         title: appTitle,
         theme: ThemeData(
           primaryColor: appColor,
+          useMaterial3: true,
+          appBarTheme: const AppBarTheme(
+              iconTheme: IconThemeData(color: Colors.white),
+              actionsIconTheme: IconThemeData(color: Colors.white),
+              titleTextStyle: TextStyle(
+                  fontFamily: 'PingFang TC',
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500)),
         ),
         initialBinding: HomeBinding(),
         initialRoute: RouteGenerator.root,

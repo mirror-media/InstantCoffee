@@ -18,13 +18,15 @@ class SubscribedArticlesCubit extends Cubit<SubscribedArticlesState>
     debugLog('Get subscribed articles');
     try {
       FirebaseAuth auth = FirebaseAuth.instance;
-      String token = await auth.currentUser!.getIdToken();
-      SubscribedArticlesService subscribedArticlesService =
-          SubscribedArticlesService();
-      List<SubscribedArticle> subscribedArticles =
-          await subscribedArticlesService.getSubscribedArticles(
-              auth.currentUser!.uid, token);
-      emit(SubscribedArticlesLoaded(subscribedArticles: subscribedArticles));
+      String? token = await auth.currentUser!.getIdToken();
+      if (token != null) {
+        SubscribedArticlesService subscribedArticlesService =
+            SubscribedArticlesService();
+        List<SubscribedArticle> subscribedArticles =
+            await subscribedArticlesService.getSubscribedArticles(
+                auth.currentUser!.uid, token);
+        emit(SubscribedArticlesLoaded(subscribedArticles: subscribedArticles));
+      }
     } on SocketException {
       emit(SubscribedArticlesError(
         error: NoInternetException('No Internet'),

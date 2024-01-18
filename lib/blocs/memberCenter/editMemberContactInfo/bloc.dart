@@ -14,6 +14,7 @@ class EditMemberContactInfoBloc
     extends Bloc<EditMemberContactInfoEvents, EditMemberContactInfoState>
     with Logger {
   final MemberRepos memberRepos;
+
   EditMemberContactInfoBloc({required this.memberRepos})
       : super(EditMemberContactInfoInitState()) {
     on<FetchMemberContactInfo>(
@@ -22,10 +23,12 @@ class EditMemberContactInfoBloc
         try {
           emit(MemberLoading());
           FirebaseAuth auth = FirebaseAuth.instance;
-          String token = await auth.currentUser!.getIdToken();
-          Member member = await memberRepos.fetchMemberInformation(
-              auth.currentUser!.uid, token);
-          emit(MemberLoaded(member: member));
+          String? token = await auth.currentUser!.getIdToken();
+          if (token != null) {
+            Member member = await memberRepos.fetchMemberInformation(
+                auth.currentUser!.uid, token);
+            emit(MemberLoaded(member: member));
+          }
         } catch (e) {
           emit(MemberLoadedError(
             error: determineException(e),
@@ -38,7 +41,19 @@ class EditMemberContactInfoBloc
         FirebaseAuth auth = FirebaseAuth.instance;
         debugLog(event.toString());
         emit(SavingLoading(member: event.editMember));
-        String token = await auth.currentUser!.getIdToken();
+        String? token = await auth.currentUser!.getIdToken();
+        if (token == null) {
+          Fluttertoast.showToast(
+              msg: '儲存失敗，請再試一次',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+
+          return;
+        }
         bool updateSuccess = await memberRepos.updateMemberContactInfo(
             event.editMember.israfelId,
             token,

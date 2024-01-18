@@ -31,21 +31,23 @@ class MemberSubscriptionTypeCubit extends Cubit<MemberSubscriptionTypeState>
     } else {
       try {
         MemberService memberService = MemberService();
-        MemberIdAndSubscriptionType memberIdAndSubscriptionType =
+        MemberIdAndSubscriptionType? memberIdAndSubscriptionType =
             await memberService.checkSubscriptionType(auth.currentUser!);
-        subscriptionType = memberIdAndSubscriptionType.subscriptionType;
-        emit(MemberSubscriptionTypeLoadedState(
-            subscriptionType: subscriptionType));
-        if (isNavigateToMagazine) {
-          if (subscriptionType != null) {
-            RouteGenerator.navigateToMagazine(subscriptionType);
-          } else {
-            RouteGenerator.navigateToLogin(
-              routeName: RouteGenerator.magazine,
-              routeArguments: {
-                'subscriptionType': subscriptionType,
-              },
-            );
+        if (memberIdAndSubscriptionType != null) {
+          subscriptionType = memberIdAndSubscriptionType.subscriptionType;
+          emit(MemberSubscriptionTypeLoadedState(
+              subscriptionType: subscriptionType));
+          if (isNavigateToMagazine) {
+            if (subscriptionType != null) {
+              RouteGenerator.navigateToMagazine(subscriptionType);
+            } else {
+              RouteGenerator.navigateToLogin(
+                routeName: RouteGenerator.magazine,
+                routeArguments: {
+                  'subscriptionType': subscriptionType,
+                },
+              );
+            }
           }
         }
       } catch (e) {
