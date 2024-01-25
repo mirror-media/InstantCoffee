@@ -9,24 +9,25 @@ class InfoBoxWidget extends StatelessWidget with Logger {
   final String title;
   final String description;
   final bool isMemberContent;
+
   const InfoBoxWidget({
     required this.title,
     required this.description,
     this.isMemberContent = false,
   });
+
   @override
   Widget build(BuildContext context) {
     if (isMemberContent) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 32),
-        child: Card(
-          color: Colors.white,
-          elevation: 10,
-          shape: const Border(
-            top: BorderSide(
-              width: 1.5,
-              color: appColor,
-            ),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+            boxShadow: const [
+              BoxShadow(color: Colors.grey, spreadRadius: 1, blurRadius: 10),
+            ],
           ),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(24, 20, 24, 20),
@@ -79,8 +80,14 @@ class InfoBoxWidget extends StatelessWidget with Logger {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-          child: Card(
-            elevation: 10,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+              boxShadow: const [
+                BoxShadow(color: Colors.grey, spreadRadius: 1, blurRadius: 10),
+              ],
+            ),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(32.0, 16.0, 32.0, 16.0),
               child: Column(

@@ -22,6 +22,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 class SubscriptionSelectWidget extends StatefulWidget {
   const SubscriptionSelectWidget();
+
   @override
   _SubscriptionSelectWidgetState createState() =>
       _SubscriptionSelectWidgetState();
@@ -191,8 +192,14 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
     int originalPrice = 99;
     int specialPrice = 50;
 
-    return Card(
-        elevation: 10,
+    return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          boxShadow: const [
+            BoxShadow(color: Colors.grey, spreadRadius: 1,blurRadius: 10),
+          ],
+        ),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
           child: Column(
@@ -229,8 +236,8 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
               _memberClause('即日起加入年費會員，月月抽sony旗艦機'),
               const SizedBox(height: 24),
               isBuying
-                  ? Column(
-                      children: const [
+                  ? const Column(
+                      children: [
                         Text(
                           '購買中',
                           style: TextStyle(
