@@ -326,6 +326,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         firebaseLoginStatus,
         emit,
       );
+      _signInTransition();
     } on SocketException {
       emit(
         LoginFail(error: NoInternetException('No Internet')),
@@ -360,6 +361,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         firebaseLoginStatus,
         emit,
       );
+      _signInTransition();
     } on SocketException {
       emit(
         LoginFail(error: NoInternetException('No Internet')),
@@ -394,6 +396,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         firebaseLoginStatus,
         emit,
       );
+      _signInTransition();
     } on SocketException {
       emit(
         LoginFail(error: NoInternetException('No Internet')),
@@ -412,6 +415,48 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         LoginFail(error: UnknownException(e.toString())),
       );
     }
+  }
+
+  void _signInTransition() async {
+    MemberIdAndSubscriptionType? memberIdAndSubscriptionType =
+    await _memberService.checkSubscriptionType(_auth.currentUser!);
+    if (memberIdAndSubscriptionType != null &&
+        premiumSubscriptionType
+            .contains(memberIdAndSubscriptionType.subscriptionType)) {
+      if (_loginLoadingType == LoginLoadingType.email) {
+        emit(FetchSignInMethodsForEmailLoading());
+      } else {
+        LoginType loginType = LoginType.google;
+        if (_loginLoadingType == LoginLoadingType.facebook) {
+          loginType = LoginType.facebook;
+        } else if (_loginLoadingType == LoginLoadingType.apple) {
+          loginType = LoginType.apple;
+        }
+
+        emit(LoginLoading(loginType: loginType));
+      }
+    } else {
+      emit(LoginSuccess(
+        israfelId: memberIdAndSubscriptionType!.israfelId!,
+        subscriptionType: memberIdAndSubscriptionType.subscriptionType!,
+        isNewebpay: memberIdAndSubscriptionType.isNewebpay,
+      ));
+    }
+
+    memberBloc.add(UpdateSubscriptionType(
+        isLogin: true,
+        israfelId: memberIdAndSubscriptionType.israfelId,
+        subscriptionType: memberIdAndSubscriptionType.subscriptionType));
+
+    Fluttertoast.showToast(
+        msg: '登入成功',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0);
+    _navigateToRouteName(memberIdAndSubscriptionType.subscriptionType!);
   }
 
   // need to refactor route
