@@ -41,11 +41,17 @@ class _MemberSubscriptionTypeBlockState
   }
 
   Widget _loadingWidget() {
-    return const Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Card(
-        elevation: 10,
-        child: Padding(
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          boxShadow: const [
+            BoxShadow(color: Colors.grey, spreadRadius: 1, blurRadius: 10),
+          ],
+        ),
+        child: const Padding(
             padding: EdgeInsets.all(16),
             child: Center(child: SpinKitWave(color: appColor, size: 48))),
       ),
@@ -56,8 +62,14 @@ class _MemberSubscriptionTypeBlockState
     double width = MediaQuery.of(context).size.width / 3.3;
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Card(
-        elevation: 10,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          boxShadow: const [
+            BoxShadow(color: Colors.grey, spreadRadius: 1, blurRadius: 10),
+          ],
+        ),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(

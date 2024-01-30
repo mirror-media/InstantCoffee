@@ -26,30 +26,32 @@ class EmailRegisteredBloc
             FirebaseAuth auth = FirebaseAuth.instance;
             MemberService memberService = MemberService();
 
-            String token = await auth.currentUser!.getIdToken();
-            bool createSuccess = await memberService.createMember(
-                auth.currentUser!.email, auth.currentUser!.uid, token);
+            String? token = await auth.currentUser!.getIdToken();
+            if (token != null) {
+              bool createSuccess = await memberService.createMember(
+                  auth.currentUser!.email, auth.currentUser!.uid, token);
 
-            if (createSuccess) {
-              emit(EmailRegisteredSuccess());
-            } else {
-              try {
-                await auth.currentUser!.delete();
-              } catch (e) {
-                debugLog(e);
-                await auth.signOut();
+              if (createSuccess) {
+                emit(EmailRegisteredSuccess());
+              } else {
+                try {
+                  await auth.currentUser!.delete();
+                } catch (e) {
+                  debugLog(e);
+                  await auth.signOut();
+                }
+                emit(EmailRegisteredFail(
+                  error: UnknownException('Create member fail'),
+                ));
               }
-              emit(EmailRegisteredFail(
-                error: UnknownException('Create member fail'),
-              ));
-            }
-          } else if (frebaseLoginStatus.status == FirebaseStatus.Error) {
-            if (frebaseLoginStatus.message == 'email-already-in-use') {
-              emit(EmailAlreadyInUse());
-            } else {
-              emit(EmailRegisteredFail(
-                error: UnknownException(frebaseLoginStatus.message),
-              ));
+            } else if (frebaseLoginStatus.status == FirebaseStatus.Error) {
+              if (frebaseLoginStatus.message == 'email-already-in-use') {
+                emit(EmailAlreadyInUse());
+              } else {
+                emit(EmailRegisteredFail(
+                  error: UnknownException(frebaseLoginStatus.message),
+                ));
+              }
             }
           }
         } catch (e) {

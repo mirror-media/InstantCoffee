@@ -111,7 +111,7 @@ class SubscriptionSelectServices
 
   Future<bool> _verifyPurchaseByAndroid(PurchaseDetails purchaseDetails) async {
     String firebaseId = _auth.currentUser!.uid;
-    String token = await _auth.currentUser!.getIdToken();
+    String? token = await _auth.currentUser!.getIdToken();
 
     Map<String, String> bodyMap = {
       "firebaseId": firebaseId,
@@ -139,7 +139,7 @@ class SubscriptionSelectServices
 
   Future<bool> _verifyPurchaseByIos(PurchaseDetails purchaseDetails) async {
     String firebaseId = _auth.currentUser!.uid;
-    String token = await _auth.currentUser!.getIdToken();
+    String? token = await _auth.currentUser!.getIdToken();
 
     Map<String, String> bodyMap = {
       "firebaseId": firebaseId,

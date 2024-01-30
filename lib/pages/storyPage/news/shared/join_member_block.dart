@@ -13,8 +13,14 @@ class JoinMemberBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Card(
-        elevation: 4,
+    return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          boxShadow: const [
+            BoxShadow(color: Colors.grey, spreadRadius: 1,blurRadius: 10),
+          ],
+        ),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20.0, 24.0, 20.0, 24.0),
           child: Column(children: [

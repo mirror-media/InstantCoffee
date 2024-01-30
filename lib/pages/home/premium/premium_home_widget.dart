@@ -57,11 +57,11 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget>
     _tabWidgets.clear();
     _scrollControllerList.clear();
     int indexToMove =
-        sectionItems.indexWhere((section) => section.title == 'Podcasts');
+    sectionItems.indexWhere((section) => section.title == 'Podcasts');
 
     // 找到 '生活' 的 Section
     int indexAfter =
-        sectionItems.indexWhere((section) => section.title == '生活');
+    sectionItems.indexWhere((section) => section.title == '生活');
 
     // 如果找到了 'podcast' 和 '生活'，而且 'podcast' 在 '生活' 之前
     if (indexToMove != -1 && indexAfter != -1 && indexToMove < indexAfter) {
@@ -123,8 +123,9 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget>
       vsync: this,
       length: sectionItems.length,
       initialIndex:
-          _tabController == null ? _initialTabIndex : _tabController!.index,
-    )..addListener(() {
+      _tabController == null ? _initialTabIndex : _tabController!.index,
+    )
+      ..addListener(() {
         _tabs.clear();
 
         if (sectionItems[_tabController!.index].title == 'Podcasts') {
@@ -135,9 +136,11 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget>
             Get.put(PodcastStickyPanelController());
           }
         } else {
-          final PodcastPageController podcastPageController = Get.find();
-          podcastPageController.rxnSelectPodcastInfo.value = null;
-          podcastPageController.animationController.reverse();
+          if (Get.isRegistered<PodcastStickyPanelController>()) {
+            final PodcastPageController podcastPageController = Get.find();
+            podcastPageController.rxnSelectPodcastInfo.value = null;
+            podcastPageController.animationController.reverse();
+          }
         }
 
         for (int i = 0; i < sectionItems.length; i++) {
@@ -193,19 +196,19 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget>
       color: Colors.white,
       child: BlocBuilder<SectionCubit, SectionState>(
           builder: (BuildContext context, SectionState state) {
-        SectionStatus status = state.status;
-        if (status == SectionStatus.error) {
-          debugLog('PremiumHomePageSectionError: ${state.errorMessages}');
-          return Container();
-        } else if (status == SectionStatus.loaded) {
-          _initializeTabController(state.sectionList!);
-          return _buildTabs(
-              state.sectionList!, _tabs, _tabWidgets, _tabController!);
-        }
+            SectionStatus status = state.status;
+            if (status == SectionStatus.error) {
+              debugLog('PremiumHomePageSectionError: ${state.errorMessages}');
+              return Container();
+            } else if (status == SectionStatus.loaded) {
+              _initializeTabController(state.sectionList!);
+              return _buildTabs(
+                  state.sectionList!, _tabs, _tabWidgets, _tabController!);
+            }
 
-        // init or loading
-        return const Center(child: CircularProgressIndicator());
-      }),
+            // init or loading
+            return const Center(child: CircularProgressIndicator());
+          }),
     );
   }
 
@@ -223,67 +226,70 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget>
                 builder: (context, snapshot) {
                   List<Tab> tabs = snapshot.data!;
                   TabBar tabBar = TabBar(
-                    isScrollable: true,
-                    indicatorColor: appColor,
-                    unselectedLabelColor: const Color(0xffA3A3A3),
-                    labelColor: appColor,
-                    tabs: tabs.toList(),
-                    controller: tabController,
-                    onTap: (int index) {
-                      if (index >= 5) {
-                        FirebaseAnalyticsHelper.logTabBarAfterTheSixthClick(
-                            sectiontitle: sections[index].title ??
-                                StringDefault.valueNullDefault);
-                      }
+                      isScrollable: true,
+                      tabAlignment: TabAlignment.start,
+                      indicatorColor: appColor,
+                      unselectedLabelColor: const Color(0xffA3A3A3),
+                      labelColor: appColor,
+                  tabs: tabs.toList(),
+                  controller: tabController,
+                  onTap: (int index) {
+                  if (index >= 5) {
+                  FirebaseAnalyticsHelper.logTabBarAfterTheSixthClick(
+                  sectiontitle: sections[index].title ??
+                  StringDefault.valueNullDefault);
+                  }
 
-                      if (_initialTabIndex == index) {
-                        _scrollToTop(index);
-                      }
-                      _initialTabIndex = index;
-                    },
+                  if (_initialTabIndex == index) {
+                  _scrollToTop(index);
+                  }
+                  _initialTabIndex = index;
+                  },
                   );
 
                   return Row(
-                    children: [
-                      Expanded(
-                        child: tabBar,
-                      ),
-                      if (_remoteConfigHelper.hasTabSectionButton) ...[
-                        SizedBox(
-                          height: tabBar.preferredSize.height,
-                          child: const VerticalDivider(
-                            color: Colors.black12,
-                            thickness: 1,
-                            indent: 12,
-                            endIndent: 12,
-                            width: 8,
-                          ),
-                        ),
-                        InkWell(
-                            child: SizedBox(
-                              height: tabBar.preferredSize.height,
-                              width: tabBar.preferredSize.height - 8,
-                              child: const Icon(
-                                Icons.keyboard_arrow_down,
-                                size: 24,
-                                color: Colors.black54,
-                              ),
-                            ),
-                            onTap: () {
-                              EasyPopup.show(
-                                context,
-                                SectionDropDownMenu(
-                                  tabBarHeight: tabBar.preferredSize.height,
-                                  tabController: _tabController!,
-                                  sectionList: sections,
-                                ),
-                                hasPaddingTop: true,
-                                cancelable: true,
-                                outsideTouchCancelable: false,
-                              );
-                            })
-                      ]
-                    ],
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                  Expanded(
+                  child: tabBar,
+                  ),
+                  if (_remoteConfigHelper.hasTabSectionButton) ...[
+                  SizedBox(
+                  height: tabBar.preferredSize.height,
+                  child: const VerticalDivider(
+                  color: Colors.black12,
+                  thickness: 1,
+                  indent: 12,
+                  endIndent: 12,
+                  width: 8,
+                  ),
+                  ),
+                  InkWell(
+                  child: SizedBox(
+                  height: tabBar.preferredSize.height,
+                  width: tabBar.preferredSize.height - 8,
+                  child: const Icon(
+                  Icons.keyboard_arrow_down,
+                  size: 24,
+                  color: Colors.black54,
+                  ),
+                  ),
+                  onTap: () {
+                  EasyPopup.show(
+                  context,
+                  SectionDropDownMenu(
+                  tabBarHeight: tabBar.preferredSize.height,
+                  tabController: _tabController!,
+                  sectionList: sections,
+                  ),
+                  hasPaddingTop: true,
+                  cancelable: true,
+                  outsideTouchCancelable: false,
+                  );
+                  })
+                  ]
+                  ]
+                  ,
                   );
                 }),
           ),

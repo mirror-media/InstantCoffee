@@ -10,6 +10,7 @@ import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/mirror_media_app.dart';
 import 'package:readr_app/helpers/request_tracking_authorization.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:readr_app/widgets/my_override_http_client.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
@@ -22,6 +23,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  HttpOverrides.global = MyHttpOverrides();
 
   FlutterError.onError = (errorDetails) {
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
