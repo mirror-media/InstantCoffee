@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/memberDetail/member_detail_cubit.dart';
 import 'package:readr_app/blocs/memberCenter/paymentRecord/payment_record_bloc.dart';
@@ -32,6 +33,7 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   _signOut() async {
+    await GoogleSignIn().disconnect();
     await _auth.signOut();
     await RouteGenerator.navigatorKey.currentState!.push(PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) =>
@@ -250,6 +252,7 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
+              surfaceTintColor: Colors.white,
               title: const Text('登出'),
               content: const Text('是否確定登出？'),
               actions: <Widget>[

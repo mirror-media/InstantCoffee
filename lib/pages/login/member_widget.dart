@@ -296,6 +296,7 @@ class _MemberWidgetState extends State<MemberWidget> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
+              surfaceTintColor: Colors.white,
               title: const Text('登出'),
               content: const Text('是否確定登出？'),
               actions: <Widget>[

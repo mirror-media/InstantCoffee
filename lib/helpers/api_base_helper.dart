@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:mime/mime.dart';
 
 import 'package:readr_app/helpers/app_exception.dart';
@@ -10,10 +10,13 @@ import 'package:readr_app/helpers/m_m_cache_manager.dart';
 import 'package:readr_app/widgets/logger.dart';
 
 class ApiBaseHelper with Logger {
-  http.Client _client = http.Client();
+  Client _client = Client();
+  HttpClient httpClient = HttpClient();
 
-  void setClient(http.Client client) {
+  void setClient(Client client) {
     _client = client;
+
+    httpClient.badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
   }
 
   BaseCacheManager? _mMCacheManager;
@@ -37,10 +40,10 @@ class ApiBaseHelper with Logger {
       } else {
         res = file.path;
       }
-      return returnResponse(http.Response(res, 200));
+      return returnResponse(Response(res, 200));
     }
 
-    return returnResponse(http.Response("Can not find any cache", 404));
+    return returnResponse(Response("Can not find any cache", 404));
   }
 
   /// Get the json file from cache first.
@@ -83,7 +86,7 @@ class ApiBaseHelper with Logger {
         res = file.path;
       }
 
-      return returnResponse(http.Response(
+      return returnResponse(Response(
         res,
         200,
         headers: {
@@ -91,7 +94,7 @@ class ApiBaseHelper with Logger {
         },
       ));
     }
-    return returnResponse(http.Response("Can not find any cache", 404));
+    return returnResponse(Response("Can not find any cache", 404));
   }
 
   Future<dynamic> getByUrl(
@@ -120,6 +123,7 @@ class ApiBaseHelper with Logger {
     dynamic responseJson;
     try {
       Uri uri = Uri.parse(url);
+
       final response = await _client.post(uri, headers: headers, body: body);
       responseJson = returnResponse(response);
     } on SocketException {
@@ -171,7 +175,7 @@ class ApiBaseHelper with Logger {
   }
 }
 
-dynamic returnResponse(http.Response response) {
+dynamic returnResponse(Response response) {
   switch (response.statusCode) {
     case 200:
       String utf8Json = utf8.decode(response.bodyBytes);
