@@ -145,9 +145,11 @@ class _HomeWidgetState extends State<HomeWidget>
             Get.put(PodcastStickyPanelController());
           }
         } else {
-          final PodcastPageController podcastPageController = Get.find();
-          podcastPageController.rxnSelectPodcastInfo.value = null;
-          podcastPageController.animationController.reverse();
+          if (Get.isRegistered<PodcastPageController>()) {
+            final PodcastPageController podcastPageController = Get.find();
+            podcastPageController.rxnSelectPodcastInfo.value = null;
+            podcastPageController.animationController.reverse();
+          }
         }
 
         for (int i = 0; i < sectionItems.length; i++) {
@@ -251,6 +253,7 @@ class _HomeWidgetState extends State<HomeWidget>
                 builder: (context, snapshot) {
                   List<Tab> tabs = snapshot.data!;
                   TabBar tabBar = TabBar(
+                    tabAlignment: TabAlignment.start,
                     isScrollable: true,
                     indicatorColor: appColor,
                     unselectedLabelColor: const Color(0xffA3A3A3),
@@ -272,6 +275,7 @@ class _HomeWidgetState extends State<HomeWidget>
                   );
 
                   return Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Expanded(
                         child: tabBar,

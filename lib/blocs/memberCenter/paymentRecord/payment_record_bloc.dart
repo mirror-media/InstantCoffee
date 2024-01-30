@@ -13,15 +13,18 @@ class PaymentRecordBloc extends Bloc<PaymentRecordEvent, PaymentRecordState>
     with Logger {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final PaymentRecordService paymentRecordService = PaymentRecordService();
+
   PaymentRecordBloc() : super(PaymentRecordInitial()) {
     on<PaymentRecordEvent>(
       (event, emit) async {
         debugLog(event.toString());
         try {
-          String token = await _auth.currentUser!.getIdToken();
-          List<PaymentRecord> paymentRecords = await paymentRecordService
-              .fetchPaymentRecord(_auth.currentUser!.uid, token);
-          emit(PaymentRecordLoaded(paymentRecords: paymentRecords));
+          String? token = await _auth.currentUser!.getIdToken();
+          if (token != null) {
+            List<PaymentRecord> paymentRecords = await paymentRecordService
+                .fetchPaymentRecord(_auth.currentUser!.uid, token);
+            emit(PaymentRecordLoaded(paymentRecords: paymentRecords));
+          }
         } catch (e) {
           emit(PaymentRecordError(
             error: determineException(e),

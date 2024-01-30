@@ -18,12 +18,14 @@ class MemberDetailCubit extends Cubit<MemberDetailState> with Logger {
     try {
       emit(MemberDetailLoading());
       User user = FirebaseAuth.instance.currentUser!;
-      String token = await user.getIdToken();
-      MemberService memberService = MemberService();
-      MemberSubscriptionDetail memberSubscriptionDetail =
-          await memberService.fetchMemberSubscriptionDetail(user.uid, token);
-      emit(
-          MemberDetailLoad(memberSubscriptionDetail: memberSubscriptionDetail));
+      String? token = await user.getIdToken();
+      if (token != null) {
+        MemberService memberService = MemberService();
+        MemberSubscriptionDetail memberSubscriptionDetail =
+            await memberService.fetchMemberSubscriptionDetail(user.uid, token);
+        emit(MemberDetailLoad(
+            memberSubscriptionDetail: memberSubscriptionDetail));
+      }
     } on SocketException {
       emit(MemberDetailError(
         error: NoInternetException('No Internet'),

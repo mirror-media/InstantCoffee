@@ -7,7 +7,9 @@ import 'package:readr_app/helpers/data_constants.dart';
 
 class DownloadMagazineWidget extends StatefulWidget {
   final bool isMemberContent;
+
   const DownloadMagazineWidget({this.isMemberContent = false});
+
   @override
   _DownloadMagazineWidgetState createState() => _DownloadMagazineWidgetState();
 }
@@ -38,50 +40,52 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
 
   Widget _downloadMagazineWidget(double width, bool isLoading) {
     if (widget.isMemberContent) {
-      return Card(
-        elevation: 10,
-        color: Colors.white,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-          margin: const EdgeInsets.symmetric(horizontal: 10),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Text(
-              '月費、年費會員免費線上閱讀動態雜誌',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                color: Color.fromRGBO(0, 0, 0, 0.66),
-              ),
-            ),
-            const SizedBox(height: 24),
-            AbsorbPointer(
-              absorbing: isLoading,
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: appColor,
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: isLoading
-                          ? const SpinKitThreeBounce(
-                              color: Colors.white,
-                              size: 17,
-                            )
-                          : const Text(
-                              '線上閱讀',
-                              style: TextStyle(
-                                fontSize: 17,
-                                color: Colors.white,
-                              ),
-                            ),
-                    ),
-                  ),
-                  onPressed: () => _fetchMemberSubscriptionType()),
-            ),
-          ]),
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          boxShadow: const [
+            BoxShadow(color: Colors.grey, spreadRadius: 1, blurRadius: 10),
+          ],
         ),
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const Text(
+            '月費、年費會員免費線上閱讀動態雜誌',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 20,
+              color: Color.fromRGBO(0, 0, 0, 0.66),
+            ),
+          ),
+          const SizedBox(height: 24),
+          AbsorbPointer(
+            absorbing: isLoading,
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: appColor,
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: isLoading
+                        ? const SpinKitThreeBounce(
+                            color: Colors.white,
+                            size: 17,
+                          )
+                        : const Text(
+                            '線上閱讀',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.white,
+                            ),
+                          ),
+                  ),
+                ),
+                onPressed: () => _fetchMemberSubscriptionType()),
+          ),
+        ]),
       );
     }
     return Container(

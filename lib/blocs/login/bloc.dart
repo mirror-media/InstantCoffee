@@ -83,28 +83,30 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
     bool createSuccess = true;
     if (isNewUser) {
       debugLog('CreateMember');
-      String token = await _auth.currentUser!.getIdToken();
-      createSuccess = await _memberService.createMember(
-          _auth.currentUser!.email, _auth.currentUser!.uid, token);
-    }
-    if (createSuccess) {
-      await _fetchMemberSubscriptionTypeToLogin(emit);
-    } else {
-      try {
-        await _auth.currentUser!.delete();
-      } catch (e) {
-        debugLog(e);
-        await _auth.signOut();
+      String? token = await _auth.currentUser!.getIdToken();
+      if (token != null) {
+        createSuccess = await _memberService.createMember(
+            _auth.currentUser!.email, _auth.currentUser!.uid, token);
+        if (createSuccess) {
+          await _fetchMemberSubscriptionTypeToLogin(emit);
+        } else {
+          try {
+            await _auth.currentUser!.delete();
+          } catch (e) {
+            debugLog(e);
+            await _auth.signOut();
+          }
+
+          _errorLogHelper.record(
+              Exception(
+                  '[HandleCreateMember] Create member fail, isNewUser: $isNewUser'),
+              StackTrace.current);
+
+          emit(LoginFail(
+            error: UnknownException('Create member fail'),
+          ));
+        }
       }
-
-      _errorLogHelper.record(
-          Exception(
-              '[HandleCreateMember] Create member fail, isNewUser: $isNewUser'),
-          StackTrace.current);
-
-      emit(LoginFail(
-        error: UnknownException('Create member fail'),
-      ));
     }
   }
 
@@ -165,10 +167,11 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
     Emitter<LoginState> emit,
   ) async {
     try {
-      MemberIdAndSubscriptionType memberIdAndSubscriptionType =
+      MemberIdAndSubscriptionType? memberIdAndSubscriptionType =
           await _memberService.checkSubscriptionType(_auth.currentUser!);
-      if (premiumSubscriptionType
-          .contains(memberIdAndSubscriptionType.subscriptionType)) {
+      if (memberIdAndSubscriptionType != null &&
+          premiumSubscriptionType
+              .contains(memberIdAndSubscriptionType.subscriptionType)) {
         if (_loginLoadingType == LoginLoadingType.email) {
           emit(FetchSignInMethodsForEmailLoading());
         } else {
@@ -183,7 +186,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         }
       } else {
         emit(LoginSuccess(
-          israfelId: memberIdAndSubscriptionType.israfelId!,
+          israfelId: memberIdAndSubscriptionType!.israfelId!,
           subscriptionType: memberIdAndSubscriptionType.subscriptionType!,
           isNewebpay: memberIdAndSubscriptionType.isNewebpay,
         ));
@@ -261,22 +264,24 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
       emit(LoginInitState());
     } else {
       try {
-        MemberIdAndSubscriptionType memberIdAndSubscriptionType =
+        MemberIdAndSubscriptionType? memberIdAndSubscriptionType =
             await _memberService.checkSubscriptionType(_auth.currentUser!);
-        emit(LoginSuccess(
-          israfelId: memberIdAndSubscriptionType.israfelId!,
-          subscriptionType: memberIdAndSubscriptionType.subscriptionType!,
-          isNewebpay: memberIdAndSubscriptionType.isNewebpay,
-        ));
+        if (memberIdAndSubscriptionType != null) {
+          emit(LoginSuccess(
+            israfelId: memberIdAndSubscriptionType.israfelId!,
+            subscriptionType: memberIdAndSubscriptionType.subscriptionType!,
+            isNewebpay: memberIdAndSubscriptionType.isNewebpay,
+          ));
 
-        memberBloc.add(UpdateSubscriptionType(
-            isLogin: true,
-            israfelId: memberIdAndSubscriptionType.israfelId,
-            subscriptionType: memberIdAndSubscriptionType.subscriptionType));
+          memberBloc.add(UpdateSubscriptionType(
+              isLogin: true,
+              israfelId: memberIdAndSubscriptionType.israfelId,
+              subscriptionType: memberIdAndSubscriptionType.subscriptionType));
 
-        if (premiumSubscriptionType
-            .contains(memberIdAndSubscriptionType.subscriptionType)) {
-          await runPremiumAnimation();
+          if (premiumSubscriptionType
+              .contains(memberIdAndSubscriptionType.subscriptionType)) {
+            await runPremiumAnimation();
+          }
         }
       } catch (e, s) {
         // there is no member in israfel
@@ -321,6 +326,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         firebaseLoginStatus,
         emit,
       );
+      _signInTransition();
     } on SocketException {
       emit(
         LoginFail(error: NoInternetException('No Internet')),
@@ -355,6 +361,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         firebaseLoginStatus,
         emit,
       );
+      _signInTransition();
     } on SocketException {
       emit(
         LoginFail(error: NoInternetException('No Internet')),
@@ -389,6 +396,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         firebaseLoginStatus,
         emit,
       );
+      _signInTransition();
     } on SocketException {
       emit(
         LoginFail(error: NoInternetException('No Internet')),
@@ -407,6 +415,48 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         LoginFail(error: UnknownException(e.toString())),
       );
     }
+  }
+
+  void _signInTransition() async {
+    MemberIdAndSubscriptionType? memberIdAndSubscriptionType =
+    await _memberService.checkSubscriptionType(_auth.currentUser!);
+    if (memberIdAndSubscriptionType != null &&
+        premiumSubscriptionType
+            .contains(memberIdAndSubscriptionType.subscriptionType)) {
+      if (_loginLoadingType == LoginLoadingType.email) {
+        emit(FetchSignInMethodsForEmailLoading());
+      } else {
+        LoginType loginType = LoginType.google;
+        if (_loginLoadingType == LoginLoadingType.facebook) {
+          loginType = LoginType.facebook;
+        } else if (_loginLoadingType == LoginLoadingType.apple) {
+          loginType = LoginType.apple;
+        }
+
+        emit(LoginLoading(loginType: loginType));
+      }
+    } else {
+      emit(LoginSuccess(
+        israfelId: memberIdAndSubscriptionType!.israfelId!,
+        subscriptionType: memberIdAndSubscriptionType.subscriptionType!,
+        isNewebpay: memberIdAndSubscriptionType.isNewebpay,
+      ));
+    }
+
+    memberBloc.add(UpdateSubscriptionType(
+        isLogin: true,
+        israfelId: memberIdAndSubscriptionType.israfelId,
+        subscriptionType: memberIdAndSubscriptionType.subscriptionType));
+
+    Fluttertoast.showToast(
+        msg: '登入成功',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0);
+    _navigateToRouteName(memberIdAndSubscriptionType.subscriptionType!);
   }
 
   // need to refactor route
