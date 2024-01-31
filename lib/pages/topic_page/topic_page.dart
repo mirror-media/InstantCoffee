@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/pages/topic_page/topic_page_controller.dart';
 import 'package:readr_app/pages/topic_page/widget/list_topic_widget.dart';
 import 'package:readr_app/pages/topic_page/widget/portrait_wall_topic_widget.dart';
@@ -54,15 +55,14 @@ class TopicPage extends GetView<TopicPageController> {
             headerSliverBuilder:
                 (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
-                controller.rxCurrentTopic.value?.type != TopicType.slideshow  &&
-                  controller.rxCurrentTopic.value?.originImage != null
+                controller.rxCurrentTopic.value?.type != TopicType.slideshow
                     ? SliverToBoxAdapter(
                         child: Container(
                           color: const Color(0xFFE2E5E7),
                           child: CustomCachedNetworkImage(
                               imageUrl: controller.rxCurrentTopic.value
-                                      ?.originImage!.imageCollection!.w800 ??
-                                  '',
+                                      ?.originImage?.imageCollection?.w800 ??
+                                  Environment().config.mirrorMediaNotImageUrl,
                               width: Get.width,
                               height: Get.width / (16 / 9)),
                         ),
