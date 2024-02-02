@@ -250,6 +250,7 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
+              surfaceTintColor: Colors.white,
               title: const Text('登出'),
               content: const Text('是否確定登出？'),
               actions: <Widget>[
