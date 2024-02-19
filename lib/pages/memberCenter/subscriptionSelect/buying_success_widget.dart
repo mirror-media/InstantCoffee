@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/pages/shared/premium_animate_page.dart';
+import '../../../data/providers/auth_info_provider.dart';
 
 class BuyingSuccessWidget extends StatelessWidget {
   final String? storySlug;
@@ -65,6 +67,8 @@ class BuyingSuccessWidget extends StatelessWidget {
                   ),
                 ),
                 onPressed: () async {
+                  final AuthInfoProvider authInfoProvider = Get.find();
+                  authInfoProvider.updateJWTToken();
                   await _runPremiumAnimation();
                   RouteGenerator.navigateToStory(storySlug!);
                 }),
@@ -89,6 +93,8 @@ class BuyingSuccessWidget extends StatelessWidget {
                 ),
               ),
               onPressed: () {
+                final AuthInfoProvider authInfoProvider = Get.find();
+                authInfoProvider.updateJWTToken();
                 _runPremiumAnimation();
               }),
         ),
