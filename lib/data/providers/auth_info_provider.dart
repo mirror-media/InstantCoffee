@@ -4,12 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:readr_app/data/providers/auth_api_provider.dart';
 
-class AuthProvider extends GetxController {
-  AuthProvider._();
+class AuthInfoProvider extends GetxController {
+  AuthInfoProvider._();
 
-  static final AuthProvider _instance = AuthProvider._();
+  static final AuthInfoProvider _instance = AuthInfoProvider._();
 
-  static AuthProvider get instance => _instance;
+  static AuthInfoProvider get instance => _instance;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final AuthApiProvider authApiProvider = Get.find();
@@ -22,14 +22,27 @@ class AuthProvider extends GetxController {
   void onInit() {
     super.onInit();
     _auth.authStateChanges().listen(authStateChangesEvent);
-    Timer.periodic(const Duration(minutes: 55), updateJWTToken);
+    Timer.periodic(const Duration(minutes: 55), updateJWTTokenEvent);
   }
 
-  void updateJWTToken(Timer timer) {
+  void updateJWTTokenEvent(Timer timer) {
     if (userIndex != null) {
       updateUserInfo(userIndex!);
     }
   }
+
+  void updateJWTToken()async{
+    if(userIndex==null) {
+      return;
+    }
+    idToken = await userIndex?.getIdToken();
+    if (idToken != null) {
+      accessToken.value =
+          await authApiProvider.getAccessTokenByIdToken(idToken!);
+    }
+
+  }
+
 
   void authStateChangesEvent(User? user) {
     if (user != null) {

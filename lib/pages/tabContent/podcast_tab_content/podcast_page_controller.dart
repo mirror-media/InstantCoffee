@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:readr_app/data/enum/page_status.dart';
 import 'package:readr_app/data/providers/articles_api_provider.dart';
-import 'package:readr_app/data/providers/auth_provider.dart';
+import 'package:readr_app/data/providers/auth_info_provider.dart';
 import 'package:readr_app/models/podcast_info/podcast_info.dart';
 
 class PodcastPageController extends GetxController
@@ -15,7 +15,7 @@ class PodcastPageController extends GetxController
   final RxList<String> rxAuthorList = RxList();
   final RxnString rxCurrentAuthor = RxnString();
   final ScrollController scrollController = ScrollController();
-  final AuthProvider authProvider = Get.find();
+  final AuthInfoProvider authProvider = Get.find();
   final Rxn<PodcastInfo> rxnSelectPodcastInfo = Rxn();
   late AnimationController animationController;
   late Animation<double> animation;
