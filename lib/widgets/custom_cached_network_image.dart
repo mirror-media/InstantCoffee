@@ -8,12 +8,8 @@ class CustomCachedNetworkImage extends StatelessWidget {
   final double width;
   final double? height;
 
-
   const CustomCachedNetworkImage(
-      {Key? key,
-      required this.imageUrl,
-      required this.width,
-      this.height})
+      {Key? key, required this.imageUrl, required this.width, this.height})
       : super(key: key);
 
   @override
@@ -22,10 +18,18 @@ class CustomCachedNetworkImage extends StatelessWidget {
       height: height,
       width: width,
       imageUrl: imageUrl,
-      placeholder: (context, url) => Container(
+      imageBuilder: (context, imageProvider) => Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover,
+              colorFilter:
+                  const ColorFilter.mode(Colors.white, BlendMode.colorBurn)),
+        ),
+      ),
+      placeholder: (context, url) => SizedBox(
         height: height,
         width: width,
-        color: Colors.grey,
       ),
       errorWidget: (context, url, error) => SizedBox(
         height: height,

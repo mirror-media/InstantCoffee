@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:readr_app/core/extensions/string_extension.dart';
-import 'package:readr_app/data/providers/auth_provider.dart';
+import 'package:readr_app/data/providers/auth_info_provider.dart';
 import 'package:readr_app/helpers/api_base_helper.dart';
 import 'package:readr_app/models/external_story.dart';
 import 'package:readr_app/models/live_stream_model.dart';
@@ -29,7 +29,7 @@ class ArticlesApiProvider extends GetConnect {
   static const articleTakeCount = 12;
   static const homePageTopicCount = 5;
   final ApiBaseHelper apiBaseHelper = ApiBaseHelper();
-  final AuthProvider _authProvider = Get.find();
+  final AuthInfoProvider _authProvider = Get.find();
   ValueNotifier<GraphQLClient>? client;
   Worker? accessTokeWorker;
 
