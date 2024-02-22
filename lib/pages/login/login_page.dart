@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
-import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/pages/login/login_widget.dart';
 import 'package:readr_app/services/login_service.dart';
 

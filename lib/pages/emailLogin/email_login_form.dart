@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/blocs/emailLogin/bloc.dart';
 import 'package:readr_app/blocs/emailLogin/events.dart';
 import 'package:readr_app/blocs/emailLogin/states.dart';
-import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/pages/shared/password_form_field.dart';
 import 'package:readr_app/pages/shared/password_validator_widget.dart';
@@ -13,6 +13,7 @@ class EmailLoginForm extends StatefulWidget {
   final String email;
   final EmailLoginState state;
   final TextEditingController passwordEditingController;
+
   const EmailLoginForm({
     required this.email,
     required this.state,

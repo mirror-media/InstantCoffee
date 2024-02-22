@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/personalPage/category/bloc.dart';
 import 'package:readr_app/blocs/personalPage/category/events.dart';
 import 'package:readr_app/blocs/personalPage/category/states.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/core/values/string.dart';
-import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/models/category.dart';
 
 class UnsubscriptionCategoryList extends StatefulWidget {

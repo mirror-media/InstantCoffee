@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
-
 class MemberSubscriptionTypeTitleWiget extends StatelessWidget {
   final SubscriptionType subscriptionType;
   final bool isCenter;

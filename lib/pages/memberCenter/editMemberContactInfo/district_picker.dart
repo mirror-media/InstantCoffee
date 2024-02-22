@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/events.dart';
-import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/models/contact/city.dart';
 import 'package:readr_app/models/contact/district.dart';
 import 'package:readr_app/models/member.dart';
-
 class DistrictPicker extends StatefulWidget {
   final List<City> cityList;
   final Member member;

@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/blocs/passwordResetEmail/bloc.dart';
 import 'package:readr_app/blocs/passwordResetEmail/events.dart';
-import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/blocs/passwordResetEmail/states.dart';
+import 'package:readr_app/core/values/colors.dart';
+import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/pages/shared/sending_email_button.dart';
-
 class PasswordResetEmailForm extends StatefulWidget {
   final String email;
   final PasswordResetEmailState state;

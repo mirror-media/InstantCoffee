@@ -4,11 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/firebase_messaging_helper.dart';
 import 'package:readr_app/models/notification_setting.dart';
 import 'package:readr_app/widgets/app_expansion_tile.dart';
-
 class PremiumSettingPage extends StatefulWidget {
   @override
   _PremiumSettingPageState createState() => _PremiumSettingPageState();

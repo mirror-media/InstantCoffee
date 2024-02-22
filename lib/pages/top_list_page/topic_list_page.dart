@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
-import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/widgets/custom_cached_network_image.dart';
 import 'package:readr_app/widgets/m_m_ad_banner.dart';
 

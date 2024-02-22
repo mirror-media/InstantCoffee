@@ -1,17 +1,19 @@
 import 'dart:async';
+
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/app_upgrade_helper.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/remote_config_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/firebase_login_status.dart';
-import 'package:readr_app/pages/emailVerification/email_verification_success_page.dart';
 import 'package:readr_app/pages/app_update_page.dart';
+import 'package:readr_app/pages/emailVerification/email_verification_success_page.dart';
 import 'package:readr_app/pages/on_boarding_page.dart';
 import 'package:readr_app/services/email_sign_in_service.dart';
 import 'package:readr_app/widgets/logger.dart';

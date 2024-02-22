@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/core/values/string.dart';
-import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/firebase_analytics_helper.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/widgets/popupRoute/easy_popup.dart';

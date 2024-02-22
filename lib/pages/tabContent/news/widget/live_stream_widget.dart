@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class LiveStreamWidget extends StatelessWidget {

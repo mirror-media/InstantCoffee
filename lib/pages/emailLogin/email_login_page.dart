@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/emailLogin/bloc.dart';
-import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/pages/emailLogin/sign_in_with_email_and_password_widget.dart';
 import 'package:readr_app/services/email_sign_in_service.dart';
 
 class EmailLoginPage extends StatelessWidget {
   final String email;
+
   const EmailLoginPage({required this.email});
 
   @override

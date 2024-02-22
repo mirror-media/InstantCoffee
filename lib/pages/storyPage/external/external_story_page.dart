@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/pages/storyPage/external/external_story_controller.dart';
 import 'package:readr_app/pages/storyPage/external/external_story_widget.dart';

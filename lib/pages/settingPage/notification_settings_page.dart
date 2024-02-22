@@ -4,19 +4,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
 import 'package:readr_app/blocs/onBoarding/events.dart';
 import 'package:readr_app/blocs/onBoarding/states.dart';
-import 'package:readr_app/pages/shared/app_version_widget.dart';
-import 'package:localstorage/localstorage.dart';
+import 'package:readr_app/core/values/colors.dart';
+import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/firebase_messaging_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/notification_setting.dart';
-import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/models/on_boarding_position.dart';
+import 'package:readr_app/pages/shared/app_version_widget.dart';
 import 'package:readr_app/widgets/app_expansion_tile.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-
 class NotificationSettingsPage extends StatefulWidget {
   @override
   _NotificationSettingsPageState createState() =>

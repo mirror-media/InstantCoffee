@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:readr_app/helpers/data_constants.dart';
-
 class EmailValidatorWidget extends StatefulWidget {
   // need to be disposed by editing controller parent
   final TextEditingController editingController;

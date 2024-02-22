@@ -4,12 +4,11 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberProfile/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberProfile/events.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberProfile/states.dart';
-import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/models/member.dart';
 import 'package:readr_app/pages/memberCenter/editMemberProfile/birthday_picker.dart';
 import 'package:readr_app/pages/memberCenter/editMemberProfile/gender_picker.dart';
 import 'package:readr_app/widgets/logger.dart';
-
 class EditMemberProfileWidget extends StatefulWidget {
   @override
   _EditMemberProfileWidgetState createState() =>

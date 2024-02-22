@@ -6,7 +6,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:readr_app/blocs/onBoarding/bloc.dart';
-import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/initial_app.dart';
 import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/member_subscription_type.dart';

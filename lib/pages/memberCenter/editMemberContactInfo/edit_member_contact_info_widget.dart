@@ -5,7 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/events.dart';
 import 'package:readr_app/blocs/memberCenter/editMemberContactInfo/states.dart';
-import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/models/contact/city.dart';
 import 'package:readr_app/models/contact/country.dart';
 import 'package:readr_app/models/member.dart';
@@ -13,7 +13,6 @@ import 'package:readr_app/pages/memberCenter/editMemberContactInfo/city_picker.d
 import 'package:readr_app/pages/memberCenter/editMemberContactInfo/country_picker.dart';
 import 'package:readr_app/pages/memberCenter/editMemberContactInfo/district_picker.dart';
 import 'package:readr_app/widgets/logger.dart';
-
 class EditMemberContactInfoWidget extends StatefulWidget {
   @override
   _EditMemberContactInfoWidgetState createState() =>

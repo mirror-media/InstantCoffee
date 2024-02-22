@@ -2,12 +2,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:readr_app/core/extensions/string_extension.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/widgets/custom_cached_network_image.dart';
-
 class MagazineItemWidget extends StatelessWidget {
   final Magazine magazine;
   final double padding;

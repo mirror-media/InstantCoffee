@@ -5,7 +5,7 @@ import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/memberCenter/memberDetail/member_detail_cubit.dart';
 import 'package:readr_app/blocs/memberCenter/paymentRecord/payment_record_bloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscribedArticles/subscribed_articles_cubit.dart';
-import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/pages/memberCenter/paymentRecord/member_payment_record_page.dart';

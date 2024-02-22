@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/blocs/emailRegistered/bloc.dart';
 import 'package:readr_app/blocs/emailRegistered/events.dart';
 import 'package:readr_app/blocs/emailRegistered/states.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/pages/shared/email_validator_widget.dart';
 import 'package:readr_app/pages/shared/password_form_field.dart';

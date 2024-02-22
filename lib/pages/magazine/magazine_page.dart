@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/magazine/bloc.dart';
-import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
+import 'package:readr_app/pages/magazine/online_magazine_widget.dart';
 import 'package:readr_app/pages/magazine/special_magazine_widget.dart';
 import 'package:readr_app/pages/magazine/weekly_magazine_widget.dart';
-import 'package:readr_app/pages/magazine/online_magazine_widget.dart';
 import 'package:readr_app/services/magazine_service.dart';
-
 class MagazinePage extends StatefulWidget {
   final SubscriptionType subscriptionType;
   const MagazinePage({

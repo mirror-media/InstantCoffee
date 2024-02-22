@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/pages/home/default/home_widget.dart';
 import 'package:readr_app/pages/home/home_controller.dart';
 import 'package:readr_app/widgets/header_bar/header_bar.dart';
+
 
 class HomePage extends GetView<HomeController> with WidgetsBindingObserver {
   final GlobalKey settingKey;

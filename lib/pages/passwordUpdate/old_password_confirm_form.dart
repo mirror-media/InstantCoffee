@@ -4,7 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/blocs/passwordUpdate/bloc.dart';
 import 'package:readr_app/blocs/passwordUpdate/events.dart';
 import 'package:readr_app/blocs/passwordUpdate/states.dart';
-import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/pages/shared/password_form_field.dart';
 import 'package:readr_app/pages/shared/password_validator_widget.dart';
 

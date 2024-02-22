@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:readr_app/blocs/memberCenter/subscribedArticles/subscribed_articles_cubit.dart';
-import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/subscribed_article.dart';
 import 'package:readr_app/pages/memberCenter/shared/state_error_widget.dart';

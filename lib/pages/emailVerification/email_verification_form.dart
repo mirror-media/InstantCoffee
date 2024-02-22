@@ -5,10 +5,10 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/blocs/emailVerification/bloc.dart';
 import 'package:readr_app/blocs/emailVerification/events.dart';
 import 'package:readr_app/blocs/emailVerification/states.dart';
-import 'package:readr_app/helpers/environment.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/pages/shared/sending_email_button.dart';
-
 class EmailVerificationForm extends StatefulWidget {
   final EmailVerificationState state;
   const EmailVerificationForm({required this.state});

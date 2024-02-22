@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/search/cubit.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
-import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/home/premium/premium_home_widget.dart';

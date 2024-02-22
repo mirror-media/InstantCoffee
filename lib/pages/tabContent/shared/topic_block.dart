@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
-import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/pages/home/home_controller.dart';
+
 import '../../../helpers/route_generator.dart';
 import '../../../models/topic/topic_model.dart';
 import '../../top_list_page/topic_list_binding.dart';

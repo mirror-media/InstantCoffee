@@ -4,6 +4,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/storyPage/listening/cubit.dart';
 import 'package:readr_app/blocs/storyPage/listening/states.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/data_constants.dart';

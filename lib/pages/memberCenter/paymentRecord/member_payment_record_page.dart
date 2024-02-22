@@ -1,12 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:readr_app/blocs/memberCenter/paymentRecord/payment_record_bloc.dart';
-import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/models/payment_record.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/pages/memberCenter/shared/state_error_widget.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 

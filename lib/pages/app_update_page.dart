@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/app_upgrade_helper.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/widgets/logger.dart';

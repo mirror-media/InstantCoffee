@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/storyPage/news/bloc.dart';
-import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/pages/storyPage/news/build_story_page.dart';
 import 'package:readr_app/services/story_service.dart';
 import 'package:share_plus/share_plus.dart';

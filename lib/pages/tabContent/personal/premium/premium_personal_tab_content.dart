@@ -3,27 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
-
-import 'package:readr_app/blocs/personalPage/category/bloc.dart';
-import 'package:readr_app/blocs/personalPage/category/events.dart';
-import 'package:readr_app/blocs/personalPage/category/states.dart';
-
 import 'package:readr_app/blocs/personalPage/article/bloc.dart';
 import 'package:readr_app/blocs/personalPage/article/events.dart';
 import 'package:readr_app/blocs/personalPage/article/states.dart';
+import 'package:readr_app/blocs/personalPage/category/bloc.dart';
+import 'package:readr_app/blocs/personalPage/category/events.dart';
+import 'package:readr_app/blocs/personalPage/category/states.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/core/values/string.dart';
-import 'package:readr_app/pages/tabContent/personal/premium/premium_member_subscription_type_block.dart';
-import 'package:readr_app/pages/tabContent/personal/premium/premium_unsubscription_category_list.dart';
-import 'package:readr_app/pages/tabContent/shared/premium_list_item.dart';
-
-import 'package:readr_app/services/category_service.dart';
-import 'package:readr_app/services/personal_subscription_service.dart';
-
-import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/remote_config_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/category.dart';
 import 'package:readr_app/models/record.dart';
+import 'package:readr_app/pages/tabContent/personal/premium/premium_member_subscription_type_block.dart';
+import 'package:readr_app/pages/tabContent/personal/premium/premium_unsubscription_category_list.dart';
+import 'package:readr_app/pages/tabContent/shared/premium_list_item.dart';
+import 'package:readr_app/services/category_service.dart';
+import 'package:readr_app/services/personal_subscription_service.dart';
 import 'package:readr_app/widgets/newsMarquee/news_marquee_persistent_header_delegate.dart';
 
 class PremiumPersonalTabContent extends StatefulWidget {

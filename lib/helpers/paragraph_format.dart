@@ -1,11 +1,10 @@
 import 'dart:math' as math;
 
+import 'package:flutter/material.dart';
 import 'package:flutter_embedded_webview/flutter_embedded_webview.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/models/content.dart';
 import 'package:readr_app/models/paragraph.dart';
 import 'package:readr_app/widgets/annotation_widget.dart';

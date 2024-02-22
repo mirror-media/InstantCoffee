@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/paragraph_format.dart';
 import 'package:readr_app/models/paragraph.dart';
 import 'package:readr_app/models/story.dart';

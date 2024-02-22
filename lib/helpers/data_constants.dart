@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
+
 
 const homePageTag = 'Home Page';
 const latestPageTag = 'Latest News';
 
-const Color appColor = Color(0xff1d9fb8);
 const appTitle = "鏡週刊";
 const searchPageTitle = '搜尋';
 const personalPageTitle = '個人專屬頁面';

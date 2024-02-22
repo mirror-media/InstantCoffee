@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/deleteMember/cubit.dart';
 import 'package:readr_app/blocs/memberCenter/deleteMember/state.dart';
+import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-
 class DeleteMemberWidget extends StatefulWidget {
   final String israfelId;
   const DeleteMemberWidget({

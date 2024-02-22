@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:readr_app/blocs/memberCenter/memberDetail/member_detail_cubit.dart';
-import 'package:readr_app/helpers/data_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:readr_app/models/member_subscription_detail.dart';
 import 'package:intl/intl.dart';
+import 'package:readr_app/blocs/memberCenter/memberDetail/member_detail_cubit.dart';
+import 'package:readr_app/core/values/colors.dart';
+import 'package:readr_app/models/member_subscription_detail.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/models/payment_record.dart';
 import 'package:readr_app/pages/memberCenter/shared/state_error_widget.dart';
