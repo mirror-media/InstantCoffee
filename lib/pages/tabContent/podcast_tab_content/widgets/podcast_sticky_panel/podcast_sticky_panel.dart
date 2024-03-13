@@ -17,6 +17,9 @@ class PodcastStickyPanel extends GetView<PodcastStickyPanelController> {
 
   @override
   Widget build(BuildContext context) {
+    if (!Get.isRegistered<PodcastStickyPanelController>()) {
+      Get.put(PodcastStickyPanelController());
+    }
     return Container(
       width: width,
       height: height,

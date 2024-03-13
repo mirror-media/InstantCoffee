@@ -415,4 +415,24 @@ class QueryDB {
           }
         }
   ''';
+
+  static const String checkSubscriptType = '''
+   query checkSubscriptionType(\$firebaseId: String!) {
+      allMembers(where: { firebaseId: \$firebaseId }) {
+        id
+        state
+        type
+        subscription(
+          orderBy: {updatedAt: desc},
+          first: 1,
+          where:{
+            paymentMethod: newebpay,
+            isActive: true
+          },
+        ){
+          id
+        }
+      }
+    }
+  ''';
 }

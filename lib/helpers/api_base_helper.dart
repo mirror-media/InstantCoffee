@@ -179,6 +179,8 @@ dynamic returnResponse(http.Response response) {
       if (responseJson is Map<String, dynamic>) {
         bool hasData = (responseJson.containsKey('_items') &&
                 responseJson['_items'].length > 0) ||
+            (responseJson.containsKey('headers') &&
+                responseJson['headers'].length > 0)||
             (responseJson.containsKey('items') &&
                 responseJson['items'].length > 0) ||
             // properties responded by popular tab content api

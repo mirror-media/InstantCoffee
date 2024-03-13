@@ -1,8 +1,11 @@
-import 'dart:io';
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/helpers/environment.dart';
+import 'package:readr_app/models/section_ad.dart';
 
 class AdHelper {
   static final AdHelper _singleton = AdHelper._internal();
@@ -34,5 +37,18 @@ class AdHelper {
             },
           ));
     }
+  }
+
+  Future<SectionAd?> getSectionAdBySlug(String? slug) async {
+    String sectionAdJsonFileLocation = Platform.isIOS
+        ? Environment().config.iOSSectionAdJsonLocation
+        : Environment().config.androidSectionAdJsonLocation;
+
+    String sectionAdString =
+        await rootBundle.loadString(sectionAdJsonFileLocation);
+    final sectionAdMaps = json.decode(sectionAdString) as Map<String, dynamic>;
+    return sectionAdMaps.containsKey(slug)
+        ? SectionAd.fromJson(sectionAdMaps[slug])
+        : SectionAd.fromJson(sectionAdMaps['other']);
   }
 }

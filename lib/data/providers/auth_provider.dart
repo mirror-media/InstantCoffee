@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:readr_app/data/providers/auth_api_provider.dart';
+import 'package:readr_app/models/member_info.dart';
 
 class AuthProvider extends GetxController {
   AuthProvider._();
@@ -13,9 +14,12 @@ class AuthProvider extends GetxController {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final AuthApiProvider authApiProvider = Get.find();
-  final RxBool isLogin =false.obs;
+  final RxBool isLogin = false.obs;
   late String? idToken;
   final RxnString accessToken = RxnString();
+
+  final Rxn<MemberInfo> rxnMemberInfo = Rxn();
+
   User? userIndex;
 
   @override
@@ -33,13 +37,14 @@ class AuthProvider extends GetxController {
 
   void authStateChangesEvent(User? user) {
     if (user != null) {
-      isLogin.value=true;
+      isLogin.value = true;
       updateUserInfo(user);
       userIndex = user;
     } else {
-      isLogin.value=false;
+      isLogin.value = false;
       idToken = null;
       accessToken.value = null;
+      rxnMemberInfo.value = null;
     }
   }
 
@@ -62,6 +67,7 @@ class AuthProvider extends GetxController {
     if (idToken != null) {
       accessToken.value =
           await authApiProvider.getAccessTokenByIdToken(idToken!);
+      rxnMemberInfo.value = await authApiProvider.checkSubscriptionType(user);
     }
   }
 }

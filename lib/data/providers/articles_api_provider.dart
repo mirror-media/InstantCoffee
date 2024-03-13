@@ -4,7 +4,9 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:readr_app/core/extensions/string_extension.dart';
 import 'package:readr_app/data/providers/auth_provider.dart';
 import 'package:readr_app/helpers/api_base_helper.dart';
+import 'package:readr_app/helpers/cache_duration_cache.dart';
 import 'package:readr_app/models/external_story.dart';
+import 'package:readr_app/models/header/header.dart';
 import 'package:readr_app/models/live_stream_model.dart';
 import 'package:readr_app/models/magazine_list.dart';
 import 'package:readr_app/models/podcast_info/podcast_info.dart';
@@ -322,4 +324,53 @@ class ArticlesApiProvider extends GetConnect {
   void onClose() {
     accessTokeWorker?.dispose();
   }
+
+  Future<List<Header>> getAppBarHeaders() async {
+    final result =
+        await apiBaseHelper.getByUrl(Environment().config.appBarHeaderPath);
+    if (result.isNotEmpty) {
+      return List<Header>.from(
+          result['headers'].map((e) => Header.fromJson(e)));
+    }
+    return [];
+  }
+
+  Future<List<Record>> getChoicesRecordList() async {
+    final jsonResponse = await apiBaseHelper.getByCacheAndAutoCache(
+        Environment().config.editorChoiceApi,
+        maxAge: editorChoiceCacheDuration);
+
+    List<Record> records = Record.recordListFromJson(jsonResponse["choices"]);
+    return records;
+  }
+
+
+  Future<RecordListAndAllCount> searchByKeyword(String keyword,
+      {int startIndex = 1}) async {
+    String searchApi =
+        '${Environment().config.searchApi}&exactTerms=$keyword&sort= ,date:s&start=$startIndex';
+
+    final jsonResponse = await apiBaseHelper.getByCacheAndAutoCache(
+      searchApi,
+      maxAge: const Duration(hours: 0),
+    );
+
+    RecordListAndAllCount recordListAndAllCount = RecordListAndAllCount(
+      recordList: jsonResponse["searchInformation"]["totalResults"] != '0'
+          ? Record.recordListFromSearchJson(jsonResponse["items"])
+          : [],
+      allCount: int.parse(jsonResponse["searchInformation"]["totalResults"]),
+    );
+
+    // if (jsonResponse['queries'].containsKey('nextPage')) {
+    //   _startIndex = jsonResponse['queries']['nextPage'][0]['startIndex'];
+    // } else {
+    //   _startIndex = 1;
+    // }
+
+
+    return recordListAndAllCount;
+  }
+
+
 }

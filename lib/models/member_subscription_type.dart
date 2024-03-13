@@ -1,3 +1,4 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:readr_app/helpers/enum_parser.dart';
 
 const List<SubscriptionType> premiumSubscriptionType = [
@@ -9,16 +10,28 @@ const List<SubscriptionType> premiumSubscriptionType = [
 ];
 
 enum SubscriptionType {
+  @JsonValue('none')
   none,
+  @JsonValue('marketing')
   marketing,
-  subscribe_one_time, // ignore: constant_identifier_names
-  subscribe_monthly, // ignore: constant_identifier_names
-  subscribe_yearly, // ignore: constant_identifier_names
-  subscribe_group, // ignore: constant_identifier_names
+  @JsonValue('subscribe_one_time')
+  subscribe_one_time,
+  @JsonValue('subscribe_monthly') // ignore: constant_identifier_names
+  subscribe_monthly,
+  @JsonValue('subscribe_yearly') // ignore: constant_identifier_names
+  subscribe_yearly,
+  @JsonValue('subscribe_group') // ignore: constant_identifier_names
+  subscribe_group,
+  @JsonValue('staff') // ignore: constant_identifier_names
   staff
 }
 
-enum MemberStateType { active, inactive }
+enum MemberStateType {
+  @JsonValue('active')
+  active,
+  @JsonValue('inactive')
+  inactive
+}
 
 class MemberIdAndSubscriptionType {
   final String? israfelId;

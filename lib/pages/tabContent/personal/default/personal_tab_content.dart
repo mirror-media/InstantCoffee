@@ -28,11 +28,9 @@ import 'package:readr_app/services/personal_subscription_service.dart';
 import 'package:readr_app/widgets/newsMarquee/news_marquee_persistent_header_delegate.dart';
 
 class PersonalTabContent extends StatefulWidget {
-  final ScrollController scrollController;
-
   const PersonalTabContent({
-    required this.scrollController,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   _PersonalTabContentState createState() => _PersonalTabContentState();
@@ -48,6 +46,9 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
   );
 
   @override
+  void initState() {}
+
+  @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
@@ -59,7 +60,6 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
         ),
       ],
       child: CustomScrollView(
-        controller: widget.scrollController,
         slivers: [
           if (!_remoteConfigHelper.isNewsMarqueePin)
             SliverPersistentHeader(

@@ -1,0 +1,32 @@
+[
+    {
+        "slug": "latest",
+        "name": "最新",
+        "focus": true,
+        "sortOrder": 0,
+        "type": "section"
+
+    },
+    {
+        "slug": "popular",
+        "name": "熱門",
+        "focus": false,
+        "sortOrder": 0,
+        "type": "section"
+    },
+    {
+        "slug": "personal",
+        "name": "個人頁面",
+        "focus": false,
+        "sortOrder": 0,
+        "type": "section"
+    },
+    {
+        "slug": "Podcasts",
+        "name": "Podcasts",
+        "focus": false,
+        "sortOrder": 0,
+        "type": "section"
+    }
+
+]

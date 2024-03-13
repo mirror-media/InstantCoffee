@@ -17,12 +17,11 @@ import 'package:readr_app/widgets/newsMarquee/news_marquee_persistent_header_del
 
 class ListeningTabContent extends StatefulWidget {
   final Section section;
-  final ScrollController scrollController;
 
   const ListeningTabContent({
+    Key? key,
     required this.section,
-    required this.scrollController,
-  });
+  }) : super(key: key);
 
   @override
   _ListeningTabContentState createState() => _ListeningTabContentState();
@@ -32,13 +31,17 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
   final RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
   late ListeningTabContentBloc _listeningTabContentBloc;
 
+  late ScrollController scrollController;
+
   @override
   void initState() {
+    // 'videohub'
     _listeningTabContentBloc =
         ListeningTabContentBloc(widget.section.sectionAd!);
-    widget.scrollController.addListener(() {
-      if (widget.scrollController.position.pixels ==
-          widget.scrollController.position.maxScrollExtent) {
+    scrollController = ScrollController();
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
         // 滾動到底部，觸發加載操作
         _listeningTabContentBloc.loadingMore();
       }
@@ -129,7 +132,7 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
       List<Record> recordList,
       Status status) {
     return CustomScrollView(
-      controller: widget.scrollController,
+      controller: scrollController,
       slivers: [
         if (!_remoteConfigHelper.isNewsMarqueePin)
           SliverPersistentHeader(

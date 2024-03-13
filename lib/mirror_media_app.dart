@@ -9,7 +9,7 @@ import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/iap_subscription_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
-import 'package:readr_app/pages/home/home_binding.dart';
+import 'package:readr_app/pages/root_page/root_binding.dart';
 import 'package:readr_app/services/member_service.dart';
 
 class MirrorMediaApp extends StatefulWidget {
@@ -72,7 +72,7 @@ class _MirrorMediaAppState extends State<MirrorMediaApp> {
                   color: Colors.white,
                   fontWeight: FontWeight.w500)),
         ),
-        initialBinding: HomeBinding(),
+        initialBinding: RootBinding(),
         initialRoute: RouteGenerator.root,
         onGenerateRoute: RouteGenerator.generateRoute,
       ),

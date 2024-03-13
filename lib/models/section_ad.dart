@@ -4,12 +4,11 @@ class SectionAd {
   final String aT3UnitId;
   final String stUnitId;
 
-  SectionAd({
-    required this.aT1UnitId,
-    required this.aT2UnitId,
-    required this.aT3UnitId,
-    required this.stUnitId
-  });
+  SectionAd(
+      {required this.aT1UnitId,
+      required this.aT2UnitId,
+      required this.aT3UnitId,
+      required this.stUnitId});
 
   factory SectionAd.fromJson(Map<String, dynamic> json) {
     return SectionAd(

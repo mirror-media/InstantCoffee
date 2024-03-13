@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/api_base_helper.dart';
 import 'package:readr_app/helpers/app_exception.dart';
 import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/graphql_body.dart';
 import 'package:readr_app/models/member.dart';
 import 'package:readr_app/models/member_subscription_detail.dart';
@@ -15,12 +15,17 @@ const String memberStateTypeIsNotActive = 'Member state type is not active';
 
 abstract class MemberRepos {
   Future<MemberIdAndSubscriptionType?> checkSubscriptionType(User user);
+
   Future<bool> createMember(String email, String firebaseId, String token);
+
   Future<Member> fetchMemberInformation(String firebaseId, String token);
+
   Future<MemberSubscriptionDetail> fetchMemberSubscriptionDetail(
       String firebaseId, String token);
+
   Future<bool> updateMemberProfile(String israfelId, String token, String? name,
       Gender? gender, String? birthday);
+
   Future<bool> updateMemberContactInfo(
       String israfelId,
       String token,
@@ -29,6 +34,7 @@ abstract class MemberRepos {
       String? city,
       String? district,
       String? address);
+
   Future<bool> deleteMember(String israfelId, String token);
 }
 
@@ -49,8 +55,9 @@ class MemberService implements MemberRepos {
   @override
   Future<MemberIdAndSubscriptionType?> checkSubscriptionType(User user) async {
     String? token = await user.getIdToken();
-    if(token ==null)
+    if (token == null) {
       return null;
+    }
 
     String query = """
     query checkSubscriptionType(\$firebaseId: String!) {
@@ -109,6 +116,7 @@ class MemberService implements MemberRepos {
         memberIdAndSubscriptionType.subscriptionType = SubscriptionType.staff;
       }
     }
+
     return memberIdAndSubscriptionType;
   }
 

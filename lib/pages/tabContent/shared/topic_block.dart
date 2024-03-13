@@ -4,17 +4,16 @@ import 'package:get/get.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
-import 'package:readr_app/pages/home/home_controller.dart';
+import 'package:readr_app/pages/root_page/root_controller.dart';
 
 import '../../../helpers/route_generator.dart';
 import '../../../models/topic/topic_model.dart';
 import '../../top_list_page/topic_list_binding.dart';
 import '../../top_list_page/topic_list_page.dart';
 
-
 class TopicBlock extends StatelessWidget {
   final bool isPremium;
-  final HomeController controller = Get.find();
+  final RootController controller = Get.find();
 
   TopicBlock({Key? key, this.isPremium = false}) : super(key: key);
 
@@ -108,7 +107,6 @@ class TopicBlock extends StatelessWidget {
           AdHelper adHelper = AdHelper();
           adHelper.checkToShowInterstitialAd();
         }
-
 
         RouteGenerator.routerToTopicPage(topic: topic);
       },

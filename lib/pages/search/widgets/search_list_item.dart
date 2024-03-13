@@ -3,14 +3,15 @@ import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/record.dart';
 
-import '../../widgets/custom_cached_network_image.dart';
+import '../../../widgets/custom_cached_network_image.dart';
 
 class SearchListItem extends StatelessWidget {
   final Record record;
 
   const SearchListItem({
+    Key? key,
     required this.record,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
