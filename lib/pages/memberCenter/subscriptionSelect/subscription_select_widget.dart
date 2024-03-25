@@ -15,8 +15,8 @@ import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/models/payment_record.dart';
 import 'package:readr_app/models/subscription_detail.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/buying_success_widget.dart';
-import 'package:readr_app/pages/memberCenter/subscriptionSelect/verify_purchase_fail_widget.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/hint_to_other_platform.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionSelect/verify_purchase_fail_widget.dart';
 import 'package:readr_app/widgets/logger.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -190,14 +190,14 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
     }
 
     int originalPrice = 99;
-    int specialPrice = 50;
+    int specialPrice = 80;
 
     return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: Colors.white,
           boxShadow: const [
-            BoxShadow(color: Colors.grey, spreadRadius: 1,blurRadius: 10),
+            BoxShadow(color: Colors.grey, spreadRadius: 1, blurRadius: 10),
           ],
         ),
         child: Padding(

@@ -173,6 +173,7 @@ class LoginServices with Logger implements LoginRepos {
   @override
   Future<void> signOut() async {
     await _auth.signOut();
+    await GoogleSignIn().disconnect();
   }
 
   static bool checkIsEmailAndPasswordLogin() {
