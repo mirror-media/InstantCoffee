@@ -419,7 +419,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
 
   void _signInTransition() async {
     MemberIdAndSubscriptionType? memberIdAndSubscriptionType =
-    await _memberService.checkSubscriptionType(_auth.currentUser!);
+        await _memberService.checkSubscriptionType(_auth.currentUser!);
     if (memberIdAndSubscriptionType != null &&
         premiumSubscriptionType
             .contains(memberIdAndSubscriptionType.subscriptionType)) {
