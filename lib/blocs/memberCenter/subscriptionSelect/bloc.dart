@@ -5,10 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
+import 'package:readr_app/data/providers/auth_info_provider.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/helpers/iap_subscription_helper.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
@@ -25,6 +27,7 @@ class SubscriptionSelectBloc
   final String? storySlug;
 
   late StreamSubscription<PurchaseDetails> _buyingPurchaseSubscription;
+  final AuthInfoProvider _authInfoProvider = Get.find();
 
   SubscriptionSelectBloc(
       {required this.subscriptionSelectRepos,
@@ -153,6 +156,7 @@ class SubscriptionSelectBloc
     } else if (purchaseDetails.status == PurchaseStatus.purchased) {
       bool isSuccess =
           await _iapSubscriptionHelper.verifyEntirePurchase(purchaseDetails);
+
       Fluttertoast.showToast(
           msg: '變更方案成功',
           toastLength: Toast.LENGTH_SHORT,
@@ -161,6 +165,7 @@ class SubscriptionSelectBloc
           backgroundColor: Colors.green,
           textColor: Colors.white,
           fontSize: 16.0);
+      _authInfoProvider.updateJWTToken();
 
       if (isSuccess) {
         emit(SubscriptionSelectState.buyingSuccess(storySlug: storySlug));
