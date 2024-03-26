@@ -40,15 +40,6 @@ class JoinMemberBlock extends StatelessWidget {
                 color: appColor,
               ),
             ),
-            const SizedBox(height: 12),
-            const Text(
-              '即日起加入年費會員  月月抽sony旗艦機',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Color(0xff9B9B9B),
-              ),
-            ),
             const SizedBox(height: 24),
             Container(
               decoration: BoxDecoration(
@@ -59,7 +50,7 @@ class JoinMemberBlock extends StatelessWidget {
               child: Column(
                 children: [
                   const Text(
-                    '限時優惠每月\$50元',
+                    '限時優惠每月\$80元',
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w400,
