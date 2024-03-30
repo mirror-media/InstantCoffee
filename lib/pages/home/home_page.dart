@@ -21,7 +21,7 @@ class HomePage extends GetView<HomeController> {
               children: [
                 Obx(() {
                   final recordList = controller.rxNewsMarqueeList;
-                  return controller.headerBarController.remoteConfigHelper
+                  return controller.remoteConfigHelper
                               .isNewsMarqueePin &&
                           recordList.isNotEmpty
                       ? Container(

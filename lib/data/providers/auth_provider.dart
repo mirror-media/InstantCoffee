@@ -17,7 +17,6 @@ class AuthProvider extends GetxController {
   final RxBool isLogin = false.obs;
   late String? idToken;
   final RxnString accessToken = RxnString();
-
   final Rxn<MemberInfo> rxnMemberInfo = Rxn();
 
   User? userIndex;
@@ -68,6 +67,7 @@ class AuthProvider extends GetxController {
       accessToken.value =
           await authApiProvider.getAccessTokenByIdToken(idToken!);
       rxnMemberInfo.value = await authApiProvider.checkSubscriptionType(user);
+
     }
   }
 }

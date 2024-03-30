@@ -208,6 +208,7 @@ flutter:
     - packages/constants/countries.json
     - packages/constants/taiwan-districts.json
     - assets/data/menu.json
+    - assets/data/default_header_section.json
     - assets/data/defaultNotificationList.json
     - assets/image/podcast/play_icon.png
     - assets/image/podcast/stop_icon.png
@@ -237,11 +238,16 @@ flutter:
     - assets/image/magazine/my_book.png
     - assets/image/magazine/pubu.png
     - assets/image/magazine/readmoo.png
+    - assets/image/icon_donate.png
+    - assets/image/facebook_share_icon.png
+    - assets/image/line_share_icon.png
+    - assets/image/link_share_icon.png
     - assets/image/magazine/book_icon.svg
     # member subscription
     - assets/image/badge.png
     - assets/image/member/subscription_icon.png
     - assets/image/member/subscribe_banner_mobile.jpg
+
 
 
 

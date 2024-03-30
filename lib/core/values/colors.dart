@@ -12,3 +12,4 @@ const Color appBarCategoryTextColor = Color(0xFF1D9FB8);
 const Color appBarCategorySelectColor = Colors.black;
 const Color appBarCategoryPremiumTextColor = Colors.white;
 const Color appBarCategoryPremiumSelectColor = Colors.black;
+const Color appDeepBlue = Color(0xFF054F77);

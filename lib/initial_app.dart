@@ -19,6 +19,8 @@ import 'package:readr_app/services/email_sign_in_service.dart';
 import 'package:readr_app/widgets/logger.dart';
 
 class InitialApp extends StatefulWidget {
+  const InitialApp({Key? key}) : super(key: key);
+
   @override
   _InitialAppState createState() => _InitialAppState();
 }

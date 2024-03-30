@@ -10,8 +10,7 @@ import 'package:readr_app/models/header/header.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section_ad.dart';
 import 'package:readr_app/pages/home/home_controller.dart';
-import 'package:readr_app/pages/home/widgets/header_bar/header_bar_controller.dart';
-
+import 'package:readr_app/routes/routes.dart';
 import '../../models/header/header_category.dart';
 
 class TabContentController extends GetxController {
@@ -29,7 +28,6 @@ class TabContentController extends GetxController {
   }
 
   final HomeController homeController = Get.find();
-  final HeaderBarController headerBarController = Get.find();
   Worker? sectionWorker;
   Worker? categoryWorker;
 
@@ -62,7 +60,7 @@ class TabContentController extends GetxController {
     sectionWorker =
         ever<Header?>(homeController.rxCurrentHeader, headerUpdateEvent);
     categoryWorker = ever<HeaderCategory?>(
-        headerBarController.rxCurrentCategory, categoryUpdateEvent);
+        homeController.rxCurrentCategory, categoryUpdateEvent);
     page = 1;
     AdHelper adHelper = AdHelper();
     rxnSectionAd.value =
@@ -72,6 +70,8 @@ class TabContentController extends GetxController {
     } else {
       fetchArticleList();
     }
+
+    scrollController.addListener(scrollEvent);
   }
 
   void scrollEvent() {
@@ -111,15 +111,9 @@ class TabContentController extends GetxController {
     if (record.slug == null) {
       return;
     }
-    if (record.isExternal) {
-      RouteGenerator.navigateToExternalStory(record.slug!, isPremiumMode: true);
-    } else {
-      RouteGenerator.navigateToStory(
-        record.slug!,
-        isMemberCheck: record.isMemberCheck,
-        url: record.url,
-      );
-    }
+    Get.toNamed(Routes.articlePage,
+        arguments: {'record': record}, id: Routes.navigationKey);
+    return;
   }
 
   @override

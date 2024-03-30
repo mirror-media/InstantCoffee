@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:readr_app/core/values/image_path.dart';
 import 'package:readr_app/core/values/colors.dart';
-import 'package:readr_app/models/header/header.dart';
-import 'package:readr_app/models/header/header_category.dart';
+import 'package:readr_app/core/values/image_path.dart';
 import 'package:readr_app/pages/home/home_controller.dart';
-import 'package:readr_app/pages/home/widgets/header_bar/header_bar_controller.dart';
 
 import 'widgets/triangle_tab_indicator.dart';
 
@@ -76,38 +73,40 @@ class HeaderBar extends StatelessWidget {
             ),
           );
         }),
-        // Obx(() {
-        //   final isPremium =
-        //       controller.authProvider.rxnMemberInfo.value?.isPremiumMember;
-        //   return Container(
-        //     color: isPremium == true
-        //         ? appBarCategoryPremiumColor
-        //         : appBarCategoryColor,
-        //     height: 56,
-        //     child: Obx(() {
-        //       final categoryList = controller.rxCategoryList;
-        //       return Padding(
-        //         padding: const EdgeInsets.symmetric(horizontal: 20),
-        //         child: TabBar(
-        //             tabAlignment: TabAlignment.start,
-        //             controller: controller.categoryTabController,
-        //             isScrollable: true,
-        //             dividerColor: Colors.transparent,
-        //             indicatorColor: Colors.transparent,
-        //             unselectedLabelColor: isPremium==true
-        //                 ? appBarCategoryPremiumTextColor
-        //                 : appBarCategoryTextColor,
-        //             labelColor: isPremium == true
-        //                 ? appBarCategoryPremiumSelectColor
-        //                 : appBarCategorySelectColor,
-        //             tabs: categoryList
-        //                 .map((element) => Tab(text: element.name))
-        //                 .toList()),
-        //       );
-        //     }),
-        //   );
-        // })
+        Obx(() {
+          final isPremium =
+              controller.authProvider.rxnMemberInfo.value?.isPremiumMember;
+          final barHeight =controller.rxAppBarHeight.value;
+          return Container(
+            color: isPremium == true
+                ? appBarCategoryPremiumColor
+                : appBarCategoryColor,
+            height: barHeight,
+            child: Obx(() {
+              final categoryList = controller.rxCategoryList;
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: TabBar(
+                    tabAlignment: TabAlignment.start,
+                    controller: controller.categoryTabController,
+                    isScrollable: true,
+                    dividerColor: Colors.transparent,
+                    indicatorColor: Colors.transparent,
+                    unselectedLabelColor: isPremium==true
+                        ? appBarCategoryPremiumTextColor
+                        : appBarCategoryTextColor,
+                    labelColor: isPremium == true
+                        ? appBarCategoryPremiumSelectColor
+                        : appBarCategorySelectColor,
+                    tabs: categoryList
+                        .map((element) => Tab(text: element.name))
+                        .toList()),
+              );
+            }),
+          );
+        })
       ],
     );
+
   }
 }

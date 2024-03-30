@@ -6,6 +6,7 @@ class ExternalStory {
   String? slug;
   String? publishedDate;
   String? extendByLine;
+  String? brief;
   String? heroImage;
   String? content;
   bool? showOnIndex;
@@ -18,6 +19,7 @@ class ExternalStory {
       this.extendByLine,
       this.heroImage,
       this.content,
+      this.brief,
       this.showOnIndex});
 
   factory ExternalStory.fromJsonK6(Map<String, dynamic> json) {
@@ -38,6 +40,7 @@ class ExternalStory {
       extendByLine: json['extend_byline'],
       heroImage: photoUrl,
       content: json['content'],
+      brief: json['brief'],
       showOnIndex: showOnIndex,
     );
   }

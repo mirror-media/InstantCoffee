@@ -46,9 +46,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
           children: [
             BlocProvider(
               create: (context) => SectionCubit(sectionRepos: SectionService()),
-              child: RootPage(
-                settingKey: _settingKey,
-              ),
+              child: const RootPage(),
             ),
             if (isOnBoarding && onBoardingPosition != null)
               GestureDetector(

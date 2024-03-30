@@ -218,13 +218,13 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
   }
 
   Future<void> runPremiumAnimation() async {
-    await RouteGenerator.navigatorKey.currentState!
-        .pushReplacement(PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          AnimatePage(transitionAnimation: animation),
-      transitionDuration: const Duration(milliseconds: 1500),
-      reverseTransitionDuration: const Duration(milliseconds: 1000),
-    ));
+    // await RouteGenerator.navigatorKey.currentState!
+    //     .pushReplacement(PageRouteBuilder(
+    //   pageBuilder: (context, animation, secondaryAnimation) =>
+    //       AnimatePage(transitionAnimation: animation),
+    //   transitionDuration: const Duration(milliseconds: 1500),
+    //   reverseTransitionDuration: const Duration(milliseconds: 1000),
+    // ));
   }
 
   void _navigateToRouteName(SubscriptionType subscriptionType) async {

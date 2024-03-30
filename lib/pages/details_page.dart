@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:readr_app/core/values/string.dart';
 import '../helpers/url_launcher.dart';
 import '../models/story.dart';
 
 class DetailPage extends StatelessWidget {
   final Story record;
+
   const DetailPage({required this.record});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(record.title),
+          title: Text(record.title ?? StringDefault.valueNullDefault),
         ),
         body: ListView(children: <Widget>[
           Hero(
             tag: "avatar_${record.title}",
             child: Image.network(
-              record.heroImage,
+              record.heroImage ?? StringDefault.valueNullDefault,
             ),
           ),
           GestureDetector(
@@ -38,7 +40,7 @@ class DetailPage extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.only(bottom: 8.0),
                             child: Text(
-                              record.title,
+                              record.title ?? StringDefault.valueNullDefault,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),

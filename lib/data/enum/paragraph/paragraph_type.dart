@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 enum ParagraphType {
@@ -5,6 +6,8 @@ enum ParagraphType {
   headerOne,
   @JsonValue('header-two')
   headerTwo,
+  @JsonValue('header-three')
+  headerThree,
   @JsonValue('code-block')
   codeBlock,
   @JsonValue('unstyled')
@@ -37,3 +40,4 @@ enum ParagraphType {
   quoteBy,
   unKnow
 }
+

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="966ea5a7-4371-4748-a4eb-e802c728f76c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/lib/data/enum/member_level.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Flutter/AppFrameworkInfo.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Flutter/AppFrameworkInfo.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Podfile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/blocs/login/bloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/blocs/login/bloc.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/blocs/storyPage/news/bloc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/blocs/storyPage/news/bloc.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/configs/baseConfig.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/configs/baseConfig.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/values/colors.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/values/colors.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/values/image_path.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/values/image_path.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/values/query.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/values/query.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/enum/paragraph/paragraph_type.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/enum/paragraph/paragraph_type.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/providers/articles_api_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/providers/articles_api_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/providers/auth_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/providers/auth_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/helpers/route_generator.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/helpers/route_generator.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/initial_app.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/initial_app.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/mirror_media_app.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/mirror_media_app.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/models/content.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/models/content.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/models/external_story.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/models/external_story.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/models/paragraph.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/models/paragraph.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/models/story.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/models/story.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/details_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/details_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/home/home_binding.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/home/home_binding.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/home/home_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/home/home_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/home/home_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/home/home_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/home/premium/premium_home_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/home/premium/premium_home_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/home/widgets/header_bar/header_bar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/home/widgets/header_bar/header_bar.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/home/widgets/header_bar/header_bar_controller.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/latest_page/latest_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/latest_page/latest_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/latest_page/latest_page_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/latest_page/latest_page_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/login/login_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/login/login_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/on_boarding_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/on_boarding_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/root_page/root_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/root_page/root_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/root_page/root_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/root_page/root_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/search/search_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/search/search_widget.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/shared/premium_animate_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/shared/premium_animate_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/storyPage/news/build_story_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/storyPage/news/build_story_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/storyPage/news/premium_story_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/storyPage/news/premium_story_widget.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/storyPage/news/story_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/storyPage/news/story_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/storyPage/news/story_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/storyPage/news/story_widget.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/tabContent/news/premium_tab_content.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/tabContent/news/premium_tab_content.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/tab_content/tab_content_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/tab_content/tab_content_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/termsOfService/m_m_terms_of_service_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/termsOfService/m_m_terms_of_service_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/termsOfService/m_m_terms_of_service_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/termsOfService/m_m_terms_of_service_widget.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/termsOfService/terms_of_service_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/termsOfService/terms_of_service_widget.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/routes/pages.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/routes/pages.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/routes/routes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/routes/routes.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dart File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "dart.analysis.tool.window.visible": "false",
+    "io.flutter.reload.alreadyRun": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="Flutter.Prod">
+    <configuration name="Dev" type="FlutterRunConfigurationType" factoryName="Flutter">
+      <option name="additionalArgs" value="--flavor dev" />
+      <option name="filePath" value="$PROJECT_DIR$/lib/main_dev.dart" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Prod" type="FlutterRunConfigurationType" factoryName="Flutter">
+      <option name="additionalArgs" value="--flavor prod" />
+      <option name="filePath" value="$PROJECT_DIR$/lib/main_prod.dart" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Flutter.Prod" />
+      <item itemvalue="Flutter.Dev" />
+    </list>
+  </component>
+  <component name="TaskManager">
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/lib/pages/article_page/article_controller.dart</url>
+          <line>91</line>
+          <option name="timeStamp" value="159" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/lib/pages/article_page/article_controller.dart</url>
+          <line>98</line>
+          <option name="timeStamp" value="160" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="dart-exception" />
+      </default-breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

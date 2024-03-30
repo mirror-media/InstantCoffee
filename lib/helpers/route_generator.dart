@@ -11,6 +11,8 @@ import 'package:readr_app/initial_app.dart';
 import 'package:readr_app/models/magazine.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/models/tag.dart';
+import 'package:readr_app/pages/article_page/article_binding.dart';
+import 'package:readr_app/pages/article_page/article_page.dart';
 import 'package:readr_app/pages/emailLogin/email_login_page.dart';
 import 'package:readr_app/pages/emailRegistered/email_registered_page.dart';
 import 'package:readr_app/pages/emailVerification/email_verification_page.dart';
@@ -35,6 +37,7 @@ import 'package:readr_app/pages/storyPage/listening/listening_story_page.dart';
 import 'package:readr_app/pages/storyPage/news/story_page.dart';
 import 'package:readr_app/pages/tag/tag_page.dart';
 import 'package:readr_app/pages/topic_page/topic_page.dart';
+import 'package:readr_app/routes/routes.dart';
 import 'package:readr_app/widgets/image_viewer_widget.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -69,11 +72,14 @@ class RouteGenerator {
   static const String tagPage = '/tag';
   static const String imageViewer = '/imageViewer';
 
-  static Route<dynamic> generateRoute(RouteSettings settings) {
+  static Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case root:
-        return MaterialPageRoute(
-            settings: settings, builder: (_) => InitialApp());
+        return GetPageRoute(
+          page: ()=> const InitialApp(),
+          settings: settings
+        );
+
       case search:
         return MaterialPageRoute(
           settings: settings,
@@ -199,17 +205,17 @@ class RouteGenerator {
           builder: (_) => PremiumSettingPage(),
           fullscreenDialog: true,
         );
-      case story:
-        Map args = settings.arguments as Map;
-        // Validation of correct data type
-        if (args['slug'] is String) {
-          return MaterialPageRoute(
-            builder: (context) => StoryPage(
-              slug: args['slug'],
-              isMemberCheck: args['isMemberCheck'],
-            ),
-          );
-        }
+      // case story:
+      //   Map args = settings.arguments as Map;
+      //   // Validation of correct data type
+      //   if (args['slug'] is String) {
+      //     return MaterialPageRoute(
+      //       builder: (context) => StoryPage(
+      //         slug: args['slug'],
+      //         isMemberCheck: args['isMemberCheck'],
+      //       ),
+      //     );
+      //   }
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
         return _errorRoute(settings);

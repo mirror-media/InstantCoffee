@@ -21,13 +21,15 @@ export 'states.dart';
 
 class StoryBloc extends Bloc<StoryEvents, StoryState> with Logger {
   final StoryRepos storyRepos;
+
   StoryBloc({required String storySlug, required this.storyRepos})
       : super(StoryState.init(storySlug: storySlug)) {
     on<FetchPublishedStoryBySlug>(_fetchPublishedStoryBySlug);
   }
 
   final ErrorLogHelper _errorLogHelper = ErrorLogHelper();
-  final ArticlesApiProvider articlesApiProvider=Get.find();
+  final ArticlesApiProvider articlesApiProvider = Get.find();
+
   _fetchPublishedStoryBySlug(
     FetchPublishedStoryBySlug event,
     Emitter<StoryState> emit,
@@ -39,7 +41,7 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> with Logger {
 
       StoryRes? storyRes =
           await articlesApiProvider.getArticleInfoBySlug(slug: event.slug);
-      if (storyRes!=null) {
+      if (storyRes != null) {
         Story story = storyRes.story;
 
         String storyAdJsonFileLocation = Platform.isIOS
@@ -49,11 +51,12 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> with Logger {
         // ? 'assets/data/iOSTestStoryAd.json'
         // : 'assets/data/androidTestStoryAd.json';
         String storyAdString =
-        await rootBundle.loadString(storyAdJsonFileLocation);
+            await rootBundle.loadString(storyAdJsonFileLocation);
         final storyAdMaps = json.decode(storyAdString);
 
         story.storyAd = StoryAd.fromJson(storyAdMaps['other']);
-        for (int i = 0; i < story.sections.length; i++) {
+        final section = story.sections ?? [];
+        for (int i = 0; i < section.length; i++) {
           String? sectionName = story.getSectionName();
 
           if (sectionName != null && storyAdMaps[sectionName] != null) {

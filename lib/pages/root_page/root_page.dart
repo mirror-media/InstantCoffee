@@ -6,11 +6,10 @@ import 'package:readr_app/routes/pages.dart';
 import 'package:readr_app/routes/routes.dart';
 
 class RootPage extends GetView<RootController> with WidgetsBindingObserver {
-  final GlobalKey settingKey;
 
   const RootPage({
     Key? key,
-    required this.settingKey,
+
   }) : super(key: key);
 
   @override
@@ -18,7 +17,7 @@ class RootPage extends GetView<RootController> with WidgetsBindingObserver {
     return SafeArea(
       child: Scaffold(
         body: Navigator(
-          key: Get.nestedKey(1),
+          key: Get.nestedKey(Routes.navigationKey),
           initialRoute: Routes.home,
           onGenerateRoute: Pages.onGenerateRoute,
         ),

@@ -52,4 +52,5 @@ abstract class BaseConfig {
   String get electionPath;
   String get electionGetMoreLink;
   String get appBarHeaderPath;
+  String get donateLink;
 }

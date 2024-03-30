@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/routes/routes.dart';
 
 class AnimatePage extends StatefulWidget {
   final Animation<double> transitionAnimation;
+
   const AnimatePage({Key? key, required this.transitionAnimation})
       : super(key: key);
 
@@ -15,7 +18,7 @@ class _AnimatePageState extends State<AnimatePage> {
   void initState() {
     widget.transitionAnimation.addStatusListener((status) async {
       if (status == AnimationStatus.completed) {
-        Navigator.of(context).pop();
+        // Get.offAndToNamed(Routes.home,id: 1);
       }
     });
     super.initState();

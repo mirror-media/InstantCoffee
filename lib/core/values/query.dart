@@ -82,9 +82,9 @@ class QueryDB {
       where: {
        slug: "%s"})
         {
-          
           slug
           title
+          subtitle
           publishedDate
           updatedAt
           heroVideo{
@@ -168,6 +168,7 @@ class QueryDB {
               id
               name
           }
+          extend_byline
           apiData
           trimmedApiData
           apiDataBrief

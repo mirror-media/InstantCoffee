@@ -10,6 +10,8 @@ import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/iap_subscription_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/pages/root_page/root_binding.dart';
+import 'package:readr_app/routes/pages.dart';
+import 'package:readr_app/routes/routes.dart';
 import 'package:readr_app/services/member_service.dart';
 
 class MirrorMediaApp extends StatefulWidget {

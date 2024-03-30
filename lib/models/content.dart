@@ -3,13 +3,14 @@ class Content {
   double? aspectRatio;
   String? description;
   List<List<String>>? tableData;
+  List<dynamic>? listData;
 
-  Content({
-    this.data,
-    this.aspectRatio,
-    this.description,
-    this.tableData,
-  });
+  Content(
+      {this.data,
+      this.aspectRatio,
+      this.description,
+      this.tableData,
+      this.listData});
 
   factory Content.fromJson(dynamic json, String? type) {
     if (type == 'table') {
@@ -20,9 +21,16 @@ class Content {
       }).toList();
 
       return Content(tableData: result);
+    } else if (type == 'ordered-list-item') {
+      return Content(
+        listData: json,
+      );
+    } else if (type == 'unordered-list-item') {
+      return Content(data: json);
     }
 
     if (json is Map<String, dynamic>) {
+      print(type);
       switch (type) {
         case 'infobox':
           return Content(
@@ -30,6 +38,7 @@ class Content {
             aspectRatio: null,
             description: json['title'],
           );
+
         case 'video-v2':
           return Content(
             data: json['video']['videoSrc'],
@@ -37,8 +46,8 @@ class Content {
             description: json['name'],
           );
         case 'audio-v2':
-          return Content (
-            data:json['audio']['audioSrc'],
+          return Content(
+            data: json['audio']['audioSrc'],
             description: json['audio']['name'],
           );
       }
@@ -108,6 +117,10 @@ class Content {
   static List<Content> contentListFromJson(
       List<dynamic> jsonList, String? type) {
     List<Content> contentList = [];
+
+    if (type == 'slideshow' || type == 'slideshow-v2') {
+      print('hello world');
+    }
 
     if (type == 'slideshow-v2') {
       final imagesList = jsonList[0]['images'] as List<dynamic>;

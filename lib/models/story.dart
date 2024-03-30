@@ -8,67 +8,67 @@ import 'package:readr_app/models/story_ad.dart';
 import 'package:readr_app/models/tag.dart';
 
 class Story {
-  String title;
-  String subtitle;
-  String slug;
-  String publishedDate;
-  String updatedAt;
-  String createTime;
-  String heroImage;
+  String? title;
+  String? subtitle;
+  String? slug;
+  String? publishedDate;
+  String? updatedAt;
+  String? createTime;
+  String? heroImage;
   String? heroVideo;
-  List<Record> relatedStory;
+  List<Record>? relatedStory;
   String? heroCaption;
   String? extendByline;
-  List<Tag> tags;
-  List<People> writers;
-  List<People> photographers;
-  List<People> cameraMen;
-  List<People> designers;
-  List<People> engineers;
-  List<Paragraph> brief;
-  List<Paragraph> apiData;
-  List<Paragraph> trimmedApiData;
-  List<Category> categories;
-  List<Section> sections;
-  bool isAdult;
-  bool isAdvertised;
-  bool isMember;
-  bool isTruncated;
+  List<Tag>? tags;
+  List<People>? writers;
+  List<People>? photographers;
+  List<People>? cameraMen;
+  List<People>? designers;
+  List<People>? engineers;
+  List<Paragraph>? brief;
+  List<Paragraph>? apiData;
+  List<Paragraph>? trimmedApiData;
+  List<Category>? categories;
+  List<Section>? sections;
+  bool? isAdult;
+  bool? isAdvertised;
+  bool? isMember;
+  bool? isTruncated;
 
   String? state;
-  List<String> imageUrlList;
+  List<String>? imageUrlList;
 
   StoryAd? storyAd;
 
   Story({
-    required this.title,
-    required this.subtitle,
-    required this.slug,
-    required this.publishedDate,
-    required this.updatedAt,
-    required this.createTime,
-    required this.heroImage,
-    required this.heroVideo,
-    required this.relatedStory,
-    required this.heroCaption,
-    required this.extendByline,
-    required this.tags,
-    required this.brief,
-    required this.apiData,
-    required this.trimmedApiData,
-    required this.writers,
-    required this.photographers,
-    required this.cameraMen,
-    required this.designers,
-    required this.engineers,
-    required this.categories,
-    required this.sections,
-    required this.isAdult,
-    required this.isAdvertised,
-    required this.isMember,
-    required this.isTruncated,
-    required this.state,
-    required this.imageUrlList,
+    this.title,
+    this.subtitle,
+    this.slug,
+    this.publishedDate,
+    this.updatedAt,
+    this.createTime,
+    this.heroImage,
+    this.heroVideo,
+    this.relatedStory,
+    this.heroCaption,
+    this.extendByline,
+    this.tags,
+    this.brief,
+    this.apiData,
+    this.trimmedApiData,
+    this.writers,
+    this.photographers,
+    this.cameraMen,
+    this.designers,
+    this.engineers,
+    this.categories,
+    this.sections,
+    this.isAdult,
+    this.isAdvertised,
+    this.isMember,
+    this.isTruncated,
+    this.state,
+    this.imageUrlList,
     this.storyAd,
   });
 
@@ -158,14 +158,14 @@ class Story {
 
     return Story(
       title: title,
-      subtitle: json['subtitle'] ?? '',
-      slug: json['slug'] ?? '',
-      publishedDate: json['publishedDate'] ?? '',
-      updatedAt: json['updatedAt'] ?? '',
-      createTime: json['createTime'] ?? '',
+      subtitle: json['subtitle'],
+      slug: json['slug'],
+      publishedDate: json['publishedDate'],
+      updatedAt: json['updatedAt'],
+      createTime: json['createTime'],
       heroImage: photoUrl,
       heroVideo: videoUrl,
-      heroCaption: json["heroCaption"] ?? '',
+      heroCaption: json["heroCaption"],
       extendByline: json["extend_byline"],
       relatedStory: relatedList,
       brief: briefList,
@@ -298,13 +298,22 @@ class Story {
 
   String? getSectionName() {
     String? sectionName;
-    if (sections.any((section) => section.name == 'member')) {
+    if (sections != null &&
+        sections!.any((section) => section.name == 'member')) {
       return 'member';
     }
 
-    if (sections.isNotEmpty) {
-      sectionName = sections[0].name;
+    if (sections != null && sections!.isNotEmpty) {
+      sectionName = sections![0].name;
     }
     return sectionName;
+  }
+
+  String? getSectionTitle() {
+    String? sectionTitle;
+    if (sections != null && sections!.isNotEmpty) {
+      sectionTitle = sections![0].title;
+    }
+    return sectionTitle;
   }
 }

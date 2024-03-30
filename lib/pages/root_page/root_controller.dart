@@ -6,6 +6,7 @@ import 'package:readr_app/data/providers/articles_api_provider.dart';
 import 'package:readr_app/data/providers/auth_provider.dart';
 import 'package:readr_app/models/live_stream_model.dart';
 import 'package:readr_app/pages/home/home_controller.dart';
+import 'package:readr_app/routes/routes.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../helpers/app_link_helper.dart';
@@ -70,14 +71,14 @@ class RootController extends GetxController
         Get.find<HomeController>().gotoPremium();
       } else {
         Get.offAndToNamed(NavigationPage.home.router,
-            id: 1, arguments: {'tab': 'premium'});
+            id: Routes.navigationKey, arguments: {'tab': 'premium'});
       }
     } else if (rxCurrentNavigationPage.value == NavigationPage.bookmark) {
       if (Get.isRegistered<HomeController>()) {
         Get.find<HomeController>().gotoBookmark();
       } else {
         Get.offAndToNamed(NavigationPage.home.router,
-            id: 1, arguments: {'tab': 'bookmark'});
+            id: Routes.navigationKey, arguments: {'tab': 'bookmark'});
       }
     } else {
       Get.offAndToNamed(rxCurrentNavigationPage.value.router, id: 1);

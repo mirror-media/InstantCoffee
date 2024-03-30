@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/core/values/colors.dart';
 import 'package:readr_app/pages/login/login_widget.dart';
+import 'package:readr_app/routes/routes.dart';
 import 'package:readr_app/services/login_service.dart';
 
 class LoginPage extends StatelessWidget {
   final String? routeName;
   final Map? routeArguments;
+
   const LoginPage({
     this.routeName,
     this.routeArguments,
@@ -31,11 +34,6 @@ class LoginPage extends StatelessWidget {
 
   PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios),
-        onPressed: () => Navigator.of(context).pop(),
-      ),
-      centerTitle: true,
       title: const Text('會員中心'),
       backgroundColor: appColor,
     );

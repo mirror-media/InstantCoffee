@@ -6,6 +6,7 @@ import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/live_stream_model.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/section_ad.dart';
+import 'package:readr_app/routes/routes.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class LatestPageController extends GetxController {
@@ -20,7 +21,7 @@ class LatestPageController extends GetxController {
   int page = 1;
   int recordIndex = 0;
   YoutubePlayerController ytStreamController =
-      YoutubePlayerController(initialVideoId: '');
+  YoutubePlayerController(initialVideoId: '');
 
   @override
   void onInit() async {
@@ -55,7 +56,7 @@ class LatestPageController extends GetxController {
   Future<void> fetchMoreRecord() async {
     if (page > 4) return;
     final newRecordList =
-        await articlesApiProvider.getHomePageLatestArticleList(page: page);
+    await articlesApiProvider.getHomePageLatestArticleList(page: page);
     rxStoreRecordList.addAll(newRecordList);
     page++;
   }
@@ -76,6 +77,11 @@ class LatestPageController extends GetxController {
     if (record.slug == null) {
       return;
     }
+    Get.toNamed(
+        Routes.articlePage, arguments: {'record': record}, id: Routes.
+        navigationKey);
+    return;
+
     if (record.isExternal) {
       RouteGenerator.navigateToExternalStory(record.slug!, isPremiumMode: true);
     } else {

@@ -368,7 +368,6 @@ class ArticlesApiProvider extends GetConnect {
     //   _startIndex = 1;
     // }
 
-
     return recordListAndAllCount;
   }
 
