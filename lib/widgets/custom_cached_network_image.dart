@@ -18,15 +18,6 @@ class CustomCachedNetworkImage extends StatelessWidget {
       height: height,
       width: width,
       imageUrl: imageUrl,
-      imageBuilder: (context, imageProvider) => Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: imageProvider,
-              fit: BoxFit.cover,
-              colorFilter:
-                  const ColorFilter.mode(Colors.white, BlendMode.colorBurn)),
-        ),
-      ),
       placeholder: (context, url) => SizedBox(
         height: height,
         width: width,
