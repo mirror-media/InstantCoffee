@@ -130,24 +130,26 @@ class _TabContentState extends State<TabContent> with Logger {
               ),
             ],
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: SafeArea(
-              child: StatefulBuilder(builder: (context, setState) {
-                return isTabContentAdsActivated && _sectionAd != null
-                    ? SizedBox(
-                        height: AdSize.banner.height.toDouble(),
-                        width: AdSize.banner.width.toDouble(),
-                        child: MMAdBanner(
-                          adUnitId: _sectionAd!.stUnitId,
-                          adSize: AdSize.banner,
-                          isKeepAlive: true,
-                        ),
-                      )
-                    : const SizedBox.shrink();
-              }),
-            ),
-          ),
+
+          /// 在Render圖上會造成App crash  後續要再處理
+          // Align(
+          //   alignment: Alignment.bottomCenter,
+          //   child: SafeArea(
+          //     child: StatefulBuilder(builder: (context, setState) {
+          //       return isTabContentAdsActivated && _sectionAd != null
+          //           ? SizedBox(
+          //               height: AdSize.banner.height.toDouble(),
+          //               width: AdSize.banner.width.toDouble(),
+          //               child: MMAdBanner(
+          //                 adUnitId: _sectionAd!.stUnitId,
+          //                 adSize: AdSize.banner,
+          //                 isKeepAlive: true,
+          //               ),
+          //             )
+          //           : const SizedBox.shrink();
+          //     }),
+          //   ),
+          // ),
         ],
       ),
     );
