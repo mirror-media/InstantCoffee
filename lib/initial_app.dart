@@ -25,6 +25,7 @@ class _InitialAppState extends State<InitialApp> with Logger {
   final RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
   final AppUpgradeHelper _appUpgradeHelper = AppUpgradeHelper();
   final StreamController<bool> _configController = StreamController<bool>();
+  final String _deepLinkPath = '/email-handler';
 
   // It cant trigger on iOS, cuz AppsFlyer's code on AppDelegate.swift break this feature.
   // The iOS DynamicLinks method will implement in initialAppsFlyer function.
@@ -33,7 +34,7 @@ class _InitialAppState extends State<InitialApp> with Logger {
         .listen((PendingDynamicLinkData dynamicLink) async {
       final Uri deepLink = dynamicLink.link;
 
-      if (deepLink.path == '/__/auth/action') {
+      if (deepLink.path == _deepLinkPath) {
         if (deepLink.queryParameters['mode'] == 'resetPassword') {
           Navigator.of(context).popUntil((route) => route.isFirst);
           RouteGenerator.navigateToPasswordReset(
@@ -76,7 +77,7 @@ class _InitialAppState extends State<InitialApp> with Logger {
         await FirebaseDynamicLinks.instance.getInitialLink();
     final Uri? deepLink = data?.link;
 
-    if (deepLink != null && deepLink.path == '/__/auth/action') {
+    if (deepLink != null && deepLink.path == _deepLinkPath) {
       if (deepLink.queryParameters['mode'] == 'resetPassword') {
         RouteGenerator.navigateToPasswordReset(
           code: deepLink.queryParameters['oobCode']!,
