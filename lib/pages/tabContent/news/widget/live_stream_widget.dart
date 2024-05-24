@@ -15,23 +15,24 @@ class LiveStreamWidget extends StatelessWidget {
     return Column(
       children: [
         Container(
-            padding: const EdgeInsets.all(8),
-            width: 163,
-            height: 44,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6),
-              color: appColor,
+          padding: const EdgeInsets.all(8),
+          width: 163,
+          height: 50,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6),
+            color: appColor,
+          ),
+          child: Center(
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 24,
+                  color: Colors.white),
             ),
-            child: Center(
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 24,
-                    color: Colors.white),
-              ),
-            )),
+          ),
+        ),
         const SizedBox(height: 24),
         if (ytPlayer != null)
           YoutubePlayer(
