@@ -53,6 +53,13 @@ class _MirrorMediaAppState extends State<MirrorMediaApp> {
           GlobalCupertinoLocalizations.delegate,
           DefaultCupertinoLocalizations.delegate,
         ],
+        builder: (context, widget) {
+          final MediaQueryData data = MediaQuery.of(context);
+          return MediaQuery(
+            data: data.copyWith(textScaler: TextScaler.noScaling),
+            child: widget ?? Container(),
+          );
+        },
         supportedLocales: const [
           Locale('en', 'US'), // English
           Locale('zh', 'TW'), // Traditional Chinese
