@@ -50,7 +50,7 @@ class PasswordResetSuccessWidget extends StatelessWidget {
           ),
           child: const Center(
             child: Text(
-              '返回註冊',
+              '返回登入',
               style: TextStyle(
                 fontSize: 17,
                 color: Colors.black,
