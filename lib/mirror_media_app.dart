@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/iap_subscription_helper.dart';
+import 'package:readr_app/helpers/remote_config_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/pages/home/home_binding.dart';
 import 'package:readr_app/services/member_service.dart';
@@ -20,11 +21,12 @@ class MirrorMediaApp extends StatefulWidget {
 
 class _MirrorMediaAppState extends State<MirrorMediaApp> {
   final IAPSubscriptionHelper _iapSubscriptionHelper = IAPSubscriptionHelper();
-
+  final RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
   @override
   void initState() {
     _iapSubscriptionHelper.setSubscription();
     super.initState();
+    print(_remoteConfigHelper.textScale);
   }
 
   @override
@@ -35,6 +37,7 @@ class _MirrorMediaAppState extends State<MirrorMediaApp> {
 
   @override
   Widget build(BuildContext context) {
+
     // force portrait
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -56,7 +59,7 @@ class _MirrorMediaAppState extends State<MirrorMediaApp> {
         builder: (context, widget) {
           final MediaQueryData data = MediaQuery.of(context);
           return MediaQuery(
-            data: data.copyWith(textScaler: TextScaler.noScaling),
+            data: data.copyWith(textScaler: TextScaler.linear(_remoteConfigHelper.textScale)),
             child: widget ?? Container(),
           );
         },
