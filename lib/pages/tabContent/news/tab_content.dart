@@ -72,6 +72,7 @@ class _TabContentState extends State<TabContent> with Logger {
 
   @override
   Widget build(BuildContext context) {
+    double textScaleFactor = MediaQuery.of(context).textScaleFactor;
     return RefreshIndicator(
       onRefresh: () async {
         _fetchFirstRecordList();
@@ -89,6 +90,7 @@ class _TabContentState extends State<TabContent> with Logger {
                   ),
                   onTap: () => RouteGenerator.navigateToSubscriptionSelect(),
                 ),
+              Text(textScaleFactor.toString()),
               Expanded(
                 child: BlocBuilder<TabContentBloc, TabContentState>(
                     builder: (BuildContext context, TabContentState state) {
