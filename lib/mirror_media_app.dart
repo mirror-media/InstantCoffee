@@ -54,9 +54,12 @@ class _MirrorMediaAppState extends State<MirrorMediaApp> {
           DefaultCupertinoLocalizations.delegate,
         ],
         builder: (context, widget) {
-          final MediaQueryData data = MediaQuery.of(context);
           return MediaQuery(
-            data: data.copyWith(textScaler: TextScaler.noScaling),
+            data: MediaQuery.of(context).copyWith(
+              textScaler: MediaQuery.of(context)
+                  .textScaler
+                  .clamp(minScaleFactor: 1.0, maxScaleFactor: 1.1),
+            ),
             child: widget ?? Container(),
           );
         },
