@@ -114,11 +114,11 @@ class PremiumStoryWidget extends StatelessWidget {
           ),
           const SizedBox(height: 16),
         ],
-        _buildCategoryText(story.sections, story.categories),
+        _buildStoryTitle(story.title),
         const SizedBox(
           height: 8,
         ),
-        _buildStoryTitle(story.title),
+        _buildCategoryText(story.sections, story.categories),
         const SizedBox(
           height: 32,
         ),
@@ -278,7 +278,7 @@ class PremiumStoryWidget extends StatelessWidget {
               }
             },
             child: CustomCachedNetworkImage(
-                 width: width, imageUrl: story.heroImage),
+                width: width, imageUrl: story.heroImage),
           ),
         if (story.heroCaption != null && story.heroCaption != '')
           const Padding(

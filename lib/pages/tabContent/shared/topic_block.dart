@@ -5,11 +5,11 @@ import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/pages/home/home_controller.dart';
+
 import '../../../helpers/route_generator.dart';
 import '../../../models/topic/topic_model.dart';
 import '../../top_list_page/topic_list_binding.dart';
 import '../../top_list_page/topic_list_page.dart';
-
 
 class TopicBlock extends StatelessWidget {
   final bool isPremium;
@@ -25,7 +25,7 @@ class TopicBlock extends StatelessWidget {
   Widget _buildTopicBlock(BuildContext context) {
     return Container(
       color: Colors.white,
-      height: isPremium ? 130 : 138,
+      height: 138,
       padding: EdgeInsets.only(top: isPremium ? 0 : 24),
       child: Column(
         crossAxisAlignment:
@@ -108,11 +108,10 @@ class TopicBlock extends StatelessWidget {
           adHelper.checkToShowInterstitialAd();
         }
 
-
         RouteGenerator.routerToTopicPage(topic: topic);
       },
       child: Container(
-        height: 42,
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(21),
           color: Colors.white,
@@ -121,7 +120,7 @@ class TopicBlock extends StatelessWidget {
             width: 1.0,
           ),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Text(
           '#${topic.name}',
           style: const TextStyle(

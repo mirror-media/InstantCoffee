@@ -216,14 +216,15 @@ class _TabContentState extends State<TabContent> with Logger {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 27),
                           child: RealTimeInvoiceWidget(
-                              isPackage: true,
-                              getMoreButtonClick: () async {
-                                if (!await launchUrl(Uri.parse(Environment()
-                                    .config
-                                    .electionGetMoreLink))) {
-                                  throw Exception('Could not launch');
-                                }
-                              }, width: Get.width-54,),
+                            isPackage: true,
+                            getMoreButtonClick: () async {
+                              if (!await launchUrl(Uri.parse(
+                                  Environment().config.electionGetMoreLink))) {
+                                throw Exception('Could not launch');
+                              }
+                            },
+                            width: Get.width - 54,
+                          ),
                         ),
                         const SizedBox(
                           height: 16.0,
