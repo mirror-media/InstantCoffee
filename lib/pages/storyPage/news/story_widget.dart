@@ -216,17 +216,24 @@ class StoryWidget extends StatelessWidget {
       onTap: categories.isNotEmpty ? () {} : null,
       child: Row(
         children: [
+          Image.asset(
+            'assets/image/mm_logo_for_story.png',
+            width: 20.0,
+            height: 20.0,
+          ),
+          const SizedBox(width: 7),
           Container(
-            width: 10,
-            height: 20,
+            width: 4,
+            height: 15,
             color: sectionColor,
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 7),
           Text(
             (categories.isNotEmpty && categories[0].title != null)
                 ? categories[0].title!
                 : '娛樂頭條',
-            style: const TextStyle(fontSize: 20),
+            style: TextStyle(
+                color: sectionColor, fontSize: 16, fontWeight: FontWeight.w600),
           ),
         ],
       ),
@@ -243,9 +250,11 @@ class StoryWidget extends StatelessWidget {
           Text(
             story.publishedDate.formattedTaipeiDateTime() ??
                 StringDefault.valueNullDefault,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600], /*fontStyle: FontStyle.italic,*/
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color:
+                  Color.fromARGB(128, 0, 0, 0), /*fontStyle: FontStyle.italic,*/
             ),
           ),
         ],
@@ -351,14 +360,6 @@ class StoryWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: Image.asset(
-              'assets/image/mm_logo_for_story.png',
-              width: 32.0,
-              height: 32.0,
-            ),
-          ),
           Expanded(
               child: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
