@@ -51,4 +51,6 @@ abstract class BaseConfig {
   String get podcastAPIPath;
   String get electionPath;
   String get electionGetMoreLink;
+  String get subscriptionLink;
+
 }
