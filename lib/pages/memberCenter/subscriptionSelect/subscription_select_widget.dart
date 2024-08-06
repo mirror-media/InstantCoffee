@@ -5,12 +5,16 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
 import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/route_generator.dart';
+import 'package:readr_app/helpers/url_launcher.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/models/payment_record.dart';
 import 'package:readr_app/models/subscription_detail.dart';
@@ -18,6 +22,7 @@ import 'package:readr_app/pages/memberCenter/subscriptionSelect/buying_success_w
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/hint_to_other_platform.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/verify_purchase_fail_widget.dart';
 import 'package:readr_app/widgets/logger.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class SubscriptionSelectWidget extends StatefulWidget {
@@ -316,7 +321,23 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
                                   productDetails: productDetailList[index],
                                 );
 
-                                _buySubscriptionProduct(purchaseParam);
+                                if (Platform.isAndroid) {
+                                  final link = Uri.parse(
+                                      Environment().config.subscriptionLink);
+                                  if (await canLaunchUrl(link)) {
+                                    await launchUrl(link);
+                                    Fluttertoast.showToast(
+                                      msg: '建議重啟App 以套用最新的會員狀態',
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                      backgroundColor: Colors.black87,
+                                      textColor: Colors.white,
+                                      fontSize: 20.0,
+                                    );
+                                  }
+                                } else {
+                                  _buySubscriptionProduct(purchaseParam);
+                                }
                               } else {
                                 RouteGenerator.navigateToEmailVerification();
                               }
