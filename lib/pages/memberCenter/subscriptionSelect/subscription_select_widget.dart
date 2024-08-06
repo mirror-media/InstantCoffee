@@ -326,14 +326,6 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
                                       Environment().config.subscriptionLink);
                                   if (await canLaunchUrl(link)) {
                                     await launchUrl(link);
-                                    Fluttertoast.showToast(
-                                      msg: '建議重啟App 以套用最新的會員狀態',
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.CENTER,
-                                      backgroundColor: Colors.black87,
-                                      textColor: Colors.white,
-                                      fontSize: 20.0,
-                                    );
                                   }
                                 } else {
                                   _buySubscriptionProduct(purchaseParam);
