@@ -134,10 +134,6 @@ dependencies {
     // fcm
     implementation 'com.google.firebase:firebase-messaging:20.2.4'
     // https://github.com/flutter/flutter/issues/53047
-    implementation 'com.android.support:multidex:1.0.3'
-    implementation 'com.google.android.play:app-update:2.1.0'
-    implementation 'com.google.android.play:app-update-ktx:2.1.0'
-    implementation 'com.google.android.gms:play-services-tasks:18.0.2'
 }
 
 apply plugin: 'com.google.gms.google-services'
