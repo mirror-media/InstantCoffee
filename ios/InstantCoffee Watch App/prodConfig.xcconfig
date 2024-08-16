@@ -1,0 +1,3 @@
+
+headerURL = https:/$()/storage.googleapis.com/v3-statics.mirrormedia.mg/files/json/header_headers.json
+storyURL = https:/$()/storage.googleapis.com/v3-statics.mirrormedia.mg/rss/google.xml

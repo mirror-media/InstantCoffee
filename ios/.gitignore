@@ -24,6 +24,8 @@ Flutter/flutter_assets/
 Flutter/flutter_export_environment.sh
 ServiceDefinitions.json
 Runner/GeneratedPluginRegistrant.*
+InstantCoffee Watch App/prodConfig.xcconfig
+InstantCoffee Watch App/devConfig.xcconfig
 
 # Exceptions to above rules.
 !default.mode1v3
