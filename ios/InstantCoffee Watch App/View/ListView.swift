@@ -17,14 +17,15 @@ struct ListView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 4))) {
                     
                     ForEach(stories) { story in
-                        VStack(alignment: .leading) {
-                            Text(story.title)
-                                .font(.headline)
-                            Text(story.date)
-                                .font(.footnote)
-                                .foregroundStyle(.gray)
+                        NavigationLink(destination: DigestView(header: header, story: story)) {
+                            VStack(alignment: .leading) {
+                                Text(story.title)
+                                    .font(.headline)
+                                Text(story.date)
+                                    .font(.footnote)
+                                    .foregroundStyle(.gray)
+                            }
                         }
-                        
                         
                     }
                 }
