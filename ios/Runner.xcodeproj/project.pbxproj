@@ -17,11 +17,13 @@
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		82A65D532C6F025A00EDC689 /* InstantCoffee Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 82A65D522C6F025A00EDC689 /* InstantCoffee Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		82A65D582C6F025A00EDC689 /* InstantCoffeeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A65D572C6F025A00EDC689 /* InstantCoffeeApp.swift */; };
-		82A65D5A2C6F025A00EDC689 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A65D592C6F025A00EDC689 /* ContentView.swift */; };
 		82A65D5C2C6F025B00EDC689 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82A65D5B2C6F025B00EDC689 /* Assets.xcassets */; };
 		82A65D5F2C6F025B00EDC689 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82A65D5E2C6F025B00EDC689 /* Preview Assets.xcassets */; };
 		82A65D772C6F14E500EDC689 /* FetchHeaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A65D762C6F14E500EDC689 /* FetchHeaders.swift */; };
 		82A65D792C6F150D00EDC689 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A65D782C6F150D00EDC689 /* Colors.swift */; };
+		82A65D7B2C6F171F00EDC689 /* HomePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A65D7A2C6F171F00EDC689 /* HomePageView.swift */; };
+		82A65D7D2C6F175800EDC689 /* FetchStories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A65D7C2C6F175800EDC689 /* FetchStories.swift */; };
+		82A65D7F2C6F178100EDC689 /* FormatDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A65D7E2C6F178100EDC689 /* FormatDate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
@@ -118,7 +120,6 @@
 		82A65D4D2C6F025A00EDC689 /* InstantCoffee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstantCoffee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		82A65D522C6F025A00EDC689 /* InstantCoffee Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "InstantCoffee Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82A65D572C6F025A00EDC689 /* InstantCoffeeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstantCoffeeApp.swift; sourceTree = "<group>"; };
-		82A65D592C6F025A00EDC689 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		82A65D5B2C6F025B00EDC689 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		82A65D5E2C6F025B00EDC689 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		82A65D732C6F125700EDC689 /* devConfig.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = devConfig.xcconfig; sourceTree = "<group>"; };
@@ -126,6 +127,9 @@
 		82A65D752C6F148200EDC689 /* InstantCoffee-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "InstantCoffee-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
 		82A65D762C6F14E500EDC689 /* FetchHeaders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchHeaders.swift; sourceTree = "<group>"; };
 		82A65D782C6F150D00EDC689 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		82A65D7A2C6F171F00EDC689 /* HomePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageView.swift; sourceTree = "<group>"; };
+		82A65D7C2C6F175800EDC689 /* FetchStories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchStories.swift; sourceTree = "<group>"; };
+		82A65D7E2C6F178100EDC689 /* FormatDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormatDate.swift; sourceTree = "<group>"; };
 		8B6408C33B292DD63EF27AEF /* Pods_ImageNotification.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ImageNotification.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
@@ -233,6 +237,7 @@
 			isa = PBXGroup;
 			children = (
 				82A65D762C6F14E500EDC689 /* FetchHeaders.swift */,
+				82A65D7C2C6F175800EDC689 /* FetchStories.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -240,7 +245,7 @@
 		82A65D702C6F115E00EDC689 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				82A65D592C6F025A00EDC689 /* ContentView.swift */,
+				82A65D7A2C6F171F00EDC689 /* HomePageView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -249,6 +254,7 @@
 			isa = PBXGroup;
 			children = (
 				82A65D782C6F150D00EDC689 /* Colors.swift */,
+				82A65D7E2C6F178100EDC689 /* FormatDate.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -658,9 +664,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				82A65D772C6F14E500EDC689 /* FetchHeaders.swift in Sources */,
+				82A65D7F2C6F178100EDC689 /* FormatDate.swift in Sources */,
 				82A65D792C6F150D00EDC689 /* Colors.swift in Sources */,
-				82A65D5A2C6F025A00EDC689 /* ContentView.swift in Sources */,
+				82A65D7D2C6F175800EDC689 /* FetchStories.swift in Sources */,
 				82A65D582C6F025A00EDC689 /* InstantCoffeeApp.swift in Sources */,
+				82A65D7B2C6F171F00EDC689 /* HomePageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

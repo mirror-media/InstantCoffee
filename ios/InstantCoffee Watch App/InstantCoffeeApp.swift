@@ -11,7 +11,7 @@ import SwiftUI
 struct InstantCoffee_Watch_AppApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomePageView(header: mockHeader, stories: [mockRSS])
         }
     }
 }
