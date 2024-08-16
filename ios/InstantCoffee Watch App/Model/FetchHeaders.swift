@@ -32,7 +32,6 @@ struct Category: Decodable {
 
 func fetchHeaders() async throws -> [Header] {
     let url = URL(string: Bundle.main.infoDictionary!["headerURL"] as! String)
-
     let (data, _) = try await URLSession.shared.data(from: url!)
     let response = try JSONDecoder().decode(Response.self, from: data)
 
