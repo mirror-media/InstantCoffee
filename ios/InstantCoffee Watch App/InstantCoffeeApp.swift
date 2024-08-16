@@ -2,10 +2,10 @@
 import SwiftUI
 
 @main
-struct InstantCoffee_Watch_AppApp: App {
+struct InstantCoffee_Watch_App: App {
     var body: some Scene {
         WindowGroup {
-            HomePageView(header: mockHeader, stories: [mockRSS])
+            MainTabView()
         }
     }
 }
