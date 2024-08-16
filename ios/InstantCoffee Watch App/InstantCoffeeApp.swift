@@ -1,9 +1,3 @@
-//
-//  InstantCoffeeApp.swift
-//  InstantCoffee Watch App
-//
-//  Created by 吳求元 on 2024/8/16.
-//
 
 import SwiftUI
 

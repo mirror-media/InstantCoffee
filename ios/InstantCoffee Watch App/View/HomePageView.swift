@@ -5,7 +5,6 @@ struct HomePageView: View {
     
     let header: Header
     let stories: [RSSItem]
-    
     @State private var backgroundImage: Image? = nil
     
     var body: some View {
@@ -28,7 +27,8 @@ struct HomePageView: View {
                 .foregroundStyle(header.color)
             
             NavigationLink {
-                
+                ListView(header: header, stories: stories)
+                    .navigationTitle(header.name)
             } label: {
                 Text("更多" + header.name)
             }
@@ -76,4 +76,3 @@ var mockRSS = RSSItem(id: "2", title: "【巴黎奧運】開幕在即澳洲金�
     }
     .navigationTitle("鏡週刊")
 }
-
