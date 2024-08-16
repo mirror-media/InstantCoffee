@@ -25,6 +25,8 @@ lib/helpers/devApiConstants.dart
 # for internal config
 lib/configs/devConfig.dart
 lib/configs/prodConfig.dart
+ios/InstantCoffee Watch App/prodConfig.xcconfig
+ios/InstantCoffee Watch App/devConfig.xcconfig
 
 .flutter-plugins
 .flutter-plugins-dependencies
