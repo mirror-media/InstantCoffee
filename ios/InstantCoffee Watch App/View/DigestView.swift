@@ -16,7 +16,7 @@ struct DigestView: View {
                     .padding(.horizontal, 4)
                     .background(header.color)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
-                Text(story.title)
+                Text(story.title ?? "")
                     .font(.headline)
                 Text(story.date)
                     .foregroundStyle(header.color)
@@ -28,7 +28,7 @@ struct DigestView: View {
         .padding(.horizontal, 5)
         .background(
             
-            AsyncImage(url: URL(string: story.imageUrl)) { phase in
+            AsyncImage(url: URL(string: story.imageUrl ?? "")) { phase in
                 switch phase {
                 case .success(let image):
                     image

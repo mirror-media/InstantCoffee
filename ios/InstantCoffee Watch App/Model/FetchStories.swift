@@ -2,21 +2,21 @@
 import Foundation
 
 struct RSSItem: Decodable, Identifiable {
-    let id: String
-    let title: String
-    let description: String
-    let category: String
-    let pubDate: String
-    let imageUrl: String
+    var id: String?
+    var title: String?
+    var description: String?
+    var category: String?
+    var pubDate: String?
+    var imageUrl: String?
     
     var date: String {
-        return formatDate(dateString: pubDate)
+        return formatDate(dateString: pubDate ?? "")
     }
     var digest: String {
         let pattern = "<[^>]+>(.*?)</[^>]+>"
         let regex = try! NSRegularExpression(pattern: pattern)
-        let range = NSRange(location: 0, length: description.utf16.count)
-        let descriptionWithoutPTags = regex.stringByReplacingMatches(in: description, options: [], range: range, withTemplate: "$1")
+        let range = NSRange(location: 0, length: description!.utf16.count)
+        let descriptionWithoutPTags = regex.stringByReplacingMatches(in: description!, options: [], range: range, withTemplate: "$1")
         return descriptionWithoutPTags
     }
 }
@@ -25,14 +25,8 @@ struct RSSItem: Decodable, Identifiable {
 class RSSParser: NSObject, XMLParserDelegate {
     
     var items: [RSSItem] = []
+    var currentItem: RSSItem?
     var currentElement: String?
-    var currentData: String = ""
-    var currentID: String = ""
-    var currentTitle: String = ""
-    var currentDescription: String = ""
-    var currentCategory: String = ""
-    var currentPubDate: String = ""
-    var currentImageUrl: String = ""
     
     var isInsideContentEncoded: Bool = false
     
@@ -50,12 +44,7 @@ class RSSParser: NSObject, XMLParserDelegate {
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
         currentElement = elementName
         if currentElement == "item" {
-            currentID = ""
-            currentTitle = ""
-            currentDescription = ""
-            currentCategory = ""
-            currentPubDate = ""
-            currentImageUrl = ""
+            currentItem = RSSItem(id: nil, title: nil, description: nil, category: nil, pubDate: nil, imageUrl: nil)
         }
         
         if elementName == "content:encoded" {
@@ -67,30 +56,28 @@ class RSSParser: NSObject, XMLParserDelegate {
     func parser(_ parser: XMLParser, foundCharacters string: String) {
         
         switch currentElement {
-        case "title": currentTitle += string
-        case "description": currentDescription += string
-        case "category": currentCategory += string
-        case "pubDate": currentPubDate += string
+        case "title": currentItem?.title = (currentItem?.title ?? "") + string
+        case "description": currentItem?.description = (currentItem?.description ?? "") + string
+        case "category": currentItem?.category = (currentItem?.category ?? "") + string
+        case "pubDate": currentItem?.pubDate = (currentItem?.pubDate ?? "") + string
         default: break
         }
         
         if isInsideContentEncoded {
-            currentImageUrl += extractImageUrl(from: string) ?? ""
+            currentItem?.imageUrl = (currentItem?.imageUrl ?? "") + (extractImageUrl(from: string) ?? "")
             isInsideContentEncoded = false
         }
     }
     
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         
-        if elementName == "item" {
-            self.items.append(RSSItem(id: currentTitle, title: currentTitle, description: currentDescription, category: currentCategory, pubDate: currentPubDate, imageUrl: currentImageUrl))
+        if elementName == "item", let currentItem = currentItem {
+            self.items.append(RSSItem(id: currentItem.title, title: currentItem.title, description: currentItem.description, category: currentItem.category, pubDate: currentItem.pubDate, imageUrl: currentItem.imageUrl))
         }
         
     }
     
     func extractImageUrl(from content: String) -> String? {
-        // Use regular expression or string manipulation to extract image URL
-        // Example using regular expression:
         let pattern = "<img src=\"(.*?)\""
         let regex = try! NSRegularExpression(pattern: pattern)
         let range = NSRange(location: 0, length: content.utf16.count)
