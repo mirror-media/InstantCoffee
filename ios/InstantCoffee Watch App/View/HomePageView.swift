@@ -18,7 +18,7 @@ struct HomePageView: View {
                 .background(header.color)
                 .clipShape(RoundedRectangle(cornerRadius: 4))
             
-            Text(stories.first!.title)
+            Text(stories.first!.title ?? "")
                 .font(.headline)
                 .fixedSize(horizontal: false, vertical: true)
                 .lineLimit(2)

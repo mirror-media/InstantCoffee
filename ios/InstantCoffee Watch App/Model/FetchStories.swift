@@ -44,7 +44,7 @@ class RSSParser: NSObject, XMLParserDelegate {
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
         currentElement = elementName
         if currentElement == "item" {
-            currentItem = RSSItem(id: nil, title: nil, description: nil, category: nil, pubDate: nil, imageUrl: nil)
+            currentItem = RSSItem(id: "", title: "", description: "", category: "", pubDate: "", imageUrl: "")
         }
         
         if elementName == "content:encoded" {
@@ -56,15 +56,15 @@ class RSSParser: NSObject, XMLParserDelegate {
     func parser(_ parser: XMLParser, foundCharacters string: String) {
         
         switch currentElement {
-        case "title": currentItem?.title = (currentItem?.title ?? "") + string
-        case "description": currentItem?.description = (currentItem?.description ?? "") + string
-        case "category": currentItem?.category = (currentItem?.category ?? "") + string
-        case "pubDate": currentItem?.pubDate = (currentItem?.pubDate ?? "") + string
+        case "title": currentItem?.title! += string
+        case "description": currentItem?.description! += string
+        case "category": currentItem?.category! += string
+        case "pubDate": currentItem?.pubDate! += string
         default: break
         }
         
         if isInsideContentEncoded {
-            currentItem?.imageUrl = (currentItem?.imageUrl ?? "") + (extractImageUrl(from: string) ?? "")
+            currentItem?.imageUrl! += (extractImageUrl(from: string) ?? "")
             isInsideContentEncoded = false
         }
     }

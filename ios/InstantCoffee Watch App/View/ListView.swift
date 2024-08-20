@@ -19,7 +19,7 @@ struct ListView: View {
                     ForEach(stories) { story in
                         NavigationLink(destination: DigestView(header: header, story: story)) {
                             VStack(alignment: .leading) {
-                                Text(story.title)
+                                Text(story.title ?? "")
                                     .font(.headline)
                                 Text(story.date)
                                     .font(.footnote)
