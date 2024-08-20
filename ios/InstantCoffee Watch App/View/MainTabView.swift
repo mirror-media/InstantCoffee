@@ -1,7 +1,6 @@
 
 import SwiftUI
 
-
 struct MainTabView: View {
     @State var headers: [Header] = []
     @State private var stories: [RSSItem] = []

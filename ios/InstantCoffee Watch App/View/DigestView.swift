@@ -20,7 +20,6 @@ struct DigestView: View {
                     .font(.headline)
                 Text(story.date)
                     .foregroundStyle(header.color)
-                
                 Text(story.digest)
             }
             .frame(maxWidth: .infinity)
@@ -35,15 +34,12 @@ struct DigestView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(minWidth: 0, maxWidth: .infinity)
-
                         .clipped()
-                    
                         .overlay() {
                             LinearGradient(colors: [.white, .black], startPoint: .top, endPoint: .bottom)
                         }
                         .opacity(0.24)
                         .edgesIgnoringSafeArea(.all)
-                    
                 case .failure(_):
                     Image(systemName: "exclamationmark.circle.fill")
                         .foregroundColor(.red)

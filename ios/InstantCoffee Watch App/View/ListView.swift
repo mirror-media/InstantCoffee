@@ -16,20 +16,14 @@ struct ListView: View {
                 .background(header.color)
                 .clipShape(RoundedRectangle(cornerRadius: 4))) {
                     
-                    ForEach(stories) { story in
-                        NavigationLink(destination: DigestView(header: header, story: story)) {
-                            VStack(alignment: .leading) {
-                                Text(story.title ?? "")
-                                    .font(.headline)
-                                Text(story.date)
-                                    .font(.footnote)
-                                    .foregroundStyle(.gray)
-                            }
-                        }
-                        
+                ForEach(stories) { story in
+                    NavigationLink(destination: DigestView(header: header, story: story)) {
+                        ListCellView(story: story)
                     }
                 }
+            }
         }
+        
     }
 }
 

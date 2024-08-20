@@ -16,6 +16,7 @@
 		3ED8977B1155ACA34E08013D /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A71B83368E104C346A503C /* Pods_Runner.framework */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		8290798E2C748B5F0094D8E6 /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8290798D2C748B5F0094D8E6 /* PreviewData.swift */; };
+		829079902C748E6B0094D8E6 /* ListCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8290798F2C748E6B0094D8E6 /* ListCellView.swift */; };
 		82A65D532C6F025A00EDC689 /* InstantCoffee Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 82A65D522C6F025A00EDC689 /* InstantCoffee Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		82A65D582C6F025A00EDC689 /* InstantCoffeeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A65D572C6F025A00EDC689 /* InstantCoffeeApp.swift */; };
 		82A65D5C2C6F025B00EDC689 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82A65D5B2C6F025B00EDC689 /* Assets.xcassets */; };
@@ -123,6 +124,7 @@
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		8290798D2C748B5F0094D8E6 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
+		8290798F2C748E6B0094D8E6 /* ListCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCellView.swift; sourceTree = "<group>"; };
 		82A65D4D2C6F025A00EDC689 /* InstantCoffee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstantCoffee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		82A65D522C6F025A00EDC689 /* InstantCoffee Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "InstantCoffee Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82A65D572C6F025A00EDC689 /* InstantCoffeeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstantCoffeeApp.swift; sourceTree = "<group>"; };
@@ -258,6 +260,7 @@
 				82A65D862C6F1D2800EDC689 /* MainTabView.swift */,
 				82A65D7A2C6F171F00EDC689 /* HomePageView.swift */,
 				82A65D822C6F1B7100EDC689 /* ListView.swift */,
+				8290798F2C748E6B0094D8E6 /* ListCellView.swift */,
 				82A65D842C6F1C2300EDC689 /* DigestView.swift */,
 			);
 			path = View;
@@ -686,6 +689,7 @@
 				82A65D792C6F150D00EDC689 /* Colors.swift in Sources */,
 				82A65D7D2C6F175800EDC689 /* FetchStories.swift in Sources */,
 				82A65D582C6F025A00EDC689 /* InstantCoffeeApp.swift in Sources */,
+				829079902C748E6B0094D8E6 /* ListCellView.swift in Sources */,
 				82A65D7B2C6F171F00EDC689 /* HomePageView.swift in Sources */,
 				82A65D812C6F1B2700EDC689 /* OrganizeStories.swift in Sources */,
 				82A65D872C6F1D2800EDC689 /* MainTabView.swift in Sources */,

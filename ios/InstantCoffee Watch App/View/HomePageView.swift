@@ -17,12 +17,10 @@ struct HomePageView: View {
                 .padding(.horizontal, 4)
                 .background(header.color)
                 .clipShape(RoundedRectangle(cornerRadius: 4))
-            
             Text(stories.first!.title ?? "")
                 .font(.headline)
                 .fixedSize(horizontal: false, vertical: true)
                 .lineLimit(2)
-            
             Text(stories.first!.date)
                 .foregroundStyle(header.color)
             
@@ -39,7 +37,6 @@ struct HomePageView: View {
         }
         .padding(4)
         .background(
-            
             AsyncImage(url: URL(string: stories.first?.imageUrl ?? "")) { phase in
                 switch phase {
                 case .success(let image):
@@ -67,7 +64,6 @@ struct HomePageView: View {
 }
 
 #Preview {
-    
     TabView {
         HomePageView(header: mockHeader, stories: [mockRSS])
     }
