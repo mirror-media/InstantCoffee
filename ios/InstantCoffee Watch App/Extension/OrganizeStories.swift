@@ -4,8 +4,10 @@ import Foundation
 func organizeStoriesByCategory(stories: [RSSItem], headers: [Header]) -> [String: [RSSItem]] {
     var storiesByCategory: [String: [RSSItem]] = [:]
     for item in stories {
-        if let headerName = findHeaderName(inputCategory: item.category ?? "", headers: headers) {
-            storiesByCategory[headerName, default: []].append(item)
+        if let category = item.category {
+            if let headerName = findHeaderName(inputCategory: category, headers: headers) {
+                storiesByCategory[headerName, default: []].append(item)
+            }
         }
     }
     return storiesByCategory
