@@ -1,35 +1,22 @@
 
 import Foundation
 
-func organizeStoriesByCategory(stories: [RSSItem], headers: [Header]) -> [String: [RSSItem]] {
-    var storiesByCategory: [String: [RSSItem]] = [:]
-    for item in stories {
-        if let category = item.category {
-            if let headerName = findHeaderName(inputCategory: category, headers: headers) {
-                storiesByCategory[headerName, default: []].append(item)
-            }
-        }
-    }
-    return storiesByCategory
-}
-
-func findHeaderName(inputCategory: String, headers: [Header]) -> String? {
-    // Check if input is a header or category
-    let isHeader = headers.contains(where: { $0.name == inputCategory })
+func organizeStoriesByCategory(stories: [RSSItem], headers: [Header], categoryToSectionMap: [String: String]) -> [String: [RSSItem]] {
+    var storiesByHeader: [String: [RSSItem]] = [:]
     
-    if isHeader {
-        return inputCategory // Return input if it's a header name
-    } else {
-        for header in headers {
-            if let categories = header.categories {
-                for category in categories {
-                    if category.name == inputCategory {
-                        return header.name // Return header name for matching category
-                    }
+    for story in stories {
+        if let category = story.category {
+            if let sectionName = categoryToSectionMap[category] {
+                if storiesByHeader[sectionName] != nil {
+                    storiesByHeader[sectionName]!.append(story)
+                } else {
+                    storiesByHeader[sectionName] = [story]
                 }
+            } else {
+                print("Warning: Category slug \(String(describing: category)) not found in headers")
             }
         }
     }
     
-    return nil
+    return storiesByHeader
 }

@@ -30,11 +30,27 @@ struct Category: Decodable {
     let name: String
 }
 
-func fetchHeaders() async throws -> [Header] {
+func fetchHeaders() async throws -> ([Header], [String: String]) {
     let url = URL(string: Bundle.main.infoDictionary!["headerURL"] as! String)
     let (data, _) = try await URLSession.shared.data(from: url!)
     let response = try JSONDecoder().decode(Response.self, from: data)
-
-    return response.headers
+    
+    var categoryToSectionMap: [String: String] = [:] // [category: section]
+    
+    for header in response.headers {
+        if header.type == "section" {
+            if let categories = header.categories, !categories.isEmpty {
+                for category in categories {
+                    categoryToSectionMap[category.name] = header.name
+                }
+            } else { // when category is empty
+                categoryToSectionMap[header.name] = header.name
+            }
+        } else if header.type == "category" { // when header is category
+            categoryToSectionMap[header.name] = header.name
+        }
+    }
+    
+    return (response.headers, categoryToSectionMap)
 }
 
