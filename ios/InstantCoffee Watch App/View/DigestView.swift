@@ -7,7 +7,7 @@ struct DigestView: View {
     let story: RSSItem
     
     var body: some View {
-                
+        
         ScrollView {
             VStack(alignment: .leading, spacing: 5) {
                 Text(header.name)
@@ -29,24 +29,24 @@ struct DigestView: View {
             
             AsyncImage(url: URL(string: story.imageUrl ?? "")) { phase in
                 switch phase {
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(minWidth: 0, maxWidth: .infinity)
-                        .clipped()
-                        .overlay() {
-                            LinearGradient(colors: [.white, .black], startPoint: .top, endPoint: .bottom)
-                        }
-                        .opacity(0.24)
-                        .edgesIgnoringSafeArea(.all)
-                case .failure(_):
-                    Image(systemName: "exclamationmark.circle.fill")
-                        .foregroundColor(.red)
-                case .empty:
-                    ProgressView()
-                default:
-                    ProgressView()
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .clipped()
+                            .overlay() {
+                                LinearGradient(colors: [.white, .black], startPoint: .top, endPoint: .bottom)
+                            }
+                            .opacity(0.24)
+                            .edgesIgnoringSafeArea(.all)
+                    case .failure(_):
+                        Image(systemName: "exclamationmark.circle.fill")
+                            .foregroundColor(.red)
+                    case .empty:
+                        ProgressView()
+                    default:
+                        ProgressView()
                 }
             }
         )

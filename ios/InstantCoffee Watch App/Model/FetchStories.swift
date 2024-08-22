@@ -37,21 +37,22 @@ class RSSParser: NSObject, XMLParserDelegate {
             }
             
             let parser = XMLParser(data: data)
-                parser.delegate = self
-                parser.parse()
-                completion(self.items)
+            parser.delegate = self
+            parser.parse()
+            completion(self.items)
         }.resume()
     }
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
         currentElement = elementName
+        
         if currentElement == "item" {
             currentItem = RSSItem(id: "", title: "", description: "", category: "", pubDate: "", imageUrl: "")
         }
+        
         if elementName == "content:encoded" {
             isInsideContentEncoded = true
         }
-        
     }
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {
@@ -92,5 +93,4 @@ class RSSParser: NSObject, XMLParserDelegate {
         }
         return nil
     }
-    
 }

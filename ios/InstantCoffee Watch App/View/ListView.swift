@@ -23,7 +23,6 @@ struct ListView: View {
                 }
             }
         }
-        
     }
 }
 
