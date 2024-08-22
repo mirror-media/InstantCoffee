@@ -17,5 +17,11 @@ struct ListCellView: View {
 }
 
 #Preview {
-    ListCellView(story: mockRSS)
+    List {
+        ForEach([mockRSS]) { story in
+            NavigationLink(destination: DigestView(header: mockHeader, story: story)) {
+                ListCellView(story: story)
+            }
+        }
+    }
 }
