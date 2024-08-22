@@ -21,7 +21,6 @@ struct RSSItem: Decodable, Identifiable {
     }
 }
 
-
 class RSSParser: NSObject, XMLParserDelegate {
     
     var items: [RSSItem] = []
@@ -31,14 +30,17 @@ class RSSParser: NSObject, XMLParserDelegate {
     var isInsideContentEncoded: Bool = false
     
     func parse(from url: URL, completion: @escaping ([RSSItem]) -> Void) {
-        guard let parser = XMLParser(contentsOf: url) else {
-            completion([])
-            return
-        }
-        parser.delegate = self
-        parser.parse()
-        completion(items)
-        
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            guard let data = data else {
+                completion([])
+                return
+            }
+            
+            let parser = XMLParser(data: data)
+                parser.delegate = self
+                parser.parse()
+                completion(self.items)
+        }.resume()
     }
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
@@ -46,7 +48,6 @@ class RSSParser: NSObject, XMLParserDelegate {
         if currentElement == "item" {
             currentItem = RSSItem(id: "", title: "", description: "", category: "", pubDate: "", imageUrl: "")
         }
-        
         if elementName == "content:encoded" {
             isInsideContentEncoded = true
         }
@@ -56,11 +57,15 @@ class RSSParser: NSObject, XMLParserDelegate {
     func parser(_ parser: XMLParser, foundCharacters string: String) {
         
         switch currentElement {
-        case "title": currentItem?.title! += string
-        case "description": currentItem?.description! += string
-        case "category": currentItem?.category! += string
-        case "pubDate": currentItem?.pubDate! += string
-        default: break
+            case "title":
+                currentItem?.title! += string
+            case "description":
+                currentItem?.description! += string
+            case "category":
+                currentItem?.category! += string
+            case "pubDate":
+                currentItem?.pubDate! += string
+            default: break
         }
         
         if isInsideContentEncoded {
@@ -70,11 +75,9 @@ class RSSParser: NSObject, XMLParserDelegate {
     }
     
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-        
         if elementName == "item", let currentItem = currentItem {
             self.items.append(RSSItem(id: nil, title: currentItem.title, description: currentItem.description, category: currentItem.category, pubDate: currentItem.pubDate, imageUrl: currentItem.imageUrl))
         }
-        
     }
     
     func extractImageUrl(from content: String) -> String? {
