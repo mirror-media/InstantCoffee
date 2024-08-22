@@ -76,7 +76,8 @@ class RSSParser: NSObject, XMLParserDelegate {
     
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         if elementName == "item", let currentItem = currentItem {
-            self.items.append(RSSItem(id: nil, title: currentItem.title, description: currentItem.description, category: currentItem.category, pubDate: currentItem.pubDate, imageUrl: currentItem.imageUrl))
+            let uuid = UUID().uuidString
+            self.items.append(RSSItem(id: uuid, title: currentItem.title, description: currentItem.description, category: currentItem.category, pubDate: currentItem.pubDate, imageUrl: currentItem.imageUrl))
         }
     }
     
