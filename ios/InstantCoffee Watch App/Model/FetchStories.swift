@@ -9,15 +9,24 @@ struct RSSItem: Decodable, Identifiable {
     var pubDate: String?
     var imageUrl: String?
     
-    var date: String {
-        return formatDate(dateString: pubDate ?? "")
+    var date: String? {
+        if let pubDate = pubDate {
+            return formatDate(dateString: pubDate)
+        } else {
+            return nil
+        }
     }
-    var digest: String {
+    
+    var digest: String? {
         let pattern = "<[^>]+>(.*?)</[^>]+>"
         let regex = try! NSRegularExpression(pattern: pattern)
         let range = NSRange(location: 0, length: description!.utf16.count)
         let descriptionWithoutPTags = regex.stringByReplacingMatches(in: description!, options: [], range: range, withTemplate: "$1")
-        return descriptionWithoutPTags
+        if !descriptionWithoutPTags.isEmpty {
+            return descriptionWithoutPTags
+        } else {
+            return nil
+        }
     }
 }
 
@@ -47,7 +56,7 @@ class RSSParser: NSObject, XMLParserDelegate {
         currentElement = elementName
         
         if currentElement == "item" {
-            currentItem = RSSItem(id: "", title: "", description: "", category: "", pubDate: "", imageUrl: "")
+            currentItem = RSSItem()
         }
         
         if elementName == "content:encoded" {
@@ -59,18 +68,37 @@ class RSSParser: NSObject, XMLParserDelegate {
         
         switch currentElement {
             case "title":
-                currentItem?.title! += string
+                guard currentItem?.title != nil else {
+                    currentItem?.title = string
+                    return
+                }
+                
             case "description":
-                currentItem?.description! += string
+                guard currentItem?.description != nil else {
+                    currentItem?.description = string
+                    return
+                }
+                
             case "category":
-                currentItem?.category! += string
+                guard currentItem?.category != nil else {
+                    currentItem?.category = string
+                    return
+                }
+                
             case "pubDate":
-                currentItem?.pubDate! += string
+                guard currentItem?.pubDate != nil else {
+                    currentItem?.pubDate = string
+                    return
+                }
+                
             default: break
         }
         
         if isInsideContentEncoded {
-            currentItem?.imageUrl! += (extractImageUrl(from: string) ?? "")
+            guard currentItem?.imageUrl != nil else {
+                currentItem?.imageUrl = extractImageUrl(from: string)
+                return
+            }
             isInsideContentEncoded = false
         }
     }
@@ -79,6 +107,7 @@ class RSSParser: NSObject, XMLParserDelegate {
         if elementName == "item", let currentItem = currentItem {
             let uuid = UUID().uuidString
             self.items.append(RSSItem(id: uuid, title: currentItem.title, description: currentItem.description, category: currentItem.category, pubDate: currentItem.pubDate, imageUrl: currentItem.imageUrl))
+            self.currentItem = nil
         }
     }
     

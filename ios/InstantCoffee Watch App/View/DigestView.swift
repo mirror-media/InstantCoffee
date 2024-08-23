@@ -18,9 +18,9 @@ struct DigestView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 4))
                 Text(story.title ?? "")
                     .font(.headline)
-                Text(story.date)
+                Text(story.date ?? "")
                     .foregroundStyle(header.color)
-                Text(story.digest)
+                Text(story.digest ?? "")
             }
             .frame(maxWidth: .infinity)
         }

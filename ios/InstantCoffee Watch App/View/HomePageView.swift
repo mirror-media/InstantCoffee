@@ -21,7 +21,7 @@ struct HomePageView: View {
                 .font(.headline)
                 .fixedSize(horizontal: false, vertical: true)
                 .lineLimit(2)
-            Text(stories.first!.date)
+            Text(stories.first!.date ?? "")
                 .foregroundStyle(header.color)
             
             NavigationLink {
