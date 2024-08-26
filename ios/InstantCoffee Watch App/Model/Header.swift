@@ -21,7 +21,6 @@ struct Header: Decodable, Identifiable {
     var color: Color {
         return Color(hex: headersColor[sectionSlug]!)
     }
-    
 }
 
 struct Category: Decodable {

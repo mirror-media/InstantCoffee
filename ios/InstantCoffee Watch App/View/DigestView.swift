@@ -26,7 +26,6 @@ struct DigestView: View {
         }
         .padding(.horizontal, 5)
         .background(
-            
             AsyncImage(url: URL(string: story.imageUrl ?? "")) { phase in
                 switch phase {
                     case .success(let image):

@@ -33,9 +33,7 @@ struct MainTabView: View {
                     headers = Array(fetchedHeaders.dropFirst())
                     categoryToSectionMap = map
                     getRSSItems()
-                } catch {
-                    print("Failed to fetch headers: \(error)")
-                }
+                } catch {}
             }
             .navigationTitle("鏡週刊")
         }

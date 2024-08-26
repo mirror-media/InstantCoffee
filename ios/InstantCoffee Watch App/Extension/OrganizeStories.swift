@@ -12,8 +12,6 @@ func organizeStoriesByCategory(stories: [RSSItem], headers: [Header], categoryTo
                 } else {
                     storiesByHeader[sectionName] = [story]
                 }
-            } else {
-                print("Warning: Category slug \(String(describing: category)) not found in headers")
             }
         }
     }
