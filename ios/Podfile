@@ -46,3 +46,7 @@ target 'ImageNotification' do
   pod 'Firebase/Messaging'
   pod 'GoogleUtilities'
 end
+
+target 'InstantCoffee Watch App' do
+  use_frameworks!
+end
