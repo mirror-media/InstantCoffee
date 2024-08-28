@@ -35,6 +35,10 @@ target 'Runner' do
   pod 'GoogleUtilities'
 end
 
+target 'InstantCoffee Watch App' do
+  use_modular_headers!
+end
+
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
@@ -45,8 +49,4 @@ target 'ImageNotification' do
   use_frameworks!
   pod 'Firebase/Messaging'
   pod 'GoogleUtilities'
-end
-
-target 'InstantCoffee Watch App' do
-  use_frameworks!
 end
