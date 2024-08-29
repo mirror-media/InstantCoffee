@@ -54,6 +54,15 @@ class ParagraphFormat {
           }
           return Container();
         }
+      case 'header-three':
+        {
+          if (isParagraphFirstContentsAvailable(paragraph.contents)) {
+            return parseTheTextToHtmlWidget(
+                '<h3>${paragraph.contents[0].data!}</h3>',
+                fontSize: htmlFontSize);
+          }
+          return Container();
+        }
       case 'code-block':
       case 'unstyled':
         {
