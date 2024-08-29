@@ -5,6 +5,7 @@ class YoutubeWidget extends StatefulWidget {
   final String youtubeId;
   final String? description;
   final double width;
+
   const YoutubeWidget({
     required this.width,
     required this.youtubeId,
@@ -18,9 +19,32 @@ class YoutubeWidget extends StatefulWidget {
 class _YoutubeWidgetState extends State<YoutubeWidget>
     with AutomaticKeepAliveClientMixin {
   bool _visible = false;
+  late final WebViewController _webViewController;
 
   @override
   bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    _webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageFinished: (url) {
+            setState(() {
+              _visible = true;
+            });
+          },
+          onWebResourceError: (error) {
+            // Handle error
+          },
+        ),
+      )
+      ..loadRequest(
+        Uri.parse('https://www.youtube.com/embed/${widget.youtubeId}'),
+      );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,16 +58,8 @@ class _YoutubeWidgetState extends State<YoutubeWidget>
           child: SizedBox(
             width: widget.width,
             height: widget.width / 16 * 9,
-            child: WebView(
-              initialUrl: 'https://www.youtube.com/embed/${widget.youtubeId}',
-              javascriptMode: JavascriptMode.unrestricted,
-              onPageFinished: (e) {
-                if (mounted) {
-                  setState(() {
-                    _visible = true;
-                  });
-                }
-              },
+            child: WebViewWidget(
+              controller: _webViewController,
             ),
           ),
         ),

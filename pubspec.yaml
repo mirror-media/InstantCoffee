@@ -54,13 +54,14 @@ dependencies:
   # toast Library for Flutter
   fluttertoast: ^8.0.8
   # webview
-  webview_flutter: ^3.0.4
+  webview_flutter: ^4.7.0
   # mirrormedia embedded code
+
   flutter_embedded_webview:
     git:
       url: https://github.com/mirror-media/flutter_embedded_webview.git
       ref: master
-      version: ^0.5.0
+      version: ^0.6.0
   # local storage
   localstorage: ^4.0.0+1
   # A Flutter plugin to store data in secure storage
@@ -78,7 +79,7 @@ dependencies:
   # carousel slider in flutter
   carousel_slider: ^4.0.0
   # widget from html
-  flutter_widget_from_html: ^0.8.4
+  flutter_widget_from_html: ^0.15.2
   # video player
   video_player: ^2.2.11
   # a friendly Material or Cupertino UI for video
@@ -119,12 +120,12 @@ dependencies:
   # firebase
   firebase_core: ^3.3.0
   # firebase analytics API
-  firebase_analytics: ^11.2.1
+  firebase_analytics: ^11.3.0
   # firebase messaging
   firebase_messaging: ^15.0.4
   # firebase remote config
   firebase_remote_config: ^5.0.4
-  google_mobile_ads: ^2.0.1
+  google_mobile_ads: ^5.1.0
 
   # firebase crashlytics
   firebase_crashlytics: ^4.0.4
@@ -150,7 +151,7 @@ dependencies:
   # zoomable widget
   photo_view: ^0.14.0
   # svg loader
-  flutter_svg: ^1.0.1
+  flutter_svg: ^2.0.10+1
 
   audio_session: ^0.1.18
   
