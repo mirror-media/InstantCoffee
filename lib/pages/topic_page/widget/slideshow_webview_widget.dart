@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -29,9 +27,50 @@ class _SlideshowWebViewWidgetState extends State<SlideshowWebViewWidget> {
     super.initState();
     url = '${Environment().config.mirrorMediaDomain}/topic/${widget.topicId}';
     print(url);
-    if (Platform.isAndroid) {
-      WebView.platform = SurfaceAndroidWebView();
-    }
+
+    _webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(NavigationDelegate(
+        onPageFinished: (String url) async {
+          await _webViewController.runJavaScript(
+              "document.getElementsByClassName('gdpr__Wrapper-sc-f0ad663b-0 dZwCMJ')[0].style.display = 'none';");
+          await _webViewController.runJavaScript(
+              "document.getElementsByTagName('header')[0].style.display = 'none';");
+          await _webViewController.runJavaScript(
+              "document.getElementsByTagName('footer')[0].style.display = 'none';");
+          await _webViewController.runJavaScript(
+              "document.getElementsByClassName('article-list')[0].style.display = 'none';");
+          await _webViewController.runJavaScript(
+              "document.getElementsByClassName('the-gdpr')[0].style.display = 'none';");
+
+          final String width =
+          await _webViewController.runJavaScriptReturningResult(
+              "document.getElementsByClassName('topic-list__Topic-sc-820f3557-1 kIKGxx topic')[0].offsetWidth") as String;
+          final String height =
+          await _webViewController.runJavaScriptReturningResult(
+              "document.getElementsByClassName('topic-list__Topic-sc-820f3557-1 kIKGxx topic')[0].offsetHeight") as String;
+
+          setState(() {
+            _aspectRatio = int.parse(width) / int.parse(height);
+            _isLoading = false;
+          });
+        },
+        onNavigationRequest: (NavigationRequest request) async {
+          if (!_isLoading) {
+            if (request.url.contains(Environment().config.mirrorMediaDomain)) {
+              if (!context.read<MemberBloc>().state.isPremium) {
+                AdHelper adHelper = AdHelper();
+                adHelper.checkToShowInterstitialAd();
+              }
+            } else {
+              launchUrlString(request.url);
+            }
+            return NavigationDecision.prevent;
+          }
+          return NavigationDecision.navigate;
+        },
+      ))
+      ..loadRequest(Uri.parse(url));
   }
 
   @override
@@ -41,63 +80,14 @@ class _SlideshowWebViewWidgetState extends State<SlideshowWebViewWidget> {
         Container(
           color: const Color(0xFFE2E5E7),
           child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-            return SizedBox(
-              width: constraints.maxWidth,
-              height: constraints.maxWidth / _aspectRatio,
-              child: WebView(
-                  onWebViewCreated: (WebViewController webViewController) {
-                    _webViewController = webViewController;
-                    _webViewController.loadUrl(url);
-                  },
-                  javascriptMode: JavascriptMode.unrestricted,
-                  gestureRecognizers: null,
-                  onPageFinished: (e) async {
-                    _webViewController.runJavascript(
-                        "document.getElementsByClassName('gdpr__Wrapper-sc-f0ad663b-0 dZwCMJ')[0].style.display = 'none';");
-                    _webViewController.runJavascript(
-                        "document.getElementsByTagName('header')[0].style.display = 'none';");
-                    _webViewController.runJavascript(
-                        "document.getElementsByTagName('footer')[0].style.display = 'none';");
-                    _webViewController.runJavascript(
-                        "document.getElementsByClassName('article-list')[0].style.display = 'none';");
-                    _webViewController.runJavascript(
-                        "document.getElementsByClassName('the-gdpr')[0].style.display = 'none';");
-                    final String width =
-                        await _webViewController.runJavascriptReturningResult(
-                            "document.getElementsByClassName('topic-list__Topic-sc-820f3557-1 kIKGxx topic')[0].offsetWidth");
-                    final String height =
-                        await _webViewController.runJavascriptReturningResult(
-                            "document.getElementsByClassName('topic-list__Topic-sc-820f3557-1 kIKGxx topic')[0].offsetHeight");
-                    setState(() {
-                      _aspectRatio = int.parse(width) / int.parse(height);
-                      _isLoading = false;
-                    });
-                  },
-                  navigationDelegate: (navigation) async {
-                    if (!_isLoading) {
-                      final url = navigation.url;
-                      if (url
-                          .contains(Environment().config.mirrorMediaDomain)) {
-                        if (!context.read<MemberBloc>().state.isPremium) {
-                          AdHelper adHelper = AdHelper();
-                          adHelper.checkToShowInterstitialAd();
-                        }
-                        /// PM:先註解掉 後續再確認是否真的有這個情境
-                        final startIndex = url.indexOf('story/');
-                        // String storySlug = url.replaceRange(0, startIndex, '');
-                        // storySlug = storySlug.replaceAll('story/', '');
-                        // storySlug = storySlug.replaceAll('/', '');
-                        // RouteGenerator.navigateToStory(storySlug);
-                      } else {
-                        launchUrlString(url);
-                      }
-                      return NavigationDecision.prevent;
-                    }
-                    return NavigationDecision.navigate;
-                  }),
-            );
-          }),
+            builder: (BuildContext context, BoxConstraints constraints) {
+              return SizedBox(
+                width: constraints.maxWidth,
+                height: constraints.maxWidth / _aspectRatio,
+                child: WebViewWidget(controller: _webViewController),
+              );
+            },
+          ),
         ),
         if (_isLoading)
           Container(
@@ -105,7 +95,7 @@ class _SlideshowWebViewWidgetState extends State<SlideshowWebViewWidget> {
             height: Get.width / _aspectRatio,
             color: Colors.white,
             child: const Center(child: CircularProgressIndicator.adaptive()),
-          )
+          ),
       ],
     );
   }
