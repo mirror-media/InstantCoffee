@@ -22,7 +22,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
 
-version: 6.9.14+464
+version: 6.9.15+465
 
 
 environment:
@@ -73,7 +73,7 @@ dependencies:
   # cached network image
   cached_network_image: ^3.2.0
   # share url
-  share_plus: ^4.1.0
+  share_plus: ^10.0.2
   # A Flutter widget that scrolls text infinitely.
   marquee: ^2.2.0
   # carousel slider in flutter
@@ -131,7 +131,7 @@ dependencies:
   firebase_crashlytics: ^4.0.4
 
   # firebase auth
-  firebase_auth: ^5.1.4
+  firebase_auth: ^5.2.0
   # google sign in
   google_sign_in: ^5.2.2
   # facebook sign in
@@ -170,7 +170,8 @@ dependencies:
   in_app_purchase_storekit: ^0.3.6+3
   upgrader: ^10.3.0
   firebase_dynamic_links: ^6.0.4
-
+dependency_overrides:
+  web: ^1.0.0
 
 dev_dependencies:
   flutter_test:
