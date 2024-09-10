@@ -25,5 +25,7 @@ class RemoteConfigHelper with Logger {
 
   bool get isElectionShow => _remoteConfig.getBool('isElectionShow');
 
+  bool get isSubscriptShow => _remoteConfig.getBool('isSubscriptShow');
+
   double get textScale => _remoteConfig.getDouble('text_scale');
 }
