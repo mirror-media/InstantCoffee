@@ -77,82 +77,82 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
   Widget build(BuildContext context) {
     return BlocBuilder<SubscriptionSelectBloc, SubscriptionSelectState>(
         builder: (BuildContext context, SubscriptionSelectState state) {
-          switch (state.status) {
-            case SubscriptionSelectStatus.error:
-              final error = state.errorMessages;
-              debugLog('SubscriptionProductsLoadedFail: ${error.message}');
-              return Container();
-            case SubscriptionSelectStatus.loaded:
-              SubscriptionDetail subscriptionDetail = state.subscriptionDetail!;
-              List<ProductDetails> productDetailList = state.productDetailList!;
+      switch (state.status) {
+        case SubscriptionSelectStatus.error:
+          final error = state.errorMessages;
+          debugLog('SubscriptionProductsLoadedFail: ${error.message}');
+          return Container();
+        case SubscriptionSelectStatus.loaded:
+          SubscriptionDetail subscriptionDetail = state.subscriptionDetail!;
+          List<ProductDetails> productDetailList = state.productDetailList!;
 
-              Widget? body;
+          Widget? body;
 
-              if (_isTheSamePlatfrom(subscriptionDetail.paymentType)) {
-                body = ListView(
-                  children: [
-                    const SizedBox(height: 24),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                      child: _memberIntroBlock(
-                          subscriptionDetail.subscriptionType, productDetailList),
-                    ),
-                    const SizedBox(height: 48),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                      child: _memberAttention(),
-                    ),
-                    const SizedBox(height: 48),
-                  ],
-                );
-              } else {
-                body = HintToOtherPlatform(
-                    paymentType: subscriptionDetail.paymentType!);
-              }
-
-              return Scaffold(
-                  appBar: _buildBar(context,
-                      subscriptionType: subscriptionDetail.subscriptionType),
-                  body: body);
-            case SubscriptionSelectStatus.buying:
-              SubscriptionDetail subscriptionDetail = state.subscriptionDetail!;
-              List<ProductDetails> productDetailList = state.productDetailList!;
-
-              return Scaffold(
-                appBar: _buildBar(context,
-                    subscriptionType: subscriptionDetail.subscriptionType),
-                body: ListView(
-                  children: [
-                    const SizedBox(height: 24),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                      child: _memberIntroBlock(
-                          subscriptionDetail.subscriptionType, productDetailList,
-                          isBuying: true),
-                    ),
-                    const SizedBox(height: 48),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                      child: _memberAttention(),
-                    ),
-                    const SizedBox(height: 48),
-                  ],
+          if (_isTheSamePlatfrom(subscriptionDetail.paymentType)) {
+            body = ListView(
+              children: [
+                const SizedBox(height: 24),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                  child: _memberIntroBlock(
+                      subscriptionDetail.subscriptionType, productDetailList),
                 ),
-              );
-            case SubscriptionSelectStatus.buyingSuccess:
-              String? storySlug = state.storySlug;
-
-              return Scaffold(
-                  appBar: _buildBar(context),
-                  body: BuyingSuccessWidget(storySlug: storySlug));
-            case SubscriptionSelectStatus.verifyPurchaseFail:
-              return Scaffold(
-                  appBar: _buildBar(context), body: VerifyPurchaseFailWidget());
-            default:
-            // state is Init, Loading
-              return Scaffold(appBar: _buildBar(context), body: _loadingWidget());
+                const SizedBox(height: 48),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                  child: _memberAttention(),
+                ),
+                const SizedBox(height: 48),
+              ],
+            );
+          } else {
+            body = HintToOtherPlatform(
+                paymentType: subscriptionDetail.paymentType!);
           }
-        });
+
+          return Scaffold(
+              appBar: _buildBar(context,
+                  subscriptionType: subscriptionDetail.subscriptionType),
+              body: body);
+        case SubscriptionSelectStatus.buying:
+          SubscriptionDetail subscriptionDetail = state.subscriptionDetail!;
+          List<ProductDetails> productDetailList = state.productDetailList!;
+
+          return Scaffold(
+            appBar: _buildBar(context,
+                subscriptionType: subscriptionDetail.subscriptionType),
+            body: ListView(
+              children: [
+                const SizedBox(height: 24),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                  child: _memberIntroBlock(
+                      subscriptionDetail.subscriptionType, productDetailList,
+                      isBuying: true),
+                ),
+                const SizedBox(height: 48),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                  child: _memberAttention(),
+                ),
+                const SizedBox(height: 48),
+              ],
+            ),
+          );
+        case SubscriptionSelectStatus.buyingSuccess:
+          String? storySlug = state.storySlug;
+
+          return Scaffold(
+              appBar: _buildBar(context),
+              body: BuyingSuccessWidget(storySlug: storySlug));
+        case SubscriptionSelectStatus.verifyPurchaseFail:
+          return Scaffold(
+              appBar: _buildBar(context), body: VerifyPurchaseFailWidget());
+        default:
+          // state is Init, Loading
+          return Scaffold(appBar: _buildBar(context), body: _loadingWidget());
+      }
+    });
   }
 
   PreferredSizeWidget _buildBar(BuildContext context,
@@ -241,133 +241,136 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
               const SizedBox(height: 24),
               isBuying
                   ? const Column(
-                children: [
-                  Text(
-                    '購買中',
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  SpinKitThreeBounce(
-                    color: appColor,
-                    size: 35,
-                  ),
-                ],
-              )
-                  : ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  separatorBuilder: (BuildContext context, int index) =>
-                  const SizedBox(height: 12),
-                  itemCount: productDetailList.length,
-                  itemBuilder: (context, index) {
-                    final ButtonStyle buttonStyle = TextButton.styleFrom(
-                      backgroundColor:
-                      index % 2 == 0 ? appColor : Colors.white,
-                      padding: const EdgeInsets.only(top: 12, bottom: 12),
-                    );
-
-                    return OutlinedButton(
-                      style: buttonStyle,
-                      child: SizedBox(
-                        width: width,
-                        child: Center(
-                          child: Column(
-                            children: [
-                              Text(
-                                productDetailList[index].title,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: index % 2 == 0
-                                      ? Colors.white
-                                      : Colors.black,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                '優惠 ${productDetailList[index].price} 元',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: index % 2 == 0
-                                      ? Colors.white60
-                                      : Colors.black38,
-                                ),
-                              ),
-                              Text(
-                                productDetailList[index].description,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: index % 2 == 0
-                                      ? Colors.white60
-                                      : Colors.black38,
-                                ),
-                              ),
-                            ],
+                      children: [
+                        Text(
+                          '購買中',
+                          style: TextStyle(
+                            fontSize: 18,
                           ),
                         ),
-                      ),
-                      onPressed: () async {
-                        if (_auth.currentUser == null) {
-                          RouteGenerator.navigateToLogin(
-                            routeName: RouteGenerator.subscriptionSelect,
-                            routeArguments: {
-                              'storySlug': '',
-                            },
-                          );
-                        } else {
-                          await _auth.currentUser!.reload();
-                          if (_auth.currentUser!.emailVerified) {
-                            PurchaseParam purchaseParam = PurchaseParam(
-                              productDetails: productDetailList[index],
-                            );
+                        SizedBox(height: 4),
+                        SpinKitThreeBounce(
+                          color: appColor,
+                          size: 35,
+                        ),
+                      ],
+                    )
+                  : ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      separatorBuilder: (BuildContext context, int index) =>
+                          const SizedBox(height: 12),
+                      itemCount: productDetailList.length,
+                      itemBuilder: (context, index) {
+                        final ButtonStyle buttonStyle = TextButton.styleFrom(
+                          backgroundColor:
+                              index % 2 == 0 ? appColor : Colors.white,
+                          padding: const EdgeInsets.only(top: 12, bottom: 12),
+                        );
 
-                            if (Platform.isAndroid) {
-                              final RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
-
-                              if(_remoteConfigHelper.isSubscriptShow) {
-                                const String kProductID = 'subscribe_monthly_80';
-                                final bool available = await InAppPurchase
-                                    .instance.isAvailable();
-                                if (!available) {
-                                  print('Store is not available');
-                                  return;
-                                }
-
-                                const Set<String> kIds = <String>{
-                                  kProductID
-                                };
-                                final ProductDetailsResponse response = await InAppPurchase
-                                    .instance.queryProductDetails(kIds);
-                                if (response.notFoundIDs.isNotEmpty) {
-                                  print('Product not found');
-                                  return;
-                                }
-
-                                final ProductDetails productDetails = response
-                                    .productDetails.first;
-                                final PurchaseParam purchaseParam = PurchaseParam(
-                                    productDetails: productDetails);
-                                InAppPurchase.instance.buyNonConsumable(
-                                    purchaseParam: purchaseParam);
-                              }
-                              else{
-                                final link = Uri.parse(
-                                    Environment().config.subscriptionLink);
-                                if (await canLaunchUrl(link)) {
-                                  await launchUrl(link);
-                                }
-                              }
+                        return OutlinedButton(
+                          style: buttonStyle,
+                          child: SizedBox(
+                            width: width,
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    productDetailList[index].title,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: index % 2 == 0
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '優惠 ${productDetailList[index].price} 元',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: index % 2 == 0
+                                          ? Colors.white60
+                                          : Colors.black38,
+                                    ),
+                                  ),
+                                  Text(
+                                    productDetailList[index].description,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: index % 2 == 0
+                                          ? Colors.white60
+                                          : Colors.black38,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          onPressed: () async {
+                            if (_auth.currentUser == null) {
+                              RouteGenerator.navigateToLogin(
+                                routeName: RouteGenerator.subscriptionSelect,
+                                routeArguments: {
+                                  'storySlug': '',
+                                },
+                              );
                             } else {
-                              _buySubscriptionProduct(purchaseParam);
+                              await _auth.currentUser!.reload();
+                              if (_auth.currentUser!.emailVerified) {
+                                PurchaseParam purchaseParam = PurchaseParam(
+                                  productDetails: productDetailList[index],
+                                );
+
+                                if (Platform.isAndroid) {
+                                  final RemoteConfigHelper _remoteConfigHelper =
+                                      RemoteConfigHelper();
+
+                                  if (_remoteConfigHelper.isSubscriptShow) {
+                                    const String kProductID =
+                                        'subscribe_monthly_80';
+                                    final bool available = await InAppPurchase
+                                        .instance
+                                        .isAvailable();
+                                    if (!available) {
+                                      print('Store is not available');
+                                      return;
+                                    }
+
+                                    const Set<String> kIds = <String>{
+                                      kProductID
+                                    };
+                                    final ProductDetailsResponse response =
+                                        await InAppPurchase.instance
+                                            .queryProductDetails(kIds);
+                                    if (response.notFoundIDs.isNotEmpty) {
+                                      print('Product not found');
+                                      return;
+                                    }
+
+                                    final ProductDetails productDetails =
+                                        response.productDetails.first;
+                                    final PurchaseParam purchaseParam =
+                                        PurchaseParam(
+                                            productDetails: productDetails);
+                                    _buySubscriptionProduct(purchaseParam);
+                                  } else {
+                                    final link = Uri.parse(
+                                        Environment().config.subscriptionLink);
+                                    if (await canLaunchUrl(link)) {
+                                      await launchUrl(link);
+                                    }
+                                  }
+                                } else {
+                                  _buySubscriptionProduct(purchaseParam);
+                                }
+                              } else {
+                                RouteGenerator.navigateToEmailVerification();
+                              }
                             }
-                          } else {
-                            RouteGenerator.navigateToEmailVerification();
-                          }
-                        }
-                      },
-                    );
-                  }),
+                          },
+                        );
+                      }),
               if (_isSubscribed(subscriptionType)) ...[
                 const SizedBox(height: 12),
                 const Text(
@@ -404,7 +407,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
 
   Widget _memberAttention() {
     final String platfromName =
-    Platform.isAndroid ? 'Google play' : 'App store';
+        Platform.isAndroid ? 'Google play' : 'App store';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -477,7 +480,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
                 children: [
                   TextSpan(
                     text:
-                    '若要取消自動續訂，請在訂閱到期日至少三日前取消訂閱。相關步驟請參照 $platfromName 官方網站操作說明：',
+                        '若要取消自動續訂，請在訂閱到期日至少三日前取消訂閱。相關步驟請參照 $platfromName 官方網站操作說明：',
                     style: const TextStyle(fontSize: 16, color: Colors.black),
                   ),
                   TextSpan(
