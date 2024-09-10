@@ -22,6 +22,20 @@
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "97C146ED1CF9000F007C117D"
+               BuildableName = "Runner.app"
+               BlueprintName = "Runner"
+               ReferencedContainer = "container:Runner.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
             buildForProfiling = "YES"
@@ -29,9 +43,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "97C146ED1CF9000F007C117D"
-               BuildableName = "Runner.app"
-               BlueprintName = "Runner"
+               BlueprintIdentifier = "82A65D4C2C6F025A00EDC689"
+               BuildableName = "InstantCoffee.app"
+               BlueprintName = "InstantCoffee"
                ReferencedContainer = "container:Runner.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

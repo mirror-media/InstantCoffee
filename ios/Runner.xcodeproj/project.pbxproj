@@ -112,14 +112,20 @@
 		12BF89EE0626C63D959F0700 /* Pods-ImageNotification.release-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageNotification.release-prod.xcconfig"; path = "Target Support Files/Pods-ImageNotification/Pods-ImageNotification.release-prod.xcconfig"; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+		247A9A155E46C7BFF6921065 /* Pods-InstantCoffee Watch App.release-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstantCoffee Watch App.release-prod.xcconfig"; path = "Target Support Files/Pods-InstantCoffee Watch App/Pods-InstantCoffee Watch App.release-prod.xcconfig"; sourceTree = "<group>"; };
 		2B2AD262CD74D9FB71C7BADD /* Pods-Runner.profile-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-dev.xcconfig"; sourceTree = "<group>"; };
+		2C0094E158711667C55FB3C8 /* Pods-InstantCoffee Watch App.release-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstantCoffee Watch App.release-dev.xcconfig"; path = "Target Support Files/Pods-InstantCoffee Watch App/Pods-InstantCoffee Watch App.release-dev.xcconfig"; sourceTree = "<group>"; };
+		2D7F046D7C194D157149D596 /* Pods-InstantCoffee Watch App.profile-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstantCoffee Watch App.profile-dev.xcconfig"; path = "Target Support Files/Pods-InstantCoffee Watch App/Pods-InstantCoffee Watch App.profile-dev.xcconfig"; sourceTree = "<group>"; };
 		32A64BC2A84789DF18DE91C9 /* Pods-ImageNotification.profile-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageNotification.profile-dev.xcconfig"; path = "Target Support Files/Pods-ImageNotification/Pods-ImageNotification.profile-dev.xcconfig"; sourceTree = "<group>"; };
 		378EE3737A061267175104F8 /* Pods-Runner.profile-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-prod.xcconfig"; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		4140234BBE66E74FF16E4EE8 /* Pods-Runner.release-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-dev.xcconfig"; sourceTree = "<group>"; };
 		42E146020E036446EC4FC13C /* Pods-ImageNotification.debug-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageNotification.debug-prod.xcconfig"; path = "Target Support Files/Pods-ImageNotification/Pods-ImageNotification.debug-prod.xcconfig"; sourceTree = "<group>"; };
+		477E475A6F258C1C30BD6039 /* Pods-InstantCoffee Watch App.debug-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstantCoffee Watch App.debug-prod.xcconfig"; path = "Target Support Files/Pods-InstantCoffee Watch App/Pods-InstantCoffee Watch App.debug-prod.xcconfig"; sourceTree = "<group>"; };
+		4CA05A473ACA702770D70EF4 /* Pods-InstantCoffee Watch App.profile-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstantCoffee Watch App.profile-prod.xcconfig"; path = "Target Support Files/Pods-InstantCoffee Watch App/Pods-InstantCoffee Watch App.profile-prod.xcconfig"; sourceTree = "<group>"; };
 		5D973E427E3D251890AE8B4D /* Pods-Runner.debug-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-prod.xcconfig"; sourceTree = "<group>"; };
 		602AA55B342A395025847D2F /* Pods-ImageNotification.release-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageNotification.release-dev.xcconfig"; path = "Target Support Files/Pods-ImageNotification/Pods-ImageNotification.release-dev.xcconfig"; sourceTree = "<group>"; };
+		730BF429564FC5C55732D7BA /* Pods-InstantCoffee Watch App.debug-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstantCoffee Watch App.debug-dev.xcconfig"; path = "Target Support Files/Pods-InstantCoffee Watch App/Pods-InstantCoffee Watch App.debug-dev.xcconfig"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
@@ -153,6 +159,7 @@
 		ADBB911EAA915BB15B7F461A /* Pods-Runner.debug-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-dev.xcconfig"; sourceTree = "<group>"; };
 		AE9292A1F4C88E29DFBA9BE0 /* Pods-Runner.release-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-prod.xcconfig"; sourceTree = "<group>"; };
 		B9A71B83368E104C346A503C /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C96D534A8B3FA5D4865602B2 /* libPods-InstantCoffee Watch App.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InstantCoffee Watch App.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D72119AD4BD5A2A04BE8BE6E /* Pods-ImageNotification.profile-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageNotification.profile-prod.xcconfig"; path = "Target Support Files/Pods-ImageNotification/Pods-ImageNotification.profile-prod.xcconfig"; sourceTree = "<group>"; };
 		EED6EB88F330211CF877441A /* Pods-ImageNotification.debug-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageNotification.debug-dev.xcconfig"; path = "Target Support Files/Pods-ImageNotification/Pods-ImageNotification.debug-dev.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -199,6 +206,7 @@
 			children = (
 				8B6408C33B292DD63EF27AEF /* Pods_ImageNotification.framework */,
 				B9A71B83368E104C346A503C /* Pods_Runner.framework */,
+				C96D534A8B3FA5D4865602B2 /* libPods-InstantCoffee Watch App.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -218,6 +226,12 @@
 				4140234BBE66E74FF16E4EE8 /* Pods-Runner.release-dev.xcconfig */,
 				378EE3737A061267175104F8 /* Pods-Runner.profile-prod.xcconfig */,
 				2B2AD262CD74D9FB71C7BADD /* Pods-Runner.profile-dev.xcconfig */,
+				477E475A6F258C1C30BD6039 /* Pods-InstantCoffee Watch App.debug-prod.xcconfig */,
+				730BF429564FC5C55732D7BA /* Pods-InstantCoffee Watch App.debug-dev.xcconfig */,
+				247A9A155E46C7BFF6921065 /* Pods-InstantCoffee Watch App.release-prod.xcconfig */,
+				2C0094E158711667C55FB3C8 /* Pods-InstantCoffee Watch App.release-dev.xcconfig */,
+				4CA05A473ACA702770D70EF4 /* Pods-InstantCoffee Watch App.profile-prod.xcconfig */,
+				2D7F046D7C194D157149D596 /* Pods-InstantCoffee Watch App.profile-dev.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1559,7 +1573,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = "$(inherited)";
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1646,7 +1660,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = "$(inherited)";
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1733,7 +1747,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = "$(inherited)";
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1814,7 +1828,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = "$(inherited)";
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1895,7 +1909,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = "$(inherited)";
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1976,7 +1990,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = "$(inherited)";
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -2093,12 +2107,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mirrormedia.news.InstantCoffee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator watchos watchsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,4";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Debug-prod";
 		};
@@ -2167,12 +2181,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mirrormedia.news.InstantCoffee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator watchos watchsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,4";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Debug-dev";
 		};
@@ -2234,11 +2248,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mirrormedia.news.InstantCoffee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator watchos watchsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,4";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = "Release-prod";
@@ -2301,11 +2315,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mirrormedia.news.InstantCoffee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator watchos watchsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,4";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = "Release-dev";
@@ -2368,11 +2382,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mirrormedia.news.InstantCoffee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator watchos watchsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,4";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = "Profile-prod";
@@ -2435,11 +2449,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mirrormedia.news.InstantCoffee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator watchos watchsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,4";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = "Profile-dev";
