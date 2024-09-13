@@ -22,7 +22,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
 
-version: 6.9.17+467
+version: 6.9.18+468
 
 
 environment:
@@ -61,7 +61,7 @@ dependencies:
     git:
       url: https://github.com/mirror-media/flutter_embedded_webview.git
       ref: master
-      version: ^0.6.0
+      version: ^0.6.1
   # local storage
   localstorage: ^4.0.0+1
   # A Flutter plugin to store data in secure storage
