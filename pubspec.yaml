@@ -22,7 +22,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
 
-version: 6.9.24+474
+version: 6.9.25+475
 
 
 environment:
