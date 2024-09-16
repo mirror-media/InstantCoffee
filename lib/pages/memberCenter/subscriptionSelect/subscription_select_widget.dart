@@ -286,7 +286,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    '優惠 ${productDetailList[index].price} 元',
+                                    '優惠 \$80 元',
                                     style: TextStyle(
                                       fontSize: 13,
                                       color: index % 2 == 0
