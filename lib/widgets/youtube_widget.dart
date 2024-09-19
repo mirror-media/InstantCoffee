@@ -1,69 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class YoutubeWidget extends StatefulWidget {
   final String youtubeId;
   final String? description;
   final double width;
 
-  const YoutubeWidget({
+  const YoutubeWidget({Key? key,
     required this.width,
     required this.youtubeId,
     this.description,
-  });
+  }) : super(key: key);
 
   @override
   _YoutubeWidgetState createState() => _YoutubeWidgetState();
 }
 
-class _YoutubeWidgetState extends State<YoutubeWidget>
-    with AutomaticKeepAliveClientMixin {
-  bool _visible = false;
-  late final WebViewController _webViewController;
-
-  @override
-  bool get wantKeepAlive => true;
+class _YoutubeWidgetState extends State<YoutubeWidget> {
+  late YoutubePlayerController _controller;
 
   @override
   void initState() {
     super.initState();
-    _webViewController = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onPageFinished: (url) {
-            setState(() {
-              _visible = true;
-            });
-          },
-          onWebResourceError: (error) {
-            // Handle error
-          },
-        ),
-      )
-      ..loadRequest(
-        Uri.parse('https://www.youtube.com/embed/${widget.youtubeId}'),
-      );
+    _controller = YoutubePlayerController(
+      initialVideoId: widget.youtubeId,
+      flags: YoutubePlayerFlags(
+        autoPlay: true,
+        mute: false,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AnimatedOpacity(
-          opacity: _visible ? 1.0 : 0.0,
-          duration: const Duration(milliseconds: 500),
-          child: SizedBox(
-            width: widget.width,
-            height: widget.width / 16 * 9,
-            child: WebViewWidget(
-              controller: _webViewController,
-            ),
+        SizedBox(
+          width: widget.width,
+          height: widget.width / 16 * 9,
+          child: YoutubePlayer(
+            controller: _controller,
+            showVideoProgressIndicator: true,
           ),
         ),
-        if (widget.description != null && widget.description != '')
+        if (widget.description != null && widget.description!.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(
@@ -73,5 +54,11 @@ class _YoutubeWidgetState extends State<YoutubeWidget>
           ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }
