@@ -124,6 +124,7 @@ class LoginServices with Logger implements LoginRepos {
 
       oauthCredential = OAuthProvider("apple.com").credential(
         idToken: appleCredential.identityToken,
+        accessToken: appleCredential.authorizationCode,
       );
     } catch (onError) {
       if (onError is SignInWithAppleAuthorizationException) {
