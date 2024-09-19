@@ -30,10 +30,10 @@ struct HomePageView: View {
             } label: {
                 Text("更多" + header.name)
             }
+            .controlSize(.small)
+            .buttonStyle(BorderedProminentButtonStyle())
             .buttonBorderShape(.roundedRectangle(radius: 8.0))
             .tint(header.color)
-            .buttonStyle(BorderedProminentButtonStyle())
-            .controlSize(.mini)
         }
         .padding(4)
         .background(
@@ -48,8 +48,9 @@ struct HomePageView: View {
                             .overlay() {
                                 LinearGradient(colors: [.white, .black], startPoint: .top, endPoint: .bottom)
                             }
+
+                            .ignoresSafeArea()
                             .opacity(0.4)
-                            .edgesIgnoringSafeArea(.all)
                     case .failure(_):
                         ProgressView()
                     case .empty:
