@@ -52,7 +52,7 @@ struct HomePageView: View {
                             .ignoresSafeArea()
                             .opacity(0.4)
                     case .failure(_):
-                        ProgressView()
+                        Image(systemName: "exclamationmark.triangle.fill")
                     case .empty:
                         ProgressView()
                     default:

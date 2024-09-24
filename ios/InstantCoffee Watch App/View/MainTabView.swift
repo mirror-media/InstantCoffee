@@ -6,9 +6,6 @@ struct MainTabView: View {
     @State private var stories: [RSSItem] = []
     @State private var storiesByCategory: [String: [RSSItem]] = [:]
     @State private var categoryToSectionMap: [String: String] = [:]
-    @State private var isLoading: Bool = false
-    @State private var hasAppeared: Bool = false
-
     let storyURL = URL(string: Bundle.main.infoDictionary!["storyURL"] as! String)
 
     func getRSSItems() async {
@@ -22,31 +19,26 @@ struct MainTabView: View {
 
     var body: some View {
         NavigationStack {
-            if isLoading {
-                ProgressView("正在載入")
-            } else {
-                TabView {
+            TabView {
+                if headers.isEmpty || storiesByCategory.isEmpty {
+                    ProgressView("正在載入...")
+                } else {
                     ForEach(headers) { header in
                         if let stories = storiesByCategory[header.name] {
                             HomePageView(header: header, stories: stories)
                         }
                     }
                 }
-                .navigationTitle("鏡週刊")
             }
+            .navigationTitle("鏡週刊")
         }
         .task {
-            print("isLoading")
-            isLoading = true
             do {
                 let (fetchedHeaders, map) = try await fetchHeaders()
                 headers = Array(fetchedHeaders.dropFirst())
                 categoryToSectionMap = map
                 await getRSSItems()
-                print("getRSSItems end")
             } catch {}
-            isLoading = false
-            print("isLoading end")
         }
     }
 }
