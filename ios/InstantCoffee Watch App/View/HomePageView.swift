@@ -16,7 +16,7 @@ struct HomePageView: View {
                 .padding(.vertical, 2)
                 .padding(.horizontal, 4)
                 .background(header.color)
-                .clipShape(RoundedRectangle(cornerRadius: 4))
+                .clipShape(RoundedRectangle(cornerRadius: 6))
             Text(stories.first!.title ?? "")
                 .font(.headline)
                 .fixedSize(horizontal: false, vertical: true)
@@ -32,7 +32,7 @@ struct HomePageView: View {
             }
             .controlSize(.small)
             .buttonStyle(BorderedProminentButtonStyle())
-            .buttonBorderShape(.roundedRectangle(radius: 8.0))
+            .buttonBorderShape(.roundedRectangle(radius: 13.0))
             .tint(header.color)
         }
         .padding(4)
