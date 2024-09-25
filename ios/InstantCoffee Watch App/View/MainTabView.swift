@@ -6,6 +6,7 @@ struct MainTabView: View {
     @State private var stories: [RSSItem] = []
     @State private var storiesByCategory: [String: [RSSItem]] = [:]
     @State private var categoryToSectionMap: [String: String] = [:]
+    @State private var errorMessage: String?
     let storyURL = URL(string: Bundle.main.infoDictionary!["storyURL"] as! String)
 
     func getRSSItems() async {
@@ -20,8 +21,14 @@ struct MainTabView: View {
     var body: some View {
         NavigationStack {
             TabView {
-                if headers.isEmpty || storiesByCategory.isEmpty {
-                    ProgressView("正在載入...")
+                if let errorMessage = errorMessage {
+                    Text(errorMessage)
+                        .foregroundStyle(.red)
+                }
+                else if headers.isEmpty {
+                    ProgressView("正在載入分類...")
+                } else if storiesByCategory.isEmpty {
+                    ProgressView("正在載入新聞...")
                 } else {
                     ForEach(headers) { header in
                         if let stories = storiesByCategory[header.name] {
@@ -32,13 +39,17 @@ struct MainTabView: View {
             }
             .navigationTitle("鏡週刊")
         }
-        .task {
-            do {
-                let (fetchedHeaders, map) = try await fetchHeaders()
-                headers = Array(fetchedHeaders.dropFirst())
-                categoryToSectionMap = map
-                await getRSSItems()
-            } catch {}
+        .onAppear {
+            Task {
+                do {
+                    let (fetchedHeaders, map) = try await fetchHeaders()
+                    headers = Array(fetchedHeaders.dropFirst())
+                    categoryToSectionMap = map
+                    await getRSSItems()
+                } catch {
+                    errorMessage = "載入失敗: \n\(error.localizedDescription)"
+                }
+            }
         }
     }
 }
