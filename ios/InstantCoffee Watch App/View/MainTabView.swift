@@ -7,6 +7,7 @@ struct MainTabView: View {
     @State private var storiesByCategory: [String: [RSSItem]] = [:]
     @State private var categoryToSectionMap: [String: String] = [:]
     @State private var errorMessage: String?
+    @State private var retryTask = false
     let storyURL = URL(string: Bundle.main.infoDictionary!["storyURL"] as! String)
 
     func getRSSItems() async {
@@ -20,39 +21,44 @@ struct MainTabView: View {
 
     var body: some View {
         NavigationStack {
-            TabView {
-                if let errorMessage = errorMessage {
-                    Text(errorMessage)
-                        .foregroundStyle(.red)
+            if let errorMessage = errorMessage {
+                Text(errorMessage)
+                    .foregroundStyle(.red)
+
+                Button("Retry") {
+                    retryTask.toggle()
                 }
-                else if headers.isEmpty {
-                    ProgressView("正在載入分類...")
-                } else if storiesByCategory.isEmpty {
-                    ProgressView("正在載入新聞...")
-                } else {
+                .buttonStyle(.borderedProminent)
+                .padding()
+            }
+            else if headers.isEmpty {
+                ProgressView("正在載入分類...")
+            } else if storiesByCategory.isEmpty {
+                ProgressView("正在載入新聞...")
+            } else {
+                TabView {
                     ForEach(headers) { header in
                         if let stories = storiesByCategory[header.name] {
                             HomePageView(header: header, stories: stories)
                         }
                     }
                 }
+                .navigationTitle("鏡週刊")
             }
-            .navigationTitle("鏡週刊")
         }
-        .onAppear {
-            Task {
-                do {
-                    let (fetchedHeaders, map) = try await fetchHeaders()
-                    headers = Array(fetchedHeaders.dropFirst())
-                    categoryToSectionMap = map
-                    await getRSSItems()
-                } catch {
-                    errorMessage = "載入失敗: \n\(error.localizedDescription)"
-                }
+        .task(id: retryTask) {
+            do {
+                let (fetchedHeaders, map) = try await fetchHeaders()
+                headers = Array(fetchedHeaders.dropFirst())
+                categoryToSectionMap = map
+                await getRSSItems()
+            } catch {
+                errorMessage = "載入失敗: \n\(error)"
             }
         }
     }
 }
+
 
 #Preview {
     MainTabView()

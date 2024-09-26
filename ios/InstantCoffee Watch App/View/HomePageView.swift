@@ -6,7 +6,8 @@ struct HomePageView: View {
     let header: Header
     let stories: [RSSItem]
     @State private var backgroundImage: Image? = nil
-    
+    @State private var retry: Bool = false
+
     var body: some View {
         
         VStack(alignment: .leading, spacing: 5) {
@@ -48,11 +49,15 @@ struct HomePageView: View {
                             .overlay() {
                                 LinearGradient(colors: [.white, .black], startPoint: .top, endPoint: .bottom)
                             }
-
                             .ignoresSafeArea()
                             .opacity(0.4)
                     case .failure(_):
-                        Image(systemName: "exclamationmark.triangle.fill")
+                        VStack {
+                            Image(systemName: "exclamationmark.triangle.fill")
+//                            Button("Retry") {
+//                                retry.toggle()
+//                            }
+                        }
                     case .empty:
                         ProgressView()
                     default:
