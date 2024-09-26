@@ -24,10 +24,11 @@ struct MainTabView: View {
             if let errorMessage = errorMessage {
                 Text(errorMessage)
                     .foregroundStyle(.red)
-
+                    .fixedSize(horizontal: false, vertical: true)
                 Button("Retry") {
                     retryTask.toggle()
                 }
+                .controlSize(.small)
                 .buttonStyle(.borderedProminent)
                 .padding()
             }
@@ -58,7 +59,6 @@ struct MainTabView: View {
         }
     }
 }
-
 
 #Preview {
     MainTabView()
