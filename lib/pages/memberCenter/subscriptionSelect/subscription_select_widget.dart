@@ -237,7 +237,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
               const Divider(),
               _memberClause('免費閱讀數位版動態雜誌'),
               const Divider(),
-              _memberClause('月方案定價 \$$originalPrice 元，限時優惠 \$$specialPrice 元'),
+              _memberClause('月方案定價 ${productDetailList[0].price} 元'),
               const SizedBox(height: 24),
               isBuying
                   ? const Column(
@@ -286,7 +286,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    '優惠 \$80 元',
+                                    '優惠 ${productDetailList[0].price} 元',
                                     style: TextStyle(
                                       fontSize: 13,
                                       color: index % 2 == 0
