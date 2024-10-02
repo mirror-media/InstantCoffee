@@ -30,6 +30,7 @@
 		82A65D832C6F1B7100EDC689 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A65D822C6F1B7100EDC689 /* ListView.swift */; };
 		82A65D852C6F1C2300EDC689 /* DigestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A65D842C6F1C2300EDC689 /* DigestView.swift */; };
 		82A65D872C6F1D2800EDC689 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A65D862C6F1D2800EDC689 /* MainTabView.swift */; };
+		82C3368F2CAD37E600103DBC /* CachedImage in Frameworks */ = {isa = PBXBuildFile; productRef = 82C3368E2CAD37E600103DBC /* CachedImage */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
@@ -177,6 +178,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82C3368F2CAD37E600103DBC /* CachedImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -482,6 +484,9 @@
 				Base,
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
+			packageReferences = (
+				82C3368D2CAD37E600103DBC /* XCRemoteSwiftPackageReference "CachedImage" */,
+			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -2707,6 +2712,25 @@
 			defaultConfigurationName = "Release-prod";
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		82C3368D2CAD37E600103DBC /* XCRemoteSwiftPackageReference "CachedImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/leoz/CachedImage.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.8;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		82C3368E2CAD37E600103DBC /* CachedImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 82C3368D2CAD37E600103DBC /* XCRemoteSwiftPackageReference "CachedImage" */;
+			productName = CachedImage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 97C146E61CF9000F007C117D /* Project object */;
 }
