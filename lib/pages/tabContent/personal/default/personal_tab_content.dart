@@ -66,12 +66,12 @@ class _PersonalTabContentState extends State<PersonalTabContent> {
               delegate: NewsMarqueePersistentHeaderDelegate(),
               floating: true,
             ),
-          SliverToBoxAdapter(
-            child: BlocProvider(
-              create: (BuildContext context) => MemberSubscriptionTypeCubit(),
-              child: MemberSubscriptionTypeBlock(),
-            ),
-          ),
+          // SliverToBoxAdapter(
+          //   child: BlocProvider(
+          //     create: (BuildContext context) => MemberSubscriptionTypeCubit(),
+          //     child: MemberSubscriptionTypeBlock(),
+          //   ),
+          // ),
           _buildSubscribedCategoryList(),
           _buildTabContent(),
         ],
