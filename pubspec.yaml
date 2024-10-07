@@ -20,10 +20,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
 
-
-
-version: 6.9.17+467
-
+version: 6.9.35+485
 
 environment:
   sdk: '>=2.12.0 <=3.4.4'
@@ -61,7 +58,7 @@ dependencies:
     git:
       url: https://github.com/mirror-media/flutter_embedded_webview.git
       ref: master
-      version: ^0.6.0
+      version: ^0.6.2
   # local storage
   localstorage: ^4.0.0+1
   # A Flutter plugin to store data in secure storage
@@ -130,8 +127,9 @@ dependencies:
   # firebase crashlytics
   firebase_crashlytics: ^4.0.4
 
+
   # firebase auth
-  firebase_auth: ^5.2.0
+  firebase_auth: ^5.3.0
   # google sign in
   google_sign_in: ^5.2.2
   # facebook sign in
