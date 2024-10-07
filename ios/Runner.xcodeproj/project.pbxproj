@@ -31,6 +31,7 @@
 		82A65D852C6F1C2300EDC689 /* DigestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A65D842C6F1C2300EDC689 /* DigestView.swift */; };
 		82A65D872C6F1D2800EDC689 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A65D862C6F1D2800EDC689 /* MainTabView.swift */; };
 		82C3368F2CAD37E600103DBC /* CachedImage in Frameworks */ = {isa = PBXBuildFile; productRef = 82C3368E2CAD37E600103DBC /* CachedImage */; };
+		82E2D61B2CB40078008E3EEA /* MafRSSItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E2D61A2CB40078008E3EEA /* MafRSSItem.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
@@ -149,6 +150,7 @@
 		82A65D862C6F1D2800EDC689 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		82A65D8A2C6F31B100EDC689 /* devConfig.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = devConfig.xcconfig; sourceTree = "<group>"; };
 		82A65D8B2C6F31D300EDC689 /* prodConfig.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = prodConfig.xcconfig; sourceTree = "<group>"; };
+		82E2D61A2CB40078008E3EEA /* MafRSSItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MafRSSItem.swift; sourceTree = "<group>"; };
 		8B6408C33B292DD63EF27AEF /* Pods_ImageNotification.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ImageNotification.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
@@ -266,6 +268,7 @@
 			children = (
 				82A65D762C6F14E500EDC689 /* Header.swift */,
 				82A65D7C2C6F175800EDC689 /* RSSItem.swift */,
+				82E2D61A2CB40078008E3EEA /* MafRSSItem.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -710,6 +713,7 @@
 				82A65D582C6F025A00EDC689 /* InstantCoffeeApp.swift in Sources */,
 				829079902C748E6B0094D8E6 /* ListCellView.swift in Sources */,
 				82A65D7B2C6F171F00EDC689 /* HomePageView.swift in Sources */,
+				82E2D61B2CB40078008E3EEA /* MafRSSItem.swift in Sources */,
 				82A65D812C6F1B2700EDC689 /* OrganizeStories.swift in Sources */,
 				82A65D872C6F1D2800EDC689 /* MainTabView.swift in Sources */,
 			);
