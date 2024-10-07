@@ -39,8 +39,10 @@ struct DigestView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 6))
                     Text(story.title ?? "")
                         .font(.headline)
-                    Text(story.date ?? "")
-                        .foregroundStyle(header.color)
+                    if let date = story.date {
+                        Text(date)
+                            .foregroundStyle(header.color)
+                    }
                     Text(story.digest ?? "")
                 }
                 .frame(maxWidth: .infinity)

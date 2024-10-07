@@ -41,9 +41,10 @@ struct HomePageView: View {
                     .font(.headline)
                     .fixedSize(horizontal: false, vertical: true)
                     .lineLimit(2)
-                Text(stories.first!.date ?? "")
-                    .foregroundStyle(header.color)
-                
+                if let date = stories.first?.date {
+                    Text(date)
+                        .foregroundStyle(header.color)
+                }
                 NavigationLink {
                     ListView(header: header, stories: stories)
                         .navigationTitle(header.name)

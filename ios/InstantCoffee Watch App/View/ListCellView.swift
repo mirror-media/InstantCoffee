@@ -9,9 +9,11 @@ struct ListCellView: View {
         VStack(alignment: .leading) {
             Text(story.title ?? "")
                 .font(.headline)
-            Text(story.date ?? "")
-                .font(.footnote)
-                .foregroundStyle(.gray)
+            if let date = story.date {
+                Text(story.date ?? "")
+                    .font(.footnote)
+                    .foregroundStyle(.gray)
+            }
         }
     }
 }

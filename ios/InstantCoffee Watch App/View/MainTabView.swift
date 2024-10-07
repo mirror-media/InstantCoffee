@@ -11,7 +11,7 @@ struct MainTabView: View {
     let storyURL = URL(string: Bundle.main.infoDictionary!["storyURL"] as! String)
     let mafURL = URL(string: Bundle.main.infoDictionary!["mafURL"] as! String)
 
-    func getRSSItems() {
+    func getRSSItems() async {
         let rssParser = RSSParser()
         let mafParser = MafRSSParser()
 
@@ -19,11 +19,11 @@ struct MainTabView: View {
         rssParser.parse(from: storyURL) { items in
             self.stories = items
             self.storiesByCategory = organizeStoriesByCategory(stories: items, headers: self.headers, categoryToSectionMap: self.categoryToSectionMap)
-        }
 
-        guard let mafURL = mafURL else { return }
-        mafParser.parse(from: mafURL) { mafItems in
-            self.storiesByCategory["瑪法達"] = mafItems
+            guard let mafURL = mafURL else { return }
+            mafParser.parse(from: mafURL) { mafItems in
+                self.storiesByCategory["瑪法達"] = mafItems
+            }
         }
     }
 
@@ -60,7 +60,7 @@ struct MainTabView: View {
                 let (fetchedHeaders, map) = try await fetchHeaders()
                 headers = Array(fetchedHeaders.dropFirst())
                 categoryToSectionMap = map
-                getRSSItems()
+                await getRSSItems()
             } catch {
                 errorMessage = "載入失敗: \n\(error)"
             }
