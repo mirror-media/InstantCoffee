@@ -1615,7 +1615,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "InstantCoffee-Watch-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = InstantCoffee;
+				INFOPLIST_KEY_CFBundleDisplayName = "鏡週刊";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1702,7 +1702,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "InstantCoffee-Watch-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = InstantCoffee;
+				INFOPLIST_KEY_CFBundleDisplayName = "鏡週刊";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1783,7 +1783,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "InstantCoffee-Watch-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = InstantCoffee;
+				INFOPLIST_KEY_CFBundleDisplayName = "鏡週刊";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1864,7 +1864,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "InstantCoffee-Watch-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = InstantCoffee;
+				INFOPLIST_KEY_CFBundleDisplayName = "鏡週刊";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1945,7 +1945,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "InstantCoffee-Watch-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = InstantCoffee;
+				INFOPLIST_KEY_CFBundleDisplayName = "鏡週刊";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2026,7 +2026,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "InstantCoffee-Watch-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = InstantCoffee;
+				INFOPLIST_KEY_CFBundleDisplayName = "鏡週刊";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
