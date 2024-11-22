@@ -3,14 +3,17 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/login/states.dart';
 import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/pages/login/login_controller.dart';
 import 'package:readr_app/widgets/member_login_policy.dart';
 
 class LoginForm extends StatefulWidget {
   final LoginState state;
+
   const LoginForm({
     required this.state,
   });
@@ -22,6 +25,15 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _email = '';
+  LoginController? controller;
+
+  @override
+  void initState() {
+    if (!Get.isRegistered<LoginController>()) {
+      Get.put(LoginController());
+    }
+    controller = Get.find<LoginController>();
+  }
 
   _signInWithGoogle() async {
     context.read<LoginBloc>().add(SignInWithGoogle());
@@ -42,9 +54,26 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    return _loginStandardWidget(
-      width,
-      widget.state,
+    return Stack(
+      children: [
+        _loginStandardWidget(
+          width,
+          widget.state,
+        ),
+        Obx(() {
+          final isLoading = controller!.rxIsLoading.value;
+          return isLoading
+              ? Container(
+                  width: Get.width,
+                  height: Get.height,
+                  color: Colors.grey.withAlpha(125),
+                  child: const Center(
+                      child: CircularProgressIndicator(
+                    color: appColor,
+                  )))
+              : const SizedBox.shrink();
+        }),
+      ],
     );
   }
 
@@ -97,6 +126,25 @@ class _LoginFormState extends State<LoginForm> {
               child: _emailLoginButton(),
             ),
           ),
+        if (Platform.isIOS)
+          SliverToBoxAdapter(
+              child: Column(
+            children: [
+              const SizedBox(
+                height: 16,
+              ),
+              InkWell(
+                onTap: controller?.anonymousLogin,
+                child: const Text(
+                  '以訪客模式使用',
+                  style: TextStyle(
+                      color: Color(0xFF1D9FB8),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400),
+                ),
+              ),
+            ],
+          )),
         if (widget.state is FetchSignInMethodsForEmailLoading)
           SliverToBoxAdapter(
             child: Padding(

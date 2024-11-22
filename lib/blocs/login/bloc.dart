@@ -4,9 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/login/states.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
+import 'package:readr_app/data/providers/auth_info_provider.dart';
 import 'package:readr_app/helpers/error_log_helper.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/helpers/route_generator.dart';
@@ -17,7 +19,7 @@ import 'package:readr_app/services/login_service.dart';
 import 'package:readr_app/services/member_service.dart';
 import 'package:readr_app/widgets/logger.dart';
 
-enum LoginLoadingType { google, facebook, apple, email }
+enum LoginLoadingType { google, facebook, apple, email, anonymous }
 
 class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
   final LoginRepos loginRepos;
@@ -166,47 +168,46 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
   Future<void> _fetchMemberSubscriptionTypeToLogin(
     Emitter<LoginState> emit,
   ) async {
-    try {
-      MemberIdAndSubscriptionType? memberIdAndSubscriptionType =
-          await _memberService.checkSubscriptionType(_auth.currentUser!);
-      if (memberIdAndSubscriptionType != null &&
-          premiumSubscriptionType
-              .contains(memberIdAndSubscriptionType.subscriptionType)) {
-        if (_loginLoadingType == LoginLoadingType.email) {
-          emit(FetchSignInMethodsForEmailLoading());
-        } else {
-          LoginType loginType = LoginType.google;
-          if (_loginLoadingType == LoginLoadingType.facebook) {
-            loginType = LoginType.facebook;
-          } else if (_loginLoadingType == LoginLoadingType.apple) {
-            loginType = LoginType.apple;
-          }
-
-          emit(LoginLoading(loginType: loginType));
-        }
+    MemberIdAndSubscriptionType? memberIdAndSubscriptionType =
+        await _memberService.checkSubscriptionType(_auth.currentUser!);
+    if (memberIdAndSubscriptionType != null &&
+        premiumSubscriptionType
+            .contains(memberIdAndSubscriptionType.subscriptionType)) {
+      if (_loginLoadingType == LoginLoadingType.email) {
+        emit(FetchSignInMethodsForEmailLoading());
       } else {
-        emit(LoginSuccess(
-          israfelId: memberIdAndSubscriptionType!.israfelId!,
-          subscriptionType: memberIdAndSubscriptionType.subscriptionType!,
-          isNewebpay: memberIdAndSubscriptionType.isNewebpay,
-        ));
+        LoginType loginType = LoginType.google;
+        if (_loginLoadingType == LoginLoadingType.facebook) {
+          loginType = LoginType.facebook;
+        } else if (_loginLoadingType == LoginLoadingType.apple) {
+          loginType = LoginType.apple;
+        }
+        emit(LoginLoading(loginType: loginType));
       }
+    } else {
+      emit(LoginSuccess(
+        israfelId: memberIdAndSubscriptionType!.israfelId!,
+        subscriptionType: memberIdAndSubscriptionType.subscriptionType!,
+        isNewebpay: memberIdAndSubscriptionType.isNewebpay,
+      ));
+    }
 
-      memberBloc.add(UpdateSubscriptionType(
-          isLogin: true,
-          israfelId: memberIdAndSubscriptionType.israfelId,
-          subscriptionType: memberIdAndSubscriptionType.subscriptionType));
+    memberBloc.add(UpdateSubscriptionType(
+        isLogin: true,
+        israfelId: memberIdAndSubscriptionType.israfelId,
+        subscriptionType: memberIdAndSubscriptionType.subscriptionType));
 
-      Fluttertoast.showToast(
-          msg: '登入成功',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0);
-      _navigateToRouteName(memberIdAndSubscriptionType.subscriptionType!);
-    } catch (e, s) {
+    Fluttertoast.showToast(
+        msg: '登入成功',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0);
+    _navigateToRouteName(memberIdAndSubscriptionType.subscriptionType!);
+
+    try {} catch (e, s) {
       // fetch member subscrition type fail
       debugLog(e.toString());
 
@@ -260,12 +261,15 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
     Emitter<LoginState> emit,
   ) async {
     debugLog(event.toString());
+
     if (_auth.currentUser == null) {
       emit(LoginInitState());
     } else {
+      MemberIdAndSubscriptionType? memberIdAndSubscriptionType =
+          await _memberService.checkSubscriptionType(_auth.currentUser!);
+      final AuthInfoProvider authInfoProvider = Get.find();
+
       try {
-        MemberIdAndSubscriptionType? memberIdAndSubscriptionType =
-            await _memberService.checkSubscriptionType(_auth.currentUser!);
         if (memberIdAndSubscriptionType != null) {
           emit(LoginSuccess(
             israfelId: memberIdAndSubscriptionType.israfelId!,
@@ -279,7 +283,8 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
               subscriptionType: memberIdAndSubscriptionType.subscriptionType));
 
           if (premiumSubscriptionType
-              .contains(memberIdAndSubscriptionType.subscriptionType)) {
+                  .contains(memberIdAndSubscriptionType.subscriptionType) &&
+              authInfoProvider.rxnLoginType.value != LoginType.anonymous) {
             await runPremiumAnimation();
           }
         }

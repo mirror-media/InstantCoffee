@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/firebase_login_status.dart';
 import 'package:readr_app/widgets/logger.dart';
