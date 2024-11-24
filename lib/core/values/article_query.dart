@@ -1,4 +1,4 @@
-class QueryDB {
+class ArticleQueryDB {
   static String fetchRelatedImageByTopic = '''
     query{
       photos(

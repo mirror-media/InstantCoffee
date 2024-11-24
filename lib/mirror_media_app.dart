@@ -22,22 +22,22 @@ class MirrorMediaApp extends StatefulWidget {
 class _MirrorMediaAppState extends State<MirrorMediaApp> {
   final IAPSubscriptionHelper _iapSubscriptionHelper = IAPSubscriptionHelper();
   final RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
+
   @override
   void initState() {
     _iapSubscriptionHelper.setSubscription();
     super.initState();
-    print(_remoteConfigHelper.textScale);
   }
 
   @override
   void dispose() {
     _iapSubscriptionHelper.cancelSubscriptionStream();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-
     // force portrait
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,

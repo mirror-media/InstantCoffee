@@ -11,7 +11,7 @@ import 'package:readr_app/models/podcast_info/podcast_info.dart';
 import 'package:readr_app/models/post/post_model.dart';
 import 'package:readr_app/models/story_res.dart';
 
-import '../../core/values/query.dart';
+import '../../core/values/article_query.dart';
 import '../../helpers/environment.dart';
 import '../../models/category.dart';
 import '../../models/record.dart';
@@ -58,7 +58,7 @@ class ArticlesApiProvider extends GetConnect {
   /// 首頁獲得Topic按鈕資訊 預設為5個
   Future<List<TopicModel>?> getTopicTabList(
       {int take = homePageTopicCount, int skip = 0}) async {
-    String queryString = QueryDB.fetchTopicList.format([take, skip]);
+    String queryString = ArticleQueryDB.fetchTopicList.format([take, skip]);
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     List<TopicModel> topicList = <TopicModel>[];
@@ -81,7 +81,7 @@ class ArticlesApiProvider extends GetConnect {
       int take = articleTakeCount,
       int skip = 0}) async {
     String queryString =
-        QueryDB.fetchRelatedPostsByTopic.format([take, skip, topicId]);
+        ArticleQueryDB.fetchRelatedPostsByTopic.format([take, skip, topicId]);
     List<PostModel> postList = <PostModel>[];
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
@@ -102,7 +102,7 @@ class ArticlesApiProvider extends GetConnect {
   /// 另外傳回的是相對路徑,因此還需要再加上root路徑
   /// 傳回範例：/images/20161003190629-c438d73ee83efeafa8746fa33216253c.jpg
   Future<List<String>> getRelatedImagesUrlByTopicId() async {
-    String queryString = QueryDB.fetchRelatedImageByTopic.format([122]);
+    String queryString = ArticleQueryDB.fetchRelatedImageByTopic.format([122]);
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     List<String> urlList = [];
@@ -122,7 +122,7 @@ class ArticlesApiProvider extends GetConnect {
   }
 
   Future<StoryRes?> getArticleInfoBySlug({required String slug}) async {
-    String queryString = QueryDB.fetchArticleInfoBySlug.format([slug]);
+    String queryString = ArticleQueryDB.fetchArticleInfoBySlug.format([slug]);
 
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
@@ -167,7 +167,7 @@ class ArticlesApiProvider extends GetConnect {
   Future<List<Record>> getArticleListBySection(
       {required String section, int page = 0}) async {
     String queryString =
-        QueryDB.fetchArticleListBySection.format([page * 12, section]);
+        ArticleQueryDB.fetchArticleListBySection.format([page * 12, section]);
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     List<Record> articleList = [];
@@ -184,7 +184,7 @@ class ArticlesApiProvider extends GetConnect {
   }
 
   Future<List<Section>> getSectionList() async {
-    String queryString = QueryDB.fetchSectionList;
+    String queryString = ArticleQueryDB.fetchSectionList;
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     List<Section> sectionList = [];
@@ -198,7 +198,7 @@ class ArticlesApiProvider extends GetConnect {
   }
 
   Future<List<Category>> getCategoriesList() async {
-    String queryString = QueryDB.fetchCategoriesList;
+    String queryString = ArticleQueryDB.fetchCategoriesList;
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     List<Category> categoryList = [];
@@ -214,7 +214,7 @@ class ArticlesApiProvider extends GetConnect {
   Future<List<Record>> getArticleListByCategoryList(
       {required List<Category> list, int page = 0}) async {
     if (list.isEmpty) return [];
-    String queryString = QueryDB.fetchArticleListByCategoryList
+    String queryString = ArticleQueryDB.fetchArticleListByCategoryList
         .format([page * articleTakeCount, list.toSubscriptionStringList()]);
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
@@ -233,8 +233,8 @@ class ArticlesApiProvider extends GetConnect {
 
   Future<RecordListAndAllCount> getArticleListByTag(
       {required String tag, int page = 1}) async {
-    String queryString =
-        QueryDB.fetchArticleListByTags.format([page * articleTakeCount, tag]);
+    String queryString = ArticleQueryDB.fetchArticleListByTags
+        .format([page * articleTakeCount, tag]);
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     List<Record> articleList = [];
@@ -255,7 +255,7 @@ class ArticlesApiProvider extends GetConnect {
   }
 
   Future<ExternalStory> getExternalArticleBySlug({required String slug}) async {
-    String queryString = QueryDB.getExternalArticleBySlug.format([slug]);
+    String queryString = ArticleQueryDB.getExternalArticleBySlug.format([slug]);
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     if (result == null ||
@@ -265,7 +265,7 @@ class ArticlesApiProvider extends GetConnect {
   }
 
   Future<MagazineList> getMagazinesList(String type, {int page = 1}) async {
-    String queryString = QueryDB.getMagazinesList.format([page * 8]);
+    String queryString = ArticleQueryDB.getMagazinesList.format([page * 8]);
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     if (result == null ||
@@ -288,7 +288,7 @@ class ArticlesApiProvider extends GetConnect {
   }
 
   Future<LiveStreamModel?> getLiveStreamModel() async {
-    String queryString = QueryDB.getLiveStreamLink;
+    String queryString = ArticleQueryDB.getLiveStreamLink;
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     if (result == null ||

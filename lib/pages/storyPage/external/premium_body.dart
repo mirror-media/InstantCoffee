@@ -4,6 +4,7 @@ import 'package:readr_app/core/extensions/string_extension.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/models/external_story.dart';
 import 'package:readr_app/widgets/custom_cached_network_image.dart';
+import 'package:readr_app/helpers/paragraph_format.dart';
 
 import '../../../core/values/string.dart';
 
@@ -16,6 +17,9 @@ class PremiumBody extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = width / 16 * 9;
+
+    ParagraphFormat paragraphFormat = ParagraphFormat();
+
     return ListView(padding: const EdgeInsets.only(top: 24), children: [
       _buildCategoryText(),
       const SizedBox(height: 8),
@@ -48,14 +52,12 @@ class PremiumBody extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 24),
-      HtmlWidget(
+      Padding(
+        padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
+        child: paragraphFormat.parseTheTextToHtmlWidget(
         externalStory.content ?? StringDefault.valueNullDefault,
-        customStylesBuilder: (element) {
-          if (element.localName == 'a') {
-            return {'padding': '0px 0px 0px 0px'};
-          }
-          return {'padding': '0px 20px 0px 20px'};
-        },
+        fontSize: 18,
+        ),
       ),
       const SizedBox(height: 24),
     ]);
