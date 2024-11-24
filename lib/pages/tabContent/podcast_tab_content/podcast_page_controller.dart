@@ -27,7 +27,7 @@ class PodcastPageController extends GetxController
     animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 200));
     animation =
-        Tween(begin: -(authProvider.isLogin.isTrue ? 130.0 : 165.0), end: 0.0)
+        Tween(begin: -(authProvider.rxIsLogin.isTrue ? 130.0 : 165.0), end: 0.0)
             .animate(animationController);
     rxPodcastList.value = await _articlesApiProvider.getPodcastInfo();
     for (final podcast in rxPodcastList) {

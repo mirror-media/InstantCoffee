@@ -312,17 +312,25 @@ class RouteGenerator {
     navigatorKey.currentState!.pushNamed(search);
   }
 
-  static void navigateToLogin({
-    String? routeName,
-    Map? routeArguments,
-  }) {
-    navigatorKey.currentState!.pushNamed(
-      login,
-      arguments: {
-        'routeName': routeName,
-        'routeArguments': routeArguments,
-      },
-    );
+  static void navigateToLogin(
+      {String? routeName, Map? routeArguments, bool? isOff = false}) {
+    if (isOff == true) {
+      navigatorKey.currentState!.popAndPushNamed(
+        login,
+        arguments: {
+          'routeName': routeName,
+          'routeArguments': routeArguments,
+        },
+      );
+    } else {
+      navigatorKey.currentState!.pushNamed(
+        login,
+        arguments: {
+          'routeName': routeName,
+          'routeArguments': routeArguments,
+        },
+      );
+    }
   }
 
   static Future<void> navigateToEmailRegistered({

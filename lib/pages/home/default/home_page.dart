@@ -5,21 +5,21 @@ import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/pages/home/default/home_widget.dart';
 import 'package:readr_app/pages/home/home_controller.dart';
 
-class HomePage extends GetView<HomeController> with WidgetsBindingObserver{
+class HomePage extends GetView<HomeController> with WidgetsBindingObserver {
   final GlobalKey settingKey;
 
-  const HomePage({Key? key,
+  const HomePage({
+    Key? key,
     required this.settingKey,
   }) : super(key: key);
-
 
   PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
         key: settingKey,
         icon: const Icon(Icons.settings),
-        onPressed: () =>
-            RouteGenerator.navigateToNotificationSettings(controller.onBoardingBloc),
+        onPressed: () => RouteGenerator.navigateToNotificationSettings(
+            controller.onBoardingBloc),
       ),
       backgroundColor: appColor,
       centerTitle: true,

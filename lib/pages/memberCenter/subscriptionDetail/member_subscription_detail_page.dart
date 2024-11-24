@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:readr_app/blocs/login/states.dart';
 import 'package:readr_app/blocs/memberCenter/memberDetail/member_detail_cubit.dart';
 import 'package:readr_app/helpers/data_constants.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/models/member_subscription_detail.dart';
-import 'package:intl/intl.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/models/payment_record.dart';
 import 'package:readr_app/pages/memberCenter/shared/state_error_widget.dart';
+import 'package:readr_app/pages/memberCenter/subscriptionDetail/member_subscription_detail_controller.dart';
 import 'package:readr_app/pages/shared/member_subscription_type_title_widget.dart';
 
 class MemberSubscriptionDetailPage extends StatefulWidget {
   final SubscriptionType subscriptionType;
+
   const MemberSubscriptionDetailPage({required this.subscriptionType});
+
   @override
   _MemberSubscriptionDetailPageState createState() =>
       _MemberSubscriptionDetailPageState();
@@ -20,8 +25,11 @@ class MemberSubscriptionDetailPage extends StatefulWidget {
 class _MemberSubscriptionDetailPageState
     extends State<MemberSubscriptionDetailPage> {
   late SubscriptionType _subscriptionType;
+  MemberSubscriptionDetailController? controller;
+
   @override
   void initState() {
+    controller = MemberSubscriptionDetailController(widget.subscriptionType);
     super.initState();
     _subscriptionType = widget.subscriptionType;
     if (_subscriptionType == SubscriptionType.subscribe_monthly ||
@@ -94,10 +102,9 @@ class _MemberSubscriptionDetailPageState
                 Material(
                   elevation: 1,
                   child: Container(
-                    color: Colors.white,
-                    padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-                    child: _memberSubscriptionTypeWidget(_subscriptionType),
-                  ),
+                      color: Colors.white,
+                      padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                      child: _memberSubscriptionTypeWidget(_subscriptionType)),
                 ),
                 Material(
                   elevation: 1,
@@ -208,7 +215,12 @@ class _MemberSubscriptionDetailPageState
           child: Container(
             color: Colors.white,
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: _memberSubscriptionTypeWidget(_subscriptionType),
+            child: Obx(() {
+              final loginType = controller?.authInfoProvider.rxnLoginType.value;
+              return loginType == LoginType.anonymous
+                  ? _anonymousSubscriptionTypeWidget(_subscriptionType)
+                  : _memberSubscriptionTypeWidget(_subscriptionType);
+            }),
           ),
         ),
         Material(
@@ -263,6 +275,20 @@ class _MemberSubscriptionDetailPageState
           fontSize: 17,
         ),
       ),
+    ]);
+  }
+
+  Widget _anonymousSubscriptionTypeWidget(SubscriptionType subscriptionType) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const Text(
+        '會員等級',
+        style: TextStyle(fontSize: 13, color: appColor),
+      ),
+      const SizedBox(
+        height: 4,
+      ),
+      Text(subscriptionType == SubscriptionType.none ? '匿名訪客' : '訂閱訪客',
+          style: const TextStyle(fontSize: 17))
     ]);
   }
 
