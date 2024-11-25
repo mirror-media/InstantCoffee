@@ -35,6 +35,7 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		DE6DC488DDA198A762395975 /* libPods-InstantCoffee Watch App.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C96D534A8B3FA5D4865602B2 /* libPods-InstantCoffee Watch App.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -181,6 +182,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				82C3368F2CAD37E600103DBC /* CachedImage in Frameworks */,
+				DE6DC488DDA198A762395975 /* libPods-InstantCoffee Watch App.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,6 +414,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 82A65D602C6F025B00EDC689 /* Build configuration list for PBXNativeTarget "InstantCoffee Watch App" */;
 			buildPhases = (
+				10F26F3287D6D9E9319FDDF6 /* [CP] Check Pods Manifest.lock */,
 				82A65D4E2C6F025A00EDC689 /* Sources */,
 				82A65D4F2C6F025A00EDC689 /* Frameworks */,
 				82A65D502C6F025A00EDC689 /* Resources */,
@@ -488,7 +491,7 @@
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
-				82C3368D2CAD37E600103DBC /* XCRemoteSwiftPackageReference "CachedImage" */,
+				82C3368D2CAD37E600103DBC /* XCRemoteSwiftPackageReference "CachedImage.git" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -558,6 +561,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "environment=\"default\"\n\n# Regex to extract the scheme name from the Build Configuration\n# We have named our Build Configurations as Debug-dev, Debug-prod etc.\n# Here, dev and prod are the scheme names. This kind of naming is required by Flutter for flavors to work.\n# We are using the $CONFIGURATION variable available in the XCode build environment to extract \n# the environment (or flavor)\n# For eg.\n# If CONFIGURATION=\"Debug-prod\", then environment will get set to \"prod\".\nsetopt KSH_ARRAYS BASH_REMATCH\nif [[ $CONFIGURATION =~ -([^-]*)$ ]]; then\nenvironment=${BASH_REMATCH[1]}\nfi\n\necho $environment\n\n# Name and path of the resource we're copying\nGOOGLESERVICE_INFO_PLIST=GoogleService-Info.plist\nGOOGLESERVICE_INFO_FILE=${PROJECT_DIR}/config/${environment}/${GOOGLESERVICE_INFO_PLIST}\n\n# Make sure GoogleService-Info.plist exists\necho \"Looking for ${GOOGLESERVICE_INFO_PLIST} in ${GOOGLESERVICE_INFO_FILE}\"\nif [ ! -f $GOOGLESERVICE_INFO_FILE ]\nthen\necho \"No GoogleService-Info.plist found. Please ensure it's in the proper directory.\"\nexit 1\nfi\nunsetopt KSH_ARRAYS\n# Get a reference to the destination location for the GoogleService-Info.plist\n# This is the default location where Firebase init code expects to find GoogleServices-Info.plist file\nPLIST_DESTINATION=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\necho \"Will copy ${GOOGLESERVICE_INFO_PLIST} to final destination: ${PLIST_DESTINATION}\"\n\n# Copy over the prod GoogleService-Info.plist for Release builds\ncp \"${GOOGLESERVICE_INFO_FILE}\" \"${PLIST_DESTINATION}\"\n";
+		};
+		10F26F3287D6D9E9319FDDF6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-InstantCoffee Watch App-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
 		};
 		20EE9295E549A575C39B11B6 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2718,7 +2743,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		82C3368D2CAD37E600103DBC /* XCRemoteSwiftPackageReference "CachedImage" */ = {
+		82C3368D2CAD37E600103DBC /* XCRemoteSwiftPackageReference "CachedImage.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/leoz/CachedImage.git";
 			requirement = {
@@ -2731,7 +2756,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		82C3368E2CAD37E600103DBC /* CachedImage */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 82C3368D2CAD37E600103DBC /* XCRemoteSwiftPackageReference "CachedImage" */;
+			package = 82C3368D2CAD37E600103DBC /* XCRemoteSwiftPackageReference "CachedImage.git" */;
 			productName = CachedImage;
 		};
 /* End XCSwiftPackageProductDependency section */
