@@ -14,7 +14,7 @@ struct ListView: View {
                 .padding(.vertical, 2)
                 .padding(.horizontal, 4)
                 .background(header.color)
-                .clipShape(RoundedRectangle(cornerRadius: 4))) {
+                .clipShape(RoundedRectangle(cornerRadius: 6))) {
                 ForEach(stories) { story in
                     NavigationLink(destination: DigestView(header: header, story: story)) {
                         ListCellView(story: story)

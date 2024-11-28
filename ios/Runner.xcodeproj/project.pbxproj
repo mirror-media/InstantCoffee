@@ -30,6 +30,8 @@
 		82A65D832C6F1B7100EDC689 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A65D822C6F1B7100EDC689 /* ListView.swift */; };
 		82A65D852C6F1C2300EDC689 /* DigestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A65D842C6F1C2300EDC689 /* DigestView.swift */; };
 		82A65D872C6F1D2800EDC689 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A65D862C6F1D2800EDC689 /* MainTabView.swift */; };
+		82C3368F2CAD37E600103DBC /* CachedImage in Frameworks */ = {isa = PBXBuildFile; productRef = 82C3368E2CAD37E600103DBC /* CachedImage */; };
+		82E2D61B2CB40078008E3EEA /* MafRSSItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E2D61A2CB40078008E3EEA /* MafRSSItem.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
@@ -149,6 +151,7 @@
 		82A65D862C6F1D2800EDC689 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		82A65D8A2C6F31B100EDC689 /* devConfig.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = devConfig.xcconfig; sourceTree = "<group>"; };
 		82A65D8B2C6F31D300EDC689 /* prodConfig.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = prodConfig.xcconfig; sourceTree = "<group>"; };
+		82E2D61A2CB40078008E3EEA /* MafRSSItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MafRSSItem.swift; sourceTree = "<group>"; };
 		8B6408C33B292DD63EF27AEF /* Pods_ImageNotification.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ImageNotification.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
@@ -266,6 +269,7 @@
 			children = (
 				82A65D762C6F14E500EDC689 /* Header.swift */,
 				82A65D7C2C6F175800EDC689 /* RSSItem.swift */,
+				82E2D61A2CB40078008E3EEA /* MafRSSItem.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -409,7 +413,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 82A65D602C6F025B00EDC689 /* Build configuration list for PBXNativeTarget "InstantCoffee Watch App" */;
 			buildPhases = (
+
 				504A5B94AA7FE76DE2B9F2E6 /* [CP] Check Pods Manifest.lock */,
+
 				82A65D4E2C6F025A00EDC689 /* Sources */,
 				82A65D4F2C6F025A00EDC689 /* Frameworks */,
 				82A65D502C6F025A00EDC689 /* Resources */,
@@ -485,6 +491,9 @@
 				Base,
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
+			packageReferences = (
+				82C3368D2CAD37E600103DBC /* XCRemoteSwiftPackageReference "CachedImage.git" */,
+			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -553,6 +562,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "environment=\"default\"\n\n# Regex to extract the scheme name from the Build Configuration\n# We have named our Build Configurations as Debug-dev, Debug-prod etc.\n# Here, dev and prod are the scheme names. This kind of naming is required by Flutter for flavors to work.\n# We are using the $CONFIGURATION variable available in the XCode build environment to extract \n# the environment (or flavor)\n# For eg.\n# If CONFIGURATION=\"Debug-prod\", then environment will get set to \"prod\".\nsetopt KSH_ARRAYS BASH_REMATCH\nif [[ $CONFIGURATION =~ -([^-]*)$ ]]; then\nenvironment=${BASH_REMATCH[1]}\nfi\n\necho $environment\n\n# Name and path of the resource we're copying\nGOOGLESERVICE_INFO_PLIST=GoogleService-Info.plist\nGOOGLESERVICE_INFO_FILE=${PROJECT_DIR}/config/${environment}/${GOOGLESERVICE_INFO_PLIST}\n\n# Make sure GoogleService-Info.plist exists\necho \"Looking for ${GOOGLESERVICE_INFO_PLIST} in ${GOOGLESERVICE_INFO_FILE}\"\nif [ ! -f $GOOGLESERVICE_INFO_FILE ]\nthen\necho \"No GoogleService-Info.plist found. Please ensure it's in the proper directory.\"\nexit 1\nfi\nunsetopt KSH_ARRAYS\n# Get a reference to the destination location for the GoogleService-Info.plist\n# This is the default location where Firebase init code expects to find GoogleServices-Info.plist file\nPLIST_DESTINATION=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\necho \"Will copy ${GOOGLESERVICE_INFO_PLIST} to final destination: ${PLIST_DESTINATION}\"\n\n# Copy over the prod GoogleService-Info.plist for Release builds\ncp \"${GOOGLESERVICE_INFO_FILE}\" \"${PLIST_DESTINATION}\"\n";
+		};
+		10F26F3287D6D9E9319FDDF6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-InstantCoffee Watch App-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
 		};
 		20EE9295E549A575C39B11B6 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -730,6 +761,7 @@
 				82A65D582C6F025A00EDC689 /* InstantCoffeeApp.swift in Sources */,
 				829079902C748E6B0094D8E6 /* ListCellView.swift in Sources */,
 				82A65D7B2C6F171F00EDC689 /* HomePageView.swift in Sources */,
+				82E2D61B2CB40078008E3EEA /* MafRSSItem.swift in Sources */,
 				82A65D812C6F1B2700EDC689 /* OrganizeStories.swift in Sources */,
 				82A65D872C6F1D2800EDC689 /* MainTabView.swift in Sources */,
 			);
@@ -1607,7 +1639,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_ASSET_PATHS = "\"InstantCoffee Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = S2KP925EFZ;
@@ -1631,7 +1663,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "InstantCoffee-Watch-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = InstantCoffee;
+				INFOPLIST_KEY_CFBundleDisplayName = "鏡週刊";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1694,7 +1726,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_ASSET_PATHS = "\"InstantCoffee Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = S2KP925EFZ;
@@ -1718,7 +1750,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "InstantCoffee-Watch-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = InstantCoffee;
+				INFOPLIST_KEY_CFBundleDisplayName = "鏡週刊";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1730,7 +1762,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mirrormedia.news.InstantCoffee.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mirrormedia.news.InstantCoffee.dev.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -1781,7 +1813,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"InstantCoffee Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = S2KP925EFZ;
@@ -1799,7 +1831,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "InstantCoffee-Watch-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = InstantCoffee;
+				INFOPLIST_KEY_CFBundleDisplayName = "鏡週刊";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1862,7 +1894,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"InstantCoffee Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = S2KP925EFZ;
@@ -1880,7 +1912,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "InstantCoffee-Watch-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = InstantCoffee;
+				INFOPLIST_KEY_CFBundleDisplayName = "鏡週刊";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1891,7 +1923,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mirrormedia.news.InstantCoffee.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mirrormedia.news.InstantCoffee.dev.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -1943,7 +1975,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"InstantCoffee Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = S2KP925EFZ;
@@ -1961,7 +1993,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "InstantCoffee-Watch-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = InstantCoffee;
+				INFOPLIST_KEY_CFBundleDisplayName = "鏡週刊";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2024,7 +2056,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"InstantCoffee Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = S2KP925EFZ;
@@ -2042,7 +2074,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "InstantCoffee-Watch-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = InstantCoffee;
+				INFOPLIST_KEY_CFBundleDisplayName = "鏡週刊";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2053,7 +2085,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mirrormedia.news.InstantCoffee.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mirrormedia.news.InstantCoffee.dev.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -2103,7 +2135,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = S2KP925EFZ;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -2177,7 +2209,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = S2KP925EFZ;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -2203,7 +2235,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mirrormedia.news.InstantCoffee;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mirrormedia.news.InstantCoffee.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -2251,7 +2283,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = S2KP925EFZ;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -2318,7 +2350,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = S2KP925EFZ;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -2337,7 +2369,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mirrormedia.news.InstantCoffee;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mirrormedia.news.InstantCoffee.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -2385,7 +2417,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = S2KP925EFZ;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -2452,7 +2484,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = S2KP925EFZ;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -2471,7 +2503,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mirrormedia.news.InstantCoffee;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mirrormedia.news.InstantCoffee.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -2732,6 +2764,25 @@
 			defaultConfigurationName = "Release-prod";
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		82C3368D2CAD37E600103DBC /* XCRemoteSwiftPackageReference "CachedImage.git" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/leoz/CachedImage.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.8;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		82C3368E2CAD37E600103DBC /* CachedImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 82C3368D2CAD37E600103DBC /* XCRemoteSwiftPackageReference "CachedImage.git" */;
+			productName = CachedImage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 97C146E61CF9000F007C117D /* Project object */;
 }
