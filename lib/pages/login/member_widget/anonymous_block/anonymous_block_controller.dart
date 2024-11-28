@@ -33,6 +33,9 @@ class AnonymousBlockController extends GetxController {
   void _handlePurchaseUpdates(List<PurchaseDetails> purchases) async {
     final subscriptionType =
         authInfoProvider.rxnUserAuthInfo.value?.subscriptionType;
+    for (var purchase in purchases) {
+      InAppPurchase.instance.completePurchase(purchase);
+    }
 
     final result = await authApiProvider.verifyPurchaseList(purchases);
 
