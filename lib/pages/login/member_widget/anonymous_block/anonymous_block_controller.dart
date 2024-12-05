@@ -36,8 +36,13 @@ class AnonymousBlockController extends GetxController {
 
     final result = await authApiProvider.verifyPurchaseList(purchases);
 
+    if (result == 'cancel') {
+      ToastFactory.showToast('訂閱已被取消，請至App Store確認', ToastType.error);
+      return;
+    }
+
     if (result == 'none') {
-      ToastFactory.showToast('查無訂閱資料', ToastType.success);
+      ToastFactory.showToast('查無訂閱資料', ToastType.error);
       return;
     }
 
@@ -88,7 +93,6 @@ class AnonymousBlockController extends GetxController {
 
     if (user?.uid != null) {
       final result = await authApiProvider.getUserInfoFirebaseId(user!.uid);
-      print(result);
     }
   }
 

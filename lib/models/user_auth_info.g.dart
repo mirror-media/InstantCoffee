@@ -9,12 +9,12 @@ part of 'user_auth_info.dart';
 UserAuthInfo _$UserAuthInfoFromJson(Map<String, dynamic> json) => UserAuthInfo(
   id: json['id'] as String?,
   subscriptionType:
-  UserAuthInfo._subscriptionTypeFromJson(json['subscriptionType'] as String?),
+  UserAuthInfo._subscriptionTypeFromJson(json['type'] as String?),
 );
 
 Map<String, dynamic> _$UserAuthInfoToJson(UserAuthInfo instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'subscriptionType':
+      'type':
       UserAuthInfo._subscriptionTypeToJson(instance.subscriptionType),
     };

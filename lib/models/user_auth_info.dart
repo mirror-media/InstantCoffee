@@ -11,7 +11,7 @@ class UserAuthInfo extends Object {
 
 
   @JsonKey(
-    name: 'subscriptionType',
+    name: 'type',
     fromJson: _subscriptionTypeFromJson,
     toJson: _subscriptionTypeToJson,
   )
@@ -19,8 +19,10 @@ class UserAuthInfo extends Object {
 
   UserAuthInfo({this.id, this.subscriptionType});
 
-  factory UserAuthInfo.fromJson(Map<String, dynamic> srcJson) =>
-      _$UserAuthInfoFromJson(srcJson);
+  factory UserAuthInfo.fromJson(Map<String, dynamic> srcJson) {
+
+   return  _$UserAuthInfoFromJson(srcJson);
+  }
 
   Map<String, dynamic> toJson() => _$UserAuthInfoToJson(this);
 

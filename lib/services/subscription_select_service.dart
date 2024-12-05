@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 
@@ -11,6 +12,7 @@ import 'package:readr_app/models/payment_record.dart';
 import 'package:readr_app/models/subscription_detail.dart';
 import 'package:readr_app/services/member_service.dart';
 import 'package:readr_app/widgets/logger.dart';
+import 'package:readr_app/widgets/toast_factory.dart';
 
 List<String> _kProductIds = <String>[
   Environment().config.monthSubscriptionId,
@@ -18,8 +20,12 @@ List<String> _kProductIds = <String>[
 
 abstract class SubscriptionSelectRepos {
   Future<SubscriptionDetail> fetchSubscriptionDetail();
+
   Future<List<ProductDetails>> fetchProductDetailList();
-  Future<bool> buySubscriptionProduct(PurchaseParam purchaseParam);
+
+  Future<bool> buySubscriptionProduct(
+      PurchaseParam purchaseParam, ProductDetails productDetails);
+
   Future<bool> verifyPurchase(PurchaseDetails purchaseDetails);
 }
 
@@ -84,9 +90,59 @@ class SubscriptionSelectServices
     throw FetchDataException('The payment platform is unavailable');
   }
 
+  Future<bool> hasPendingTransaction(String productId) async {
+    bool hasPendingTransaction = false;
+
+    InAppPurchase.instance.purchaseStream.listen((purchases) {
+      for (var purchase in purchases) {
+        if (purchase.productID == productId && purchase.pendingCompletePurchase) {
+          hasPendingTransaction = true;
+        }
+      }
+    }).onError((error) {
+      print("購買流監聽錯誤: $error");
+    });
+
+    return hasPendingTransaction;
+  }
+
+
+  Future<bool> hasPurchasedProductUsingRestore(String productId) async {
+    Completer<bool> completer = Completer();
+
+    // 恢復購買
+    await InAppPurchase.instance.restorePurchases();
+
+    // 監聽購買流
+    InAppPurchase.instance.purchaseStream.listen((purchases) {
+      for (var purchase in purchases) {
+        if (purchase.productID == productId &&
+            purchase.status == PurchaseStatus.restored) {
+          completer.complete(true);
+          break;
+        }
+      }
+      completer.complete(false);
+    }).onError((error) {
+      completer.complete(false);
+    });
+
+    return completer.future;
+  }
+
+
   @override
-  Future<bool> buySubscriptionProduct(PurchaseParam purchaseParam) async {
+  Future<bool> buySubscriptionProduct(
+      PurchaseParam purchaseParam, ProductDetails productDetails) async {
     bool buySuccess = false;
+
+    final purchaseParam = PurchaseParam(productDetails: productDetails);
+    final hasPurchased = await hasPurchasedProductUsingRestore(productDetails.id);
+    if (hasPurchased) {
+      ToastFactory.showToast('該產品已購買，無需重複購買，將直接跳轉。', ToastType.success);
+      return true;
+    }
+
 
     try {
       buySuccess =
