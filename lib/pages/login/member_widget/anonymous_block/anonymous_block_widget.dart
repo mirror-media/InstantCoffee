@@ -8,6 +8,8 @@ import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/pages/login/member_widget/anonymous_bind_page/anonymous_bind_page.dart';
 import 'package:readr_app/pages/login/member_widget/anonymous_block/anonymous_block_controller.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionDetail/member_subscription_detail_page.dart';
+import 'package:readr_app/pages/shared/app_version_widget.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class AnonymousBlockWidget extends StatelessWidget {
   AnonymousBlockWidget({Key? key, required this.subscriptionType})
@@ -196,6 +198,74 @@ class AnonymousBlockWidget extends StatelessWidget {
             const Divider(
               height: 0,
             ),
+            Wrap(children: [
+              Container(
+                height: 24,
+                width: double.infinity,
+                color: const Color(0x1C000000),
+              ),
+              const SizedBox(height: 16),
+              InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+                    child: SizedBox(
+                      width: Get.width,
+                      child: const Text(
+                        '聯絡我們',
+                        style:
+                            TextStyle(color: Color(0xff4A4A4A), fontSize: 16.0),
+                      ),
+                    ),
+                  ),
+                  onTap: () async {
+                    final Uri emailLaunchUri = Uri(
+                      scheme: 'mailto',
+                      path: mirrorMediaServiceEmail,
+                    );
+
+                    if (await canLaunchUrlString(emailLaunchUri.toString())) {
+                      await launchUrlString(emailLaunchUri.toString());
+                    } else {
+                      throw 'Could not launch $mirrorMediaServiceEmail';
+                    }
+                  }),
+              InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+                    child: SizedBox(
+                      width: Get.width,
+                      child: const Text(
+                        '隱私條款',
+                        style:
+                            TextStyle(color: Color(0xff4A4A4A), fontSize: 16.0),
+                      ),
+                    ),
+                  ),
+                  onTap: () async {
+                    RouteGenerator.navigateToStory('privacy',
+                        isMemberCheck: false);
+                  }),
+              InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+                    child: SizedBox(
+                      width: Get.width,
+                      child: const Text(
+                        '服務條款',
+                        style:
+                            TextStyle(color: Color(0xff4A4A4A), fontSize: 16.0),
+                      ),
+                    ),
+                  ),
+                  onTap: () {
+                    RouteGenerator.navigateToStory('service-rule',
+                        isMemberCheck: false);
+                  }),
+              const SizedBox(height: 16),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+                  child: AppVersionWidget()),
+            ])
           ],
         ),
         Obx(() {
