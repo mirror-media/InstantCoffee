@@ -29,16 +29,19 @@ class AuthInfoProvider extends GetxController {
   User? userIndex;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     _auth.authStateChanges().listen(authStateChangesEvent);
     Timer.periodic(const Duration(minutes: 55), updateJWTTokenEvent);
+    userIndex = _auth.currentUser;
+    await fetchUserInfo();
 
     FirebaseAuth.instance.idTokenChanges().listen((User? user) {
       if (user == null) {
         authLogout();
       } else {
         _getSignInProvider(user);
+
       }
     });
   }
@@ -127,6 +130,7 @@ class AuthInfoProvider extends GetxController {
   }
 
   Future<void> fetchUserInfo() async {
+    updateJWTToken();
     if (userIndex?.uid != null) {
       rxnUserAuthInfo.value =
           await authApiProvider.getUserInfoFirebaseId(userIndex!.uid);
@@ -137,6 +141,7 @@ class AuthInfoProvider extends GetxController {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final result = await authApiProvider.getUserInfoFirebaseId(user.uid);
+      print(result);
     }
   }
 

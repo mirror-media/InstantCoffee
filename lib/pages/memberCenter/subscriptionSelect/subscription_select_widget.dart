@@ -372,6 +372,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
                               } else {
                                 RouteGenerator.navigateToEmailVerification();
                               }
+
                             }
                           },
                         );

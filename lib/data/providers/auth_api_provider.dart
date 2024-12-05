@@ -133,12 +133,17 @@ class AuthApiProvider extends GetConnect {
       jsonEncode(bodyMap),
       headers: MemberService.getHeaders(token),
     );
-    print(jsonResponse);
 
-    return jsonResponse.containsKey('success') &&
-            jsonResponse['success'] == true
-        ? jsonResponse['data'][0]['frequency']
-        : null;
+    if (!jsonResponse.containsKey('success') ||
+        jsonResponse['success'] != true) {
+      return null;
+    }
+
+    if (jsonResponse['data'][0]['isCanceled'] == true) {
+      return 'cancel';
+    }
+
+    return jsonResponse['data'][0]['frequency'];
   }
 
   Future<bool> linkEmailFromAnonymous(
