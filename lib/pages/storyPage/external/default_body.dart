@@ -10,6 +10,7 @@ import 'package:readr_app/models/external_story.dart';
 import 'package:readr_app/pages/storyPage/external/external_story_controller.dart';
 import 'package:readr_app/widgets/custom_cached_network_image.dart';
 import 'package:readr_app/widgets/m_m_ad_banner.dart';
+import 'package:readr_app/helpers/paragraph_format.dart';
 
 class DefaultBody extends GetView<ExternalStoryController> {
   final ExternalStory externalStory;
@@ -20,6 +21,8 @@ class DefaultBody extends GetView<ExternalStoryController> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = width / 16 * 9;
+
+    ParagraphFormat paragraphFormat = ParagraphFormat();
 
     return Stack(
       children: [
@@ -48,14 +51,12 @@ class DefaultBody extends GetView<ExternalStoryController> {
           _buildAuthors(
               externalStory.extendByLine ?? StringDefault.valueNullDefault),
           const SizedBox(height: 16),
-          HtmlWidget(
-            externalStory.content ?? StringDefault.valueNullDefault,
-            customStylesBuilder: (element) {
-              if (element.localName == 'a') {
-                return {'padding': '0px 0px 0px 0px'};
-              }
-              return {'padding': '0px 16px 0px 16px'};
-            },
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
+            child: paragraphFormat.parseTheTextToHtmlWidget(
+              externalStory.content ?? StringDefault.valueNullDefault,
+              fontSize: 18,
+            ),
           ),
           const SizedBox(height: 16),
           Obx(() {

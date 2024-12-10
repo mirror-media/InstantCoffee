@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
@@ -105,8 +106,14 @@ class SubscriptionSelectBloc
       emit(SubscriptionSelectState.buying(
           subscriptionDetail: state.subscriptionDetail!,
           productDetailList: state.productDetailList!));
-      bool buySuccess = await subscriptionSelectRepos
-          .buySubscriptionProduct(event.purchaseParam);
+
+      final transactions = await SKPaymentQueueWrapper().transactions();
+      for (var transaction in transactions) {
+        await SKPaymentQueueWrapper().finishTransaction(transaction);
+      }
+
+      bool buySuccess = await subscriptionSelectRepos.buySubscriptionProduct(
+          event.purchaseParam, state.productDetailList![0]);
       if (buySuccess) {
       } else {
         Fluttertoast.showToast(

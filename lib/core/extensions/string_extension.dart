@@ -3,6 +3,11 @@ import 'package:sprintf/sprintf.dart';
 
 extension StringFormatExtension on String {
   String format(var arguments) => sprintf(this, arguments);
+
+  T toEnum<T>(List<T> values) {
+    return values.firstWhere(
+        (e) => e.toString().toLowerCase().split(".").last == toLowerCase());
+  }
 }
 
 extension DateTimeExtensions on String {

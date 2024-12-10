@@ -6,7 +6,7 @@ import 'package:readr_app/blocs/login/states.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/pages/login/login_error_widget.dart';
 import 'package:readr_app/pages/login/login_form.dart';
-import 'package:readr_app/pages/login/member_widget.dart';
+import 'package:readr_app/pages/login/member_widget/member_widget.dart';
 import 'package:readr_app/widgets/logger.dart';
 
 class LoginWidget extends StatefulWidget {

@@ -17,9 +17,9 @@ class SectionCubit extends Cubit<SectionState> with Logger {
   fetchSectionList({bool loadingSectionAds = true}) async {
     debugLog('Fetch section list');
     emit(SectionState.loading());
-
+    List<Section> sectionList = await sectionRepos.fetchSectionList();
     try {
-      List<Section> sectionList = await sectionRepos.fetchSectionList();
+
 
       if (loadingSectionAds) {
         String sectionAdJsonFileLocation = Platform.isIOS
