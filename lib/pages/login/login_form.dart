@@ -8,6 +8,7 @@ import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/login/states.dart';
 import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/helpers/remote_config_helper.dart';
 import 'package:readr_app/pages/login/login_controller.dart';
 import 'package:readr_app/widgets/member_login_policy.dart';
 
@@ -24,6 +25,7 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
   String _email = '';
   LoginController? controller;
 
@@ -126,7 +128,7 @@ class _LoginFormState extends State<LoginForm> {
               child: _emailLoginButton(),
             ),
           ),
-        if (Platform.isIOS)
+        if (Platform.isIOS && _remoteConfigHelper.isAnonymousShow)
           SliverToBoxAdapter(
               child: Column(
             children: [
