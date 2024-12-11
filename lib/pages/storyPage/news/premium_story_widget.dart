@@ -71,11 +71,11 @@ class PremiumStoryWidget extends StatelessWidget {
 
     bool isWineCategory = _isWineCategory(story.categories);
     bool isTruncated = story.isTruncated;
-    bool isAdsActivated = isStoryWidgetAdsActivated && isTruncated;
-
+    // bool isAdsActivated = isStoryWidgetAdsActivated && isTruncated;
+    bool isAdsActivated=false;
     return Column(
       children: [
-        Expanded(child: _buildStoryWidget(context, width, height, story)),
+        Expanded(child: _buildStoryWidget(context, width, height, story,isAdsActivated)),
         if (isWineCategory)
           Container(
             color: Colors.black,
@@ -97,9 +97,9 @@ class PremiumStoryWidget extends StatelessWidget {
   }
 
   Widget _buildStoryWidget(
-      BuildContext context, double width, double height, Story story) {
+      BuildContext context, double width, double height, Story story,bool isAdsActivated) {
     bool isTruncated = story.isTruncated;
-    bool isAdsActivated = isStoryWidgetAdsActivated && isTruncated;
+
     StoryAd storyAd = story.storyAd!;
     Color sectionColor = _getSectionColor(story);
 
