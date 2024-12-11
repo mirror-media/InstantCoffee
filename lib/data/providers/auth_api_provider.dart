@@ -84,8 +84,8 @@ class AuthApiProvider extends GetConnect {
   }
 
   Future<void> _updateToken() async {
-    User user = FirebaseAuth.instance.currentUser!;
-    String? token = await user.getIdToken();
+    User? user = FirebaseAuth.instance.currentUser;
+    String? token = await user?.getIdToken();
     bearerToken = token ?? "";
     initGraphQLLink();
   }
