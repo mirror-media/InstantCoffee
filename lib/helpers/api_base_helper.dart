@@ -125,11 +125,14 @@ class ApiBaseHelper with Logger {
     dynamic responseJson;
     Uri uri = Uri.parse(url);
 
-    final response = await _client
-        .post(uri, headers: headers, body: body)
-        .timeout(Duration(seconds: 10));
-    responseJson = returnResponse(response);
-    try {} on SocketException {
+
+    try {
+      final response = await _client
+          .post(uri, headers: headers, body: body)
+          .timeout(Duration(seconds: 10));
+      responseJson = returnResponse(response);
+
+    } on SocketException {
       debugLog('No Internet connection');
       throw FetchDataException('No Internet connection');
     }

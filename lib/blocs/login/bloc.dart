@@ -269,25 +269,29 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
           await _memberService.checkSubscriptionType(_auth.currentUser!);
       final AuthInfoProvider authInfoProvider = Get.find();
 
+      if (memberIdAndSubscriptionType == null) {
+        emit(LoginLoading(
+            loginType:
+                authInfoProvider.rxnLoginType.value ?? LoginType.anonymous));
+        return;
+      }
+
       try {
-        if (memberIdAndSubscriptionType != null) {
-          emit(LoginSuccess(
-            israfelId: memberIdAndSubscriptionType.israfelId!,
-            subscriptionType: memberIdAndSubscriptionType.subscriptionType!,
-            isNewebpay: memberIdAndSubscriptionType.isNewebpay,
-          ));
+        memberBloc.add(UpdateSubscriptionType(
+            isLogin: true,
+            israfelId: memberIdAndSubscriptionType.israfelId,
+            subscriptionType: memberIdAndSubscriptionType.subscriptionType));
 
-          memberBloc.add(UpdateSubscriptionType(
-              isLogin: true,
-              israfelId: memberIdAndSubscriptionType.israfelId,
-              subscriptionType: memberIdAndSubscriptionType.subscriptionType));
-
-          if (premiumSubscriptionType
-                  .contains(memberIdAndSubscriptionType.subscriptionType) &&
-              authInfoProvider.rxnLoginType.value != LoginType.anonymous) {
-            await runPremiumAnimation();
-          }
+        if (premiumSubscriptionType
+                .contains(memberIdAndSubscriptionType.subscriptionType) &&
+            authInfoProvider.rxnLoginType.value != LoginType.anonymous) {
+          await runPremiumAnimation();
         }
+        emit(LoginSuccess(
+          israfelId: memberIdAndSubscriptionType.israfelId!,
+          subscriptionType: memberIdAndSubscriptionType.subscriptionType!,
+          isNewebpay: memberIdAndSubscriptionType.isNewebpay,
+        ));
       } catch (e, s) {
         // there is no member in israfel
         if (e.toString() == "Invalid Request: $memberStateTypeIsNotFound") {
