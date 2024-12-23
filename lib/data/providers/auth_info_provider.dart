@@ -33,9 +33,6 @@ class AuthInfoProvider extends GetxController {
     super.onInit();
     _auth.authStateChanges().listen(authStateChangesEvent);
     Timer.periodic(const Duration(minutes: 55), updateJWTTokenEvent);
-    userIndex = _auth.currentUser;
-    await fetchUserInfo();
-
     FirebaseAuth.instance.idTokenChanges().listen((User? user) {
       if (user == null) {
         authLogout();
@@ -44,6 +41,10 @@ class AuthInfoProvider extends GetxController {
 
       }
     });
+    userIndex = _auth.currentUser;
+    await fetchUserInfo();
+
+
   }
 
   void _getSignInProvider(User user) {

@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:readr_app/helpers/api_base_helper.dart';
 import 'package:readr_app/helpers/app_exception.dart';
 import 'package:readr_app/helpers/environment.dart';
@@ -95,7 +96,8 @@ class SubscriptionSelectServices
 
     InAppPurchase.instance.purchaseStream.listen((purchases) {
       for (var purchase in purchases) {
-        if (purchase.productID == productId && purchase.pendingCompletePurchase) {
+        if (purchase.productID == productId &&
+            purchase.pendingCompletePurchase) {
           hasPendingTransaction = true;
         }
       }
@@ -106,43 +108,17 @@ class SubscriptionSelectServices
     return hasPendingTransaction;
   }
 
-
-  Future<bool> hasPurchasedProductUsingRestore(String productId) async {
-    Completer<bool> completer = Completer();
-
-    // 恢復購買
-    await InAppPurchase.instance.restorePurchases();
-
-    // 監聽購買流
-    InAppPurchase.instance.purchaseStream.listen((purchases) {
-      for (var purchase in purchases) {
-        if (purchase.productID == productId &&
-            purchase.status == PurchaseStatus.restored) {
-          completer.complete(true);
-          break;
-        }
-      }
-      completer.complete(false);
-    }).onError((error) {
-      completer.complete(false);
-    });
-
-    return completer.future;
-  }
-
-
   @override
   Future<bool> buySubscriptionProduct(
       PurchaseParam purchaseParam, ProductDetails productDetails) async {
     bool buySuccess = false;
 
     final purchaseParam = PurchaseParam(productDetails: productDetails);
-    final hasPurchased = await hasPurchasedProductUsingRestore(productDetails.id);
-    if (hasPurchased) {
-      ToastFactory.showToast('該產品已購買，無需重複購買，將直接跳轉。', ToastType.success);
-      return true;
-    }
 
+    final transactions = await SKPaymentQueueWrapper().transactions();
+    for (var transaction in transactions) {
+      await SKPaymentQueueWrapper().finishTransaction(transaction);
+    }
 
     try {
       buySuccess =
