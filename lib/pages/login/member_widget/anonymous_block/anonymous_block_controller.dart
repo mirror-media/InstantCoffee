@@ -34,6 +34,14 @@ class AnonymousBlockController extends GetxController {
     final subscriptionType =
         authInfoProvider.rxnUserAuthInfo.value?.subscriptionType;
 
+    if (purchases.isEmpty) {
+      String purchasesString = purchases[0].toString();
+      if (purchasesString.isEmpty) {
+        return;
+      }
+      return ;
+    }
+
     final result = await authApiProvider.verifyPurchaseList(purchases);
 
     if (result == 'cancel') {

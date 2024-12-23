@@ -93,6 +93,9 @@ class MemberService implements MemberRepos {
       headers: getHeaders(token),
     );
 
+    if (jsonResponse['data']['allMembers'] ==null)return null;
+
+
     if ((jsonResponse['data']['allMembers'] != null &&
             jsonResponse['data']['allMembers'].length == 0) ||
         (jsonResponse['data']['allMembers'] == null &&
