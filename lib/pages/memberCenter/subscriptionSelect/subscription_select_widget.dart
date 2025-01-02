@@ -309,7 +309,10 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
                             ),
                           ),
                           onPressed: () async {
-                            if (Platform.isIOS) {
+                            final RemoteConfigHelper _remoteConfigHelper =
+                                RemoteConfigHelper();
+                            if (Platform.isIOS &&
+                                !_remoteConfigHelper.isIosSubscriptEnable) {
                               ToastFactory.showToast('此功能修復中', ToastType.error);
                               return;
                             }
@@ -334,9 +337,6 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
                                 );
 
                                 if (Platform.isAndroid) {
-                                  final RemoteConfigHelper _remoteConfigHelper =
-                                      RemoteConfigHelper();
-
                                   if (_remoteConfigHelper.isSubscriptShow) {
                                     const String kProductID =
                                         'subscribe_monthly_80';
