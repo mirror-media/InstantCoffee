@@ -67,13 +67,13 @@ class IAPSubscriptionHelper {
     await _inAppPurchase.isAvailable();
     final Stream<List<PurchaseDetails>> purchaseUpdated =
         _inAppPurchase.purchaseStream;
-    // _subscription = purchaseUpdated.listen((purchaseDetailsList) {
-    //   _listenToPurchaseUpdated(purchaseDetailsList);
-    // }, onDone: () {
-    //   _subscription.cancel();
-    // }, onError: (error) {
-    //   // handle error here.
-    // });
+    _subscription = purchaseUpdated.listen((purchaseDetailsList) {
+      _listenToPurchaseUpdated(purchaseDetailsList);
+    }, onDone: () {
+      _subscription.cancel();
+    }, onError: (error) {
+      // handle error here.
+    });
     handleIncompletePurchases();
   }
 
@@ -111,7 +111,6 @@ class IAPSubscriptionHelper {
   Future<bool> _verifyPurchase(PurchaseDetails purchaseDetails) async {
     SubscriptionSelectServices subscriptionSelectServices =
         SubscriptionSelectServices();
-    return false;
     return await subscriptionSelectServices.verifyPurchase(purchaseDetails);
   }
 
@@ -144,7 +143,7 @@ class IAPSubscriptionHelper {
         await _inAppPurchase.completePurchase(purchaseDetails);
       }
     } else {
-      // valid = await _handleInvalidPurchase(purchaseDetails);
+       valid = await _handleInvalidPurchase(purchaseDetails);
     }
 
     return valid;
