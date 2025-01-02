@@ -23,6 +23,7 @@ import 'package:readr_app/pages/memberCenter/subscriptionSelect/buying_success_w
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/hint_to_other_platform.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/verify_purchase_fail_widget.dart';
 import 'package:readr_app/widgets/logger.dart';
+import 'package:readr_app/widgets/toast_factory.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -308,6 +309,11 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
                             ),
                           ),
                           onPressed: () async {
+                            if (Platform.isIOS) {
+                              ToastFactory.showToast('此功能修復中', ToastType.error);
+                              return;
+                            }
+
                             if (_auth.currentUser == null) {
                               RouteGenerator.navigateToLogin(
                                 routeName: RouteGenerator.subscriptionSelect,
@@ -372,7 +378,6 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
                               } else {
                                 RouteGenerator.navigateToEmailVerification();
                               }
-
                             }
                           },
                         );
