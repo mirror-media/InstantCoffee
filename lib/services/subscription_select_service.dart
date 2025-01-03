@@ -115,14 +115,17 @@ class SubscriptionSelectServices
 
     final purchaseParam = PurchaseParam(productDetails: productDetails);
 
-    final transactions = await SKPaymentQueueWrapper().transactions();
-    for (var transaction in transactions) {
-      await SKPaymentQueueWrapper().finishTransaction(transaction);
+    if (Platform.isIOS) {
+      final transactions = await SKPaymentQueueWrapper().transactions();
+      for (var transaction in transactions) {
+        await SKPaymentQueueWrapper().finishTransaction(transaction);
+      }
     }
+
 
     try {
       buySuccess =
-          await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+      await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
     } catch (e) {
       debugLog('buySubscriptionProduct$e');
     }

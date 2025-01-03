@@ -102,18 +102,22 @@ class SubscriptionSelectBloc
     Emitter<SubscriptionSelectState> emit,
   ) async {
     debugLog(event.toString());
+    if(Platform.isIOS) {
+      final transactions = await SKPaymentQueueWrapper().transactions();
+      for (var transaction in transactions) {
+        await SKPaymentQueueWrapper().finishTransaction(transaction);
+      }
+    }
+
+    bool buySuccess = await subscriptionSelectRepos.buySubscriptionProduct(
+        event.purchaseParam, state.productDetailList![0]);
+
     try {
       emit(SubscriptionSelectState.buying(
           subscriptionDetail: state.subscriptionDetail!,
           productDetailList: state.productDetailList!));
 
-      final transactions = await SKPaymentQueueWrapper().transactions();
-      for (var transaction in transactions) {
-        await SKPaymentQueueWrapper().finishTransaction(transaction);
-      }
 
-      bool buySuccess = await subscriptionSelectRepos.buySubscriptionProduct(
-          event.purchaseParam, state.productDetailList![0]);
       if (buySuccess) {
       } else {
         Fluttertoast.showToast(
