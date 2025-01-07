@@ -79,7 +79,7 @@ dependencies:
   # video player
   video_player: ^2.2.11
   # a friendly Material or Cupertino UI for video
-  chewie: ^1.2.2
+  chewie: ^1.8.0
   # audio service
   audioplayers: ^5.2.1
   # spin
