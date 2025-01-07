@@ -89,8 +89,10 @@ class AuthInfoProvider extends GetxController {
     }
     idToken = await userIndex?.getIdToken();
     if (idToken != null) {
-      accessToken.value =
-          await authApiProvider.getAccessTokenByIdToken(idToken!);
+      Future.delayed(const Duration(seconds: 30), () async {
+        accessToken.value =
+            await authApiProvider.getAccessTokenByIdToken(idToken!);
+      });
     }
   }
 
