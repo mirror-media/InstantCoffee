@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
+import 'package:readr_app/blocs/search/cubit.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/pages/home/premium/premium_home_widget.dart';
 import 'package:readr_app/pages/login/premium_member_widget.dart';
-import 'package:readr_app/pages/search/search_page.dart';
+import 'package:readr_app/pages/search/search_widget.dart';
 import 'package:readr_app/pages/tabContent/news/premium_tab_content.dart';
 import 'package:readr_app/services/record_service.dart';
+import 'package:readr_app/services/search_service.dart';
 
 import '../home_controller.dart';
 
@@ -25,7 +27,10 @@ class PremiumHomePage extends GetView<HomeController> {
   List<Widget> _getPages(ScrollController premiumArticleBarScrollController) {
     return <Widget>[
       PremiumHomeWidget(),
-      const SearchPage(),
+      BlocProvider(
+        create: (context) => SearchCubit(searchRepos: SearchServices()),
+        child: ColoredBox(color: Colors.white, child: SearchWidget()),
+      ),
       ColoredBox(
           color: Colors.white,
           child: BlocProvider(
@@ -64,7 +69,7 @@ class PremiumHomePage extends GetView<HomeController> {
         ),
       ),
       bottomNavigationBar: Obx(() {
-        final selectIndex = controller.rxSelectedIndex.value;
+        final selectIndex =controller.rxSelectedIndex.value;
         return BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           backgroundColor: appColor,

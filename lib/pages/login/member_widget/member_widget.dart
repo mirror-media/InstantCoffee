@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/login/states.dart';
@@ -44,7 +43,6 @@ class _MemberWidgetState extends State<MemberWidget> {
       Get.put(MemberWidgetController());
     }
     controller = Get.find();
-    controller.rxIsLoading.value = false;
   }
 
   _signOut() async {
@@ -59,160 +57,125 @@ class _MemberWidgetState extends State<MemberWidget> {
       final loginType = controller.authInfoProvider.rxnLoginType.value;
       return loginType == LoginType.anonymous
           ? AnonymousBlockWidget(subscriptionType: widget.subscriptionType)
-          : Obx(() {
-              final isLoading = controller.rxIsLoading.value;
-              return Stack(
+          : Container(
+              color: Colors.grey[300],
+              child: ListView(
                 children: [
                   Container(
-                    color: Colors.grey[300],
-                    child: ListView(
+                    color: Colors.white,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          color: Colors.white,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 48),
-                              Obx(() {
-                                final loginType = controller
-                                    .authInfoProvider.rxnLoginType.value;
-                                return _memberLevelBlock(
-                                    widget.subscriptionType,
-                                    loginType: loginType);
-                              }),
-                              const SizedBox(height: 24),
-                            ],
-                          ),
-                        ),
-                        if (widget.subscriptionType != SubscriptionType.staff)
-                          Container(
-                            color: Colors.white,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _horizontalDivider(width),
-                                _memberSubscriptionDetailButton(
-                                    widget.subscriptionType),
-                                if (widget.subscriptionType ==
-                                        SubscriptionType.none ||
-                                    widget.subscriptionType ==
-                                        SubscriptionType
-                                            .subscribe_one_time) ...[
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        24.0, 0.0, 24.0, 0.0),
-                                    child: _horizontalDivider(width),
-                                  ),
-                                  _memberSubscribedArticleButton(),
-                                ],
-                                if (widget.subscriptionType !=
-                                        SubscriptionType.marketing &&
-                                    widget.subscriptionType !=
-                                        SubscriptionType.subscribe_group) ...[
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        24.0, 0.0, 24.0, 0.0),
-                                    child: _horizontalDivider(width),
-                                  ),
-                                  _memberPaymentRecordButton(
-                                      widget.subscriptionType),
-                                  if (widget.subscriptionType ==
-                                          SubscriptionType.none ||
-                                      widget.subscriptionType ==
-                                          SubscriptionType
-                                              .subscribe_one_time) ...[
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          24.0, 0.0, 24.0, 0.0),
-                                      child: _horizontalDivider(width),
-                                    ),
-                                    _subscriptionSelectButton(
-                                        widget.subscriptionType),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          24.0, 0.0, 24.0, 0.0),
-                                      child: _horizontalDivider(width),
-                                    ),
-                                    _navigateButton('恢復訂閱資格', () async {
-                                      controller.rxIsLoading.value = true;
-                                      await InAppPurchase.instance
-                                          .restorePurchases();
-
-                                      await Future.delayed(
-                                          const Duration(seconds: 20));
-                                      controller.rxIsLoading.value = false;
-                                    }),
-                                  ]
-                                ],
-                              ],
-                            ),
-                          ),
-                        const SizedBox(height: 36),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 24.0, right: 24.0),
-                          child: Text(
-                            '會員檔案',
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Container(
-                          color: Colors.white,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _memberProfileButton(),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    24.0, 0.0, 24.0, 0.0),
-                                child: _horizontalDivider(width),
-                              ),
-                              if (LoginServices
-                                  .checkIsEmailAndPasswordLogin()) ...[
-                                _changePasswordButton(),
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      24.0, 0.0, 24.0, 0.0),
-                                  child: _horizontalDivider(width),
-                                ),
-                              ],
-                              _memberContactInfoButton(),
-                            ],
-                          ),
-                        ),
                         const SizedBox(height: 48),
-                        Container(
-                          color: Colors.white,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _logoutButton(width),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    24.0, 0.0, 24.0, 0.0),
-                                child: _horizontalDivider(width),
-                              ),
-                              _deleteMemberButton(width),
-                            ],
-                          ),
-                        ),
+                        Obx(() {
+                          final loginType =
+                              controller.authInfoProvider.rxnLoginType.value;
+                          return _memberLevelBlock(widget.subscriptionType,
+                              loginType: loginType);
+                        }),
+                        const SizedBox(height: 24),
                       ],
                     ),
                   ),
-                  isLoading
-                      ? Container(
-                          height: Get.height,
-                          width: Get.width,
-                          child: Center(
-                            child: CircularProgressIndicator(),
+                  if (widget.subscriptionType != SubscriptionType.staff)
+                    Container(
+                      color: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _horizontalDivider(width),
+                          _memberSubscriptionDetailButton(
+                              widget.subscriptionType),
+                          if (widget.subscriptionType ==
+                                  SubscriptionType.none ||
+                              widget.subscriptionType ==
+                                  SubscriptionType.subscribe_one_time) ...[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  24.0, 0.0, 24.0, 0.0),
+                              child: _horizontalDivider(width),
+                            ),
+                            _memberSubscribedArticleButton(),
+                          ],
+                          if (widget.subscriptionType !=
+                                  SubscriptionType.marketing &&
+                              widget.subscriptionType !=
+                                  SubscriptionType.subscribe_group) ...[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  24.0, 0.0, 24.0, 0.0),
+                              child: _horizontalDivider(width),
+                            ),
+                            _memberPaymentRecordButton(widget.subscriptionType),
+                            if (widget.subscriptionType ==
+                                    SubscriptionType.none ||
+                                widget.subscriptionType ==
+                                    SubscriptionType.subscribe_one_time) ...[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                    24.0, 0.0, 24.0, 0.0),
+                                child: _horizontalDivider(width),
+                              ),
+                              _subscriptionSelectButton(
+                                  widget.subscriptionType),
+                            ]
+                          ],
+                        ],
+                      ),
+                    ),
+                  const SizedBox(height: 36),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 24.0, right: 24.0),
+                    child: Text(
+                      '會員檔案',
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    color: Colors.white,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _memberProfileButton(),
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                          child: _horizontalDivider(width),
+                        ),
+                        if (LoginServices.checkIsEmailAndPasswordLogin()) ...[
+                          _changePasswordButton(),
+                          Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                            child: _horizontalDivider(width),
                           ),
-                        )
-                      : SizedBox.shrink(),
+                        ],
+                        _memberContactInfoButton(),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 48),
+                  Container(
+                    color: Colors.white,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _logoutButton(width),
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                          child: _horizontalDivider(width),
+                        ),
+                        _deleteMemberButton(width),
+                      ],
+                    ),
+                  ),
                 ],
-              );
-            });
+              ),
+            );
     });
   }
 
