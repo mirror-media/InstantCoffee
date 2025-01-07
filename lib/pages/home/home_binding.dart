@@ -19,7 +19,8 @@ class HomeBinding extends Bindings {
     Get.put(AuthInfoProvider.instance);
     Get.put(ArticlesApiProvider.instance);
     Get.put(LocalStorageProvider.instance);
-    Get.put(GoogleSearchService());
+    // Get.put(GoogleSearchService());
+
     Get.put(GraphQLLinkProvider());
     Get.put(ElectionDataProvider.create(Environment().config.electionPath));
   }
