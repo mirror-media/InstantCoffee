@@ -1,11 +1,16 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:readr_app/services/subscription_select_service.dart';
-import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
-import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:get/get.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
+import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
+import 'package:readr_app/data/providers/auth_info_provider.dart';
+import 'package:readr_app/services/subscription_select_service.dart';
+
+import '../models/member_subscription_type.dart';
+import 'route_generator.dart';
 
 class IAPSubscriptionHelper {
   static final IAPSubscriptionHelper _instance =
@@ -89,6 +94,7 @@ class IAPSubscriptionHelper {
             if (purchaseDetails.pendingCompletePurchase) {
               await _inAppPurchase.completePurchase(purchaseDetails);
             }
+            playPremiumAnimation();
           } else {
             _handleInvalidPurchase(purchaseDetails);
             continue;
@@ -125,6 +131,7 @@ class IAPSubscriptionHelper {
         if (purchaseDetails.pendingCompletePurchase) {
           await _inAppPurchase.completePurchase(purchaseDetails);
         }
+        playPremiumAnimation();
       }
       retryAwaitSecond = retryAwaitSecond * 2;
     }
@@ -143,10 +150,25 @@ class IAPSubscriptionHelper {
         await _inAppPurchase.completePurchase(purchaseDetails);
       }
     } else {
-       valid = await _handleInvalidPurchase(purchaseDetails);
+      valid = await _handleInvalidPurchase(purchaseDetails);
     }
 
     return valid;
+  }
+
+  void playPremiumAnimation() async {
+    final AuthInfoProvider authInfoProvider = Get.find();
+    final subscriptionType =
+        authInfoProvider.rxnUserAuthInfo.value?.subscriptionType;
+    if (subscriptionType == SubscriptionType.subscribe_monthly ||
+        subscriptionType == SubscriptionType.subscribe_yearly) {
+      return;
+    }
+
+    await authInfoProvider.fetchUserInfo();
+    authInfoProvider.rxnUserAuthInfo.value?.subscriptionType =
+        SubscriptionType.subscribe_monthly;
+    RouteGenerator.navigateToHome();
   }
 
   cancelSubscriptionStream() {
