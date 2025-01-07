@@ -78,8 +78,7 @@ dependencies:
   flutter_widget_from_html: ^0.15.2
   # video player
   video_player: ^2.2.11
-  # a friendly Material or Cupertino UI for video
-  chewie: ^1.8.0
+
   # audio service
   audioplayers: ^5.2.1
   # spin
