@@ -121,7 +121,7 @@ dependencies:
   firebase_messaging: ^15.0.4
   # firebase remote config
   firebase_remote_config: ^5.0.4
-  google_mobile_ads: ^5.1.0
+  google_mobile_ads: 5.1.0
 
   # firebase crashlytics
   firebase_crashlytics: ^4.0.4
