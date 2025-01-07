@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -13,6 +13,7 @@ import 'package:readr_app/models/payment_record.dart';
 import 'package:readr_app/models/subscription_detail.dart';
 import 'package:readr_app/services/member_service.dart';
 import 'package:readr_app/widgets/logger.dart';
+import 'package:readr_app/widgets/toast_factory.dart';
 
 List<String> _kProductIds = <String>[
   Environment().config.monthSubscriptionId,
@@ -121,9 +122,10 @@ class SubscriptionSelectServices
       }
     }
 
+
     try {
       buySuccess =
-          await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+      await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
     } catch (e) {
       debugLog('buySubscriptionProduct$e');
     }
@@ -186,8 +188,8 @@ class SubscriptionSelectServices
         headers: MemberService.getHeaders(token),
       );
 
-      return jsonResponse.containsKey('success') &&
-          jsonResponse['success'] == true;
+      return jsonResponse.containsKey('status') &&
+          jsonResponse['status'] == 'success';
     } catch (e) {
       debugLog(e);
       return false;
