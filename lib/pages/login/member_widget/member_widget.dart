@@ -133,16 +133,16 @@ class _MemberWidgetState extends State<MemberWidget> {
                                           24.0, 0.0, 24.0, 0.0),
                                       child: _horizontalDivider(width),
                                     ),
-                                    _navigateButton('恢復訂閱資格', () async {
-                                      controller.rxIsLoading.value = true;
-                                      await InAppPurchase.instance
-                                          .restorePurchases();
+                                  ],
+                                  _navigateButton('恢復訂閱資格', () async {
+                                    controller.rxIsLoading.value = true;
+                                    await InAppPurchase.instance
+                                        .restorePurchases();
 
-                                      await Future.delayed(
-                                          const Duration(seconds: 20));
-                                      controller.rxIsLoading.value = false;
-                                    }),
-                                  ]
+                                    await Future.delayed(
+                                        const Duration(seconds: 20));
+                                    controller.rxIsLoading.value = false;
+                                  }),
                                 ],
                               ],
                             ),
