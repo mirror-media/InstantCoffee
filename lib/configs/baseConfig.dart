@@ -18,7 +18,6 @@ abstract class BaseConfig {
   String get editorChoiceApi;
   String get popularListApi;
 
-  String get searchApi;
   String get onlineMagazineUrl;
 
   String get latestSectionKey;
