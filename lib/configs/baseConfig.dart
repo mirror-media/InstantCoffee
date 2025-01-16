@@ -18,7 +18,6 @@ abstract class BaseConfig {
   String get editorChoiceApi;
   String get popularListApi;
 
-  String get searchApi;
   String get onlineMagazineUrl;
 
   String get latestSectionKey;
@@ -52,5 +51,7 @@ abstract class BaseConfig {
   String get electionPath;
   String get electionGetMoreLink;
   String get subscriptionLink;
+  String get vertexSearchApi;
+
 
 }

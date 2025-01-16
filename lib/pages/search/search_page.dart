@@ -1,12 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:readr_app/data/enum/page_status.dart';
 import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/pages/search/search_list_item.dart';
 import 'package:readr_app/pages/search/search_page_controller.dart';
 
 class SearchPage extends GetView<SearchPageController> {
   const SearchPage({
     Key? key,
   }) : super(key: key);
+
+  PreferredSizeWidget _buildBar(BuildContext context) {
+    return AppBar(
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_ios),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+      centerTitle: true,
+      title: const Text(
+        searchPageTitle,
+        style: TextStyle(color: Colors.white, fontSize: 24.0),
+      ),
+      backgroundColor: appColor,
+    );
+  }
 
   Widget _keywordTextField() {
     return SizedBox(
@@ -64,56 +81,14 @@ class SearchPage extends GetView<SearchPageController> {
           ),
         ),
       ),
-      onTap: () {},
+      onTap: controller.searchButtonClick,
     );
-  }
-
-  Widget _buildSearchList() {
-    return Text('List');
-
-    // return ListView.separated(
-    //   separatorBuilder: (BuildContext context, int index) =>
-    //   const SizedBox(height: 16.0),
-    //   itemCount: _searchList.length + 1,
-    //   itemBuilder: (context, index) {
-    //     if (index == _searchList.length) {
-    //       if (_isNeedToLoadMore) {
-    //         return VisibilityDetector(
-    //           key: const Key('SearchLoadingMore'),
-    //           child: _loadingWidget(),
-    //           onVisibilityChanged: (info) {
-    //             var percentage = info.visibleFraction * 100;
-    //             if (percentage > 0.5 &&
-    //                 state != SearchState.searchLoadingMore()) {
-    //               _searchNextPageByKeyword(_textController.text);
-    //             }
-    //           },
-    //         );
-    //       } else {
-    //         return Container();
-    //       }
-    //     }
-    //
-    //     return SearchListItem(record: _searchList[index]);
-    //   },
-    // );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () => Get.back(),
-          ),
-          centerTitle: true,
-          title: const Text(
-            searchPageTitle,
-            style: TextStyle(color: Colors.white, fontSize: 24.0),
-          ),
-          backgroundColor: appColor,
-        ),
+        appBar: _buildBar(context),
         body: Column(
           children: [
             Padding(
@@ -131,41 +106,36 @@ class SearchPage extends GetView<SearchPageController> {
                 ],
               ),
             ),
-            Expanded(child: _buildSearchList()),
+            Obx(() {
+              final searchList = controller.rxSearchResultList.value;
+              final pageStatus = controller.rxCurrentPageStatus.value;
+              return pageStatus == PageStatus.loading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: appColor,
+                      ),
+                    )
+                  : Expanded(
+                      child: ListView.separated(
+                          controller: controller.scrollController,
+                          itemBuilder: (context, index) {
+                            return SearchListItem(searchList[index]);
+                          },
+                          separatorBuilder: (context, index) {
+                            return const SizedBox();
+                          },
+                          itemCount: searchList.length),
+                    );
+            }),
+            Obx(() {
+              final pageStatus = controller.rxIsLoadMore.value;
+              return pageStatus
+                  ? const CircularProgressIndicator(
+                      color: appColor,
+                    )
+                  : const SizedBox.shrink();
+            }),
           ],
         ));
   }
 }
-
-// class SearchPage extends  {
-//   @override
-//   _SearchPageState createState() => _SearchPageState();
-// }
-//
-// class _SearchPageState extends State<SearchPage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: _buildBar(context),
-//       body: BlocProvider(
-//         create: (context) => SearchCubit(searchRepos: SearchServices()),
-//         child: SearchWidget(),
-//       ),
-//     );
-//   }
-//
-//   PreferredSizeWidget _buildBar(BuildContext context) {
-//     return AppBar(
-//       leading: IconButton(
-//         icon: const Icon(Icons.arrow_back_ios),
-//         onPressed: () => Navigator.of(context).pop(),
-//       ),
-//       centerTitle: true,
-//       title: const Text(
-//         searchPageTitle,
-//         style: TextStyle(color: Colors.white, fontSize: 24.0),
-//       ),
-//       backgroundColor: appColor,
-//     );
-//   }
-// }
