@@ -52,5 +52,7 @@ abstract class BaseConfig {
   String get electionPath;
   String get electionGetMoreLink;
   String get subscriptionLink;
+  String get vertexSearchApi;
+
 
 }
