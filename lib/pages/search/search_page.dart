@@ -4,6 +4,7 @@ import 'package:readr_app/data/enum/page_status.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/pages/search/search_list_item.dart';
 import 'package:readr_app/pages/search/search_page_controller.dart';
+import 'package:readr_app/services/google_search_service.dart';
 
 class SearchPage extends GetView<SearchPageController> {
   const SearchPage({
@@ -26,6 +27,8 @@ class SearchPage extends GetView<SearchPageController> {
   }
 
   Widget _keywordTextField() {
+
+
     return SizedBox(
       width: double.maxFinite,
       child: Theme(
@@ -87,6 +90,14 @@ class SearchPage extends GetView<SearchPageController> {
 
   @override
   Widget build(BuildContext context) {
+
+    if (!Get.isRegistered<GoogleSearchService>()) {
+      Get.put(GoogleSearchService.instance);
+    }
+
+    if (!Get.isRegistered<SearchPageController>()) {
+      Get.put(SearchPageController());
+    }
     return Scaffold(
         appBar: _buildBar(context),
         body: Column(
