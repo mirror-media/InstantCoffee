@@ -143,7 +143,7 @@ class IAPSubscriptionHelper {
         await _inAppPurchase.completePurchase(purchaseDetails);
       }
     } else {
-      valid = await _handleInvalidPurchase(purchaseDetails);
+       valid = await _handleInvalidPurchase(purchaseDetails);
     }
 
     return valid;

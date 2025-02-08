@@ -27,6 +27,7 @@ import 'package:readr_app/pages/passwordResetEmail/password_reset_email_page.dar
 import 'package:readr_app/pages/passwordResetPrompt/password_reset_prompt_page.dart';
 import 'package:readr_app/pages/passwordUpdate/password_update_page.dart';
 import 'package:readr_app/pages/search/search_page.dart';
+import 'package:readr_app/pages/search/search_page_binding.dart';
 import 'package:readr_app/pages/settingPage/notification_settings_page.dart';
 import 'package:readr_app/pages/settingPage/premium_setting_page.dart';
 import 'package:readr_app/pages/storyPage/external/external_story_controller.dart';
@@ -75,11 +76,10 @@ class RouteGenerator {
         return MaterialPageRoute(
             settings: settings, builder: (_) => InitialApp());
       case search:
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (context) => SearchPage(),
-          fullscreenDialog: true,
-        );
+        return GetPageRoute(
+            settings: settings,
+            page: () => const SearchPage(),
+            binding: SearchPageBinding());
       case login:
         String? routeName;
         Map? routeArguments;
@@ -309,20 +309,35 @@ class RouteGenerator {
   }
 
   static void navigateToSearch() {
+
+
+
     navigatorKey.currentState!.pushNamed(search);
   }
 
-  static void navigateToLogin({
-    String? routeName,
-    Map? routeArguments,
-  }) {
-    navigatorKey.currentState!.pushNamed(
-      login,
-      arguments: {
-        'routeName': routeName,
-        'routeArguments': routeArguments,
-      },
-    );
+  static void navigateToHome() {
+    navigatorKey.currentState!.popAndPushNamed(root);
+  }
+
+  static void navigateToLogin(
+      {String? routeName, Map? routeArguments, bool? isOff = false}) {
+    if (isOff == true) {
+      navigatorKey.currentState!.popAndPushNamed(
+        login,
+        arguments: {
+          'routeName': routeName,
+          'routeArguments': routeArguments,
+        },
+      );
+    } else {
+      navigatorKey.currentState!.pushNamed(
+        login,
+        arguments: {
+          'routeName': routeName,
+          'routeArguments': routeArguments,
+        },
+      );
+    }
   }
 
   static Future<void> navigateToEmailRegistered({

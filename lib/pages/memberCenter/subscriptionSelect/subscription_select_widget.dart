@@ -5,17 +5,17 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:readr_app/blocs/login/states.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
+import 'package:readr_app/data/providers/auth_info_provider.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/remote_config_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
-import 'package:readr_app/helpers/url_launcher.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/models/payment_record.dart';
 import 'package:readr_app/models/subscription_detail.dart';
@@ -23,6 +23,7 @@ import 'package:readr_app/pages/memberCenter/subscriptionSelect/buying_success_w
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/hint_to_other_platform.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/verify_purchase_fail_widget.dart';
 import 'package:readr_app/widgets/logger.dart';
+import 'package:readr_app/widgets/toast_factory.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -308,6 +309,14 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
                             ),
                           ),
                           onPressed: () async {
+                            final RemoteConfigHelper _remoteConfigHelper =
+                                RemoteConfigHelper();
+                            if (Platform.isIOS &&
+                                !_remoteConfigHelper.isIosSubscriptEnable) {
+                              ToastFactory.showToast('此功能修復中', ToastType.error);
+                              return;
+                            }
+
                             if (_auth.currentUser == null) {
                               RouteGenerator.navigateToLogin(
                                 routeName: RouteGenerator.subscriptionSelect,
@@ -317,15 +326,17 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
                               );
                             } else {
                               await _auth.currentUser!.reload();
-                              if (_auth.currentUser!.emailVerified) {
+                              final AuthInfoProvider authInfoProvider =
+                                  Get.find();
+
+                              if (_auth.currentUser!.emailVerified ||
+                                  authInfoProvider.rxnLoginType.value ==
+                                      LoginType.anonymous) {
                                 PurchaseParam purchaseParam = PurchaseParam(
                                   productDetails: productDetailList[index],
                                 );
 
                                 if (Platform.isAndroid) {
-                                  final RemoteConfigHelper _remoteConfigHelper =
-                                      RemoteConfigHelper();
-
                                   if (_remoteConfigHelper.isSubscriptShow) {
                                     const String kProductID =
                                         'subscribe_monthly_80';

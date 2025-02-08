@@ -27,5 +27,10 @@ class RemoteConfigHelper with Logger {
 
   bool get isSubscriptShow => _remoteConfig.getBool('isSubscriptShow');
 
+  bool get isAnonymousShow => _remoteConfig.getBool('isAnonymousShow');
+
   double get textScale => _remoteConfig.getDouble('text_scale');
+
+  bool get isIosSubscriptEnable=> _remoteConfig.getBool('isIosSubscriptEnable');
+
 }

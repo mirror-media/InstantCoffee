@@ -1,10 +1,10 @@
-import 'dart:io';
-import 'dart:convert';
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:http/http.dart';
 import 'package:mime/mime.dart';
-
 import 'package:readr_app/helpers/app_exception.dart';
 import 'package:readr_app/helpers/m_m_cache_manager.dart';
 import 'package:readr_app/widgets/logger.dart';
@@ -16,7 +16,9 @@ class ApiBaseHelper with Logger {
   void setClient(Client client) {
     _client = client;
 
-    httpClient.badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+    httpClient.connectionTimeout = const Duration(seconds: 20);
+    httpClient.badCertificateCallback =
+        ((X509Certificate cert, String host, int port) => true);
   }
 
   BaseCacheManager? _mMCacheManager;
@@ -121,11 +123,15 @@ class ApiBaseHelper with Logger {
   Future<dynamic> postByUrl(String url, dynamic body,
       {Map<String, String>? headers}) async {
     dynamic responseJson;
-    try {
-      Uri uri = Uri.parse(url);
+    Uri uri = Uri.parse(url);
 
-      final response = await _client.post(uri, headers: headers, body: body);
+
+    try {
+      final response = await _client
+          .post(uri, headers: headers, body: body)
+          .timeout(Duration(seconds: 10));
       responseJson = returnResponse(response);
+
     } on SocketException {
       debugLog('No Internet connection');
       throw FetchDataException('No Internet connection');
@@ -220,10 +226,11 @@ dynamic returnResponse(Response response) {
     case 400:
       throw BadRequestException(response.body.toString());
     case 401:
-    case 403:
       throw UnauthorisedException(response.body.toString());
     case 500:
     default:
+      print('body');
+      print(response.body);
       throw FetchDataException(
           'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
   }

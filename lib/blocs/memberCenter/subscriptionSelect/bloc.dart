@@ -7,10 +7,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/events.dart';
 import 'package:readr_app/blocs/memberCenter/subscriptionSelect/states.dart';
 import 'package:readr_app/data/providers/auth_info_provider.dart';
+import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/helpers/iap_subscription_helper.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
@@ -96,18 +98,79 @@ class SubscriptionSelectBloc
     }
   }
 
+  void showUpgradeDialog() {
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Container(
+          width: 327,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                '感謝您升級成我們的訂閱會員，升級後請稍等2-3分鐘，我們需要一點時間升級你的會員資格，完成後您將可以盡情瀏覽會員文章以及線上雜誌。',
+                style: TextStyle(fontSize: 16, color: Colors.black87),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: appColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  onPressed: () {
+                    Get.back(); // Close the dialog
+                  },
+                  child: const Text(
+                    '我知道了',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   void _buySubscriptionProduct(
     BuySubscriptionProduct event,
     Emitter<SubscriptionSelectState> emit,
   ) async {
     debugLog(event.toString());
+    if (Platform.isIOS) {
+      final transactions = await SKPaymentQueueWrapper().transactions();
+      for (var transaction in transactions) {
+        await SKPaymentQueueWrapper().finishTransaction(transaction);
+      }
+    }
+
+    bool buySuccess = await subscriptionSelectRepos.buySubscriptionProduct(
+        event.purchaseParam, state.productDetailList![0]);
+
     try {
       emit(SubscriptionSelectState.buying(
           subscriptionDetail: state.subscriptionDetail!,
           productDetailList: state.productDetailList!));
-      bool buySuccess = await subscriptionSelectRepos
-          .buySubscriptionProduct(event.purchaseParam);
+
       if (buySuccess) {
+        showUpgradeDialog();
       } else {
         Fluttertoast.showToast(
             msg: '購買失敗，請再試一次',

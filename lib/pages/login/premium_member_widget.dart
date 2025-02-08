@@ -1,13 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:readr_app/blocs/login/states.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/memberCenter/memberDetail/member_detail_cubit.dart';
 import 'package:readr_app/blocs/memberCenter/paymentRecord/payment_record_bloc.dart';
+import 'package:readr_app/data/providers/auth_info_provider.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
+import 'package:readr_app/pages/login/member_widget/anonymous_block/anonymous_block_widget.dart';
 import 'package:readr_app/pages/memberCenter/paymentRecord/member_payment_record_page.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionDetail/member_subscription_detail_page.dart';
 import 'package:readr_app/pages/passwordUpdate/password_update_page.dart';
@@ -20,6 +24,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 class PremiumMemberWidget extends StatefulWidget {
   final String israfelId;
   final SubscriptionType subscriptionType;
+
   const PremiumMemberWidget({
     required this.israfelId,
     required this.subscriptionType,
@@ -31,6 +36,7 @@ class PremiumMemberWidget extends StatefulWidget {
 
 class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final AuthInfoProvider authInfoProvider = Get.find();
 
   _signOut() async {
     await GoogleSignIn().disconnect();
@@ -61,55 +67,70 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
               color: appColor, fontSize: 20, fontWeight: FontWeight.w400),
         ),
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 16.0, bottom: 12),
-              child: _memberLevelBlock(widget.subscriptionType),
-            ),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                if (widget.subscriptionType != SubscriptionType.staff) ...[
-                  _horizontalDivider(width),
-                  _memberSubscriptionDetailButton(widget.subscriptionType),
-                  if (widget.subscriptionType != SubscriptionType.marketing &&
-                      widget.subscriptionType !=
-                          SubscriptionType.subscribe_group) ...[
-                    _horizontalDivider(width),
-                    _memberPaymentRecordButton(widget.subscriptionType),
-                  ],
+      body: Obx(() {
+        final isAnonymous =
+            authInfoProvider.rxnLoginType.value == LoginType.anonymous;
+        final subscriptionType =
+            authInfoProvider.rxnUserAuthInfo.value?.subscriptionType;
+        return isAnonymous
+            ? AnonymousBlockWidget(
+                subscriptionType: subscriptionType ?? SubscriptionType.none,
+              )
+            : CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 16.0, bottom: 12),
+                      child: _memberLevelBlock(widget.subscriptionType),
+                    ),
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        if (widget.subscriptionType !=
+                            SubscriptionType.staff) ...[
+                          _horizontalDivider(width),
+                          _memberSubscriptionDetailButton(
+                              widget.subscriptionType),
+                          if (widget.subscriptionType !=
+                                  SubscriptionType.marketing &&
+                              widget.subscriptionType !=
+                                  SubscriptionType.subscribe_group) ...[
+                            _horizontalDivider(width),
+                            _memberPaymentRecordButton(widget.subscriptionType),
+                          ],
+                        ],
+                        _horizontalDivider(width),
+                        _memberProfileButton(),
+                        _horizontalDivider(width),
+                        if (LoginServices.checkIsEmailAndPasswordLogin()) ...[
+                          _changePasswordButton(),
+                          _horizontalDivider(width),
+                        ],
+                        _memberContactInfoButton(),
+                        _horizontalDivider(width),
+                        _settingButton(),
+                        Container(
+                          color: const Color(0xffF4F4F4),
+                          child: _logoutButton(width),
+                        ),
+                        _horizontalDivider(width),
+                        _deleteMemberButton(width),
+                      ],
+                    ),
+                  ),
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: SizedBox(
+                            height: 185,
+                            width: width,
+                            child: _contactInfo(width))),
+                  ),
                 ],
-                _horizontalDivider(width),
-                _memberProfileButton(),
-                _horizontalDivider(width),
-                if (LoginServices.checkIsEmailAndPasswordLogin()) ...[
-                  _changePasswordButton(),
-                  _horizontalDivider(width),
-                ],
-                _memberContactInfoButton(),
-                _horizontalDivider(width),
-                _settingButton(),
-                Container(
-                  color: const Color(0xffF4F4F4),
-                  child: _logoutButton(width),
-                ),
-                _horizontalDivider(width),
-                _deleteMemberButton(width),
-              ],
-            ),
-          ),
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Align(
-                alignment: Alignment.bottomCenter,
-                child: SizedBox(
-                    height: 185, width: width, child: _contactInfo(width))),
-          ),
-        ],
-      ),
+              );
+      }),
     );
   }
 

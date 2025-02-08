@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:readr_app/helpers/api_base_helper.dart';
 import 'package:readr_app/helpers/app_exception.dart';
 import 'package:readr_app/helpers/environment.dart';
@@ -11,6 +13,7 @@ import 'package:readr_app/models/payment_record.dart';
 import 'package:readr_app/models/subscription_detail.dart';
 import 'package:readr_app/services/member_service.dart';
 import 'package:readr_app/widgets/logger.dart';
+import 'package:readr_app/widgets/toast_factory.dart';
 
 List<String> _kProductIds = <String>[
   Environment().config.monthSubscriptionId,
@@ -18,8 +21,12 @@ List<String> _kProductIds = <String>[
 
 abstract class SubscriptionSelectRepos {
   Future<SubscriptionDetail> fetchSubscriptionDetail();
+
   Future<List<ProductDetails>> fetchProductDetailList();
-  Future<bool> buySubscriptionProduct(PurchaseParam purchaseParam);
+
+  Future<bool> buySubscriptionProduct(
+      PurchaseParam purchaseParam, ProductDetails productDetails);
+
   Future<bool> verifyPurchase(PurchaseDetails purchaseDetails);
 }
 
@@ -84,13 +91,41 @@ class SubscriptionSelectServices
     throw FetchDataException('The payment platform is unavailable');
   }
 
+  Future<bool> hasPendingTransaction(String productId) async {
+    bool hasPendingTransaction = false;
+
+    InAppPurchase.instance.purchaseStream.listen((purchases) {
+      for (var purchase in purchases) {
+        if (purchase.productID == productId &&
+            purchase.pendingCompletePurchase) {
+          hasPendingTransaction = true;
+        }
+      }
+    }).onError((error) {
+      print("購買流監聽錯誤: $error");
+    });
+
+    return hasPendingTransaction;
+  }
+
   @override
-  Future<bool> buySubscriptionProduct(PurchaseParam purchaseParam) async {
+  Future<bool> buySubscriptionProduct(
+      PurchaseParam purchaseParam, ProductDetails productDetails) async {
     bool buySuccess = false;
+
+    final purchaseParam = PurchaseParam(productDetails: productDetails);
+
+    if (Platform.isIOS) {
+      final transactions = await SKPaymentQueueWrapper().transactions();
+      for (var transaction in transactions) {
+        await SKPaymentQueueWrapper().finishTransaction(transaction);
+      }
+    }
+
 
     try {
       buySuccess =
-          await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+      await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
     } catch (e) {
       debugLog('buySubscriptionProduct$e');
     }
