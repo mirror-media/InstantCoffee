@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' show Colors, Icons, InkWell;
+import 'package:flutter/widgets.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/models/content.dart';
 import 'package:readr_app/widgets/image_description_widget.dart';
@@ -8,6 +9,7 @@ class ImageAndDescriptionSlideShowWidget extends StatefulWidget {
   final List<Content> contentList;
   final bool isMemberContent;
   final List<String> imageUrlList;
+
   const ImageAndDescriptionSlideShowWidget({
     required this.contentList,
     required this.imageUrlList,
@@ -25,7 +27,8 @@ class _ImageAndDescriptionSlideShowWidgetState
   late double carouselRatio;
   late List<Content> contentList;
   late CarouselOptions options;
-  CarouselController carouselController = CarouselController();
+  final CarouselSliderController carouselController =
+      CarouselSliderController();
 
   bool backActivated = false;
   bool forwardActivated = false;
