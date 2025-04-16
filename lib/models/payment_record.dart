@@ -1,7 +1,8 @@
 enum PaymentType {
   newebpay,
   app_store, // ignore: constant_identifier_names
-  google_play, // ignore: constant_identifier_names
+  google_play,
+  line_pay// ignore: constant_identifier_names
 }
 
 class PaymentRecord {

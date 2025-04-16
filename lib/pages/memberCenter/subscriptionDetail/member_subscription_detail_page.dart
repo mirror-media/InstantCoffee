@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:readr_app/blocs/login/states.dart';
 import 'package:readr_app/blocs/memberCenter/memberDetail/member_detail_cubit.dart';
+import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/models/member_subscription_detail.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
@@ -32,10 +33,9 @@ class _MemberSubscriptionDetailPageState
     controller = MemberSubscriptionDetailController(widget.subscriptionType);
     super.initState();
     _subscriptionType = widget.subscriptionType;
+    _getMemberDetail();
     if (_subscriptionType == SubscriptionType.subscribe_monthly ||
-        _subscriptionType == SubscriptionType.subscribe_yearly) {
-      _getMemberDetail();
-    }
+        _subscriptionType == SubscriptionType.subscribe_yearly) {}
   }
 
   _getMemberDetail() {
@@ -79,7 +79,7 @@ class _MemberSubscriptionDetailPageState
             }
 
             String paymentMethod =
-                '信用卡自動續扣（${memberSubscriptionDetail.cardInfoLastFour}）';
+                '信用卡自動續扣（${memberSubscriptionDetail.cardInfoLastFour ?? StringDefault.valueNullDefault}）';
             if (memberSubscriptionDetail.paymentType == PaymentType.app_store) {
               paymentMethod = 'Apple Pay 續扣';
             } else if (memberSubscriptionDetail.paymentType ==

@@ -27,6 +27,8 @@ class SearchPage extends GetView<SearchPageController> {
   }
 
   Widget _keywordTextField() {
+
+
     return SizedBox(
       width: double.maxFinite,
       child: Theme(
@@ -88,6 +90,7 @@ class SearchPage extends GetView<SearchPageController> {
 
   @override
   Widget build(BuildContext context) {
+
     if (!Get.isRegistered<GoogleSearchService>()) {
       Get.put(GoogleSearchService.instance);
     }

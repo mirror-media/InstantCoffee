@@ -21,10 +21,11 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
 
-version: 6.9.49+499
+version: 6.9.50+500
+
 
 environment:
-  sdk: '>=2.12.0 <=3.5.1'
+  sdk: '>=2.12.0 <=3.7.2'
 
 dependencies:
   flutter:
@@ -39,7 +40,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.4
 
-  youtube_player_flutter: ^8.1.2
+  youtube_player_flutter: ^9.1.1
   # being able to compare objects 
   equatable: ^2.0.3
   # http ajax call
@@ -58,7 +59,7 @@ dependencies:
     git:
       url: https://github.com/mirror-media/flutter_embedded_webview.git
       ref: master
-      version: ^0.6.2
+      version: ^0.6.4
   # local storage
   localstorage: ^4.0.0+1
   # A Flutter plugin to store data in secure storage
@@ -74,7 +75,7 @@ dependencies:
   # A Flutter widget that scrolls text infinitely.
   marquee: ^2.2.0
   # carousel slider in flutter
-  carousel_slider: ^4.0.0
+  carousel_slider: ^5.0.0
   # widget from html
   flutter_widget_from_html: ^0.15.2
   # video player
@@ -95,7 +96,7 @@ dependencies:
     git:
       url: https://github.com/mirror-media/constants.git
       ref: master
-      version: ^2.0.0
+      version: ^2.0.3
   # custom real time invoice widget
   real_time_invoice_widget:
     git:
@@ -143,7 +144,7 @@ dependencies:
   flutter_launcher_icons: ^0.10.0
 
   # more powerful webview
-  flutter_inappwebview: ^5.8.0
+  flutter_inappwebview: ^6.1.5
 
   # zoomable widget
   photo_view: ^0.14.0
