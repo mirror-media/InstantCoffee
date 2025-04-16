@@ -94,7 +94,6 @@ class SearchPage extends GetView<SearchPageController> {
     if (!Get.isRegistered<GoogleSearchService>()) {
       Get.put(GoogleSearchService.instance);
     }
-
     if (!Get.isRegistered<SearchPageController>()) {
       Get.put(SearchPageController());
     }
