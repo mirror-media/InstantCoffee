@@ -50,7 +50,7 @@ dependencies:
   # blocs and cubits.
   flutter_bloc: ^8.0.1
   # toast Library for Flutter
-  fluttertoast: ^8.0.8
+  fluttertoast: ^8.2.12
   # webview
   webview_flutter: ^4.7.0
   # mirrormedia embedded code
