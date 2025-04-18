@@ -3,7 +3,10 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
-        flutterPluginPortal() // ✅ 必須有這行才能抓 flutter-gradle-plugin
+        if (settings.hasProperty("flutterVersion")) {
+            flutterPluginPortal()
+        }
+       
     }
 }
 
