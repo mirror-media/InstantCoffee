@@ -135,7 +135,7 @@ dependencies:
   # facebook sign in
   flutter_facebook_auth: ^6.2.0
   # apple sign in
-  sign_in_with_apple: ^4.1.0
+  sign_in_with_apple: ^7.0.1
 
   # a storefront-independent API for purchases in Flutter apps.
   in_app_purchase: ^3.2.0
