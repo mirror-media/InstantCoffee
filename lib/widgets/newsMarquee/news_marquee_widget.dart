@@ -1,4 +1,5 @@
-import 'package:carousel_slider/carousel_slider.dart';
+
+import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
@@ -9,6 +10,7 @@ import 'package:readr_app/helpers/firebase_analytics_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/widgets/newsMarquee/marquee_widget.dart';
+import 'package:carousel_slider/carousel_slider.dart' as carousel;
 
 class NewsMarqueeWidget extends StatefulWidget {
   final List<Record> recordList;
@@ -28,8 +30,10 @@ class NewsMarqueeWidget extends StatefulWidget {
 }
 
 class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
-  final CarouselController _carouselController = CarouselController();
-  final CarouselOptions _options = CarouselOptions(
+
+
+  final CarouselSliderController _carouselController = CarouselSliderController();
+  final carousel.CarouselOptions _options = carousel.CarouselOptions(
     scrollPhysics: const NeverScrollableScrollPhysics(),
     height: 48,
     viewportFraction: 1,
@@ -46,7 +50,7 @@ class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    return CarouselSlider(
+    return carousel.CarouselSlider(
       items: _buildList(width, widget.recordList),
       carouselController: _carouselController,
       options: _options,
