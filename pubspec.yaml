@@ -90,7 +90,10 @@ dependencies:
   # package for working with MIME type definitions
   mime: ^1.0.1
   # app link
-  uni_links: ^0.5.1
+  uni_links:
+    git:
+    url: https://github.com/avioli/uni_links.git
+    ref: f9de4a02ff096090c96e71baac3fe1a73209e6c3
   # mirrormedia constants
   constants:
     git:
