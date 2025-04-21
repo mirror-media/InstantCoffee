@@ -508,7 +508,7 @@ class RouteGenerator {
         InAppBrowser browser = InAppBrowser();
         browser.openUrlRequest(
           urlRequest: URLRequest(
-            url: Uri.parse(url),
+            url: WebUri(url),
           ),
           options: InAppBrowserClassOptions(
             crossPlatform: InAppBrowserOptions(

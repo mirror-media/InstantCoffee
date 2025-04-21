@@ -1,11 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart' show Colors, Icons, InkWell;
+import 'package:flutter/widgets.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/widgets/carousel_display_widget.dart';
 
 class EditorChoiceCarousel extends StatefulWidget {
   final List<Record> editorChoiceList;
   final double aspectRatio;
+
   const EditorChoiceCarousel({
     required this.editorChoiceList,
     this.aspectRatio = 16 / 9,
@@ -16,7 +18,8 @@ class EditorChoiceCarousel extends StatefulWidget {
 }
 
 class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
-  final CarouselController _carouselController = CarouselController();
+  final CarouselSliderController _carouselController =
+      CarouselSliderController();
   late CarouselOptions _options;
 
   @override

@@ -1,62 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:uni_links/uni_links.dart';
+import 'package:app_links/app_links.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 
 class AppLinkHelper {
-  Stream<String?> get getStringLinksStream => linkStream;
+  final AppLinks _appLinks = AppLinks();
+  bool _hasHandledInitialLink = false;
 
   AppLinkHelper();
 
-  Future<String?> getLink() async {
-    try {
-      return await getInitialLink();
-    } on PlatformException {
-      return null;
-    }
-  }
-
-  // it will trigger at the first open
-  configAppLink(BuildContext context) async {
-    String? link = await getLink();
-    if (link != null) {
-      var linkList = link.split('/');
-      // navigate to storyPage
-      for (int i = 0; i < linkList.length; i++) {
-        if (linkList[i] == 'story' && i + 1 < linkList.length) {
-          _navigateToStoryPage(context, linkList[i + 1]);
-          break;
-        } else if (linkList[i] == 'video' && i + 1 < linkList.length) {
-          _navigateToStoryPage(context, linkList[i + 1], isListeningPage: true);
-          break;
+  // 監聽 deep link
+  void listenAppLink(BuildContext context) {
+    _appLinks.uriLinkStream.listen((Uri? uri) {
+      if (uri != null) {
+        if (!_hasHandledInitialLink) {
+          // 預設第一次就是 initial
+          _hasHandledInitialLink = true;
+          _handleUri(context, uri);
+        } else {
+          // 之後的就是背景或已開啟時觸發
+          _handleUri(context, uri);
         }
       }
-    }
-  }
-
-  // it will trigger when app is running in the background
-  listenAppLink(BuildContext context) async {
-    getStringLinksStream.listen((String? link) {
-      if (link != null) {
-        var linkList = link.split('/');
-        // navigate to storyPage
-        for (int i = 0; i < linkList.length; i++) {
-          if (linkList[i] == 'story' && i + 1 < linkList.length) {
-            _navigateToStoryPage(context, linkList[i + 1]);
-            break;
-          } else if (linkList[i] == 'video' && i + 1 < linkList.length) {
-            _navigateToStoryPage(context, linkList[i + 1],
-                isListeningPage: true);
-            break;
-          }
-        }
-      }
+    }, onError: (err) {
+      debugPrint('❌ uriLinkStream error: $err');
     });
   }
 
-  _navigateToStoryPage(BuildContext context, String? slug,
-      {isListeningPage = false}) {
-    if (slug != null && slug != '') {
+  void _handleUri(BuildContext context, Uri uri) {
+    final segments = uri.pathSegments;
+    for (int i = 0; i < segments.length; i++) {
+      if (segments[i] == 'story' && i + 1 < segments.length) {
+        _navigateToStoryPage(context, segments[i + 1]);
+        break;
+      } else if (segments[i] == 'video' && i + 1 < segments.length) {
+        _navigateToStoryPage(context, segments[i + 1], isListeningPage: true);
+        break;
+      }
+    }
+  }
+
+  void _navigateToStoryPage(BuildContext context, String? slug,
+      {bool isListeningPage = false}) {
+    if (slug != null && slug.isNotEmpty) {
       Navigator.of(context).popUntil((route) => route.isFirst);
       if (isListeningPage) {
         RouteGenerator.navigateToListeningStory(slug);
@@ -65,6 +50,4 @@ class AppLinkHelper {
       }
     }
   }
-
-  dispose() {}
 }

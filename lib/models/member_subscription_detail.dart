@@ -7,7 +7,7 @@ class MemberSubscriptionDetail {
   DateTime? periodEndDatetime;
   DateTime? periodNextPayDatetime;
   PaymentType? paymentType;
-  String cardInfoLastFour;
+  final String? cardInfoLastFour;
   bool isCanceled;
 
   MemberSubscriptionDetail({
@@ -16,7 +16,7 @@ class MemberSubscriptionDetail {
     required this.periodEndDatetime,
     required this.periodNextPayDatetime,
     required this.paymentType,
-    required this.cardInfoLastFour,
+    this.cardInfoLastFour,
     required this.isCanceled,
   });
 
@@ -30,12 +30,16 @@ class MemberSubscriptionDetail {
 
     String? paymentMethodJson = json['paymentMethod'];
     PaymentType? paymentType;
-    if (paymentMethodJson != null) {
+    if (paymentMethodJson == 'line_pay') {
+      paymentType = PaymentType.line_pay;
+    } else if (paymentMethodJson != null) {
       paymentType = paymentMethodJson.toEnum(PaymentType.values);
     }
 
-    String cardInfoLastFour = '';
-    if (json["newebpayPayment"] != null) {
+    String? cardInfoLastFour;
+    final newsbpayPayment =json["newebpayPayment"] as List<dynamic>;
+
+    if (json["newebpayPayment"] != null && newsbpayPayment.isNotEmpty) {
       cardInfoLastFour = json["newebpayPayment"][0]["cardInfoLastFour"];
     }
 

@@ -6,7 +6,9 @@ import 'package:readr_app/models/content.dart';
 class SlideShowController extends GetxController {
   final RxList<Content> rxContentList = RxList();
   final RxnString rxnDescription = RxnString();
-  CarouselController carouselController = CarouselController();
+
+  final CarouselSliderController carouselController =
+      CarouselSliderController();
   CarouselOptions? option;
 
   SlideShowController(List<Content> contentList) {
