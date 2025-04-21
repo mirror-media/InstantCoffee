@@ -108,7 +108,7 @@ android {
         release {
             productFlavors.dev.signingConfig signingConfigs.dev
             productFlavors.prod.signingConfig signingConfigs.prod
-            shrinkResources true
+            shrinkResources false
             minifyEnabled false
         }
     }
