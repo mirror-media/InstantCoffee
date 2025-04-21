@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:uni_links/uni_links.dart';
 import 'package:readr_app/helpers/route_generator.dart';
+import 'package:uni_links3/uni_links.dart';
 
 class AppLinkHelper {
   Stream<String?> get getStringLinksStream => linkStream;
