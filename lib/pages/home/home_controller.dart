@@ -45,7 +45,7 @@ class HomeController extends GetxController with WidgetsBindingObserver {
     if (context == null) return;
     WidgetsBinding.instance.addObserver(this);
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      _appLinkHelper.configAppLink(context!);
+      // _appLinkHelper.configAppLink(context!);
       _appLinkHelper.listenAppLink(context!);
       _firebaseMessageHelper.configFirebaseMessaging();
     });
@@ -97,7 +97,7 @@ class HomeController extends GetxController with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    _appLinkHelper.dispose();
+    // _appLinkHelper.dispose();
     _firebaseMessageHelper.dispose();
     super.dispose();
   }
