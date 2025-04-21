@@ -88,7 +88,7 @@ dependencies:
   # package for working with MIME type definitions
   mime: ^1.0.1
   # app link
-  uni_links: ^0.5.1
+  uni_links3: ^0.5.3
   # mirrormedia constants
   constants:
     git:
@@ -133,7 +133,7 @@ dependencies:
   # facebook sign in
   flutter_facebook_auth: ^6.2.0
   # apple sign in
-  sign_in_with_apple: ^4.1.0
+  sign_in_with_apple: ^7.0.1
 
   # a storefront-independent API for purchases in Flutter apps.
   in_app_purchase: ^3.2.0
