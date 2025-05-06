@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/data/providers/articles_api_provider.dart';
 import 'package:readr_app/models/live_stream_model.dart';
+import 'package:readr_app/services/app_cache_service.dart';
+import 'package:readr_app/widgets/raise_price_dialog_widget.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../blocs/onBoarding/bloc.dart';
@@ -24,6 +26,8 @@ class HomeController extends GetxController with WidgetsBindingObserver {
   final Rxn<LiveStreamModel> rxLiveStreamModel = Rxn();
   final LocalStorage _storage = LocalStorage('setting');
   final AppLinkHelper _appLinkHelper = AppLinkHelper();
+  final AppCacheService appCacheService = Get.find();
+
   final FirebaseMessangingHelper _firebaseMessageHelper =
       FirebaseMessangingHelper();
   YoutubePlayerController ytStreamController =
@@ -45,7 +49,7 @@ class HomeController extends GetxController with WidgetsBindingObserver {
     if (context == null) return;
     WidgetsBinding.instance.addObserver(this);
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      _appLinkHelper.configAppLink(context!);
+      // _appLinkHelper.configAppLink(context!);
       _appLinkHelper.listenAppLink(context!);
       _firebaseMessageHelper.configFirebaseMessaging();
     });
@@ -53,6 +57,12 @@ class HomeController extends GetxController with WidgetsBindingObserver {
     onBoardingBloc = context!.read<OnBoardingBloc>();
     pageController = PageController(initialPage: rxSelectedIndex.value);
     rxTopicList.value = await articlesApiProvider.getTopicTabList() ?? [];
+    final isShow =
+        appCacheService.getBool(AppCacheService.raisePriceNotShowAgain);
+    print(isShow);
+    if (isShow != true && Get.isDialogOpen==false) {
+      Get.dialog(const RaisePriceDialogWidget());
+    }
   }
 
   _showTermsOfService() async {
@@ -97,7 +107,7 @@ class HomeController extends GetxController with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    _appLinkHelper.dispose();
+    // _appLinkHelper.dispose();
     _firebaseMessageHelper.dispose();
     super.dispose();
   }

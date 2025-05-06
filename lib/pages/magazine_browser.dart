@@ -38,7 +38,7 @@ class _MagazineBrowserState extends State<MagazineBrowser> {
     if (type == 'weekly') {
       _browser = InAppWebView(
         initialUrlRequest: URLRequest(
-          url: Uri.parse(widget.magazine.onlineReadingUrl ??
+          url: WebUri(widget.magazine.onlineReadingUrl ??
               StringDefault.valueNullDefault),
         ),
         initialOptions: options,
@@ -50,7 +50,7 @@ class _MagazineBrowserState extends State<MagazineBrowser> {
     } else {
       _browser = InAppWebView(
         initialUrlRequest: URLRequest(
-          url: Uri.parse(
+          url: WebUri(
               widget.magazine.pdfUrl ?? StringDefault.valueNullDefault),
         ),
         initialOptions: options,
