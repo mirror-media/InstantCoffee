@@ -21,7 +21,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
 
-version: 6.9.51+502
+version: 6.9.52+503
 
 
 environment:
@@ -133,7 +133,9 @@ dependencies:
   # google sign in
   google_sign_in: ^5.2.2
   # facebook sign in
-  flutter_facebook_auth: ^6.2.0
+  flutter_facebook_auth: ^7.1.2
+  permission_handler: ^11.3.1
+
   # apple sign in
   sign_in_with_apple: ^7.0.1
 
@@ -168,6 +170,7 @@ dependencies:
   in_app_purchase_storekit: ^0.3.6+3
   upgrader: ^10.3.0
   firebase_dynamic_links: ^6.0.4
+  crypto: ^3.0.6
 dependency_overrides:
   web: ^1.0.0
 
