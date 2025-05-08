@@ -1,9 +1,12 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:readr_app/models/firebase_login_status.dart';
 import 'package:readr_app/widgets/logger.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:readr_app/helpers/crypto_utils.dart' as crypto_helper;
 
 abstract class LoginRepos {
   Future<FirebaseLoginStatus> signInWithGoogle();
@@ -57,53 +60,67 @@ class LoginServices with Logger implements LoginRepos {
 
   @override
   Future<FirebaseLoginStatus> signInWithFacebook() async {
-    // Trigger the authentication flow
-    final LoginResult facebookUser = await FacebookAuth.instance.login();
+    UserCredential? userCredential;
+    String? rawNonce;
 
-    UserCredential userCredential;
+    try {
+      if (Platform.isIOS) {
+        await Permission.appTrackingTransparency.request();
+      }
 
-    switch (facebookUser.status) {
-      case LoginStatus.success:
-        // Obtain the auth details from the request
-        final AccessToken facebookAuth = facebookUser.accessToken!;
+      rawNonce = crypto_helper.generateNonce();
+      final hashedNonce = crypto_helper.sha256OfString(rawNonce);
 
-        // Create a new credential
-        final OAuthCredential credential = FacebookAuthProvider.credential(
-          facebookAuth.token,
-        );
+      final LoginResult facebookLoginResult = await FacebookAuth.instance.login(
+        permissions: ['email', 'public_profile'],
+        nonce: hashedNonce,
+      );
 
-        try {
-          // Once signed in, get the UserCredential
-          userCredential = await _auth.signInWithCredential(credential);
-          // Need to log out to avoid facebook login error 304
-          await FacebookAuth.instance.logOut();
-        } catch (onError) {
-          debugLog('Error sign in with facebook $onError');
-          // Need to log out to avoid facebook login error 304
-          await FacebookAuth.instance.logOut();
+      if (facebookLoginResult.status == LoginStatus.success) {
+        final AccessToken? accessToken = facebookLoginResult.accessToken;
+        if (accessToken == null) {
           return FirebaseLoginStatus(
-            status: FirebaseStatus.Error,
-            message: onError,
-          );
+              status: FirebaseStatus.Error,
+              message: 'Facebook AccessToken is null');
         }
-        break;
-      case LoginStatus.cancelled:
+
+        OAuthCredential credential;
+
+        if (accessToken.type == AccessTokenType.limited) {
+          credential = OAuthProvider("facebook.com").credential(
+            idToken: accessToken.tokenString,
+            rawNonce: rawNonce,
+          );
+        } else {
+          credential = FacebookAuthProvider.credential(accessToken.tokenString);
+        }
+
+        userCredential = await _auth.signInWithCredential(credential);
+        await FacebookAuth.instance.logOut();
+
         return FirebaseLoginStatus(
-          status: FirebaseStatus.Cancel,
-          message: 'Facebook sign in cancel',
+          status: FirebaseStatus.Success,
+          message: userCredential,
         );
-      case LoginStatus.failed:
-      case LoginStatus.operationInProgress:
+      } else if (facebookLoginResult.status == LoginStatus.cancelled) {
+        return FirebaseLoginStatus(
+            status: FirebaseStatus.Cancel, message: 'Facebook sign in cancel');
+      } else {
         return FirebaseLoginStatus(
           status: FirebaseStatus.Error,
-          message: facebookUser.message,
+          message: facebookLoginResult.message ??
+              'Facebook sign in failed or operation in progress',
         );
+      }
+    } catch (onError) {
+      if (onError is FirebaseAuthException) {
+        // Potentially log onError.code, onError.message if not already handled by a logger
+      }
+      return FirebaseLoginStatus(
+        status: FirebaseStatus.Error,
+        message: onError,
+      );
     }
-
-    return FirebaseLoginStatus(
-      status: FirebaseStatus.Success,
-      message: userCredential,
-    );
   }
 
   // https://stackoverflow.com/questions/62805312/android-sign-in-with-apple-and-firebase-flutter
