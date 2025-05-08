@@ -237,7 +237,7 @@ class AuthInfoProvider extends GetxController {
       }
 
       final AuthCredential credential =
-          FacebookAuthProvider.credential(accessToken.token);
+          FacebookAuthProvider.credential(accessToken.tokenString);
 
       // 合併帳號
       final UserCredential userCredential =

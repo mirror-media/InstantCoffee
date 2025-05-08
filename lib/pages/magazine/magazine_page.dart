@@ -11,8 +11,11 @@ import 'package:readr_app/services/magazine_service.dart';
 
 class MagazinePage extends StatefulWidget {
   final SubscriptionType subscriptionType;
+  final bool showAppBar;
+
   const MagazinePage({
     required this.subscriptionType,
+    this.showAppBar = true, // 預設顯示 AppBar
   });
 
   @override
@@ -39,7 +42,7 @@ class _MagazinePageState extends State<MagazinePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: _buildBar(context),
+      appBar: widget.showAppBar ? _buildBar(context) : null,
       body: _checkPermission(widget.subscriptionType)
           ? ListView(
               controller: _listviewController,

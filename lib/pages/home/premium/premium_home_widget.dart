@@ -23,6 +23,8 @@ import 'package:readr_app/widgets/logger.dart';
 import 'package:readr_app/widgets/newsMarquee/news_marquee.dart';
 import 'package:readr_app/widgets/popupRoute/easy_popup.dart';
 import 'package:readr_app/widgets/popupRoute/section_drop_down_menu.dart';
+import 'package:readr_app/pages/magazine/magazine_page.dart';
+import 'package:readr_app/models/member_subscription_type.dart';
 
 class PremiumHomeWidget extends StatefulWidget {
   @override
@@ -56,20 +58,26 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget>
     _tabs.clear();
     _tabWidgets.clear();
     _scrollControllerList.clear();
-    int indexToMove =
-    sectionItems.indexWhere((section) => section.title == 'Podcasts');
+    // Move 'Podcasts' after '生活'
+    int indexToMovePodcasts = sectionItems.indexWhere((section) => section.title == 'Podcasts');
+    int indexAfterLiving = sectionItems.indexWhere((section) => section.title == '生活');
+    if (indexToMovePodcasts != -1 && indexAfterLiving != -1 && indexToMovePodcasts < indexAfterLiving) {
+      Section sectionToMove = sectionItems.removeAt(indexToMovePodcasts);
+      sectionItems.insert(indexAfterLiving, sectionToMove);
+    }
 
-    // 找到 '生活' 的 Section
-    int indexAfter =
-    sectionItems.indexWhere((section) => section.title == '生活');
+    // Check if '動態雜誌' exists; if not, add it
+    bool hasDynamicMagazine = sectionItems.any((section) => section.title == '動態雜誌');
+    if (!hasDynamicMagazine) {
+      sectionItems.add(Section(title: '動態雜誌', key: 'dynamic_magazine'));
+    }
 
-    // 如果找到了 'podcast' 和 '生活'，而且 'podcast' 在 '生活' 之前
-    if (indexToMove != -1 && indexAfter != -1 && indexToMove < indexAfter) {
-      // 取出 'podcast'
-      Section sectionToMove = sectionItems.removeAt(indexToMove);
-
-      // 插入到 '生活' 的後面
-      sectionItems.insert(indexAfter, sectionToMove);
+    // Move '動態雜誌' after 'Premium文章'
+    int indexToMoveDynamicMagazine = sectionItems.indexWhere((section) => section.title == '動態雜誌');
+    int indexAfterPremium = sectionItems.indexWhere((section) => section.title == '會員專區');
+    if (indexToMoveDynamicMagazine != -1 && indexAfterPremium != -1) {
+      Section dynamicMagazineSection = sectionItems.removeAt(indexToMoveDynamicMagazine);
+      sectionItems.insert(indexAfterPremium + 1, dynamicMagazineSection);
     }
 
     for (int i = 0; i < sectionItems.length; i++) {
@@ -105,6 +113,11 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget>
         ));
       } else if (section.key == 'Podcasts') {
         _tabWidgets.add(const PodcastPage());
+      } else if (section.key == 'dynamic_magazine') {
+        _tabWidgets.add(MagazinePage(
+          subscriptionType: SubscriptionType.subscribe_monthly,
+          showAppBar: false, // 隱藏 AppBar
+        ));
       } else {
         _tabWidgets.add(BlocProvider(
             create: (context) => TabContentBloc(recordRepos: RecordService()),
@@ -115,7 +128,6 @@ class _PremiumHomeWidgetState extends State<PremiumHomeWidget>
             )));
       }
     }
-
     _tabBarController = StreamController<List<Tab>>();
 
     // set controller
