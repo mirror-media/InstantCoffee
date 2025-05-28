@@ -50,7 +50,7 @@ class JoinMemberBlock extends StatelessWidget {
               child: Column(
                 children: [
                   const Text(
-                    '限時優惠每月\$80元',
+                    '限時優惠每月\$100元',
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w400,
