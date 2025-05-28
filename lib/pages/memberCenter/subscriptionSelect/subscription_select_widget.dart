@@ -398,7 +398,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
                                 if (Platform.isAndroid) {
                                   if (_remoteConfigHelper.isSubscriptShow) {
                                     const String kProductID =
-                                        'subscribe_monthly_80';
+                                        'subscribe_monthly_100';
                                     final bool available = await InAppPurchase
                                         .instance
                                         .isAvailable();
