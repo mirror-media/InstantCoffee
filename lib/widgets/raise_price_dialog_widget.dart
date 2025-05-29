@@ -20,28 +20,41 @@ class RaisePriceDialogWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text(
-              '鏡週刊官網和APP訂閱方案\n自 2025年6月調漲！',
+              '鏡週刊APP訂閱方案\n自 2025年6月調漲！',
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: 16, fontWeight: FontWeight.bold, color: appColor),
             ),
             const SizedBox(height: 16),
-            const Text(
-              '官網訂閱\n月訂閱：99 元／每月\n年訂閱：799元／年',
+            RichText(
               textAlign: TextAlign.center,
-              style: TextStyle(height: 1.5),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'APP訂閱\n月訂閱：100 元／每月',
-              textAlign: TextAlign.center,
-              style: TextStyle(height: 1.5),
+              text: const TextSpan(
+                style: TextStyle(
+                    height: 1.5,
+                    fontSize: 16,
+                    color: Colors.black), // Default style
+                children: <TextSpan>[
+                  TextSpan(
+                      text: 'APP訂閱',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(text: '\n月訂閱：100 元／每月'),
+                ],
+              ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              '感謝您的每一筆付費，讓我們能為社會帶來更多深度報導～\n立即續訂，把握最後原價優惠！',
+            RichText(
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14),
+              text: const TextSpan(
+                style: TextStyle(
+                    fontSize: 14, color: Colors.black), // Default style
+                children: <TextSpan>[
+                  TextSpan(text: '請特別注意：因技術調整，原本已訂閱的 '),
+                  TextSpan(
+                      text: 'Android 用戶',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(text: '，現有訂閱將於近期被取消，請務必重新訂閱。'),
+                ],
+              ),
             ),
             const SizedBox(height: 16),
             Obx(() => Row(
@@ -52,7 +65,7 @@ class RaisePriceDialogWidget extends StatelessWidget {
                       onChanged: (value) {
                         showAgain.value = value ?? false;
                       },
-                      activeColor: Colors.blue,   // ✔️ 選取時框線 + 打勾的背景色
+                      activeColor: Colors.blue, // ✔️ 選取時框線 + 打勾的背景色
                       checkColor: Colors.white,
                     ),
                     const Text('以後不再通知',
@@ -64,8 +77,9 @@ class RaisePriceDialogWidget extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  final controller=  Get.find<AppCacheService>();
-                  controller.setBool(AppCacheService.raisePriceNotShowAgain, showAgain.value);
+                  final controller = Get.find<AppCacheService>();
+                  controller.setBool(
+                      AppCacheService.raisePriceNotShowAgain, showAgain.value);
                   Get.back();
                 },
                 style: ElevatedButton.styleFrom(
