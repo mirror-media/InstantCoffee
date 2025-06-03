@@ -34,25 +34,9 @@ class RaisePriceDialogWidget extends StatelessWidget {
                     fontSize: 16,
                     color: Colors.black), // Default style
                 children: <TextSpan>[
-                  TextSpan(
-                      text: 'APP訂閱',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  TextSpan(text: '\n月訂閱：100 元／每月'),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            RichText(
-              textAlign: TextAlign.center,
-              text: const TextSpan(
-                style: TextStyle(
-                    fontSize: 14, color: Colors.black), // Default style
-                children: <TextSpan>[
-                  TextSpan(text: '請特別注意：因技術調整，原本已訂閱的 '),
-                  TextSpan(
-                      text: 'Android 用戶',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  TextSpan(text: '，現有訂閱將於近期被取消，請務必重新訂閱。'),
+                  TextSpan(text: '請注意：即時起的訂閱費將以\n\n'),
+                  TextSpan(text: '100 元 / 每月 收費\n\n'),
+                  TextSpan(text: '如需取消訂閱，請至會員中心操作或聯繫客服。'),
                 ],
               ),
             ),
