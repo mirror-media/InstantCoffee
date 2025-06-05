@@ -10,27 +10,27 @@ class NoticeDialogHelper {
     final AppCacheService cacheService = Get.find<AppCacheService>();
 
     bool isEnabled = remoteConfigHelper.isNoticeDialogEnabled;
-
-    if (!isEnabled) {
-      return;
-    }
-
-    // 如果已啟用，但標題或內容為空，則不顯示
     String title = remoteConfigHelper.noticeDialogTitle;
     String content = remoteConfigHelper.noticeDialogContent;
-    if (title.isEmpty || content.isEmpty) {
+    String version = remoteConfigHelper.noticeDialogVersion;
+
+    if (!isEnabled || title.isEmpty || content.isEmpty || version.isEmpty) {
       return;
     }
 
-    bool notShowAgain =
-        cacheService.getBool(AppCacheService.raisePriceNotShowAgain) ?? false;
+    String cacheKey = 'notice_dialog_not_show_again_$version';
+    bool notShowAgain = cacheService.getBool(cacheKey) ?? false;
 
     if (notShowAgain) {
       return;
     }
 
     Get.dialog(
-      NoticeDialogWidget(title: title, content: content),
+      NoticeDialogWidget(
+        title: title,
+        content: content,
+        cacheKey: cacheKey,
+      ),
       barrierDismissible: false,
     ).then((value) {});
   }

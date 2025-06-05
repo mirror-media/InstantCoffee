@@ -42,4 +42,7 @@ class RemoteConfigHelper with Logger {
 
   String get noticeDialogContent =>
       _remoteConfig.getString('notice_dialog_content');
+
+  String get noticeDialogVersion =>
+      _remoteConfig.getString('notice_dialog_version');
 }

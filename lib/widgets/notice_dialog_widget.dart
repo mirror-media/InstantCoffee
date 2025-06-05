@@ -6,11 +6,13 @@ import '../helpers/data_constants.dart';
 class NoticeDialogWidget extends StatelessWidget {
   final String title;
   final String content;
+  final String cacheKey;
 
   const NoticeDialogWidget({
     Key? key,
     required this.title,
     required this.content,
+    required this.cacheKey,
   }) : super(key: key);
 
   @override
@@ -26,7 +28,7 @@ class NoticeDialogWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              title,
+              title.replaceAll('\\n', '\n'), // 將 \n 字符串轉換為實際換行
               textAlign: TextAlign.center,
               style: const TextStyle(
                   fontSize: 16, fontWeight: FontWeight.bold, color: appColor),
@@ -60,8 +62,7 @@ class NoticeDialogWidget extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   final controller = Get.find<AppCacheService>();
-                  controller.setBool(
-                      AppCacheService.raisePriceNotShowAgain, showAgain.value);
+                  controller.setBool(cacheKey, showAgain.value);
                   Get.back();
                 },
                 style: ElevatedButton.styleFrom(
