@@ -6,7 +6,7 @@ import 'package:localstorage/localstorage.dart';
 import 'package:readr_app/data/providers/articles_api_provider.dart';
 import 'package:readr_app/models/live_stream_model.dart';
 import 'package:readr_app/services/app_cache_service.dart';
-import 'package:readr_app/widgets/raise_price_dialog_widget.dart';
+import 'package:readr_app/helpers/notice_dialog_helper.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../blocs/onBoarding/bloc.dart';
@@ -57,12 +57,8 @@ class HomeController extends GetxController with WidgetsBindingObserver {
     onBoardingBloc = context!.read<OnBoardingBloc>();
     pageController = PageController(initialPage: rxSelectedIndex.value);
     rxTopicList.value = await articlesApiProvider.getTopicTabList() ?? [];
-    final isShow =
-        appCacheService.getBool(AppCacheService.raisePriceNotShowAgain);
-    print(isShow);
-    if (isShow != true && Get.isDialogOpen==false) {
-      Get.dialog(const RaisePriceDialogWidget());
-    }
+
+    NoticeDialogHelper.showIfNeeded(context!);
   }
 
   _showTermsOfService() async {
