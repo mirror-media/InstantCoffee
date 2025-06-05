@@ -3,7 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AppCacheService extends GetxService {
   late SharedPreferences _prefs;
-  static String raisePriceNotShowAgain = 'raise_price_note_show_again';
 
   @override
   void onInit() async {

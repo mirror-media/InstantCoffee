@@ -123,12 +123,26 @@ class _InitialAppState extends State<InitialApp> with Logger {
   }
 
   _waiting() async {
-    await _remoteConfigHelper.initialize();
-    _appUpgradeHelper.needToUpdate =
-        await _appUpgradeHelper.isUpdateAvailable();
-    debugLog('in-app upgrade: ${_appUpgradeHelper.needToUpdate}');
+    try {
+      await _remoteConfigHelper.initialize();
+    } catch (e) {
+      debugLog('Remote Config initialization failed: $e');
+    }
 
-    await initDynamicLinks();
+    try {
+      _appUpgradeHelper.needToUpdate =
+          await _appUpgradeHelper.isUpdateAvailable();
+    } catch (e) {
+      debugLog('App upgrade check failed: $e');
+      _appUpgradeHelper.needToUpdate = false;
+    }
+
+    try {
+      await initDynamicLinks();
+    } catch (e) {
+      debugLog('Dynamic links initialization failed: $e');
+    }
+
     _configController.sink.add(true);
   }
 
