@@ -53,5 +53,6 @@ abstract class BaseConfig {
   String get subscriptionLink;
   String get vertexSearchApi;
 
-
+  String get comscoreClientId;
+  String get comscoreC2Value;
 }

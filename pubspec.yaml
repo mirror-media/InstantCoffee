@@ -21,7 +21,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
 
-version: 6.9.55+506
+version: 6.9.56+507
 
 
 environment:
@@ -138,6 +138,9 @@ dependencies:
 
   # apple sign in
   sign_in_with_apple: ^7.0.1
+
+  # comscore analytics
+  comscore_analytics_flutter: ^1.0.0
 
   # a storefront-independent API for purchases in Flutter apps.
   in_app_purchase: ^3.2.0

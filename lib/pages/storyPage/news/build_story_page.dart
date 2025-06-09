@@ -5,6 +5,7 @@ import 'package:readr_app/blocs/storyPage/news/bloc.dart';
 import 'package:readr_app/models/story_res.dart';
 import 'package:readr_app/pages/storyPage/news/premium_story_widget.dart';
 import 'package:readr_app/pages/storyPage/news/story_widget.dart';
+import 'package:readr_app/services/comscore_service.dart';
 import 'package:readr_app/widgets/logger.dart';
 
 import '../../../data/enum/story_status.dart';
@@ -45,6 +46,19 @@ class _BuildStoryPageState extends State<BuildStoryPage> with Logger {
         case StoryStatus.loaded:
           StoryRes storyRes = state.storyRes!;
           bool isMemberOnlyStory = storyRes.story.isMember;
+
+          // Track with Comscore
+          ComscoreService.instance.trackStoryView(
+            storyTitle: storyRes.story.title,
+            storySlug: storyRes.story.slug,
+            categoryName: storyRes.story.sections.isNotEmpty
+                ? storyRes.story.sections.first.title
+                : null,
+            authorName: storyRes.story.writers.isNotEmpty
+                ? storyRes.story.writers.first.name
+                : null,
+            publishedDate: DateTime.tryParse(storyRes.story.publishedDate),
+          );
 
           if (context.read<MemberBloc>().state.isPremium || isMemberOnlyStory) {
             return PremiumStoryWidget(
