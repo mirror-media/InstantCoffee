@@ -35,7 +35,7 @@ android {
 
     defaultConfig {
         applicationId "com.mirrormedia.news"
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
