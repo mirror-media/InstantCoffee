@@ -79,7 +79,7 @@ class ComscoreService {
     String? authorName,
     DateTime? publishedDate,
   }) async {
-    final pageUrl = 'https://www.readr.tw/post/$storySlug';
+    final pageUrl = '/story/$storySlug';
 
     final customLabels = <String, String>{};
 
