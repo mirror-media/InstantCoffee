@@ -14,6 +14,7 @@ import 'package:readr_app/pages/emailVerification/email_verification_success_pag
 import 'package:readr_app/pages/app_update_page.dart';
 import 'package:readr_app/pages/on_boarding_page.dart';
 import 'package:readr_app/services/email_sign_in_service.dart';
+import 'package:readr_app/services/comscore_service.dart';
 import 'package:readr_app/widgets/logger.dart';
 
 class InitialApp extends StatefulWidget {
@@ -129,6 +130,16 @@ class _InitialAppState extends State<InitialApp> with Logger {
       debugLog('Remote Config initialization failed: $e');
     }
 
+<<<<<<< sub-100
+=======
+    // Initialize Comscore Analytics
+    try {
+      await ComscoreService.instance.initialize();
+    } catch (e) {
+      debugLog('Comscore initialization failed: $e');
+    }
+
+>>>>>>> master
     try {
       _appUpgradeHelper.needToUpdate =
           await _appUpgradeHelper.isUpdateAvailable();
