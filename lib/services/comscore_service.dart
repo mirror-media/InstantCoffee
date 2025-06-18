@@ -1,4 +1,4 @@
-import 'package:comscore_analytics_flutter/comscore.dart';
+import 'package:comscore_analytics_flutter/comscore_analytics_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:readr_app/helpers/environment.dart';
