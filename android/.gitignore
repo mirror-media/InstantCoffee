@@ -5,3 +5,13 @@ gradle-wrapper.jar
 /gradlew.bat
 /local.properties
 GeneratedPluginRegistrant.java
+
+# NDK 編譯快取
+app/.cxx/
+.cxx/
+
+# 其他編譯產生的檔案
+*.keystore
+*.jks
+dev.properties
+prod.properties
