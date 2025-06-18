@@ -130,8 +130,6 @@ class _InitialAppState extends State<InitialApp> with Logger {
       debugLog('Remote Config initialization failed: $e');
     }
 
-<<<<<<< sub-100
-=======
     // Initialize Comscore Analytics
     try {
       await ComscoreService.instance.initialize();
@@ -139,7 +137,6 @@ class _InitialAppState extends State<InitialApp> with Logger {
       debugLog('Comscore initialization failed: $e');
     }
 
->>>>>>> master
     try {
       _appUpgradeHelper.needToUpdate =
           await _appUpgradeHelper.isUpdateAvailable();
