@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:readr_app/services/app_cache_service.dart';
-
 import '../helpers/data_constants.dart';
 
-class RaisePriceDialogWidget extends StatelessWidget {
-  const RaisePriceDialogWidget({Key? key}) : super(key: key);
+class NoticeDialogWidget extends StatelessWidget {
+  final String title;
+  final String content;
+  final String cacheKey;
+
+  const NoticeDialogWidget({
+    Key? key,
+    required this.title,
+    required this.content,
+    required this.cacheKey,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,26 +27,18 @@ class RaisePriceDialogWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              '鏡週刊APP訂閱方案\n自 2025年6月調漲！',
+            Text(
+              title.replaceAll('\\n', '\n'), // 將 \n 字符串轉換為實際換行
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 16, fontWeight: FontWeight.bold, color: appColor),
             ),
             const SizedBox(height: 16),
-            RichText(
+            Text(
+              content.replaceAll('\\n', '\n'), // 將 \n 字符串轉換為實際換行
               textAlign: TextAlign.center,
-              text: const TextSpan(
-                style: TextStyle(
-                    height: 1.5,
-                    fontSize: 16,
-                    color: Colors.black), // Default style
-                children: <TextSpan>[
-                  TextSpan(text: '請注意：即時起的訂閱費將以\n\n'),
-                  TextSpan(text: '100 元 / 每月 收費\n\n'),
-                  TextSpan(text: '如需取消訂閱，請至會員中心操作或聯繫客服。'),
-                ],
-              ),
+              style: const TextStyle(
+                  height: 1.5, fontSize: 16, color: Colors.black),
             ),
             const SizedBox(height: 16),
             Obx(() => Row(
@@ -49,7 +49,7 @@ class RaisePriceDialogWidget extends StatelessWidget {
                       onChanged: (value) {
                         showAgain.value = value ?? false;
                       },
-                      activeColor: Colors.blue, // ✔️ 選取時框線 + 打勾的背景色
+                      activeColor: Colors.blue,
                       checkColor: Colors.white,
                     ),
                     const Text('以後不再通知',
@@ -62,15 +62,14 @@ class RaisePriceDialogWidget extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   final controller = Get.find<AppCacheService>();
-                  controller.setBool(
-                      AppCacheService.raisePriceNotShowAgain, showAgain.value);
+                  controller.setBool(cacheKey, showAgain.value);
                   Get.back();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: appColor,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4), // 👈 這裡設定你的 R 值
+                    borderRadius: BorderRadius.circular(4),
                   ),
                 ),
                 child: const Text('我知道了'),
