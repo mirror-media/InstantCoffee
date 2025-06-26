@@ -14,6 +14,7 @@ import 'package:readr_app/pages/emailVerification/email_verification_success_pag
 import 'package:readr_app/pages/app_update_page.dart';
 import 'package:readr_app/pages/on_boarding_page.dart';
 import 'package:readr_app/services/email_sign_in_service.dart';
+import 'package:readr_app/services/comscore_service.dart';
 import 'package:readr_app/widgets/logger.dart';
 
 class InitialApp extends StatefulWidget {
@@ -123,12 +124,33 @@ class _InitialAppState extends State<InitialApp> with Logger {
   }
 
   _waiting() async {
-    await _remoteConfigHelper.initialize();
-    _appUpgradeHelper.needToUpdate =
-        await _appUpgradeHelper.isUpdateAvailable();
-    debugLog('in-app upgrade: ${_appUpgradeHelper.needToUpdate}');
+    try {
+      await _remoteConfigHelper.initialize();
+    } catch (e) {
+      debugLog('Remote Config initialization failed: $e');
+    }
 
-    await initDynamicLinks();
+    // Initialize Comscore Analytics
+    try {
+      await ComscoreService.instance.initialize();
+    } catch (e) {
+      debugLog('Comscore initialization failed: $e');
+    }
+
+    try {
+      _appUpgradeHelper.needToUpdate =
+          await _appUpgradeHelper.isUpdateAvailable();
+    } catch (e) {
+      debugLog('App upgrade check failed: $e');
+      _appUpgradeHelper.needToUpdate = false;
+    }
+
+    try {
+      await initDynamicLinks();
+    } catch (e) {
+      debugLog('Dynamic links initialization failed: $e');
+    }
+
     _configController.sink.add(true);
   }
 
