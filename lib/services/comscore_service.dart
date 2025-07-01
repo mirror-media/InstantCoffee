@@ -1,6 +1,5 @@
 import 'package:comscore_analytics_flutter/comscore_analytics_flutter.dart';
 import 'package:flutter/foundation.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:readr_app/helpers/environment.dart';
 
 class ComscoreService {
@@ -18,17 +17,11 @@ class ComscoreService {
     }
 
     try {
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
       PublisherConfiguration? publisherConfig =
           await PublisherConfiguration.build(
               publisherId: Environment().config.comscoreC2Value,
               persistentLabels: {
             'ns_site': Environment().config.comscoreClientId,
-          },
-              startLabels: {
-            'app_name': 'InstantCoffee',
-            'app_version': packageInfo.version,
           });
 
       if (publisherConfig == null) {
@@ -83,10 +76,6 @@ class ComscoreService {
 
     final customLabels = <String, String>{};
 
-    if (categoryName != null && categoryName.isNotEmpty) {
-      customLabels['ns_category'] = categoryName;
-    }
-
     if (authorName != null && authorName.isNotEmpty) {
       customLabels['author'] = authorName;
     }
@@ -119,11 +108,7 @@ class ComscoreService {
     }
 
     try {
-      final labels = <String, String>{
-        'ns_category': sectionId,
-      };
-
-      Analytics.notifyViewEvent(labels: labels);
+      Analytics.notifyViewEvent(labels: {});
     } catch (e) {}
   }
 

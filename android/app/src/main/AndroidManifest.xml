@@ -13,7 +13,6 @@
     <application
         android:name="${applicationName}"
         android:allowBackup="false"
-
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/launcher_icon">
         <!-- Facebook sign in -->
