@@ -16,6 +16,11 @@ class ComscoreService {
       return;
     }
 
+    if (Environment().config.comscoreC2Value.isEmpty) {
+      _isInitialized = true;
+      return;
+    }
+
     try {
       PublisherConfiguration? publisherConfig =
           await PublisherConfiguration.build(
