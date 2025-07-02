@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:readr_app/data/enum/external_story_ad_mode.dart';
 import 'package:readr_app/data/enum/page_status.dart';
 import 'package:readr_app/data/providers/articles_api_provider.dart';
 import 'package:readr_app/helpers/environment.dart';
+import 'package:readr_app/helpers/share_helper.dart';
 import 'package:readr_app/models/external_story.dart';
 import 'package:readr_app/models/story_ad.dart';
 
@@ -49,5 +51,17 @@ class ExternalStoryController extends GetxController {
           isShowOnIndex ? ExternalStoryAdMode.news : ExternalStoryAdMode.life;
     }
     rxnStoryAd.value = StoryAd.fromJson(storyAdMaps[rxAdMod.value.key]);
+  }
+
+  Future<void> shareStory({GlobalKey? shareButtonKey}) async {
+    if (rxnSlug.value == null) return;
+
+    String shareUrl =
+        '${Environment().config.mirrorMediaDomain}/external/${rxnSlug.value}';
+
+    await ShareHelper.shareWithPosition(
+      text: shareUrl,
+      buttonKey: shareButtonKey,
+    );
   }
 }

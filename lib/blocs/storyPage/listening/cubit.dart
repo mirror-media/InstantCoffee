@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/storyPage/listening/states.dart';
 import 'package:readr_app/helpers/app_exception.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/exceptions.dart';
+import 'package:readr_app/helpers/share_helper.dart';
 import 'package:readr_app/models/listening.dart';
 import 'package:readr_app/models/record.dart';
 import 'package:readr_app/models/story_ad.dart';
@@ -29,8 +31,8 @@ class ListeningStoryCubit extends Cubit<ListeningStoryState> with Logger {
       ListeningTabContentService listeningTabContentService =
           ListeningTabContentService();
       Listening listening = await listeningWidgetService.fetchListening(slug);
-      List<Record> recordList = await listeningTabContentService.fetchRecordList(
-          Environment().config.listeningWidgetApi);
+      List<Record> recordList = await listeningTabContentService
+          .fetchRecordList(Environment().config.listeningWidgetApi);
 
       String storyAdJsonFileLocation = Platform.isIOS
           ? Environment().config.iOSStoryAdJsonLocation
@@ -75,5 +77,14 @@ class ListeningStoryCubit extends Cubit<ListeningStoryState> with Logger {
 
   String getShareUrlFromSlug() {
     return '${Environment().config.mirrorMediaDomain}/video/$storySlug/?utm_source=app&utm_medium=mmapp';
+  }
+
+  Future<void> shareStory({GlobalKey? shareButtonKey}) async {
+    String shareUrl = getShareUrlFromSlug();
+
+    await ShareHelper.shareWithPosition(
+      text: shareUrl,
+      buttonKey: shareButtonKey,
+    );
   }
 }
