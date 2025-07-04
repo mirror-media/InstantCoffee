@@ -5,13 +5,14 @@ import 'package:readr_app/blocs/storyPage/news/bloc.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/pages/storyPage/news/build_story_page.dart';
 import 'package:readr_app/services/story_service.dart';
-import 'package:share_plus/share_plus.dart';
 
 class StoryPage extends StatelessWidget {
   final String slug;
   final bool isMemberCheck;
-  const StoryPage({Key? key, required this.slug, required this.isMemberCheck})
+  StoryPage({Key? key, required this.slug, required this.isMemberCheck})
       : super(key: key);
+
+  final GlobalKey _shareButtonKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +29,11 @@ class StoryPage extends StatelessWidget {
           ),
           actions: [
             IconButton(
+              key: _shareButtonKey,
               icon: const Icon(Icons.share),
               tooltip: 'share',
-              onPressed: () {
-                String url = storyBloc.getShareUrlFromSlug();
-                Share.share(url);
-              },
+              onPressed: () =>
+                  storyBloc.shareStory(shareButtonKey: _shareButtonKey),
             )
           ],
         ),

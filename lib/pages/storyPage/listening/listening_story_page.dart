@@ -3,11 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/storyPage/listening/cubit.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/pages/storyPage/listening/listening_widget.dart';
-import 'package:share_plus/share_plus.dart';
 
 class ListeningStoryPage extends StatelessWidget {
   final String slug;
-  const ListeningStoryPage({Key? key, required this.slug}) : super(key: key);
+  ListeningStoryPage({Key? key, required this.slug}) : super(key: key);
+
+  final GlobalKey _shareButtonKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +25,11 @@ class ListeningStoryPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
+            key: _shareButtonKey,
             icon: const Icon(Icons.share),
             tooltip: 'share',
-            onPressed: () {
-              String url = listeningStoryCubit.getShareUrlFromSlug();
-              Share.share(url);
-            },
+            onPressed: () =>
+                listeningStoryCubit.shareStory(shareButtonKey: _shareButtonKey),
           )
         ],
       ),
