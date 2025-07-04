@@ -97,51 +97,8 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
                   padding: EdgeInsets.symmetric(horizontal: 52),
                   child: Column(
                     children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        child: SizedBox(
-                          height: 81,
-                          child: Text(
-                            '鏡週刊官網和APP訂閱方案自 2025年6月調漲!',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 18, color: Color(0xFFEA4335)),
-                          ),
-                        ),
-                      ),
                       Text(
-                        '官網訂閱',
-                        style:
-                            TextStyle(fontSize: 18, color: Color(0xFF414141)),
-                      ),
-                      Text(
-                        '月訂閱：99 元／每月',
-                        style:
-                            TextStyle(fontSize: 18, color: Color(0xFF808080)),
-                      ),
-                      Text(
-                        '年訂閱：799元／年',
-                        style:
-                            TextStyle(fontSize: 18, color: Color(0xFF808080)),
-                      ),
-                      SizedBox(
-                        height: 24,
-                      ),
-                      Text(
-                        'APP訂閱',
-                        style:
-                            TextStyle(fontSize: 18, color: Color(0xFF414141)),
-                      ),
-                      Text(
-                        '月訂閱：100 元／每月',
-                        style:
-                            TextStyle(fontSize: 18, color: Color(0xFF808080)),
-                      ),
-                      SizedBox(
-                        height: 24,
-                      ),
-                      Text(
-                        '感謝您的每一筆付費，讓我們能為社會帶來更多深度報導~ 立即續訂，把握最後原價優惠!',
+                        '感謝您的每一筆付費，讓我們能為社會帶來更多深度報導～立即續訂，把握最後原價優惠！',
                         textAlign: TextAlign.center,
                         style:
                             TextStyle(fontSize: 18, color: Color(0xFF676767)),
