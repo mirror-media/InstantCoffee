@@ -354,8 +354,8 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
 
                                 if (Platform.isAndroid) {
                                   if (_remoteConfigHelper.isSubscriptShow) {
-                                    const String kProductID =
-                                        'subscribe_monthly_100';
+                                    final String kProductID =
+                                        Environment().config.monthSubscriptionId;
                                     final bool available = await InAppPurchase
                                         .instance
                                         .isAvailable();
@@ -364,7 +364,7 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
                                       return;
                                     }
 
-                                    const Set<String> kIds = <String>{
+                                    final Set<String> kIds = <String>{
                                       kProductID
                                     };
                                     final ProductDetailsResponse response =
