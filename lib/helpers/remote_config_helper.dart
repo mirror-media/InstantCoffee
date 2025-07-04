@@ -31,6 +31,18 @@ class RemoteConfigHelper with Logger {
 
   double get textScale => _remoteConfig.getDouble('text_scale');
 
-  bool get isIosSubscriptEnable=> _remoteConfig.getBool('isIosSubscriptEnable');
+  bool get isIosSubscriptEnable =>
+      _remoteConfig.getBool('isIosSubscriptEnable');
 
+  bool get isNoticeDialogEnabled =>
+      _remoteConfig.getBool('notice_dialog_enabled');
+
+  String get noticeDialogTitle =>
+      _remoteConfig.getString('notice_dialog_title');
+
+  String get noticeDialogContent =>
+      _remoteConfig.getString('notice_dialog_content');
+
+  String get noticeDialogVersion =>
+      _remoteConfig.getString('notice_dialog_version');
 }
