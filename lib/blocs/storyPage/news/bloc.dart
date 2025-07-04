@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,7 @@ import 'package:readr_app/data/providers/articles_api_provider.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/error_log_helper.dart';
 import 'package:readr_app/helpers/exceptions.dart';
+import 'package:readr_app/helpers/share_helper.dart';
 import 'package:readr_app/models/story.dart';
 import 'package:readr_app/models/story_ad.dart';
 import 'package:readr_app/models/story_res.dart';
@@ -27,7 +29,7 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> with Logger {
   }
 
   final ErrorLogHelper _errorLogHelper = ErrorLogHelper();
-  final ArticlesApiProvider articlesApiProvider=Get.find();
+  final ArticlesApiProvider articlesApiProvider = Get.find();
   _fetchPublishedStoryBySlug(
     FetchPublishedStoryBySlug event,
     Emitter<StoryState> emit,
@@ -39,7 +41,7 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> with Logger {
 
       StoryRes? storyRes =
           await articlesApiProvider.getArticleInfoBySlug(slug: event.slug);
-      if (storyRes!=null) {
+      if (storyRes != null) {
         Story story = storyRes.story;
 
         String storyAdJsonFileLocation = Platform.isIOS
@@ -49,7 +51,7 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> with Logger {
         // ? 'assets/data/iOSTestStoryAd.json'
         // : 'assets/data/androidTestStoryAd.json';
         String storyAdString =
-        await rootBundle.loadString(storyAdJsonFileLocation);
+            await rootBundle.loadString(storyAdJsonFileLocation);
         final storyAdMaps = json.decode(storyAdString);
 
         story.storyAd = StoryAd.fromJson(storyAdMaps['other']);
@@ -76,5 +78,14 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> with Logger {
 
   String getShareUrlFromSlug() {
     return '${Environment().config.mirrorMediaDomain}/story/$currentStorySlug/?utm_source=app&utm_medium=mmapp';
+  }
+
+  Future<void> shareStory({GlobalKey? shareButtonKey}) async {
+    String shareUrl = getShareUrlFromSlug();
+
+    await ShareHelper.shareWithPosition(
+      text: shareUrl,
+      buttonKey: shareButtonKey,
+    );
   }
 }
