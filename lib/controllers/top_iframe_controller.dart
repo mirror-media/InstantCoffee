@@ -54,10 +54,13 @@ class TopIframeController extends GetxController {
   }
 
   void resetWebViewState() {
+    TopIframeHelper.safeDisposeWebView(webViewController);
     webViewController = null;
+
     isLoading.value = true;
     hasError.value = false;
     errorMessage.value = '';
+
     webViewKey.value = TopIframeHelper.generateWebViewKey(currentUrl.value);
   }
 
@@ -166,15 +169,14 @@ class TopIframeController extends GetxController {
   @override
   void onClose() {
     refreshTimer?.cancel();
+    refreshTimer = null;
     loadingTimeoutTimer?.cancel();
+    loadingTimeoutTimer = null;
 
     if (webViewController != null) {
-      try {
-        webViewController!.dispose();
-      } catch (e) {}
+      TopIframeHelper.safeDisposeWebView(webViewController);
       webViewController = null;
     }
-
     super.onClose();
   }
 }

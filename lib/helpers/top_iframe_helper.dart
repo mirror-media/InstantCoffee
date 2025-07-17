@@ -5,30 +5,54 @@ class TopIframeHelper {
   static const String _heightDetectionScript = '''
     (function() {
       try {
-        // 檢測可見內容的最大高度
+        // 移除不必要的空白元素
+        var emptyElements = document.querySelectorAll('div:empty, p:empty, span:empty');
+        for (var i = 0; i < emptyElements.length; i++) {
+          var elem = emptyElements[i];
+          if (elem.offsetHeight === 0 && elem.offsetWidth === 0) {
+            elem.style.display = 'none';
+          }
+        }
+        
+        // 檢測實際內容高度
         var body = document.body;
         var html = document.documentElement;
         
-        // 找到所有有內容的元素
-        var elements = document.querySelectorAll('table, div, p, span, h1, h2, h3, h4, h5, h6');
+        // 找到所有有內容的元素，包含表格和圖片
+        var elements = document.querySelectorAll('table, div, p, span, h1, h2, h3, h4, h5, h6, img, canvas, svg');
         var maxBottom = 0;
+        var minTop = Infinity;
         
         for (var i = 0; i < elements.length; i++) {
           var element = elements[i];
           var rect = element.getBoundingClientRect();
+          var computedStyle = window.getComputedStyle(element);
+          
+          // 跳過隱藏的元素
+          if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden') {
+            continue;
+          }
           
           // 只考慮可見且有內容的元素
           if (rect.height > 0 && rect.width > 0) {
+            var top = rect.top + window.pageYOffset;
             var bottom = rect.bottom + window.pageYOffset;
+            
+            if (top < minTop) {
+              minTop = top;
+            }
             if (bottom > maxBottom) {
               maxBottom = bottom;
             }
           }
         }
         
-        // 如果找到內容，使用實際高度；否則使用預設值
-        if (maxBottom > 0) {
-          return Math.min(maxBottom + 30, 500); // 加30px緩衝，最大500px
+        // 計算實際內容高度
+        var contentHeight = maxBottom - Math.max(0, minTop);
+        
+        // 如果找到內容，使用實際高度；否則使用文檔高度
+        if (contentHeight > 0 && maxBottom > 0) {
+          return Math.min(contentHeight + 3, 500);
         } else {
           // 備用方法：使用文檔高度
           var docHeight = Math.max(
@@ -90,5 +114,13 @@ class TopIframeHelper {
   static double calculateContentHeight(double contentHeight) {
     if (contentHeight <= 0) return 300;
     return contentHeight > 500 ? 500 : contentHeight;
+  }
+
+  static void safeDisposeWebView(InAppWebViewController? controller) {
+    if (controller != null) {
+      try {
+        controller.dispose();
+      } catch (e) {}
+    }
   }
 }

@@ -24,11 +24,18 @@ class TopIframeWidget extends StatefulWidget {
 
 class _TopIframeWidgetState extends State<TopIframeWidget> {
   late TopIframeController controller;
+  late String controllerTag;
 
   @override
   void initState() {
     super.initState();
-    controller = Get.put(TopIframeController());
+    controllerTag = 'top_iframe_${DateTime.now().millisecondsSinceEpoch}';
+
+    if (Get.isRegistered<TopIframeController>()) {
+      Get.delete<TopIframeController>(force: true);
+    }
+
+    controller = Get.put(TopIframeController(), tag: controllerTag);
     controller.initialize(
       refreshInterval: widget.refreshInterval,
       autoHeight: widget.autoHeight,
@@ -195,7 +202,13 @@ class _TopIframeWidgetState extends State<TopIframeWidget> {
 
   @override
   void dispose() {
-    Get.delete<TopIframeController>();
+    try {
+      Get.delete<TopIframeController>(tag: controllerTag, force: true);
+    } catch (e) {
+      try {
+        Get.delete<TopIframeController>(force: true);
+      } catch (e) {}
+    }
     super.dispose();
   }
 }
