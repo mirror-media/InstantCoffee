@@ -29,6 +29,10 @@ class RemoteConfigHelper with Logger {
 
   bool get isAnonymousShow => _remoteConfig.getBool('isAnonymousShow');
 
+  bool get isTopIframeShow => _remoteConfig.getBool('isTopIframeShow');
+
+  String get topIframeUrl => _remoteConfig.getString('topIframeUrl');
+
   double get textScale => _remoteConfig.getDouble('text_scale');
 
   bool get isIosSubscriptEnable =>
