@@ -7,6 +7,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/editorChoice/cubit.dart';
 import 'package:readr_app/blocs/editorChoice/state.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
+import 'package:readr_app/controllers/top_iframe_controller.dart';
 import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/data_constants.dart';
@@ -75,6 +76,16 @@ class _TabContentState extends State<TabContent> with Logger {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
+        if (widget.needCarousel) {
+          try {
+            await _remoteConfigHelper.refresh();
+
+            if (Get.isRegistered<TopIframeController>()) {
+              final topIframeController = Get.find<TopIframeController>();
+              topIframeController.checkVisibility();
+            }
+          } catch (e) {}
+        }
         _fetchFirstRecordList();
       },
       child: Stack(

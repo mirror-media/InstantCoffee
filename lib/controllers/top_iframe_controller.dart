@@ -14,6 +14,7 @@ class TopIframeController extends GetxController {
   final RxString currentUrl = ''.obs;
   final RxString webViewKey = ''.obs;
   final RxBool isVisible = false.obs;
+  final RxBool hasDetectedHeight = false.obs;
 
   InAppWebViewController? webViewController;
   Timer? refreshTimer;
@@ -27,12 +28,13 @@ class TopIframeController extends GetxController {
     Duration refreshInterval = const Duration(minutes: 1),
     bool autoHeight = true,
     double initialHeight = 300,
+    bool waitForHeightDetection = false,
   }) {
     this.refreshInterval = refreshInterval;
     this.autoHeight = autoHeight;
     this.initialHeight = initialHeight;
 
-    currentHeight.value = initialHeight;
+    currentHeight.value = autoHeight ? 150 : initialHeight;
     webViewKey.value = TopIframeHelper.generateWebViewKey('');
 
     checkVisibility();
@@ -53,6 +55,13 @@ class TopIframeController extends GetxController {
     }
   }
 
+  Future<void> refreshRemoteConfig() async {
+    try {
+      await _remoteConfigHelper.refresh();
+      checkVisibility();
+    } catch (e) {}
+  }
+
   void resetWebViewState() {
     TopIframeHelper.safeDisposeWebView(webViewController);
     webViewController = null;
@@ -60,6 +69,7 @@ class TopIframeController extends GetxController {
     isLoading.value = true;
     hasError.value = false;
     errorMessage.value = '';
+    hasDetectedHeight.value = false;
 
     webViewKey.value = TopIframeHelper.generateWebViewKey(currentUrl.value);
   }
@@ -155,6 +165,9 @@ class TopIframeController extends GetxController {
   void updateHeight(double newHeight) {
     if (TopIframeHelper.shouldUpdateHeight(currentHeight.value, newHeight)) {
       currentHeight.value = newHeight;
+    }
+    if (!hasDetectedHeight.value) {
+      hasDetectedHeight.value = true;
     }
   }
 

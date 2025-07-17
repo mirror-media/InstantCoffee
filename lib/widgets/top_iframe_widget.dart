@@ -10,26 +10,42 @@ class TopIframeWidget extends StatefulWidget {
   final double height;
   final Duration refreshInterval;
   final bool autoHeight;
-
+  final bool waitForHeightDetection;
   const TopIframeWidget({
     Key? key,
     this.height = 300,
     this.refreshInterval = const Duration(minutes: 1),
     this.autoHeight = true,
+    this.waitForHeightDetection = false,
   }) : super(key: key);
 
   @override
   State<TopIframeWidget> createState() => _TopIframeWidgetState();
 }
 
-class _TopIframeWidgetState extends State<TopIframeWidget> {
+class _TopIframeWidgetState extends State<TopIframeWidget>
+    with TickerProviderStateMixin {
   late TopIframeController controller;
   late String controllerTag;
+  late AnimationController _shimmerController;
+  late Animation<double> _shimmerAnimation;
 
   @override
   void initState() {
     super.initState();
     controllerTag = 'top_iframe_${DateTime.now().millisecondsSinceEpoch}';
+
+    _shimmerController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+    _shimmerAnimation = Tween<double>(
+      begin: 0.3,
+      end: 0.8,
+    ).animate(CurvedAnimation(
+      parent: _shimmerController,
+      curve: Curves.easeInOut,
+    ));
 
     if (Get.isRegistered<TopIframeController>()) {
       Get.delete<TopIframeController>(force: true);
@@ -40,6 +56,7 @@ class _TopIframeWidgetState extends State<TopIframeWidget> {
       refreshInterval: widget.refreshInterval,
       autoHeight: widget.autoHeight,
       initialHeight: widget.height,
+      waitForHeightDetection: widget.waitForHeightDetection,
     );
   }
 
@@ -48,6 +65,17 @@ class _TopIframeWidgetState extends State<TopIframeWidget> {
     return Obx(() {
       if (!controller.isVisible.value) {
         return const SizedBox.shrink();
+      }
+
+      if (widget.waitForHeightDetection &&
+          !controller.hasDetectedHeight.value &&
+          controller.isLoading.value) {
+        _shimmerController.repeat(reverse: true);
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+          height: 60,
+          child: _buildSkeletonContent(),
+        );
       }
 
       return Container(
@@ -64,7 +92,9 @@ class _TopIframeWidgetState extends State<TopIframeWidget> {
   }
 
   Widget _buildIframeContainer() {
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
       height: controller.currentHeight.value,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
@@ -98,7 +128,10 @@ class _TopIframeWidgetState extends State<TopIframeWidget> {
         shouldOverrideUrlLoading: (controller, navigationAction) async {
           return NavigationActionPolicy.ALLOW;
         },
-        onLoadStop: (controller, url) => this.controller.onLoadStop(),
+        onLoadStop: (controller, url) {
+          this.controller.onLoadStop();
+          _shimmerController.stop();
+        },
         onContentSizeChanged: (controller, oldContentSize, newContentSize) {
           this.controller.onContentSizeChanged(newContentSize.height);
         },
@@ -106,17 +139,92 @@ class _TopIframeWidgetState extends State<TopIframeWidget> {
     );
   }
 
+  Widget _buildSkeletonContent() {
+    return AnimatedBuilder(
+      animation: _shimmerAnimation,
+      builder: (context, child) {
+        return Container(
+          width: double.infinity,
+          height: 60,
+          decoration: BoxDecoration(
+            color: Colors.grey[50],
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: double.infinity,
+                height: 16,
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200]!.withOpacity(_shimmerAnimation.value),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              Container(
+                width: double.infinity * 0.7,
+                height: 16,
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200]!.withOpacity(_shimmerAnimation.value),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildLoadingIndicator() {
-    return Container(
-      width: double.infinity,
-      height: controller.currentHeight.value,
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: const Center(
-        child: CircularProgressIndicator(),
-      ),
+    _shimmerController.repeat(reverse: true);
+
+    return AnimatedBuilder(
+      animation: _shimmerAnimation,
+      builder: (context, child) {
+        return Container(
+          width: double.infinity,
+          height: controller.currentHeight.value,
+          decoration: BoxDecoration(
+            color: Colors.grey[50],
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: double.infinity,
+                height: 40,
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200]!.withOpacity(_shimmerAnimation.value),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                height: 20,
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200]!.withOpacity(_shimmerAnimation.value),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              Container(
+                width: double.infinity * 0.7,
+                height: 20,
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200]!.withOpacity(_shimmerAnimation.value),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -202,6 +310,7 @@ class _TopIframeWidgetState extends State<TopIframeWidget> {
 
   @override
   void dispose() {
+    _shimmerController.dispose();
     try {
       Get.delete<TopIframeController>(tag: controllerTag, force: true);
     } catch (e) {

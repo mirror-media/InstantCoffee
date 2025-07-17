@@ -15,6 +15,20 @@ class RemoteConfigHelper with Logger {
     return await _remoteConfig.fetchAndActivate();
   }
 
+  Future<bool> refresh({
+    Duration fetchTimeout = const Duration(seconds: 10),
+  }) async {
+    try {
+      await _remoteConfig.setConfigSettings(RemoteConfigSettings(
+          fetchTimeout: fetchTimeout, minimumFetchInterval: Duration.zero));
+
+      return await _remoteConfig.fetchAndActivate();
+    } catch (e) {
+      debugLog('RemoteConfig refresh error: $e');
+      return false;
+    }
+  }
+
   String get minAppVersion => _remoteConfig.getString('min_version_number');
 
   String get updateMessage => _remoteConfig.getString('update_message');
