@@ -71,24 +71,69 @@ class _TopIframeWidgetState extends State<TopIframeWidget>
           !controller.hasDetectedHeight.value &&
           controller.isLoading.value) {
         _shimmerController.repeat(reverse: true);
-        return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
-          height: 60,
-          child: _buildSkeletonContent(),
+        return Column(
+          children: [
+            if (controller.title.value != null) ...[
+              _buildTitleBar(),
+              const SizedBox(height: 16.0),
+            ],
+            Container(
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 60,
+                    child: _buildSkeletonContent(),
+                  ),
+                  const SizedBox(height: 16.0),
+                  if (controller.showMoreUrl.value != null)
+                    _buildOpenExternalButton(),
+                ],
+              ),
+            ),
+          ],
         );
       }
 
-      return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
-        child: Column(
-          children: [
-            _buildIframeContainer(),
+      return Column(
+        children: [
+          if (controller.title.value != null) ...[
+            _buildTitleBar(),
             const SizedBox(height: 16.0),
-            _buildOpenExternalButton(),
           ],
-        ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+            child: Column(
+              children: [
+                _buildIframeContainer(),
+                const SizedBox(height: 16.0),
+                if (controller.showMoreUrl.value != null)
+                  _buildOpenExternalButton(),
+              ],
+            ),
+          ),
+        ],
       );
     });
+  }
+
+  Widget _buildTitleBar() {
+    return Container(
+      width: double.infinity,
+      height: 48,
+      color: appColor,
+      child: Center(
+        child: Text(
+          controller.title.value!,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildIframeContainer() {
@@ -96,8 +141,8 @@ class _TopIframeWidgetState extends State<TopIframeWidget>
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       height: controller.currentHeight.value,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.0),
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(8.0)),
       ),
       child: Stack(
         children: [
@@ -113,8 +158,9 @@ class _TopIframeWidgetState extends State<TopIframeWidget>
     return ClipRRect(
       borderRadius: BorderRadius.circular(8.0),
       child: InAppWebView(
-        key: ValueKey(controller.webViewKey.value),
-        initialUrlRequest: URLRequest(url: WebUri(controller.currentUrl.value)),
+        key: ValueKey(controller.webViewKey.value!),
+        initialUrlRequest:
+            URLRequest(url: WebUri(controller.currentUrl.value!)),
         initialSettings: TopIframeHelper.createWebViewSettings(),
         onWebViewCreated: controller.onWebViewCreated,
         onLoadStart: (controller, url) => this.controller.onLoadStart(),
@@ -247,8 +293,8 @@ class _TopIframeWidgetState extends State<TopIframeWidget>
             ),
             const SizedBox(height: 16),
             Text(
-              controller.errorMessage.value.isNotEmpty
-                  ? controller.errorMessage.value
+              controller.errorMessage.value != null
+                  ? controller.errorMessage.value!
                   : '載入失敗',
               style: TextStyle(
                 fontSize: 16,
@@ -268,11 +314,10 @@ class _TopIframeWidgetState extends State<TopIframeWidget>
   }
 
   Widget _buildOpenExternalButton() {
-    return SizedBox(
-      width: double.infinity,
+    return Center(
       child: TextButton(
         onPressed: () async {
-          final url = controller.currentUrl.value;
+          final url = controller.showMoreUrl.value!;
           if (await canLaunchUrl(Uri.parse(url))) {
             await launchUrl(
               Uri.parse(url),
@@ -285,24 +330,17 @@ class _TopIframeWidgetState extends State<TopIframeWidget>
         style: TextButton.styleFrom(
           backgroundColor: appColor,
           foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),
         ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.open_in_new, size: 18),
-            SizedBox(width: 8),
-            Text(
-              '查看完整內容',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
+        child: const Text(
+          '查看完整內容',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );

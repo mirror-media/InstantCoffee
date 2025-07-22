@@ -47,6 +47,10 @@ class RemoteConfigHelper with Logger {
 
   String get topIframeUrl => _remoteConfig.getString('topIframeUrl');
 
+  String get iframeTitle => _remoteConfig.getString('iframeTitle');
+
+  String get iframeShowMoreUrl => _remoteConfig.getString('iframeShowMoreUrl');
+
   double get textScale => _remoteConfig.getDouble('text_scale');
 
   bool get isIosSubscriptEnable =>

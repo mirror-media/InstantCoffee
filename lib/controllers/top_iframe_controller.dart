@@ -9,12 +9,14 @@ class TopIframeController extends GetxController {
 
   final RxBool isLoading = true.obs;
   final RxBool hasError = false.obs;
-  final RxString errorMessage = ''.obs;
+  final RxnString errorMessage = RxnString();
   final RxDouble currentHeight = 300.0.obs;
-  final RxString currentUrl = ''.obs;
-  final RxString webViewKey = ''.obs;
+  final RxnString currentUrl = RxnString();
+  final RxnString webViewKey = RxnString();
   final RxBool isVisible = false.obs;
   final RxBool hasDetectedHeight = false.obs;
+  final RxnString title = RxnString();
+  final RxnString showMoreUrl = RxnString();
 
   InAppWebViewController? webViewController;
   Timer? refreshTimer;
@@ -44,8 +46,13 @@ class TopIframeController extends GetxController {
   void checkVisibility() {
     bool isShow = _remoteConfigHelper.isTopIframeShow;
     String url = _remoteConfigHelper.topIframeUrl;
+    String titleText = _remoteConfigHelper.iframeTitle;
+    String moreUrl = _remoteConfigHelper.iframeShowMoreUrl;
 
     isVisible.value = isShow && url.isNotEmpty;
+
+    title.value = titleText.isEmpty ? null : titleText;
+    showMoreUrl.value = moreUrl.isEmpty ? null : moreUrl;
 
     if (isVisible.value) {
       if (currentUrl.value != url) {
@@ -68,10 +75,10 @@ class TopIframeController extends GetxController {
 
     isLoading.value = true;
     hasError.value = false;
-    errorMessage.value = '';
+    errorMessage.value = null;
     hasDetectedHeight.value = false;
 
-    webViewKey.value = TopIframeHelper.generateWebViewKey(currentUrl.value);
+    webViewKey.value = TopIframeHelper.generateWebViewKey(currentUrl.value!);
   }
 
   void startAutoRefresh() {
@@ -100,7 +107,7 @@ class TopIframeController extends GetxController {
   void onLoadStart() {
     isLoading.value = true;
     hasError.value = false;
-    errorMessage.value = '';
+    errorMessage.value = null;
 
     loadingTimeoutTimer?.cancel();
     loadingTimeoutTimer = Timer(const Duration(seconds: 30), () {
