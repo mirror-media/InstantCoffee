@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:readr_app/blocs/editorChoice/cubit.dart';
 import 'package:readr_app/blocs/editorChoice/state.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
+import 'package:readr_app/controllers/top_iframe_controller.dart';
 import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/environment.dart';
@@ -19,6 +20,7 @@ import 'package:readr_app/pages/tabContent/shared/the_first_item.dart';
 import 'package:readr_app/pages/tabContent/shared/topic_block.dart';
 import 'package:readr_app/services/editor_choice_service.dart';
 import 'package:readr_app/widgets/editor_choice_carousel.dart';
+import 'package:readr_app/widgets/top_iframe_widget.dart';
 import 'package:readr_app/widgets/error_stateless_widget.dart';
 import 'package:readr_app/widgets/logger.dart';
 import 'package:readr_app/widgets/newsMarquee/news_marquee_persistent_header_delegate.dart';
@@ -68,6 +70,16 @@ class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
+        if (widget.needCarousel) {
+          try {
+            await _remoteConfigHelper.refresh();
+
+            if (Get.isRegistered<TopIframeController>()) {
+              final topIframeController = Get.find<TopIframeController>();
+              topIframeController.checkVisibility();
+            }
+          } catch (e) {}
+        }
         _fetchFirstRecordList();
       },
       child: BlocBuilder<TabContentBloc, TabContentState>(
@@ -155,20 +167,26 @@ class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 27),
                           child: RealTimeInvoiceWidget(
-                              isPackage: true,
-                              getMoreButtonClick: () async {
-                                if (!await launchUrl(Uri.parse(
-                                    Environment()
-                                    .config
-                                    .electionGetMoreLink))) {
-                                  throw Exception('Could not launch');
-                                }
-                              }, width: Get.width-54,),
+                            isPackage: true,
+                            getMoreButtonClick: () async {
+                              if (!await launchUrl(Uri.parse(
+                                  Environment().config.electionGetMoreLink))) {
+                                throw Exception('Could not launch');
+                              }
+                            },
+                            width: Get.width - 54,
+                          ),
                         ),
                         const SizedBox(
                           height: 16.0,
                         ),
                       ],
+                      const TopIframeWidget(
+                        height: 300,
+                        refreshInterval: Duration(minutes: 1),
+                        autoHeight: true,
+                      ),
+                      const SizedBox(height: 16.0),
                       _buildEditorChoiceList(),
                       if (widget.section.key ==
                           Environment().config.latestSectionKey) ...[
@@ -180,7 +198,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
                           final liveStreamModel =
                               controller.rxLiveStreamModel.value;
                           final ytController = controller.ytStreamController;
-                          return liveStreamModel != null && ytController != null
+                          return liveStreamModel != null
                               ? LiveStreamWidget(
                                   title: liveStreamModel.name ??
                                       StringDefault.valueNullDefault,

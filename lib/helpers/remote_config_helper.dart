@@ -15,6 +15,20 @@ class RemoteConfigHelper with Logger {
     return await _remoteConfig.fetchAndActivate();
   }
 
+  Future<bool> refresh({
+    Duration fetchTimeout = const Duration(seconds: 10),
+  }) async {
+    try {
+      await _remoteConfig.setConfigSettings(RemoteConfigSettings(
+          fetchTimeout: fetchTimeout, minimumFetchInterval: Duration.zero));
+
+      return await _remoteConfig.fetchAndActivate();
+    } catch (e) {
+      debugLog('RemoteConfig refresh error: $e');
+      return false;
+    }
+  }
+
   String get minAppVersion => _remoteConfig.getString('min_version_number');
 
   String get updateMessage => _remoteConfig.getString('update_message');
@@ -28,6 +42,14 @@ class RemoteConfigHelper with Logger {
   bool get isSubscriptShow => _remoteConfig.getBool('isSubscriptShow');
 
   bool get isAnonymousShow => _remoteConfig.getBool('isAnonymousShow');
+
+  bool get isTopIframeShow => _remoteConfig.getBool('isTopIframeShow');
+
+  String get topIframeUrl => _remoteConfig.getString('topIframeUrl');
+
+  String get iframeTitle => _remoteConfig.getString('iframeTitle');
+
+  String get iframeShowMoreUrl => _remoteConfig.getString('iframeShowMoreUrl');
 
   double get textScale => _remoteConfig.getDouble('text_scale');
 
