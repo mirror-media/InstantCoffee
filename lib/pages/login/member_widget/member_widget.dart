@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -26,20 +27,22 @@ class MemberWidget extends StatefulWidget {
   final bool isNewebpay;
 
   const MemberWidget({
+    Key? key,
     required this.israfelId,
     required this.subscriptionType,
     required this.isNewebpay,
-  });
+  }) : super(key: key);
 
   @override
-  _MemberWidgetState createState() => _MemberWidgetState();
+  MemberWidgetState createState() => MemberWidgetState();
 }
 
-class _MemberWidgetState extends State<MemberWidget> {
+class MemberWidgetState extends State<MemberWidget> {
   late MemberWidgetController controller;
 
   @override
   void initState() {
+    super.initState();
     if (!Get.isRegistered<MemberWidgetController>()) {
       Get.put(MemberWidgetController());
     }
@@ -304,8 +307,30 @@ class _MemberWidgetState extends State<MemberWidget> {
   Widget _subscriptionSelectButton(SubscriptionType subscriptionType) {
     return _navigateButton(
       '升級 Premium 會員',
-      () => RouteGenerator.navigateToSubscriptionSelect(),
+      () async {
+        await Navigator.of(context).pushNamed(
+          RouteGenerator.subscriptionSelect,
+          arguments: {'storySlug': ''},
+        );
+
+        await _refreshMemberData();
+      },
     );
+  }
+
+  Future<void> _refreshMemberData() async {
+    try {
+      final auth = FirebaseAuth.instance;
+      if (auth.currentUser != null) {
+        await auth.currentUser!.reload();
+      }
+
+      if (context.mounted) {
+        context.read<LoginBloc>().add(CheckIsLoginOrNot());
+      }
+    } catch (e) {
+      debugPrint('Error refreshing member data: $e');
+    }
   }
 
   Widget _memberProfileButton() {
