@@ -10,6 +10,7 @@ import 'package:readr_app/helpers/notice_dialog_helper.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../blocs/onBoarding/bloc.dart';
+import '../../blocs/onBoarding/states.dart';
 import '../../helpers/app_link_helper.dart';
 import '../../helpers/firebase_messaging_helper.dart';
 import '../../models/topic/topic_model.dart';
@@ -27,6 +28,8 @@ class HomeController extends GetxController with WidgetsBindingObserver {
   final LocalStorage _storage = LocalStorage('setting');
   final AppLinkHelper _appLinkHelper = AppLinkHelper();
   final AppCacheService appCacheService = Get.find();
+
+  bool _hasShownNoticeDialog = false;
 
   final FirebaseMessangingHelper _firebaseMessageHelper =
       FirebaseMessangingHelper();
@@ -58,7 +61,26 @@ class HomeController extends GetxController with WidgetsBindingObserver {
     pageController = PageController(initialPage: rxSelectedIndex.value);
     rxTopicList.value = await articlesApiProvider.getTopicTabList() ?? [];
 
-    NoticeDialogHelper.showIfNeeded(context!);
+    _setupOnBoardingListener();
+  }
+
+  void _setupOnBoardingListener() {
+    onBoardingBloc.stream.listen((OnBoardingState state) {
+      if (!state.isOnBoarding && !_hasShownNoticeDialog) {
+        _hasShownNoticeDialog = true;
+        NoticeDialogHelper.showIfNeeded(context!);
+      }
+    });
+
+    Future.delayed(const Duration(milliseconds: 500), () async {
+      if (!_hasShownNoticeDialog) {
+        bool isOnBoarding = await onBoardingBloc.getOnBoardingFromStorage();
+        if (!isOnBoarding) {
+          _hasShownNoticeDialog = true;
+          NoticeDialogHelper.showIfNeeded(context!);
+        }
+      }
+    });
   }
 
   _showTermsOfService() async {

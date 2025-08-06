@@ -39,8 +39,6 @@ class RemoteConfigHelper with Logger {
 
   bool get isElectionShow => _remoteConfig.getBool('isElectionShow');
 
-  bool get isSubscriptShow => _remoteConfig.getBool('isSubscriptShow');
-
   bool get isAnonymousShow => _remoteConfig.getBool('isAnonymousShow');
 
   bool get isTopIframeShow => _remoteConfig.getBool('isTopIframeShow');
@@ -53,8 +51,22 @@ class RemoteConfigHelper with Logger {
 
   double get textScale => _remoteConfig.getDouble('text_scale');
 
-  bool get isIosSubscriptEnable =>
-      _remoteConfig.getBool('isIosSubscriptEnable');
+  bool get isIosSubEnabled => _remoteConfig.getBool('isIosSubEnabled');
+
+  bool get isAndroidSubEnabled => _remoteConfig.getBool('isAndroidSubEnabled');
+
+  String get subNoticeTitle => _remoteConfig.getString('subNoticeTitle');
+
+  String get subNoticeContent => _remoteConfig.getString('subNoticeContent');
+
+  String get subNoticeConfirmTitle =>
+      _remoteConfig.getString('subNoticeConfirmTitle');
+
+  String get subNoticeConfirmURL =>
+      _remoteConfig.getString('subNoticeConfirmURL');
+
+  String get subNoticeCancelTitle =>
+      _remoteConfig.getString('subNoticeCancelTitle');
 
   bool get isNoticeDialogEnabled =>
       _remoteConfig.getBool('notice_dialog_enabled');
