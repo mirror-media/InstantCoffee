@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +15,7 @@ import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/remote_config_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
+import 'package:readr_app/helpers/sub_notice_dialog_helper.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/models/payment_record.dart';
 import 'package:readr_app/models/subscription_detail.dart';
@@ -23,19 +23,17 @@ import 'package:readr_app/pages/memberCenter/subscriptionSelect/buying_success_w
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/hint_to_other_platform.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionSelect/verify_purchase_fail_widget.dart';
 import 'package:readr_app/widgets/logger.dart';
-import 'package:readr_app/widgets/toast_factory.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class SubscriptionSelectWidget extends StatefulWidget {
-  const SubscriptionSelectWidget();
+  const SubscriptionSelectWidget({Key? key}) : super(key: key);
 
   @override
-  _SubscriptionSelectWidgetState createState() =>
-      _SubscriptionSelectWidgetState();
+  SubscriptionSelectWidgetState createState() =>
+      SubscriptionSelectWidgetState();
 }
 
-class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
+class SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
     with Logger {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -212,9 +210,6 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
       boxTitle = '變更為月訂閱方案';
     }
 
-    int originalPrice = 99;
-    int specialPrice = 80;
-
     return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -325,11 +320,15 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
                             ),
                           ),
                           onPressed: () async {
-                            final RemoteConfigHelper _remoteConfigHelper =
+                            final RemoteConfigHelper remoteConfigHelper =
                                 RemoteConfigHelper();
-                            if (Platform.isIOS &&
-                                !_remoteConfigHelper.isIosSubscriptEnable) {
-                              ToastFactory.showToast('此功能修復中', ToastType.error);
+
+                            bool subscriptionEnabled = Platform.isIOS
+                                ? remoteConfigHelper.isIosSubEnabled
+                                : remoteConfigHelper.isAndroidSubEnabled;
+
+                            if (!subscriptionEnabled) {
+                              SubNoticeDialogHelper.show(context);
                               return;
                             }
 
@@ -353,41 +352,31 @@ class _SubscriptionSelectWidgetState extends State<SubscriptionSelectWidget>
                                 );
 
                                 if (Platform.isAndroid) {
-                                  if (_remoteConfigHelper.isSubscriptShow) {
-                                    final String kProductID =
-                                        Environment().config.monthSubscriptionId;
-                                    final bool available = await InAppPurchase
-                                        .instance
-                                        .isAvailable();
-                                    if (!available) {
-                                      print('Store is not available');
-                                      return;
-                                    }
-
-                                    final Set<String> kIds = <String>{
-                                      kProductID
-                                    };
-                                    final ProductDetailsResponse response =
-                                        await InAppPurchase.instance
-                                            .queryProductDetails(kIds);
-                                    if (response.notFoundIDs.isNotEmpty) {
-                                      print('Product not found');
-                                      return;
-                                    }
-
-                                    final ProductDetails productDetails =
-                                        response.productDetails.first;
-                                    final PurchaseParam purchaseParam =
-                                        PurchaseParam(
-                                            productDetails: productDetails);
-                                    _buySubscriptionProduct(purchaseParam);
-                                  } else {
-                                    final link = Uri.parse(
-                                        Environment().config.subscriptionLink);
-                                    if (await canLaunchUrl(link)) {
-                                      await launchUrl(link);
-                                    }
+                                  final String kProductID =
+                                      Environment().config.monthSubscriptionId;
+                                  final bool available = await InAppPurchase
+                                      .instance
+                                      .isAvailable();
+                                  if (!available) {
+                                    print('Store is not available');
+                                    return;
                                   }
+
+                                  final Set<String> kIds = <String>{kProductID};
+                                  final ProductDetailsResponse response =
+                                      await InAppPurchase.instance
+                                          .queryProductDetails(kIds);
+                                  if (response.notFoundIDs.isNotEmpty) {
+                                    print('Product not found');
+                                    return;
+                                  }
+
+                                  final ProductDetails productDetails =
+                                      response.productDetails.first;
+                                  final PurchaseParam purchaseParam =
+                                      PurchaseParam(
+                                          productDetails: productDetails);
+                                  _buySubscriptionProduct(purchaseParam);
                                 } else {
                                   _buySubscriptionProduct(purchaseParam);
                                 }
