@@ -21,7 +21,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
 
-version: 6.9.61+512
+version: 6.9.62+513
 
 
 environment:
@@ -172,7 +172,6 @@ dependencies:
   device_info_plus: ^9.1.1
   in_app_purchase_storekit: ^0.3.6+3
   upgrader: ^10.3.0
-  firebase_dynamic_links: ^6.0.4
   crypto: ^3.0.6
 dependency_overrides:
   web: ^1.0.0

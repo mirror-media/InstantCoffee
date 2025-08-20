@@ -1,6 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/firebase_login_status.dart';
 import 'package:readr_app/widgets/logger.dart';
@@ -81,18 +79,8 @@ class EmailSignInServices with Logger implements EmailSignInRepos {
   @override
   Future<FirebaseLoginStatus> sendPasswordResetEmail(String email) async {
     var acs = ActionCodeSettings(
-      // URL you want to redirect back to. The domain (www.example.com) for this
-      // URL must be whitelisted in the Firebase Console.
       url: Environment().config.recoverPasswordUrl,
-      // This must be true
-      handleCodeInApp: true,
-      iOSBundleId: Environment().config.iOSBundleId,
-      androidPackageName: Environment().config.androidPackageName,
-      // installIfNotAvailable
-      androidInstallApp: false,
-      // minimumVersion
-      androidMinimumVersion: "12",
-      dynamicLinkDomain: Environment().config.dynamicLinkDomain,
+      handleCodeInApp: false,
     );
 
     try {
@@ -118,18 +106,8 @@ class EmailSignInServices with Logger implements EmailSignInRepos {
   Future<FirebaseLoginStatus> sendEmailVerification(
       String email, String redirectUrl) async {
     var acs = ActionCodeSettings(
-      // URL you want to redirect back to. The domain (www.example.com) for this
-      // URL must be whitelisted in the Firebase Console.
-      url: redirectUrl,
-      // This must be true
-      handleCodeInApp: true,
-      iOSBundleId: Environment().config.iOSBundleId,
-      androidPackageName: Environment().config.androidPackageName,
-      // installIfNotAvailable
-      androidInstallApp: false,
-      // minimumVersion
-      androidMinimumVersion: "12",
-      dynamicLinkDomain: Environment().config.dynamicLinkDomain,
+      url: Environment().config.finishEmailVerificationUrl,
+      handleCodeInApp: false,
     );
 
     try {
