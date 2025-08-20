@@ -36,8 +36,6 @@ abstract class BaseConfig {
 
   String get recoverPasswordUrl;
   String get finishEmailVerificationUrl;
-  String get dynamicLinkDomain;
-
   String get iOSInterstitialAdUnitId;
   String get androidInterstitialAdUnitId;
 
