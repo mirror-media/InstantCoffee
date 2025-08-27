@@ -31,12 +31,12 @@ if (prodKeystorePropertiesFile.exists()) {
 
 android {
     namespace "com.mirrormedia.news"
-    compileSdkVersion 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.mirrormedia.news"
         minSdkVersion 24
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
