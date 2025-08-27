@@ -141,7 +141,7 @@ dependencies:
   comscore_analytics_flutter: ^1.0.0
 
   # a storefront-independent API for purchases in Flutter apps.
-  in_app_purchase: ^3.2.0
+  in_app_purchase: ^3.2.3
 
   # generate app icons
   flutter_launcher_icons: ^0.14.4
@@ -168,7 +168,7 @@ dependencies:
   bloc: ^8.1.1
   meta: ^1.8.0
   device_info_plus: ^9.1.1
-  in_app_purchase_storekit: ^0.3.6+3
+  in_app_purchase_storekit: ^0.4.4
   upgrader: ^10.3.0
   crypto: ^3.0.6
 dependency_overrides:
