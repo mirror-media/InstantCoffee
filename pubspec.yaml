@@ -21,7 +21,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
 
-version: 6.9.62+513
+version: 6.9.63+514
 
 
 environment:
@@ -41,7 +41,7 @@ dependencies:
   cupertino_icons: ^1.0.4
 
   youtube_player_flutter: ^9.1.1
-  # being able to compare objects 
+  # being able to compare objects
   equatable: ^2.0.3
   # http ajax call
   http: ^1.0.0
@@ -104,10 +104,9 @@ dependencies:
       ref: main
       version: ^1.0.9+9
 
-
   # android in app update
   in_app_update: ^4.2.3
-  # get package info 
+  # get package info
   package_info_plus: ^8.0.1
   # display ios 14+ tracking authorization dialog and request permission to collect data.
   app_tracking_transparency: ^2.0.2+1
@@ -127,7 +126,6 @@ dependencies:
   # firebase crashlytics
   firebase_crashlytics: ^4.0.4
 
-
   # firebase auth
   firebase_auth: ^5.3.0
   # google sign in
@@ -146,7 +144,7 @@ dependencies:
   in_app_purchase: ^3.2.0
 
   # generate app icons
-  flutter_launcher_icons: ^0.10.0
+  flutter_launcher_icons: ^0.14.4
 
   # more powerful webview
   flutter_inappwebview: ^6.1.5
@@ -157,7 +155,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
 
   audio_session: ^0.1.18
-  
+
   file: ^6.1.2
   intl: ^0.19.0
   get: ^4.6.3
@@ -165,7 +163,7 @@ dependencies:
   percent_indicator: ^4.2.2
 
   #format css
-  csslib: ^0.17.1
+  csslib: ^1.0.2
 
   bloc: ^8.1.1
   meta: ^1.8.0
@@ -181,10 +179,10 @@ dev_dependencies:
     sdk: flutter
   json_serializable: ^6.0.1
   # generate splash screen
-  # flutter_native_splash: ^2.2.0+1
+  flutter_native_splash: ^2.4.6
   # generated mock classes
   mockito: ^5.0.17
-  
+
   build_runner: ^2.1.7
   flutter_lints: ^2.0.1
 
@@ -198,7 +196,6 @@ flutter_icons:
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -251,8 +248,6 @@ flutter:
     - assets/image/badge.png
     - assets/image/member/subscription_icon.png
     - assets/image/member/subscribe_banner_mobile.jpg
-
-
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
