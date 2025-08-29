@@ -2,6 +2,8 @@
 
     <!-- The INTERNET permission is required for this app-->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Google Play Billing permission -->
+    <uses-permission android:name="com.android.vending.BILLING"/>
     <queries>
         <provider android:authorities="com.facebook.katana.provider.PlatformProvider" />
     </queries>
