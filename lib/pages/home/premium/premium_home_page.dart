@@ -6,6 +6,7 @@ import 'package:readr_app/blocs/tabContent/bloc.dart';
 import 'package:readr_app/helpers/data_constants.dart';
 import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/section.dart';
+import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/pages/home/premium/premium_home_widget.dart';
 import 'package:readr_app/pages/login/premium_member_widget.dart';
 import 'package:readr_app/pages/search/search_page.dart';
@@ -44,9 +45,11 @@ class PremiumHomePage extends GetView<HomeController> {
             ),
           )),
       PremiumMemberWidget(
-          israfelId: controller.context!.read<MemberBloc>().state.israfelId!,
+          israfelId:
+              controller.context!.read<MemberBloc>().state.israfelId ?? '',
           subscriptionType:
-              controller.context!.read<MemberBloc>().state.subscriptionType!)
+              controller.context!.read<MemberBloc>().state.subscriptionType ??
+                  SubscriptionType.none)
     ];
   }
 

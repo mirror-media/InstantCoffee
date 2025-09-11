@@ -79,4 +79,6 @@ class RemoteConfigHelper with Logger {
 
   String get noticeDialogVersion =>
       _remoteConfig.getString('notice_dialog_version');
+
+  bool get isFreePremium => _remoteConfig.getBool('isFreePremium');
 }

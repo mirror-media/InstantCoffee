@@ -24,6 +24,7 @@ import 'package:readr_app/widgets/custom_cached_network_image.dart';
 import 'package:readr_app/widgets/fading_effect_painter.dart';
 import 'package:readr_app/widgets/m_m_ad_banner.dart';
 import 'package:readr_app/widgets/m_m_video_player.dart';
+import 'package:readr_app/helpers/remote_config_helper.dart';
 
 class PremiumStoryWidget extends StatelessWidget {
   final bool isLogin;
@@ -63,19 +64,24 @@ class PremiumStoryWidget extends StatelessWidget {
     return appColor;
   }
 
+  bool _isFreePremiumEnabled() {
+    final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+    return remoteConfigHelper.isFreePremium;
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = width / 16 * 9;
-    StoryAd storyAd = story.storyAd!;
 
     bool isWineCategory = _isWineCategory(story.categories);
-    bool isTruncated = story.isTruncated;
     // bool isAdsActivated = isStoryWidgetAdsActivated && isTruncated;
-    bool isAdsActivated=false;
+    bool isAdsActivated = false;
     return Column(
       children: [
-        Expanded(child: _buildStoryWidget(context, width, height, story,isAdsActivated)),
+        Expanded(
+            child: _buildStoryWidget(
+                context, width, height, story, isAdsActivated)),
         if (isWineCategory)
           Container(
             color: Colors.black,
@@ -96,8 +102,8 @@ class PremiumStoryWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildStoryWidget(
-      BuildContext context, double width, double height, Story story,bool isAdsActivated) {
+  Widget _buildStoryWidget(BuildContext context, double width, double height,
+      Story story, bool isAdsActivated) {
     bool isTruncated = story.isTruncated;
 
     StoryAd storyAd = story.storyAd!;
