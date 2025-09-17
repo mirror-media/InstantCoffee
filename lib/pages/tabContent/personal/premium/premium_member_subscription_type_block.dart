@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/state.dart';
 import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/helpers/remote_config_helper.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/pages/shared/member_subscription_type_title_widget.dart';
 
@@ -55,6 +56,17 @@ class _PremiumMemberSubscriptionTypeBlockState
   }
 
   Widget _buildMemberTypeBlock(SubscriptionType? subscriptionType) {
+    if (subscriptionType == null) {
+      try {
+        final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+        if (remoteConfigHelper.isFreePremium) {
+          return const SizedBox.shrink();
+        }
+      } catch (e) {
+        // RemoteConfig 未初始化時使用原始邏輯
+      }
+    }
+
     return Container(
         color: appColor,
         child: Padding(
@@ -64,9 +76,10 @@ class _PremiumMemberSubscriptionTypeBlockState
 
   Widget _memberTypeTitle(SubscriptionType? subscriptionType) {
     if (subscriptionType == null) {
-      return Column(
+      // 原始的加入會員區塊
+      return const Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: const [
+        children: [
           Text(
             '加入 Premium 會員',
             style: TextStyle(fontSize: 15, color: Colors.white),
