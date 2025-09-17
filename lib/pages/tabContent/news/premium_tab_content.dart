@@ -71,7 +71,7 @@ class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        if (widget.needCarousel) {
+        if (widget.needCarousel || widget.section.title == '熱門') {
           try {
             await _remoteConfigHelper.refresh();
 

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readr_app/blocs/listening_tab_content_bloc.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/helpers/api_response.dart';
 import 'package:readr_app/helpers/remote_config_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
@@ -53,6 +55,10 @@ class _PremiumListeningTabContentState
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
+        try {
+          await _remoteConfigHelper.refresh();
+          context.read<MemberBloc>().add(RefreshMemberStatus());
+        } catch (e) {}
         _listeningTabContentBloc.refreshTheList();
       },
       child: _buildListeningTabContentBody(),
@@ -106,7 +112,6 @@ class _PremiumListeningTabContentState
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-
               if (index == 0) {
                 return TheFirstItem(
                   record: recordList[index],
@@ -117,7 +122,6 @@ class _PremiumListeningTabContentState
 
               return Column(
                 children: [
-
                   Padding(
                       padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
                       child: PremiumListItem(
