@@ -184,7 +184,7 @@ class PremiumStoryWidget extends StatelessWidget {
             isKeepAlive: true,
           ),
         ],
-        if (!isTruncated) ...[
+        if (!isTruncated && !_isFreePremiumEnabled()) ...[
           const SizedBox(height: 32),
           _buildQuoteWarningText(),
           const SizedBox(height: 12),
