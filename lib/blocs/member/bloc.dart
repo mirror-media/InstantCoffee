@@ -36,6 +36,8 @@ class MemberBloc extends Bloc<MemberEvents, MemberState> with Logger {
                 israfelId: memberIdAndSubscriptionType.israfelId,
                 subscriptionType: memberIdAndSubscriptionType.subscriptionType),
           );
+        } else {
+          emit(MemberState.isNotLogin());
         }
       } catch (e) {
         emit(MemberState.error(errorMessages: e));

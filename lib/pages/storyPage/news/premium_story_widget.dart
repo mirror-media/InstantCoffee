@@ -65,8 +65,13 @@ class PremiumStoryWidget extends StatelessWidget {
   }
 
   bool _isFreePremiumEnabled() {
-    final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
-    return remoteConfigHelper.isFreePremium;
+    try {
+      final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+      return remoteConfigHelper.isFreePremium;
+    } catch (e) {
+      // RemoteConfig 未初始化時返回 false
+      return false;
+    }
   }
 
   @override
@@ -92,12 +97,13 @@ class PremiumStoryWidget extends StatelessWidget {
               "assets/image/wine_warning.png",
             ),
           ),
-        if (isAdsActivated && !isWineCategory)
-          MMAdBanner(
-            adUnitId: storyAd.stUnitId,
-            adSize: AdSize.banner,
-            isKeepAlive: true,
-          ),
+        // 廣告已停用，移除 dead code
+        // if (isAdsActivated && !isWineCategory)
+        //   MMAdBanner(
+        //     adUnitId: storyAd.stUnitId,
+        //     adSize: AdSize.banner,
+        //     isKeepAlive: true,
+        //   ),
       ],
     );
   }
@@ -167,7 +173,7 @@ class PremiumStoryWidget extends StatelessWidget {
           height: 32,
         ),
         _buildContent(story, isAdsActivated, isTruncated),
-        if (isTruncated) ...[
+        if (isTruncated && !_isFreePremiumEnabled()) ...[
           _joinMemberBlock(isLogin, story.slug),
         ],
         if (isAdsActivated) ...[
