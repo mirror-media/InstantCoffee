@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/editorChoice/cubit.dart';
 import 'package:readr_app/blocs/editorChoice/state.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
 import 'package:readr_app/controllers/top_iframe_controller.dart';
 import 'package:readr_app/core/values/string.dart';
@@ -84,6 +85,8 @@ class _TabContentState extends State<TabContent> with Logger {
               final topIframeController = Get.find<TopIframeController>();
               topIframeController.checkVisibility();
             }
+
+            context.read<MemberBloc>().add(RefreshMemberStatus());
           } catch (e) {}
         }
         _fetchFirstRecordList();

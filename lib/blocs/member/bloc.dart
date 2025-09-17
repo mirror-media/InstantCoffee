@@ -15,6 +15,7 @@ class MemberBloc extends Bloc<MemberEvents, MemberState> with Logger {
   MemberBloc({required this.memberRepos}) : super(MemberState.loading()) {
     on<FetchMemberSubscriptionType>(_fetchMemberSubscriptionType);
     on<UpdateSubscriptionType>(_updateSubscriptionType);
+    on<RefreshMemberStatus>(_refreshMemberStatus);
   }
 
   void _fetchMemberSubscriptionType(
@@ -56,5 +57,17 @@ class MemberBloc extends Bloc<MemberEvents, MemberState> with Logger {
           israfelId: event.israfelId,
           subscriptionType: event.subscriptionType),
     );
+  }
+
+  void _refreshMemberStatus(
+    RefreshMemberStatus event,
+    Emitter<MemberState> emit,
+  ) {
+    debugLog('RefreshMemberStatus: current isPremium = ${state.isPremium}');
+    emit(MemberState.loaded(
+      isLogin: state.isLogin ?? false,
+      israfelId: state.israfelId,
+      subscriptionType: state.subscriptionType,
+    ));
   }
 }
