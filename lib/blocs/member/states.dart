@@ -53,8 +53,6 @@ class MemberState {
   bool get isPremium {
     try {
       final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
-
-      // 如果 isFreePremium 為 true，所有使用者都可以看到 premium 內容
       if (remoteConfigHelper.isFreePremium) {
         return true;
       }
@@ -62,6 +60,12 @@ class MemberState {
       // 如果 RemoteConfig 還未初始化或出現錯誤，使用原始邏輯
     }
 
+    return isLogin == true &&
+        subscriptionType != SubscriptionType.none &&
+        subscriptionType != SubscriptionType.subscribe_one_time;
+  }
+
+  bool get shouldShowPremiumUI {
     return isLogin == true &&
         subscriptionType != SubscriptionType.none &&
         subscriptionType != SubscriptionType.subscribe_one_time;

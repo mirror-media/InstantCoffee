@@ -39,14 +39,14 @@ class OnBoardingPageState extends State<OnBoardingPage> {
     // 支援 Remote Config 動態更新
     return BlocBuilder<MemberBloc, MemberState>(
       builder: (context, memberState) {
-        bool isPremium = memberState.status == MemberStatus.loaded
+        bool shouldShowPremiumUI = memberState.status == MemberStatus.loaded
             ? memberState.isPremium
             : widget.isPremium;
 
         debugPrint(
-            'OnBoardingPage: memberState.status = ${memberState.status}, isPremium = $isPremium');
+            'OnBoardingPage: memberState.status = ${memberState.status}, shouldShowPremiumUI = $shouldShowPremiumUI');
 
-        if (isPremium) {
+        if (shouldShowPremiumUI) {
           return BlocProvider(
             create: (context) => SectionCubit(sectionRepos: SectionService()),
             child: PremiumHomePage(

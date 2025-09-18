@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
 import 'package:readr_app/helpers/data_constants.dart';
@@ -8,9 +9,12 @@ import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/models/section.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/pages/home/premium/premium_home_widget.dart';
+import 'package:readr_app/pages/login/member_widget/member_widget.dart';
 import 'package:readr_app/pages/login/premium_member_widget.dart';
+import 'package:readr_app/pages/login/login_widget.dart';
 import 'package:readr_app/pages/search/search_page.dart';
 import 'package:readr_app/pages/tabContent/news/premium_tab_content.dart';
+import 'package:readr_app/services/login_service.dart';
 import 'package:readr_app/services/record_service.dart';
 
 import '../home_controller.dart';
@@ -44,12 +48,43 @@ class PremiumHomePage extends GetView<HomeController> {
               scrollController: premiumArticleBarScrollController,
             ),
           )),
-      PremiumMemberWidget(
-          israfelId:
-              controller.context!.read<MemberBloc>().state.israfelId ?? '',
-          subscriptionType:
-              controller.context!.read<MemberBloc>().state.subscriptionType ??
-                  SubscriptionType.none)
+      BlocBuilder<MemberBloc, MemberState>(
+        builder: (context, memberState) {
+          // 判斷用戶狀態
+          bool isLoggedIn = memberState.isLogin == true;
+          bool isActualPremiumMember = memberState.shouldShowPremiumUI;
+
+          if (isActualPremiumMember) {
+            // 真正的付費會員
+            return PremiumMemberWidget(
+                israfelId: memberState.israfelId ?? '',
+                subscriptionType:
+                    memberState.subscriptionType ?? SubscriptionType.none);
+          } else if (isLoggedIn) {
+            // 已登入但不是付費會員
+            return MemberWidget(
+              israfelId: memberState.israfelId ?? '',
+              subscriptionType:
+                  memberState.subscriptionType ?? SubscriptionType.none,
+              isNewebpay: false,
+            );
+          } else {
+            // 未登入用戶
+            return Container(
+              color: Colors.white,
+              child: BlocProvider(
+                create: (context) => LoginBloc(
+                  loginRepos: LoginServices(),
+                  memberBloc: context.read<MemberBloc>(),
+                  routeName: null,
+                  routeArguments: null,
+                ),
+                child: LoginWidget(),
+              ),
+            );
+          }
+        },
+      )
     ];
   }
 
