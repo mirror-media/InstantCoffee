@@ -16,7 +16,7 @@ class RemoteConfigHelper with Logger {
   }
 
   Future<bool> refresh({
-    Duration fetchTimeout = const Duration(seconds: 10),
+    Duration fetchTimeout = const Duration(seconds: 5),
   }) async {
     try {
       await _remoteConfig.setConfigSettings(RemoteConfigSettings(

@@ -7,6 +7,7 @@ import 'package:readr_app/pages/storyPage/news/premium_story_widget.dart';
 import 'package:readr_app/pages/storyPage/news/story_widget.dart';
 import 'package:readr_app/services/comscore_service.dart';
 import 'package:readr_app/widgets/logger.dart';
+import 'package:readr_app/helpers/remote_config_helper.dart';
 
 import '../../../data/enum/story_status.dart';
 
@@ -45,7 +46,6 @@ class _BuildStoryPageState extends State<BuildStoryPage> with Logger {
           return Container();
         case StoryStatus.loaded:
           StoryRes storyRes = state.storyRes!;
-          bool isMemberOnlyStory = storyRes.story.isMember;
 
           // Track with Comscore
           ComscoreService.instance.trackStoryView(
@@ -60,7 +60,26 @@ class _BuildStoryPageState extends State<BuildStoryPage> with Logger {
             publishedDate: DateTime.tryParse(storyRes.story.publishedDate),
           );
 
-          if (context.read<MemberBloc>().state.isPremium || isMemberOnlyStory) {
+          // 檢查 isFreePremium 狀態
+          bool isFreePremiumEnabled = false;
+          try {
+            final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+            isFreePremiumEnabled = remoteConfigHelper.isFreePremium;
+          } catch (e) {
+            // RemoteConfig 未初始化時跳過
+          }
+
+          if (isFreePremiumEnabled) {
+            // isFreePremium=true 時，所有人（包含付費會員）都看廣告
+            return StoryWidget(
+              story: storyRes.story,
+            );
+          }
+
+          // isFreePremium=false 時，根據會員身份選擇
+          bool isActualPremiumMember =
+              context.read<MemberBloc>().state.shouldShowPremiumUI;
+          if (isActualPremiumMember) {
             return PremiumStoryWidget(
               isLogin: storyRes.isMember,
               story: storyRes.story,

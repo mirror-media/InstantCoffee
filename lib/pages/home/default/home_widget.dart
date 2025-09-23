@@ -8,6 +8,7 @@ import 'package:readr_app/blocs/onBoarding/events.dart';
 import 'package:readr_app/blocs/onBoarding/states.dart';
 import 'package:readr_app/blocs/section/cubit.dart';
 import 'package:readr_app/blocs/section/states.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/tabContent/bloc.dart';
 import 'package:readr_app/core/values/string.dart';
 import 'package:readr_app/helpers/data_constants.dart';
@@ -27,6 +28,8 @@ import 'package:readr_app/widgets/logger.dart';
 import 'package:readr_app/widgets/newsMarquee/news_marquee.dart';
 import 'package:readr_app/widgets/popupRoute/easy_popup.dart';
 import 'package:readr_app/widgets/popupRoute/section_drop_down_menu.dart';
+import 'package:readr_app/pages/magazine/magazine_page.dart';
+import 'package:readr_app/models/member_subscription_type.dart';
 
 class HomeWidget extends StatefulWidget {
   @override
@@ -48,6 +51,9 @@ class _HomeWidgetState extends State<HomeWidget>
   final List<Tab> _tabs = [];
   final List<Widget> _tabWidgets = [];
   final List<ScrollController> _scrollControllerList = [];
+
+  // 維護本地的 sections 列表，用於動態添加/移除
+  List<Section>? _cachedSections;
 
   _fetchSectionList() {
     context.read<SectionCubit>().fetchSectionList();
@@ -80,6 +86,44 @@ class _HomeWidgetState extends State<HomeWidget>
 
       // 插入到 '生活' 的後面
       sectionItems.insert(indexAfter, sectionToMove);
+    }
+
+    // 動態處理動態雜誌Tab
+    try {
+      bool isFreePremiumEnabled = _remoteConfigHelper.isFreePremium;
+
+      if (isFreePremiumEnabled) {
+        // isFreePremium=true 時，添加動態雜誌Tab
+        bool hasDynamicMagazine =
+            sectionItems.any((section) => section.title == '動態雜誌');
+
+        if (!hasDynamicMagazine) {
+          sectionItems.add(Section(title: '動態雜誌', key: 'dynamic_magazine'));
+        }
+
+        // 將動態雜誌移動到 Premium文章之後
+        int indexToMoveDynamicMagazine =
+            sectionItems.indexWhere((section) => section.title == '動態雜誌');
+        int indexAfterPremium =
+            sectionItems.indexWhere((section) => section.title == '會員專區');
+        if (indexToMoveDynamicMagazine != -1 && indexAfterPremium != -1) {
+          Section dynamicMagazineSection =
+              sectionItems.removeAt(indexToMoveDynamicMagazine);
+          sectionItems.insert(indexAfterPremium + 1, dynamicMagazineSection);
+        }
+      } else {
+        // isFreePremium=false 時，移除動態雜誌Tab
+        bool hadDynamicMagazine =
+            sectionItems.any((section) => section.title == '動態雜誌');
+        if (hadDynamicMagazine) {
+          sectionItems.removeWhere((section) => section.title == '動態雜誌');
+        }
+      }
+
+      // 更新 cached sections
+      _cachedSections = List<Section>.from(sectionItems);
+    } catch (e) {
+      // RemoteConfig 未初始化時跳過動態雜誌處理
     }
 
     for (int i = 0; i < sectionItems.length; i++) {
@@ -115,6 +159,11 @@ class _HomeWidgetState extends State<HomeWidget>
         ));
       } else if (section.key == 'Podcasts') {
         _tabWidgets.add(const PodcastPage());
+      } else if (section.key == 'dynamic_magazine') {
+        _tabWidgets.add(const MagazinePage(
+          subscriptionType: SubscriptionType.subscribe_monthly,
+          showAppBar: false, // 隱藏 AppBar
+        ));
       } else {
         _tabWidgets.add(BlocProvider(
             create: (context) => TabContentBloc(recordRepos: RecordService()),
@@ -126,14 +175,20 @@ class _HomeWidgetState extends State<HomeWidget>
       }
     }
 
+    _tabBarController?.close();
     _tabBarController = StreamController<List<Tab>>();
 
-    // set controller
+    int currentIndex = _tabController?.index ?? _initialTabIndex;
+    if (currentIndex >= sectionItems.length) {
+      currentIndex = 0;
+    }
+
+    _tabController?.dispose();
+
     _tabController = TabController(
       vsync: this,
       length: sectionItems.length,
-      initialIndex:
-          _tabController == null ? _initialTabIndex : _tabController!.index,
+      initialIndex: currentIndex,
     )..addListener(() {
         _tabs.clear();
 
@@ -222,21 +277,45 @@ class _HomeWidgetState extends State<HomeWidget>
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SectionCubit, SectionState>(
-        builder: (BuildContext context, SectionState state) {
-      SectionStatus status = state.status;
-      if (status == SectionStatus.error) {
-        debugLog('HomePageSectionError: ${state.errorMessages}');
-        return Container();
-      } else if (status == SectionStatus.loaded) {
-        _initializeTabController(state.sectionList!);
+      builder: (BuildContext context, SectionState sectionState) {
+        return BlocBuilder<MemberBloc, MemberState>(
+          builder: (BuildContext context, MemberState memberState) {
+            SectionStatus status = sectionState.status;
+            if (status == SectionStatus.error) {
+              debugLog('HomePageSectionError: ${sectionState.errorMessages}');
+              return Container();
+            } else if (status == SectionStatus.loaded) {
+              if (_cachedSections == null ||
+                  _cachedSections!.length != sectionState.sectionList!.length ||
+                  !_sectionsEqual(
+                      _cachedSections!, sectionState.sectionList!)) {
+                _cachedSections = List<Section>.from(sectionState.sectionList!);
+              }
 
-        return _buildTabs(
-            state.sectionList!, _tabs, _tabWidgets, _tabController!);
+              List<Section> processedSections =
+                  List<Section>.from(_cachedSections!);
+              _initializeTabController(processedSections);
+
+              return _buildTabs(
+                  processedSections, _tabs, _tabWidgets, _tabController!);
+            }
+
+            // init or loading
+            return const Center(child: CircularProgressIndicator());
+          },
+        );
+      },
+    );
+  }
+
+  bool _sectionsEqual(List<Section> list1, List<Section> list2) {
+    if (list1.length != list2.length) return false;
+    for (int i = 0; i < list1.length; i++) {
+      if (list1[i].key != list2[i].key || list1[i].title != list2[i].title) {
+        return false;
       }
-
-      // init or loading
-      return const Center(child: CircularProgressIndicator());
-    });
+    }
+    return true;
   }
 
   Widget _buildTabs(List<Section> sections, List<Tab> tabs,
