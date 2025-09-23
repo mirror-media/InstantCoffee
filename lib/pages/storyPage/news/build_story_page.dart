@@ -71,22 +71,18 @@ class _BuildStoryPageState extends State<BuildStoryPage> with Logger {
           }
 
           if (isFreePremiumEnabled) {
-            // isFreePremium=true 時，根據文章類型選擇
             if (isPremiumArticle) {
-              // Premium 文章不顯示廣告
               return PremiumStoryWidget(
                 isLogin: storyRes.isMember,
                 story: storyRes.story,
               );
             } else {
-              // 一般文章顯示廣告
               return StoryWidget(
                 story: storyRes.story,
               );
             }
           }
 
-          // isFreePremium=false 時，根據會員身份選擇
           bool isActualPremiumMember =
               context.read<MemberBloc>().state.shouldShowPremiumUI;
           if (isActualPremiumMember) {

@@ -80,30 +80,52 @@ class PremiumStoryWidget extends StatelessWidget {
     double height = width / 16 * 9;
 
     bool isWineCategory = _isWineCategory(story.categories);
-    // bool isAdsActivated = isStoryWidgetAdsActivated && isTruncated;
     bool isAdsActivated = false;
-    return Column(
+    try {
+      final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+      isAdsActivated =
+          isStoryWidgetAdsActivated && remoteConfigHelper.isFreePremium;
+    } catch (e) {
+      isAdsActivated = false;
+    }
+    return Stack(
       children: [
-        Expanded(
-            child: _buildStoryWidget(
-                context, width, height, story, isAdsActivated)),
-        if (isWineCategory)
-          Container(
-            color: Colors.black,
-            height: 90,
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 31, vertical: 22),
-            child: Image.asset(
-              "assets/image/wine_warning.png",
-            ),
+        Column(
+          children: [
+            Expanded(
+                child: _buildStoryWidget(
+                    context, width, height, story, isAdsActivated)),
+            if (isWineCategory)
+              Container(
+                color: Colors.black,
+                height: 90,
+                width: double.infinity,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 31, vertical: 22),
+                child: Image.asset(
+                  "assets/image/wine_warning.png",
+                ),
+              ),
+          ],
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: SafeArea(
+            child: StatefulBuilder(builder: (context, setState) {
+              return isAdsActivated && !isWineCategory
+                  ? SizedBox(
+                      height: AdSize.banner.height.toDouble(),
+                      width: AdSize.banner.width.toDouble(),
+                      child: MMAdBanner(
+                        adUnitId: story.storyAd!.stUnitId,
+                        adSize: AdSize.banner,
+                        isKeepAlive: true,
+                      ),
+                    )
+                  : const SizedBox.shrink();
+            }),
           ),
-        // 廣告已停用，移除 dead code
-        // if (isAdsActivated && !isWineCategory)
-        //   MMAdBanner(
-        //     adUnitId: storyAd.stUnitId,
-        //     adSize: AdSize.banner,
-        //     isKeepAlive: true,
-        //   ),
+        ),
       ],
     );
   }
