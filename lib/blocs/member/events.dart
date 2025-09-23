@@ -21,3 +21,8 @@ class UpdateSubscriptionType extends MemberEvents {
   String toString() =>
       'UpdateSubscriptionType: { isLogin: $isLogin, subscriptionType: $subscriptionType }';
 }
+
+class RefreshMemberStatus extends MemberEvents {
+  @override
+  String toString() => 'RefreshMemberStatus';
+}

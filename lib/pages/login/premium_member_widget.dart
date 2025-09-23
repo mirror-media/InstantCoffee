@@ -9,6 +9,7 @@ import 'package:readr_app/blocs/memberCenter/memberDetail/member_detail_cubit.da
 import 'package:readr_app/blocs/memberCenter/paymentRecord/payment_record_bloc.dart';
 import 'package:readr_app/data/providers/auth_info_provider.dart';
 import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/helpers/remote_config_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/pages/login/member_widget/anonymous_block/anonymous_block_widget.dart';
@@ -51,6 +52,17 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
         isLogin: false, israfelId: null, subscriptionType: null));
   }
 
+  // 檢查 isFreePremium 功能
+  bool _isFreePremiumEnabled() {
+    try {
+      final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+      return remoteConfigHelper.isFreePremium;
+    } catch (e) {
+      // RemoteConfig 未初始化時回傳 false
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -76,59 +88,103 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
             ? AnonymousBlockWidget(
                 subscriptionType: subscriptionType ?? SubscriptionType.none,
               )
-            : CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 16.0, bottom: 12),
-                      child: _memberLevelBlock(widget.subscriptionType),
+            : Container(
+                color: Colors.grey[300],
+                child: ListView(
+                  children: [
+                    Container(
+                      color: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 48),
+                          _memberLevelBlock(widget.subscriptionType),
+                          const SizedBox(height: 24),
+                        ],
+                      ),
                     ),
-                  ),
-                  SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
-                        if (widget.subscriptionType !=
-                            SubscriptionType.staff) ...[
-                          _horizontalDivider(width),
-                          _memberSubscriptionDetailButton(
-                              widget.subscriptionType),
-                          if (widget.subscriptionType !=
-                                  SubscriptionType.marketing &&
-                              widget.subscriptionType !=
-                                  SubscriptionType.subscribe_group) ...[
+                    if (widget.subscriptionType != SubscriptionType.staff)
+                      Container(
+                        color: Colors.white,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             _horizontalDivider(width),
-                            _memberPaymentRecordButton(widget.subscriptionType),
+                            _memberSubscriptionDetailButton(
+                                widget.subscriptionType),
+                            if (widget.subscriptionType !=
+                                    SubscriptionType.marketing &&
+                                widget.subscriptionType !=
+                                    SubscriptionType.subscribe_group) ...[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                    24.0, 0.0, 24.0, 0.0),
+                                child: _horizontalDivider(width),
+                              ),
+                              _memberPaymentRecordButton(
+                                  widget.subscriptionType),
+                            ],
                           ],
-                        ],
-                        _horizontalDivider(width),
-                        _memberProfileButton(),
-                        _horizontalDivider(width),
-                        if (LoginServices.checkIsEmailAndPasswordLogin()) ...[
-                          _changePasswordButton(),
-                          _horizontalDivider(width),
-                        ],
-                        _memberContactInfoButton(),
-                        _horizontalDivider(width),
-                        _settingButton(),
-                        Container(
-                          color: const Color(0xffF4F4F4),
-                          child: _logoutButton(width),
                         ),
-                        _horizontalDivider(width),
-                        _deleteMemberButton(width),
-                      ],
+                      ),
+                    const SizedBox(height: 36),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 24.0, right: 24.0),
+                      child: Text(
+                        '會員檔案',
+                        style: TextStyle(fontSize: 15),
+                      ),
                     ),
-                  ),
-                  SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: SizedBox(
-                            height: 185,
-                            width: width,
-                            child: _contactInfo(width))),
-                  ),
-                ],
+                    const SizedBox(height: 12),
+                    Container(
+                      color: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _memberProfileButton(),
+                          Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                            child: _horizontalDivider(width),
+                          ),
+                          if (LoginServices.checkIsEmailAndPasswordLogin()) ...[
+                            _changePasswordButton(),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  24.0, 0.0, 24.0, 0.0),
+                              child: _horizontalDivider(width),
+                            ),
+                          ],
+                          _memberContactInfoButton(),
+                          Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                            child: _horizontalDivider(width),
+                          ),
+                          _settingButton(),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 48),
+                    Container(
+                      color: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _logoutButton(width),
+                          Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                            child: _horizontalDivider(width),
+                          ),
+                          _deleteMemberButton(width),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 48),
+                    _contactInfo(width),
+                  ],
+                ),
               );
       }),
     );
@@ -160,7 +216,7 @@ class _PremiumMemberWidgetState extends State<PremiumMemberWidget> {
 
   Widget _horizontalDivider(double width) {
     return Container(
-      color: const Color(0xffDADADA),
+      color: Colors.grey,
       width: width,
       height: 1,
     );
