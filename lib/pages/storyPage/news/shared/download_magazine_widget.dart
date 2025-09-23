@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/state.dart';
 import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/helpers/remote_config_helper.dart';
 
 class DownloadMagazineWidget extends StatefulWidget {
   final bool isMemberContent;
@@ -21,8 +22,23 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
         .fetchMemberSubscriptionType(isNavigateToMagazine: true);
   }
 
+  bool _isFreePremiumEnabled() {
+    try {
+      final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+      return remoteConfigHelper.isFreePremium;
+    } catch (e) {
+      // RemoteConfig 未初始化時返回 false
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // 如果 isFreePremium 為 true，隱藏整個組件
+    if (_isFreePremiumEnabled()) {
+      return const SizedBox.shrink();
+    }
+
     var width = MediaQuery.of(context).size.width;
 
     return BlocBuilder<MemberSubscriptionTypeCubit,

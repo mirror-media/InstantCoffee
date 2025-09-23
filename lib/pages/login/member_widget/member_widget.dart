@@ -10,6 +10,7 @@ import 'package:readr_app/blocs/memberCenter/memberDetail/member_detail_cubit.da
 import 'package:readr_app/blocs/memberCenter/paymentRecord/payment_record_bloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscribedArticles/subscribed_articles_cubit.dart';
 import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/helpers/remote_config_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/pages/login/member_widget/anonymous_block/anonymous_block_widget.dart';
@@ -54,6 +55,17 @@ class MemberWidgetState extends State<MemberWidget> {
     context.read<LoginBloc>().add(SignOut());
   }
 
+  // 檢查 isFreePremium 功能
+  bool _isFreePremiumEnabled() {
+    try {
+      final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+      return remoteConfigHelper.isFreePremium;
+    } catch (e) {
+      // RemoteConfig 未初始化時回傳 false
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -96,11 +108,12 @@ class MemberWidgetState extends State<MemberWidget> {
                                 _horizontalDivider(width),
                                 _memberSubscriptionDetailButton(
                                     widget.subscriptionType),
-                                if (widget.subscriptionType ==
-                                        SubscriptionType.none ||
-                                    widget.subscriptionType ==
-                                        SubscriptionType
-                                            .subscribe_one_time) ...[
+                                if ((widget.subscriptionType ==
+                                            SubscriptionType.none ||
+                                        widget.subscriptionType ==
+                                            SubscriptionType
+                                                .subscribe_one_time) &&
+                                    !_isFreePremiumEnabled()) ...[
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(
                                         24.0, 0.0, 24.0, 0.0),
@@ -119,11 +132,12 @@ class MemberWidgetState extends State<MemberWidget> {
                                   ),
                                   _memberPaymentRecordButton(
                                       widget.subscriptionType),
-                                  if (widget.subscriptionType ==
-                                          SubscriptionType.none ||
-                                      widget.subscriptionType ==
-                                          SubscriptionType
-                                              .subscribe_one_time) ...[
+                                  if ((widget.subscriptionType ==
+                                              SubscriptionType.none ||
+                                          widget.subscriptionType ==
+                                              SubscriptionType
+                                                  .subscribe_one_time) &&
+                                      !_isFreePremiumEnabled()) ...[
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           24.0, 0.0, 24.0, 0.0),
@@ -137,15 +151,16 @@ class MemberWidgetState extends State<MemberWidget> {
                                       child: _horizontalDivider(width),
                                     ),
                                   ],
-                                  _navigateButton('恢復訂閱資格', () async {
-                                    controller.rxIsLoading.value = true;
-                                    await InAppPurchase.instance
-                                        .restorePurchases();
+                                  if (!_isFreePremiumEnabled())
+                                    _navigateButton('恢復訂閱資格', () async {
+                                      controller.rxIsLoading.value = true;
+                                      await InAppPurchase.instance
+                                          .restorePurchases();
 
-                                    await Future.delayed(
-                                        const Duration(seconds: 20));
-                                    controller.rxIsLoading.value = false;
-                                  }),
+                                      await Future.delayed(
+                                          const Duration(seconds: 20));
+                                      controller.rxIsLoading.value = false;
+                                    }),
                                 ],
                               ],
                             ),

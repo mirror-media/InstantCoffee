@@ -16,7 +16,7 @@ class RemoteConfigHelper with Logger {
   }
 
   Future<bool> refresh({
-    Duration fetchTimeout = const Duration(seconds: 10),
+    Duration fetchTimeout = const Duration(seconds: 5),
   }) async {
     try {
       await _remoteConfig.setConfigSettings(RemoteConfigSettings(
@@ -79,4 +79,6 @@ class RemoteConfigHelper with Logger {
 
   String get noticeDialogVersion =>
       _remoteConfig.getString('notice_dialog_version');
+
+  bool get isFreePremium => _remoteConfig.getBool('isFreePremium');
 }

@@ -30,27 +30,39 @@ class _LoginWidgetState extends State<LoginWidget> with Logger {
     return BlocBuilder<LoginBloc, LoginState>(
         builder: (BuildContext context, LoginState state) {
       if (state is LoadingUI) {
-        return const Center(child: CircularProgressIndicator());
+        return Container(
+          color: Colors.white,
+          child: const Center(child: CircularProgressIndicator()),
+        );
       }
       if (state is LoginFail) {
         final error = state.error;
         debugLog('LoginError: ${error.message}');
-        return LoginErrorWidget();
+        return Container(
+          color: Colors.white,
+          child: LoginErrorWidget(),
+        );
       }
       if (state is LoginSuccess) {
         String israfelId = state.israfelId;
         SubscriptionType subscriptionType = state.subscriptionType;
 
-        return MemberWidget(
-          israfelId: israfelId,
-          subscriptionType: subscriptionType,
-          isNewebpay: state.isNewebpay,
+        return Container(
+          color: Colors.white,
+          child: MemberWidget(
+            israfelId: israfelId,
+            subscriptionType: subscriptionType,
+            isNewebpay: state.isNewebpay,
+          ),
         );
       }
 
       // state is Init, Third Party Loading
-      return LoginForm(
-        state: state,
+      return Container(
+        color: Colors.white,
+        child: LoginForm(
+          state: state,
+        ),
       );
     });
   }
