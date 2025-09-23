@@ -24,6 +24,7 @@ import 'package:readr_app/widgets/custom_cached_network_image.dart';
 import 'package:readr_app/widgets/fading_effect_painter.dart';
 import 'package:readr_app/widgets/m_m_ad_banner.dart';
 import 'package:readr_app/widgets/m_m_video_player.dart';
+import 'package:readr_app/helpers/remote_config_helper.dart';
 
 class PremiumStoryWidget extends StatelessWidget {
   final bool isLogin;
@@ -63,41 +64,74 @@ class PremiumStoryWidget extends StatelessWidget {
     return appColor;
   }
 
+  bool _isFreePremiumEnabled() {
+    try {
+      final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+      return remoteConfigHelper.isFreePremium;
+    } catch (e) {
+      // RemoteConfig 未初始化時返回 false
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = width / 16 * 9;
-    StoryAd storyAd = story.storyAd!;
 
     bool isWineCategory = _isWineCategory(story.categories);
-    bool isTruncated = story.isTruncated;
-    // bool isAdsActivated = isStoryWidgetAdsActivated && isTruncated;
-    bool isAdsActivated=false;
-    return Column(
+    bool isAdsActivated = false;
+    try {
+      final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+      isAdsActivated =
+          isStoryWidgetAdsActivated && remoteConfigHelper.isFreePremium;
+    } catch (e) {
+      isAdsActivated = false;
+    }
+    return Stack(
       children: [
-        Expanded(child: _buildStoryWidget(context, width, height, story,isAdsActivated)),
-        if (isWineCategory)
-          Container(
-            color: Colors.black,
-            height: 90,
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 31, vertical: 22),
-            child: Image.asset(
-              "assets/image/wine_warning.png",
-            ),
+        Column(
+          children: [
+            Expanded(
+                child: _buildStoryWidget(
+                    context, width, height, story, isAdsActivated)),
+            if (isWineCategory)
+              Container(
+                color: Colors.black,
+                height: 90,
+                width: double.infinity,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 31, vertical: 22),
+                child: Image.asset(
+                  "assets/image/wine_warning.png",
+                ),
+              ),
+          ],
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: SafeArea(
+            child: StatefulBuilder(builder: (context, setState) {
+              return isAdsActivated && !isWineCategory
+                  ? SizedBox(
+                      height: AdSize.banner.height.toDouble(),
+                      width: AdSize.banner.width.toDouble(),
+                      child: MMAdBanner(
+                        adUnitId: story.storyAd!.stUnitId,
+                        adSize: AdSize.banner,
+                        isKeepAlive: true,
+                      ),
+                    )
+                  : const SizedBox.shrink();
+            }),
           ),
-        if (isAdsActivated && !isWineCategory)
-          MMAdBanner(
-            adUnitId: storyAd.stUnitId,
-            adSize: AdSize.banner,
-            isKeepAlive: true,
-          ),
+        ),
       ],
     );
   }
 
-  Widget _buildStoryWidget(
-      BuildContext context, double width, double height, Story story,bool isAdsActivated) {
+  Widget _buildStoryWidget(BuildContext context, double width, double height,
+      Story story, bool isAdsActivated) {
     bool isTruncated = story.isTruncated;
 
     StoryAd storyAd = story.storyAd!;
@@ -161,7 +195,7 @@ class PremiumStoryWidget extends StatelessWidget {
           height: 32,
         ),
         _buildContent(story, isAdsActivated, isTruncated),
-        if (isTruncated) ...[
+        if (isTruncated && !_isFreePremiumEnabled()) ...[
           _joinMemberBlock(isLogin, story.slug),
         ],
         if (isAdsActivated) ...[
@@ -172,7 +206,7 @@ class PremiumStoryWidget extends StatelessWidget {
             isKeepAlive: true,
           ),
         ],
-        if (!isTruncated) ...[
+        if (!isTruncated && !_isFreePremiumEnabled()) ...[
           const SizedBox(height: 32),
           _buildQuoteWarningText(),
           const SizedBox(height: 12),

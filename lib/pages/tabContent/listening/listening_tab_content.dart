@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readr_app/blocs/listening_tab_content_bloc.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/helpers/ad_helper.dart';
 import 'package:readr_app/helpers/api_response.dart';
 import 'package:readr_app/helpers/data_constants.dart';
@@ -57,6 +59,10 @@ class _ListeningTabContentState extends State<ListeningTabContent> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
+        try {
+          await _remoteConfigHelper.refresh();
+          context.read<MemberBloc>().add(RefreshMemberStatus());
+        } catch (e) {}
         _listeningTabContentBloc.refreshTheList();
       },
       child: Stack(

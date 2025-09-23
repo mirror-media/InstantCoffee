@@ -1,4 +1,5 @@
 import 'package:readr_app/models/member_subscription_type.dart';
+import 'package:readr_app/helpers/remote_config_helper.dart';
 
 enum MemberStatus { loading, loaded, error }
 
@@ -49,8 +50,24 @@ class MemberState {
     );
   }
 
-  bool get isPremium =>
-      isLogin! &&
-      subscriptionType != SubscriptionType.none &&
-      subscriptionType != SubscriptionType.subscribe_one_time;
+  bool get isPremium {
+    try {
+      final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+      if (remoteConfigHelper.isFreePremium) {
+        return true;
+      }
+    } catch (e) {
+      // 如果 RemoteConfig 還未初始化或出現錯誤，使用原始邏輯
+    }
+
+    return isLogin == true &&
+        subscriptionType != SubscriptionType.none &&
+        subscriptionType != SubscriptionType.subscribe_one_time;
+  }
+
+  bool get shouldShowPremiumUI {
+    return isLogin == true &&
+        subscriptionType != SubscriptionType.none &&
+        subscriptionType != SubscriptionType.subscribe_one_time;
+  }
 }

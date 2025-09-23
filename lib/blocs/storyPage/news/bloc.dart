@@ -17,6 +17,7 @@ import 'package:readr_app/models/story_ad.dart';
 import 'package:readr_app/models/story_res.dart';
 import 'package:readr_app/services/story_service.dart';
 import 'package:readr_app/widgets/logger.dart';
+import 'package:readr_app/helpers/remote_config_helper.dart';
 
 export 'events.dart';
 export 'states.dart';
@@ -43,6 +44,21 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> with Logger {
           await articlesApiProvider.getArticleInfoBySlug(slug: event.slug);
       if (storyRes != null) {
         Story story = storyRes.story;
+
+        // 檢查 isFreePremium 功能
+        try {
+          final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+          if (remoteConfigHelper.isFreePremium &&
+              story.isTruncated &&
+              story.trimmedApiData.isNotEmpty) {
+            // 當 isFreePremium=true 且文章被截斷時，使用完整內容
+            story.apiData = List.from(story.trimmedApiData);
+            story.isTruncated = false;
+          }
+        } catch (e) {
+          // RemoteConfig 未初始化時跳過，使用預設邏輯
+          debugLog('RemoteConfig not ready in StoryBloc: $e');
+        }
 
         String storyAdJsonFileLocation = Platform.isIOS
             ? Environment().config.iOSStoryAdJsonLocation
