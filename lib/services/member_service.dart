@@ -93,8 +93,20 @@ class MemberService implements MemberRepos {
       headers: getHeaders(token),
     );
 
-    if (jsonResponse['data']['allMembers'] ==null)return null;
+    if (jsonResponse['data']['allMembers'] == null) {
+      if (user.emailVerified) {
+        String domain = user.email!.split('@')[1];
+        if (mirrormediaGroupDomain.contains(domain)) {
+          return MemberIdAndSubscriptionType(
+            israfelId: user.uid,
+            subscriptionType: SubscriptionType.staff,
+            isNewebpay: false,
+          );
+        }
+      }
 
+      return null;
+    }
 
     if ((jsonResponse['data']['allMembers'] != null &&
             jsonResponse['data']['allMembers'].length == 0) ||
