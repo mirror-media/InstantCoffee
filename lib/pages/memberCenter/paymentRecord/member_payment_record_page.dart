@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:readr_app/blocs/memberCenter/paymentRecord/payment_record_bloc.dart';
 import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/helpers/remote_config_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
 import 'package:readr_app/models/payment_record.dart';
@@ -30,6 +31,17 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
 
   _fetchPaymentRecords() {
     context.read<PaymentRecordBloc>().add(FetchPaymentRecord());
+  }
+
+  // 檢查 isFreePremium 功能
+  bool _isFreePremiumEnabled() {
+    try {
+      final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+      return remoteConfigHelper.isFreePremium;
+    } catch (e) {
+      // RemoteConfig 未初始化時回傳 false
+      return false;
+    }
   }
 
   @override
@@ -207,8 +219,9 @@ class _MemberPaymentRecordPageState extends State<MemberPaymentRecordPage> {
             fontSize: 17,
           ),
         ),
-        _subscriptionType == SubscriptionType.none ||
-                _subscriptionType == SubscriptionType.subscribe_one_time
+        (_subscriptionType == SubscriptionType.none ||
+                    _subscriptionType == SubscriptionType.subscribe_one_time) &&
+                !_isFreePremiumEnabled()
             ? Container(
                 margin: const EdgeInsets.only(top: 24),
                 padding: const EdgeInsets.symmetric(horizontal: 80),
