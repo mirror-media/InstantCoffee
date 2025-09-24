@@ -38,13 +38,10 @@ class AuthInfoProvider extends GetxController {
         authLogout();
       } else {
         _getSignInProvider(user);
-
       }
     });
     userIndex = _auth.currentUser;
     await fetchUserInfo();
-
-
   }
 
   void _getSignInProvider(User user) {
@@ -90,8 +87,10 @@ class AuthInfoProvider extends GetxController {
     idToken = await userIndex?.getIdToken();
     if (idToken != null) {
       Future.delayed(const Duration(seconds: 30), () async {
-        accessToken.value =
-            await authApiProvider.getAccessTokenByIdToken(idToken!);
+        if (idToken != null) {
+          accessToken.value =
+              await authApiProvider.getAccessTokenByIdToken(idToken!);
+        }
       });
     }
   }

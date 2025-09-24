@@ -54,10 +54,6 @@ class OnBoardingPageState extends State<OnBoardingPage> {
           // RemoteConfig 未初始化時跳過
         }
 
-        debugPrint(
-            'OnBoardingPage: isActualPremiumMember = $isActualPremiumMember, isFreePremiumEnabled = $isFreePremiumEnabled');
-
-        // 只有真正的付費會員且不是 isFreePremium 模式時才顯示 Premium 首頁
         if (isActualPremiumMember && !isFreePremiumEnabled) {
           return BlocProvider(
             create: (context) => SectionCubit(sectionRepos: SectionService()),

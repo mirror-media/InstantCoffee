@@ -4,11 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/login/states.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
-import 'package:readr_app/data/providers/auth_info_provider.dart';
 import 'package:readr_app/helpers/error_log_helper.dart';
 import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/helpers/route_generator.dart';
@@ -170,6 +168,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
   ) async {
     MemberIdAndSubscriptionType? memberIdAndSubscriptionType =
         await _memberService.checkSubscriptionType(_auth.currentUser!);
+
     if (memberIdAndSubscriptionType != null &&
         premiumSubscriptionType
             .contains(memberIdAndSubscriptionType.subscriptionType)) {
@@ -185,9 +184,16 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         emit(LoginLoading(loginType: loginType));
       }
     } else {
+      memberIdAndSubscriptionType ??= MemberIdAndSubscriptionType(
+        israfelId: null,
+        subscriptionType: SubscriptionType.none,
+        isNewebpay: false,
+      );
+
       emit(LoginSuccess(
-        israfelId: memberIdAndSubscriptionType!.israfelId!,
-        subscriptionType: memberIdAndSubscriptionType.subscriptionType!,
+        israfelId: memberIdAndSubscriptionType.israfelId ?? '',
+        subscriptionType: memberIdAndSubscriptionType.subscriptionType ??
+            SubscriptionType.none,
         isNewebpay: memberIdAndSubscriptionType.isNewebpay,
       ));
     }
@@ -205,7 +211,8 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         backgroundColor: Colors.green,
         textColor: Colors.white,
         fontSize: 16.0);
-    _navigateToRouteName(memberIdAndSubscriptionType.subscriptionType!);
+    _navigateToRouteName(
+        memberIdAndSubscriptionType.subscriptionType ?? SubscriptionType.none);
 
     try {} catch (e, s) {
       // fetch member subscrition type fail
@@ -260,20 +267,19 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
     CheckIsLoginOrNot event,
     Emitter<LoginState> emit,
   ) async {
-    debugLog(event.toString());
-
     if (_auth.currentUser == null) {
       emit(LoginInitState());
     } else {
       MemberIdAndSubscriptionType? memberIdAndSubscriptionType =
           await _memberService.checkSubscriptionType(_auth.currentUser!);
-      final AuthInfoProvider authInfoProvider = Get.find();
 
       if (memberIdAndSubscriptionType == null) {
-        emit(LoginLoading(
-            loginType:
-                authInfoProvider.rxnLoginType.value ?? LoginType.anonymous));
-        return;
+        // 當 memberIdAndSubscriptionType 為 null 時，提供默認值而不是停留在 Loading 狀態
+        memberIdAndSubscriptionType = MemberIdAndSubscriptionType(
+          israfelId: null,
+          subscriptionType: SubscriptionType.none,
+          isNewebpay: false,
+        );
       }
 
       try {
@@ -282,14 +288,11 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
             israfelId: memberIdAndSubscriptionType.israfelId,
             subscriptionType: memberIdAndSubscriptionType.subscriptionType));
 
-        if (premiumSubscriptionType
-                .contains(memberIdAndSubscriptionType.subscriptionType) &&
-            authInfoProvider.rxnLoginType.value != LoginType.anonymous) {
-          await runPremiumAnimation();
-        }
+        // CheckIsLoginOrNot 不應該播放動畫，只有真正登入時才播放
         emit(LoginSuccess(
-          israfelId: memberIdAndSubscriptionType.israfelId!,
-          subscriptionType: memberIdAndSubscriptionType.subscriptionType!,
+          israfelId: memberIdAndSubscriptionType.israfelId ?? '',
+          subscriptionType: memberIdAndSubscriptionType.subscriptionType ??
+              SubscriptionType.none,
           isNewebpay: memberIdAndSubscriptionType.isNewebpay,
         ));
       } catch (e, s) {
@@ -335,7 +338,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         firebaseLoginStatus,
         emit,
       );
-      _signInTransition();
+      await _signInTransition();
     } on SocketException {
       emit(
         LoginFail(error: NoInternetException('No Internet')),
@@ -370,7 +373,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         firebaseLoginStatus,
         emit,
       );
-      _signInTransition();
+      await _signInTransition();
     } on SocketException {
       emit(
         LoginFail(error: NoInternetException('No Internet')),
@@ -405,7 +408,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         firebaseLoginStatus,
         emit,
       );
-      _signInTransition();
+      await _signInTransition();
     } on SocketException {
       emit(
         LoginFail(error: NoInternetException('No Internet')),
@@ -426,9 +429,10 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
     }
   }
 
-  void _signInTransition() async {
+  Future<void> _signInTransition() async {
     MemberIdAndSubscriptionType? memberIdAndSubscriptionType =
         await _memberService.checkSubscriptionType(_auth.currentUser!);
+
     if (memberIdAndSubscriptionType != null &&
         premiumSubscriptionType
             .contains(memberIdAndSubscriptionType.subscriptionType)) {
@@ -445,9 +449,18 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         emit(LoginLoading(loginType: loginType));
       }
     } else {
+      // 如果 memberIdAndSubscriptionType 是 null，提供默認值
+      if (memberIdAndSubscriptionType == null) {
+        memberIdAndSubscriptionType = MemberIdAndSubscriptionType(
+          israfelId: null,
+          subscriptionType: SubscriptionType.none,
+          isNewebpay: false,
+        );
+      }
       emit(LoginSuccess(
-        israfelId: memberIdAndSubscriptionType!.israfelId!,
-        subscriptionType: memberIdAndSubscriptionType.subscriptionType!,
+        israfelId: memberIdAndSubscriptionType.israfelId ?? '',
+        subscriptionType: memberIdAndSubscriptionType.subscriptionType ??
+            SubscriptionType.none,
         isNewebpay: memberIdAndSubscriptionType.isNewebpay,
       ));
     }
@@ -465,7 +478,8 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         backgroundColor: Colors.green,
         textColor: Colors.white,
         fontSize: 16.0);
-    _navigateToRouteName(memberIdAndSubscriptionType.subscriptionType!);
+    _navigateToRouteName(
+        memberIdAndSubscriptionType.subscriptionType ?? SubscriptionType.none);
   }
 
   // need to refactor route
