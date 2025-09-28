@@ -44,11 +44,13 @@ class _SlideshowWebViewWidgetState extends State<SlideshowWebViewWidget> {
               "document.getElementsByClassName('the-gdpr')[0].style.display = 'none';");
 
           final String width =
-          await _webViewController.runJavaScriptReturningResult(
-              "document.getElementsByClassName('topic-list__Topic-sc-820f3557-1 kIKGxx topic')[0].offsetWidth") as String;
+              await _webViewController.runJavaScriptReturningResult(
+                      "document.getElementsByClassName('topic-list__Topic-sc-820f3557-1 kIKGxx topic')[0].offsetWidth")
+                  as String;
           final String height =
-          await _webViewController.runJavaScriptReturningResult(
-              "document.getElementsByClassName('topic-list__Topic-sc-820f3557-1 kIKGxx topic')[0].offsetHeight") as String;
+              await _webViewController.runJavaScriptReturningResult(
+                      "document.getElementsByClassName('topic-list__Topic-sc-820f3557-1 kIKGxx topic')[0].offsetHeight")
+                  as String;
 
           setState(() {
             _aspectRatio = int.parse(width) / int.parse(height);
@@ -58,7 +60,7 @@ class _SlideshowWebViewWidgetState extends State<SlideshowWebViewWidget> {
         onNavigationRequest: (NavigationRequest request) async {
           if (!_isLoading) {
             if (request.url.contains(Environment().config.mirrorMediaDomain)) {
-              if (!context.read<MemberBloc>().state.isPremium) {
+              if (!context.read<MemberBloc>().state.shouldShowPremiumUI) {
                 AdHelper adHelper = AdHelper();
                 adHelper.checkToShowInterstitialAd();
               }

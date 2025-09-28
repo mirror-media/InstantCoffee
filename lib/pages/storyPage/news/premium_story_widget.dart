@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/memberSubscriptionType/cubit.dart';
 import 'package:readr_app/blocs/storyPage/news/bloc.dart';
 import 'package:readr_app/core/extensions/string_extension.dart';
@@ -81,12 +82,25 @@ class PremiumStoryWidget extends StatelessWidget {
 
     bool isWineCategory = _isWineCategory(story.categories);
     bool isAdsActivated = false;
+
+    // 檢查是否為真正的付費會員
+    bool isActualPremiumMember = false;
     try {
-      final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
-      isAdsActivated =
-          isStoryWidgetAdsActivated && remoteConfigHelper.isFreePremium;
+      isActualPremiumMember =
+          context.read<MemberBloc>().state.shouldShowPremiumUI;
     } catch (e) {
-      isAdsActivated = false;
+      // 如果無法取得 MemberBloc，預設為 false
+    }
+
+    // 只有非付費會員且 isFreePremium=true 時才顯示廣告
+    if (!isActualPremiumMember) {
+      try {
+        final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+        isAdsActivated =
+            isStoryWidgetAdsActivated && remoteConfigHelper.isFreePremium;
+      } catch (e) {
+        isAdsActivated = false;
+      }
     }
     return Stack(
       children: [

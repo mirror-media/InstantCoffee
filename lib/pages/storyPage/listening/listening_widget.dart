@@ -29,7 +29,7 @@ class _ListeningWidget extends State<ListeningWidget> with Logger {
 
   @override
   void initState() {
-    _isPremium = context.read<MemberBloc>().state.isPremium;
+    _isPremium = context.read<MemberBloc>().state.shouldShowPremiumUI;
     _fetchListeningStoryPageInfo(context.read<ListeningStoryCubit>().storySlug);
     super.initState();
   }

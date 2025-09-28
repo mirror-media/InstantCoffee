@@ -1,4 +1,3 @@
-
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,9 +29,8 @@ class NewsMarqueeWidget extends StatefulWidget {
 }
 
 class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
-
-
-  final CarouselSliderController _carouselController = CarouselSliderController();
+  final CarouselSliderController _carouselController =
+      CarouselSliderController();
   final carousel.CarouselOptions _options = carousel.CarouselOptions(
     scrollPhysics: const NeverScrollableScrollPhysics(),
     height: 48,
@@ -78,7 +76,7 @@ class _MarqueeWidgetState extends State<NewsMarqueeWidget> {
             FirebaseAnalyticsHelper.logNewsMarqueeOpen(
                 slug: recordList[i].slug,
                 title: recordList[i].title ?? StringDefault.valueNullDefault);
-            if (!context.read<MemberBloc>().state.isPremium) {
+            if (!context.read<MemberBloc>().state.shouldShowPremiumUI) {
               AdHelper adHelper = AdHelper();
               adHelper.checkToShowInterstitialAd();
             }

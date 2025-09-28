@@ -6,7 +6,6 @@ import 'package:readr_app/blocs/onBoarding/states.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/blocs/section/cubit.dart';
 import 'package:readr_app/helpers/route_generator.dart';
-import 'package:readr_app/helpers/remote_config_helper.dart';
 import 'package:readr_app/models/on_boarding_position.dart';
 import 'package:readr_app/pages/home/default/home_page.dart';
 import 'package:readr_app/pages/home/premium/premium_home_page.dart';
@@ -45,16 +44,7 @@ class OnBoardingPageState extends State<OnBoardingPage> {
             ? memberState.shouldShowPremiumUI
             : widget.isPremium;
 
-        // 檢查 isFreePremium 狀態
-        bool isFreePremiumEnabled = false;
-        try {
-          final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
-          isFreePremiumEnabled = remoteConfigHelper.isFreePremium;
-        } catch (e) {
-          // RemoteConfig 未初始化時跳過
-        }
-
-        if (isActualPremiumMember && !isFreePremiumEnabled) {
+        if (isActualPremiumMember) {
           return BlocProvider(
             create: (context) => SectionCubit(sectionRepos: SectionService()),
             child: PremiumHomePage(

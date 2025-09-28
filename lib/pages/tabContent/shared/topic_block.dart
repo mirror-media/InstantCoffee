@@ -103,7 +103,7 @@ class TopicBlock extends StatelessWidget {
   Widget _buildListItem(BuildContext context, TopicModel topic) {
     return GestureDetector(
       onTap: () {
-        if (!context.read<MemberBloc>().state.isPremium) {
+        if (!context.read<MemberBloc>().state.shouldShowPremiumUI) {
           AdHelper adHelper = AdHelper();
           adHelper.checkToShowInterstitialAd();
         }

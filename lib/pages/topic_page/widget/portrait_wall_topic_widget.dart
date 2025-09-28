@@ -39,7 +39,7 @@ class PortraitWallTopicWidget extends GetView<TopicPageController> {
     return InkWell(
       onTap: () {
         if (topicImageItem.record != null) {
-          if (!context.read<MemberBloc>().state.isPremium) {
+          if (!context.read<MemberBloc>().state.shouldShowPremiumUI) {
             AdHelper adHelper = AdHelper();
             adHelper.checkToShowInterstitialAd();
           }
