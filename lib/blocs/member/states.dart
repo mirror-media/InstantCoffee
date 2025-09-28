@@ -51,6 +51,14 @@ class MemberState {
   }
 
   bool get isPremium {
+    bool isActualPremiumMember = isLogin == true &&
+        subscriptionType != SubscriptionType.none &&
+        subscriptionType != SubscriptionType.subscribe_one_time;
+
+    if (isActualPremiumMember) {
+      return true;
+    }
+
     try {
       final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
       if (remoteConfigHelper.isFreePremium) {
@@ -60,9 +68,7 @@ class MemberState {
       // 如果 RemoteConfig 還未初始化或出現錯誤，使用原始邏輯
     }
 
-    return isLogin == true &&
-        subscriptionType != SubscriptionType.none &&
-        subscriptionType != SubscriptionType.subscribe_one_time;
+    return false;
   }
 
   bool get shouldShowPremiumUI {

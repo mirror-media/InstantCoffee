@@ -41,7 +41,7 @@ class CarouselDisplayWidget extends StatelessWidget {
         ],
       ),
       onTap: () {
-        if (!context.read<MemberBloc>().state.isPremium) {
+        if (!context.read<MemberBloc>().state.shouldShowPremiumUI) {
           AdHelper adHelper = AdHelper();
           adHelper.checkToShowInterstitialAd();
         }

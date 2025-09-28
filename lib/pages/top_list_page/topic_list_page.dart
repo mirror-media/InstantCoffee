@@ -139,7 +139,7 @@ class TopicListPage extends GetView<TopicListController> {
         ),
       ),
       onTap: () {
-        if (!context.read<MemberBloc>().state.isPremium) {
+        if (!context.read<MemberBloc>().state.shouldShowPremiumUI) {
           AdHelper adHelper = AdHelper();
           adHelper.checkToShowInterstitialAd();
         }
@@ -203,7 +203,7 @@ class TopicListPage extends GetView<TopicListController> {
         ],
       ),
       onTap: () {
-        if (!context.read<MemberBloc>().state.isPremium) {
+        if (!context.read<MemberBloc>().state.shouldShowPremiumUI) {
           AdHelper adHelper = AdHelper();
           adHelper.checkToShowInterstitialAd();
         }

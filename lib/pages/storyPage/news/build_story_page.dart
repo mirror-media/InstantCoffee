@@ -61,7 +61,15 @@ class _BuildStoryPageState extends State<BuildStoryPage> with Logger {
             publishedDate: DateTime.tryParse(storyRes.story.publishedDate),
           );
 
-          // 檢查 isFreePremium 狀態
+          bool isActualPremiumMember =
+              context.read<MemberBloc>().state.shouldShowPremiumUI;
+          if (isActualPremiumMember) {
+            return PremiumStoryWidget(
+              isLogin: storyRes.isMember,
+              story: storyRes.story,
+            );
+          }
+
           bool isFreePremiumEnabled = false;
           try {
             final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
@@ -83,14 +91,6 @@ class _BuildStoryPageState extends State<BuildStoryPage> with Logger {
             }
           }
 
-          bool isActualPremiumMember =
-              context.read<MemberBloc>().state.shouldShowPremiumUI;
-          if (isActualPremiumMember) {
-            return PremiumStoryWidget(
-              isLogin: storyRes.isMember,
-              story: storyRes.story,
-            );
-          }
           return StoryWidget(
             story: storyRes.story,
           );
