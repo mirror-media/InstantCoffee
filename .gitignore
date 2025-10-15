@@ -36,3 +36,4 @@ ios/Podfile.lock
 build/
 .flutter-plugins
 .flutter-plugins-dependencies
+ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
