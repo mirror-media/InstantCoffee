@@ -4,6 +4,7 @@
 .dart_tool/
 .packages
 build/
+pubspec.lock
 
 # Directory created by dartdoc
 # If you don't generate documentation locally you can remove this line.
@@ -19,9 +20,10 @@ doc/api/
 *.js.map
 
 # for internal constants (Deprecated)
-lib/helpers/constants.dart 
+lib/helpers/constants.dart
 lib/helpers/apiConstants.dart
 lib/helpers/devApiConstants.dart
+
 # for internal config
 lib/configs/devConfig.dart
 lib/configs/prodConfig.dart
@@ -30,6 +32,7 @@ ios/InstantCoffee Watch App/prodConfig.xcconfig
 
 .flutter-plugins
 .flutter-plugins-dependencies
+
 # key
 android/prod.properties
 android/MirrorMedia.jks
@@ -38,8 +41,41 @@ android/MirrorMediaDev.jks
 
 # Mac OS
 **/.DS_Store
-# Android 
-android/.idea
 
-# fvm
+# Android / IntelliJ
+.idea/
+*.iml
+android/.idea/
+
+# iOS
+# Swift Package Manager
+ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+ios/.idea/
+ios/Runner.xcworkspace/
+ios/Runner.xcodeproj/project.xcworkspace/
+ios/Runner.xcodeproj/xcuserdata/
+ios/Runner.xcworkspace/xcshareddata/swiftpm/
+ios/Flutter/Flutter.framework/
+ios/Flutter/Flutter.podspec
+ios/Pods/
+ios/Podfile.lock
+
+# Google Services
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+
+# Flutter DevTools
+devtools_options.yaml
+
+# Xcode user data
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.pbxuser
+*.xcuserstate
+
+# FVM
 .fvm/
+
+# Build outputs
+build/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/

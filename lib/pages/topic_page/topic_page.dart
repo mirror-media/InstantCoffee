@@ -15,7 +15,6 @@ import '../../data/enum/topic_type.dart';
 
 class TopicPage extends GetView<TopicPageController> {
   const TopicPage({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,21 +56,21 @@ class TopicPage extends GetView<TopicPageController> {
               return <Widget>[
                 controller.rxCurrentTopic.value?.type != TopicType.slideshow
                     ? SliverToBoxAdapter(
-                        child: Container(
-                          color: const Color(0xFFE2E5E7),
-                          child: CustomCachedNetworkImage(
-                              imageUrl: controller.rxCurrentTopic.value
-                                      ?.originImage?.imageCollection?.w800 ??
-                                  Environment().config.mirrorMediaNotImageUrl,
-                              width: Get.width,
-                              height: Get.width / (16 / 9)),
-                        ),
-                      )
+                  child: Container(
+                    color: const Color(0xFFE2E5E7),
+                    child: CustomCachedNetworkImage(
+                        imageUrl: controller.rxCurrentTopic.value
+                            ?.originImage?.imageCollection?.w800 ??
+                            Environment().config.mirrorMediaNotImageUrl,
+                        width: Get.width,
+                        height: Get.width / (16 / 9)),
+                  ),
+                )
                     : SliverToBoxAdapter(
-                        child: SlideshowWebViewWidget(
-                            controller.rxCurrentTopic.value?.slug ??
-                                StringDefault.valueNullDefault),
-                      ),
+                  child: SlideshowWebViewWidget(
+                      controller.rxCurrentTopic.value?.slug ??
+                          StringDefault.valueNullDefault),
+                ),
               ];
             },
             body: Obx(() {
@@ -108,3 +107,4 @@ class TopicPage extends GetView<TopicPageController> {
     }
   }
 }
+
