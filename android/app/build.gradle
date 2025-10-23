@@ -9,9 +9,7 @@ plugins {
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
-        localProperties.load(reader)
-    }
+    localPropertiesFile.withReader('UTF-8') { reader -> localProperties.load(reader) }
 }
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode') ?: '1'
@@ -31,28 +29,33 @@ if (prodKeystorePropertiesFile.exists()) {
 
 android {
     namespace "com.mirrormedia.news"
-    compileSdk 35
+    compileSdk 36
+    ndkVersion "26.1.10909125"
 
     defaultConfig {
         applicationId "com.mirrormedia.news"
         minSdkVersion 24
-        targetSdkVersion 35
+        targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
-        ndkVersion "25.1.8937393"
+
         ndk {
             debugSymbolLevel 'FULL'
         }
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
+    }
+
+    kotlin {
+        jvmToolchain(17)
     }
 
     sourceSets {
@@ -119,7 +122,6 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7"
-    implementation 'com.google.firebase:firebase-messaging:20.2.4'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
     implementation 'com.android.billingclient:billing:7.0.0'
 }
