@@ -1,11 +1,7 @@
-const String registeredByGoogleMethodWarningMessage =
-    '由於您曾以Google帳號登入，請點擊上方「使用 Google 登入」重試。';
-const String registeredByFacebookMethodWarningMessage =
-    '由於您曾以Facebook帳號登入，請點擊上方「使用 Facebook 登入」重試。';
-const String registeredByAppleMethodWarningMessage =
-    '由於您曾以Apple帳號登入，請點擊上方「使用 Apple 登入」重試。';
+const String registeredByThirdPartyMethodWarningMessage =
+    '此信箱已使用第三方登入，請使用其他登入方式重試。';
 const String registeredByPasswordMethodWarningMessage =
-    '由於您曾以email帳號密碼登入，請輸入下方email重試。';
+    '此信箱已使用 email 密碼登入，請改用密碼登入。';
 
 abstract class LoginEvents {}
 
@@ -37,15 +33,15 @@ class SignInWithApple extends LoginEvents {
   Map eventParameters() => {};
 }
 
-class FetchSignInMethodsForEmail extends LoginEvents {
+class CheckEmailSignInMethod extends LoginEvents {
   final String email;
-  FetchSignInMethodsForEmail(
+  CheckEmailSignInMethod(
     this.email,
   );
 
   @override
-  String toString() => 'FetchSignInMethodsForEmail { "email": $email }';
-  String eventName() => 'FetchSignInMethodsForEmail';
+  String toString() => 'CheckEmailSignInMethod { "email": $email }';
+  String eventName() => 'CheckEmailSignInMethod';
   Map eventParameters() => {'email': email};
 }
 

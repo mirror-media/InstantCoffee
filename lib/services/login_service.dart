@@ -3,16 +3,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:readr_app/helpers/crypto_utils.dart' as crypto_helper;
 import 'package:readr_app/models/firebase_login_status.dart';
+import 'package:readr_app/models/sign_in_method_status.dart';
+import 'package:readr_app/services/email_sign_in_service.dart';
 import 'package:readr_app/widgets/logger.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:readr_app/helpers/crypto_utils.dart' as crypto_helper;
 
 abstract class LoginRepos {
   Future<FirebaseLoginStatus> signInWithGoogle();
   Future<FirebaseLoginStatus> signInWithFacebook();
   Future<FirebaseLoginStatus> signInWithApple();
-  Future<List<String>> fetchSignInMethodsForEmail(String email);
+  Future<SignInMethodStatus> checkSignInMethod(String email);
   Future<void> signOut();
 }
 
@@ -178,14 +180,8 @@ class LoginServices with Logger implements LoginRepos {
   }
 
   @override
-  Future<List<String>> fetchSignInMethodsForEmail(String email) async {
-    List<String> resultList = [];
-    try {
-      resultList = await _auth.fetchSignInMethodsForEmail(email);
-    } catch (onError) {
-      debugLog('Fetch sign in methods for email: $onError');
-    }
-    return resultList;
+  Future<SignInMethodStatus> checkSignInMethod(String email) {
+    return EmailSignInServices().checkSignInMethod(email);
   }
 
   @override

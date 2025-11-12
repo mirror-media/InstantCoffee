@@ -500,10 +500,9 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         case SignInMethodStatus.thirdParty:
           emit(RegisteredByAnotherMethod(
               warningMessage: registeredByThirdPartyMethodWarningMessage));
-          await _renderingUiAfterEmailLogin(emit);
-          break;
+          _loginLoadingType = null;
+          return;
         case SignInMethodStatus.unknown:
-        default:
           emit(
             LoginFail(
               error: UnknownException(
