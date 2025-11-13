@@ -10,11 +10,13 @@ import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/mirror_media_app.dart';
 import 'package:readr_app/helpers/request_tracking_authorization.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:readr_app/widgets/my_override_http_client.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp();
+  HttpOverrides.global = MyHttpOverrides();
 
   debugPrint("Handling a background message: ${message.messageId}");
 }

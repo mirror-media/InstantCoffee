@@ -12,6 +12,7 @@ import 'package:readr_app/helpers/exceptions.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/firebase_login_status.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
+import 'package:readr_app/models/sign_in_method_status.dart';
 import 'package:readr_app/pages/shared/premium_animate_page.dart';
 import 'package:readr_app/services/login_service.dart';
 import 'package:readr_app/services/member_service.dart';
@@ -36,7 +37,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
     on<SignInWithGoogle>(_signInWithGoogle);
     on<SignInWithFacebook>(_signInWithFacebook);
     on<SignInWithApple>(_signInWithApple);
-    on<FetchSignInMethodsForEmail>(_fetchSignInMethodsForEmail);
+    on<CheckEmailSignInMethod>(_checkEmailSignInMethod);
     on<SignOut>(_onSignOut);
   }
 
@@ -116,21 +117,14 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
   ) async {
     try {
       String email = firebaseLoginStatus.message.email;
-      List<String> signInMethodsStringList =
-          await LoginServices().fetchSignInMethodsForEmail(email);
+      SignInMethodStatus status = await loginRepos.checkSignInMethod(email);
 
-      if (signInMethodsStringList.contains('google.com')) {
-        emit(RegisteredByAnotherMethod(
-            warningMessage: registeredByGoogleMethodWarningMessage));
-      } else if (signInMethodsStringList.contains('facebook.com')) {
-        emit(RegisteredByAnotherMethod(
-            warningMessage: registeredByFacebookMethodWarningMessage));
-      } else if (signInMethodsStringList.contains('apple.com')) {
-        emit(RegisteredByAnotherMethod(
-            warningMessage: registeredByAppleMethodWarningMessage));
-      } else if (signInMethodsStringList.contains('password')) {
+      if (status == SignInMethodStatus.password) {
         emit(RegisteredByAnotherMethod(
             warningMessage: registeredByPasswordMethodWarningMessage));
+      } else if (status == SignInMethodStatus.thirdParty) {
+        emit(RegisteredByAnotherMethod(
+            warningMessage: registeredByThirdPartyMethodWarningMessage));
       } else {
         emit(LoginFail(error: UnknownException(firebaseLoginStatus.message)));
       }
@@ -173,7 +167,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         premiumSubscriptionType
             .contains(memberIdAndSubscriptionType.subscriptionType)) {
       if (_loginLoadingType == LoginLoadingType.email) {
-        emit(FetchSignInMethodsForEmailLoading());
+        emit(CheckEmailSignInMethodLoading());
       } else {
         LoginType loginType = LoginType.google;
         if (_loginLoadingType == LoginLoadingType.facebook) {
@@ -437,7 +431,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         premiumSubscriptionType
             .contains(memberIdAndSubscriptionType.subscriptionType)) {
       if (_loginLoadingType == LoginLoadingType.email) {
-        emit(FetchSignInMethodsForEmailLoading());
+        emit(CheckEmailSignInMethodLoading());
       } else {
         LoginType loginType = LoginType.google;
         if (_loginLoadingType == LoginLoadingType.facebook) {
@@ -483,38 +477,39 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
   }
 
   // need to refactor route
-  void _fetchSignInMethodsForEmail(
-    FetchSignInMethodsForEmail event,
+  void _checkEmailSignInMethod(
+    CheckEmailSignInMethod event,
     Emitter<LoginState> emit,
   ) async {
     debugLog(event.toString());
     try {
       _loginLoadingType = LoginLoadingType.email;
-      emit(FetchSignInMethodsForEmailLoading());
-      List<String> signInMethodsStringList =
-          await loginRepos.fetchSignInMethodsForEmail(event.email);
+      emit(CheckEmailSignInMethodLoading());
+      SignInMethodStatus status =
+          await loginRepos.checkSignInMethod(event.email);
 
-      if (signInMethodsStringList.length == 1 &&
-          signInMethodsStringList.contains('google.com')) {
-        emit(RegisteredByAnotherMethod(
-            warningMessage: registeredByGoogleMethodWarningMessage));
-      } else if (signInMethodsStringList.length == 1 &&
-          signInMethodsStringList.contains('facebook.com')) {
-        emit(RegisteredByAnotherMethod(
-            warningMessage: registeredByFacebookMethodWarningMessage));
-      } else if (signInMethodsStringList.length == 1 &&
-          signInMethodsStringList.contains('apple.com')) {
-        emit(RegisteredByAnotherMethod(
-            warningMessage: registeredByAppleMethodWarningMessage));
-      } else if (signInMethodsStringList.contains('password')) {
-        await RouteGenerator.navigateToEmailLogin(email: event.email);
-        await _renderingUiAfterEmailLogin(emit);
-      } else if (signInMethodsStringList.contains('emailLink')) {
-        await RouteGenerator.navigateToPasswordResetPrompt(email: event.email);
-        await _renderingUiAfterEmailLogin(emit);
-      } else {
-        await RouteGenerator.navigateToEmailRegistered(email: event.email);
-        await _renderingUiAfterEmailLogin(emit);
+      switch (status) {
+        case SignInMethodStatus.password:
+          await RouteGenerator.navigateToEmailLogin(email: event.email);
+          await _renderingUiAfterEmailLogin(emit);
+          break;
+        case SignInMethodStatus.notRegistered:
+          await RouteGenerator.navigateToEmailRegistered(email: event.email);
+          await _renderingUiAfterEmailLogin(emit);
+          break;
+        case SignInMethodStatus.thirdParty:
+          emit(RegisteredByAnotherMethod(
+              warningMessage: registeredByThirdPartyMethodWarningMessage));
+          _loginLoadingType = null;
+          return;
+        case SignInMethodStatus.unknown:
+          emit(
+            LoginFail(
+              error: UnknownException(
+                  'CheckEmailSignInMethod failed for ${event.email}'),
+            ),
+          );
+          break;
       }
     } on SocketException {
       emit(
