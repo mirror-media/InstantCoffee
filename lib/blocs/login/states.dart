@@ -28,7 +28,7 @@ class LoginLoading extends LoginState {
   });
 }
 
-class FetchSignInMethodsForEmailLoading extends LoginState {}
+class CheckEmailSignInMethodLoading extends LoginState {}
 
 class RegisteredByAnotherMethod extends LoginInitState {
   final String warningMessage;

@@ -49,8 +49,8 @@ class _LoginFormState extends State<LoginForm> {
     context.read<LoginBloc>().add(SignInWithApple());
   }
 
-  _fetchSignInMethodsForEmail(String email) async {
-    context.read<LoginBloc>().add(FetchSignInMethodsForEmail(email));
+  _checkEmailSignInMethod(String email) async {
+    context.read<LoginBloc>().add(CheckEmailSignInMethod(email));
   }
 
   @override
@@ -121,7 +121,14 @@ class _LoginFormState extends State<LoginForm> {
           ),
         ),
         const SliverToBoxAdapter(child: SizedBox(height: 16)),
-        if (widget.state is! FetchSignInMethodsForEmailLoading)
+        if (widget.state is CheckEmailSignInMethodLoading)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+              child: _emailLoadingButton(),
+            ),
+          )
+        else
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.only(left: 24.0, right: 24.0),
@@ -147,13 +154,6 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ],
           )),
-        if (widget.state is FetchSignInMethodsForEmailLoading)
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-              child: _emailLoadingButton(),
-            ),
-          ),
         SliverFillRemaining(
           hasScrollBody: false,
           child: Align(
@@ -418,7 +418,7 @@ class _LoginFormState extends State<LoginForm> {
         ),
         onTap: () {
           if (_formKey.currentState!.validate()) {
-            _fetchSignInMethodsForEmail(_email);
+            _checkEmailSignInMethod(_email);
           }
         });
   }
