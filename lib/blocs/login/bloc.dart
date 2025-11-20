@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +10,7 @@ import 'package:readr_app/blocs/login/states.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/helpers/error_log_helper.dart';
 import 'package:readr_app/helpers/exceptions.dart';
+import 'package:readr_app/helpers/app_exception.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/firebase_login_status.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
@@ -46,12 +48,13 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
   final ErrorLogHelper _errorLogHelper = ErrorLogHelper();
   LoginLoadingType? _loginLoadingType;
 
-  Future<void> _handleFirebaseThirdPartyLogin(
+  Future<bool> _handleFirebaseThirdPartyLogin(
     FirebaseLoginStatus firebaseLoginStatus,
     Emitter<LoginState> emit,
   ) async {
     if (firebaseLoginStatus.status == FirebaseStatus.Cancel) {
       emit(LoginInitState());
+      return false;
     } else if (firebaseLoginStatus.status == FirebaseStatus.Success) {
       bool isNewUser = false;
       if (firebaseLoginStatus.message is UserCredential) {
@@ -59,6 +62,7 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
         isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
       }
       await _handleCreateMember(isNewUser, emit);
+      return true;
     } else if (firebaseLoginStatus.status == FirebaseStatus.Error) {
       _errorLogHelper.record(
           Exception(
@@ -74,7 +78,9 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
           error: UnknownException(firebaseLoginStatus.message),
         ));
       }
+      return false;
     }
+    return false;
   }
 
   Future<void> _handleCreateMember(
@@ -328,10 +334,14 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
       emit(LoginLoading(loginType: LoginType.google));
       FirebaseLoginStatus firebaseLoginStatus =
           await loginRepos.signInWithGoogle();
-      await _handleFirebaseThirdPartyLogin(
+      final isSuccess = await _handleFirebaseThirdPartyLogin(
         firebaseLoginStatus,
         emit,
       );
+      if (!isSuccess) {
+        _loginLoadingType = null;
+        return;
+      }
       await _signInTransition();
     } on SocketException {
       emit(
@@ -363,10 +373,14 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
       emit(LoginLoading(loginType: LoginType.facebook));
       FirebaseLoginStatus firebaseLoginStatus =
           await loginRepos.signInWithFacebook();
-      await _handleFirebaseThirdPartyLogin(
+      final isSuccess = await _handleFirebaseThirdPartyLogin(
         firebaseLoginStatus,
         emit,
       );
+      if (!isSuccess) {
+        _loginLoadingType = null;
+        return;
+      }
       await _signInTransition();
     } on SocketException {
       emit(
@@ -398,10 +412,14 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
       emit(LoginLoading(loginType: LoginType.apple));
       FirebaseLoginStatus firebaseLoginStatus =
           await loginRepos.signInWithApple();
-      await _handleFirebaseThirdPartyLogin(
+      final isSuccess = await _handleFirebaseThirdPartyLogin(
         firebaseLoginStatus,
         emit,
       );
+      if (!isSuccess) {
+        _loginLoadingType = null;
+        return;
+      }
       await _signInTransition();
     } on SocketException {
       emit(
@@ -424,8 +442,25 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
   }
 
   Future<void> _signInTransition() async {
-    MemberIdAndSubscriptionType? memberIdAndSubscriptionType =
-        await _memberService.checkSubscriptionType(_auth.currentUser!);
+    final currentUser = _auth.currentUser;
+    if (currentUser == null) {
+      debugLog('Skip sign-in transition because current user is null.');
+      return;
+    }
+
+    MemberIdAndSubscriptionType? memberIdAndSubscriptionType;
+    try {
+      memberIdAndSubscriptionType =
+          await _memberService.checkSubscriptionType(currentUser);
+    } on FetchDataException catch (e, s) {
+      _errorLogHelper.record(e, s);
+      debugLog('Check subscription type network issue: $e');
+      memberIdAndSubscriptionType = null;
+    } on TimeoutException catch (e, s) {
+      _errorLogHelper.record(e, s);
+      debugLog('Check subscription type timeout: $e');
+      memberIdAndSubscriptionType = null;
+    }
 
     if (memberIdAndSubscriptionType != null &&
         premiumSubscriptionType
