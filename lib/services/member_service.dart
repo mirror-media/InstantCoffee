@@ -9,6 +9,7 @@ import 'package:readr_app/models/graphql_body.dart';
 import 'package:readr_app/models/member.dart';
 import 'package:readr_app/models/member_subscription_detail.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
+import 'package:readr_app/widgets/logger.dart';
 
 const String memberStateTypeIsNotFound = 'Member state type is not found';
 const String memberStateTypeIsNotActive = 'Member state type is not active';
@@ -38,7 +39,7 @@ abstract class MemberRepos {
   Future<bool> deleteMember(String israfelId, String token);
 }
 
-class MemberService implements MemberRepos {
+class MemberService with Logger implements MemberRepos {
   final ApiBaseHelper _helper = ApiBaseHelper();
 
   static Map<String, String> getHeaders(String? token) {
@@ -304,7 +305,8 @@ class MemberService implements MemberRepos {
         headers: getHeaders(token),
       );
 
-      return !jsonResponse.containsKey('errors');
+      final hasError = jsonResponse.containsKey('errors');
+      return !hasError;
     } catch (e) {
       return false;
     }

@@ -10,7 +10,6 @@ import 'package:readr_app/blocs/login/states.dart';
 import 'package:readr_app/blocs/member/bloc.dart';
 import 'package:readr_app/helpers/error_log_helper.dart';
 import 'package:readr_app/helpers/exceptions.dart';
-import 'package:readr_app/helpers/app_exception.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/firebase_login_status.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
@@ -73,6 +72,10 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
           firebaseLoginStatus.message.code ==
               'account-exists-with-different-credential') {
         await _checkThirdPartyLoginEmail(firebaseLoginStatus, emit);
+      } else if (firebaseLoginStatus.message ==
+          LoginServices.providerConflictMessage) {
+        emit(RegisteredByAnotherMethod(
+            warningMessage: registeredByThirdPartyMethodWarningMessage));
       } else {
         emit(LoginFail(
           error: UnknownException(firebaseLoginStatus.message),
@@ -452,16 +455,17 @@ class LoginBloc extends Bloc<LoginEvents, LoginState> with Logger {
     try {
       memberIdAndSubscriptionType =
           await _memberService.checkSubscriptionType(currentUser);
-    } on FetchDataException catch (e, s) {
+    } catch (e, s) {
       _errorLogHelper.record(e, s);
-      debugLog('Check subscription type network issue: $e');
-      memberIdAndSubscriptionType = null;
-    } on TimeoutException catch (e, s) {
-      _errorLogHelper.record(e, s);
-      debugLog('Check subscription type timeout: $e');
+      debugLog('Check subscription type failed: $e');
       memberIdAndSubscriptionType = null;
     }
 
+    _finalizeSignIn(memberIdAndSubscriptionType);
+  }
+
+  void _finalizeSignIn(
+      MemberIdAndSubscriptionType? memberIdAndSubscriptionType) {
     if (memberIdAndSubscriptionType != null &&
         premiumSubscriptionType
             .contains(memberIdAndSubscriptionType.subscriptionType)) {
