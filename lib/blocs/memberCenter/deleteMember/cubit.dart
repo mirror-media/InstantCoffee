@@ -13,17 +13,23 @@ class DeleteMemberCubit extends Cubit<DeleteMemberState> with Logger {
     FirebaseAuth auth = FirebaseAuth.instance;
     String? token = await auth.currentUser?.getIdToken();
     MemberService memberService = MemberService();
-    bool deleteSuccess = await memberService.deleteMember(israfelId, token);
-    if (deleteSuccess) {
-      try {
-        await auth.currentUser!.delete();
-        emit(DeleteMemberSuccess());
-      } catch (e) {
-        debugLog('firebase account delete fail');
-        await auth.signOut();
-        emit(DeleteMemberError());
-      }
+    bool deleteMemberRecordSuccess = true;
+    if (israfelId.isNotEmpty) {
+      deleteMemberRecordSuccess =
+          await memberService.deleteMember(israfelId, token);
     } else {
+      debugLog('Skip server-side member deletion due to empty id.');
+    }
+
+    try {
+      await auth.currentUser!.delete();
+      if (!deleteMemberRecordSuccess) {
+        debugLog('Member record deletion failed but Firebase account removed.');
+      }
+      emit(DeleteMemberSuccess());
+    } catch (e) {
+      debugLog('firebase account delete fail: $e');
+      await auth.signOut();
       emit(DeleteMemberError());
     }
   }
