@@ -1,8 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/login/states.dart';
@@ -10,6 +8,7 @@ import 'package:readr_app/blocs/memberCenter/memberDetail/member_detail_cubit.da
 import 'package:readr_app/blocs/memberCenter/paymentRecord/payment_record_bloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscribedArticles/subscribed_articles_cubit.dart';
 import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/remote_config_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
@@ -21,6 +20,7 @@ import 'package:readr_app/pages/memberCenter/subscriptionDetail/member_subscript
 import 'package:readr_app/pages/passwordUpdate/password_update_page.dart';
 import 'package:readr_app/pages/shared/member_subscription_type_title_widget.dart';
 import 'package:readr_app/services/login_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MemberWidget extends StatefulWidget {
   final String israfelId;
@@ -145,22 +145,7 @@ class MemberWidgetState extends State<MemberWidget> {
                                     ),
                                     _subscriptionSelectButton(
                                         widget.subscriptionType),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          24.0, 0.0, 24.0, 0.0),
-                                      child: _horizontalDivider(width),
-                                    ),
                                   ],
-                                  if (!_isFreePremiumEnabled())
-                                    _navigateButton('恢復訂閱資格', () async {
-                                      controller.rxIsLoading.value = true;
-                                      await InAppPurchase.instance
-                                          .restorePurchases();
-
-                                      await Future.delayed(
-                                          const Duration(seconds: 20));
-                                      controller.rxIsLoading.value = false;
-                                    }),
                                 ],
                               ],
                             ),
@@ -322,30 +307,9 @@ class MemberWidgetState extends State<MemberWidget> {
   Widget _subscriptionSelectButton(SubscriptionType subscriptionType) {
     return _navigateButton(
       '升級 Premium 會員',
-      () async {
-        await Navigator.of(context).pushNamed(
-          RouteGenerator.subscriptionSelect,
-          arguments: {'storySlug': ''},
-        );
-
-        await _refreshMemberData();
-      },
+      () => launchUrl(Uri.parse(Environment().config.subscriptionLink),
+          mode: LaunchMode.externalApplication),
     );
-  }
-
-  Future<void> _refreshMemberData() async {
-    try {
-      final auth = FirebaseAuth.instance;
-      if (auth.currentUser != null) {
-        await auth.currentUser!.reload();
-      }
-
-      if (context.mounted) {
-        context.read<LoginBloc>().add(CheckIsLoginOrNot());
-      }
-    } catch (e) {
-      debugPrint('Error refreshing member data: $e');
-    }
   }
 
   Widget _memberProfileButton() {
