@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -55,6 +56,23 @@ class MemberWidgetState extends State<MemberWidget> {
     context.read<LoginBloc>().add(SignOut());
   }
 
+  Future<void> _refreshSubscriptionStatus() async {
+    final loginBloc = context.read<LoginBloc>();
+
+    final waitForNextState = loginBloc.stream
+        .firstWhere((state) =>
+            state is LoginSuccess ||
+            state is LoginFail ||
+            state is LoginInitState)
+        .timeout(const Duration(seconds: 20));
+
+    loginBloc.add(CheckIsLoginOrNot());
+
+    try {
+      await waitForNextState;
+    } catch (_) {}
+  }
+
   // 檢查 isFreePremium 功能
   bool _isFreePremiumEnabled() {
     try {
@@ -80,57 +98,36 @@ class MemberWidgetState extends State<MemberWidget> {
                 children: [
                   Container(
                     color: Colors.grey[300],
-                    child: ListView(
-                      children: [
-                        Container(
-                          color: Colors.white,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 48),
-                              Obx(() {
-                                final loginType = controller
-                                    .authInfoProvider.rxnLoginType.value;
-                                return _memberLevelBlock(
-                                    widget.subscriptionType,
-                                    loginType: loginType);
-                              }),
-                              const SizedBox(height: 24),
-                            ],
-                          ),
-                        ),
-                        if (widget.subscriptionType != SubscriptionType.staff)
+                    child: RefreshIndicator(
+                      onRefresh: _refreshSubscriptionStatus,
+                      child: ListView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        children: [
                           Container(
                             color: Colors.white,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _horizontalDivider(width),
-                                _memberSubscriptionDetailButton(
-                                    widget.subscriptionType),
-                                if ((widget.subscriptionType ==
-                                            SubscriptionType.none ||
-                                        widget.subscriptionType ==
-                                            SubscriptionType
-                                                .subscribe_one_time) &&
-                                    !_isFreePremiumEnabled()) ...[
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        24.0, 0.0, 24.0, 0.0),
-                                    child: _horizontalDivider(width),
-                                  ),
-                                  _memberSubscribedArticleButton(),
-                                ],
-                                if (widget.subscriptionType !=
-                                        SubscriptionType.marketing &&
-                                    widget.subscriptionType !=
-                                        SubscriptionType.subscribe_group) ...[
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        24.0, 0.0, 24.0, 0.0),
-                                    child: _horizontalDivider(width),
-                                  ),
-                                  _memberPaymentRecordButton(
+                                const SizedBox(height: 48),
+                                Obx(() {
+                                  final loginType = controller
+                                      .authInfoProvider.rxnLoginType.value;
+                                  return _memberLevelBlock(
+                                      widget.subscriptionType,
+                                      loginType: loginType);
+                                }),
+                                const SizedBox(height: 24),
+                              ],
+                            ),
+                          ),
+                          if (widget.subscriptionType != SubscriptionType.staff)
+                            Container(
+                              color: Colors.white,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _horizontalDivider(width),
+                                  _memberSubscriptionDetailButton(
                                       widget.subscriptionType),
                                   if ((widget.subscriptionType ==
                                               SubscriptionType.none ||
@@ -143,65 +140,90 @@ class MemberWidgetState extends State<MemberWidget> {
                                           24.0, 0.0, 24.0, 0.0),
                                       child: _horizontalDivider(width),
                                     ),
-                                    _subscriptionSelectButton(
+                                    _memberSubscribedArticleButton(),
+                                  ],
+                                  if (widget.subscriptionType !=
+                                          SubscriptionType.marketing &&
+                                      widget.subscriptionType !=
+                                          SubscriptionType.subscribe_group) ...[
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          24.0, 0.0, 24.0, 0.0),
+                                      child: _horizontalDivider(width),
+                                    ),
+                                    _memberPaymentRecordButton(
                                         widget.subscriptionType),
+                                    if ((widget.subscriptionType ==
+                                                SubscriptionType.none ||
+                                            widget.subscriptionType ==
+                                                SubscriptionType
+                                                    .subscribe_one_time) &&
+                                        !_isFreePremiumEnabled()) ...[
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            24.0, 0.0, 24.0, 0.0),
+                                        child: _horizontalDivider(width),
+                                      ),
+                                      _subscriptionSelectButton(
+                                          widget.subscriptionType),
+                                    ],
                                   ],
                                 ],
-                              ],
-                            ),
-                          ),
-                        const SizedBox(height: 36),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 24.0, right: 24.0),
-                          child: Text(
-                            '會員檔案',
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Container(
-                          color: Colors.white,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _memberProfileButton(),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    24.0, 0.0, 24.0, 0.0),
-                                child: _horizontalDivider(width),
                               ),
-                              if (LoginServices
-                                  .checkIsEmailAndPasswordLogin()) ...[
-                                _changePasswordButton(),
+                            ),
+                          const SizedBox(height: 36),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 24.0, right: 24.0),
+                            child: Text(
+                              '會員檔案',
+                              style: TextStyle(
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Container(
+                            color: Colors.white,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _memberProfileButton(),
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(
                                       24.0, 0.0, 24.0, 0.0),
                                   child: _horizontalDivider(width),
                                 ),
+                                if (LoginServices
+                                    .checkIsEmailAndPasswordLogin()) ...[
+                                  _changePasswordButton(),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        24.0, 0.0, 24.0, 0.0),
+                                    child: _horizontalDivider(width),
+                                  ),
+                                ],
+                                _memberContactInfoButton(),
                               ],
-                              _memberContactInfoButton(),
-                            ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 48),
-                        Container(
-                          color: Colors.white,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _logoutButton(width),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    24.0, 0.0, 24.0, 0.0),
-                                child: _horizontalDivider(width),
-                              ),
-                              _deleteMemberButton(width),
-                            ],
+                          const SizedBox(height: 48),
+                          Container(
+                            color: Colors.white,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _logoutButton(width),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      24.0, 0.0, 24.0, 0.0),
+                                  child: _horizontalDivider(width),
+                                ),
+                                _deleteMemberButton(width),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   isLoading
