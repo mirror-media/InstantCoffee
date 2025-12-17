@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:readr_app/blocs/memberCenter/memberDetail/member_detail_cubit.dart';
 import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/remote_config_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
@@ -10,6 +11,7 @@ import 'package:readr_app/pages/login/member_widget/anonymous_bind_page/anonymou
 import 'package:readr_app/pages/login/member_widget/anonymous_block/anonymous_block_controller.dart';
 import 'package:readr_app/pages/memberCenter/subscriptionDetail/member_subscription_detail_page.dart';
 import 'package:readr_app/pages/shared/app_version_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class AnonymousBlockWidget extends StatelessWidget {
@@ -112,34 +114,17 @@ class AnonymousBlockWidget extends StatelessWidget {
                                 ),
                                 InkWell(
                                   onTap: () {
-                                    RouteGenerator
-                                        .navigateToSubscriptionSelect();
+                                    launchUrl(
+                                        Uri.parse(Environment()
+                                            .config
+                                            .subscriptionLink),
+                                        mode: LaunchMode.externalApplication);
                                   },
                                   child: const SizedBox(
                                     height: 50,
                                     child: Row(
                                       children: [
                                         Text('升級Premium會員'),
-                                        Spacer(),
-                                        Icon(
-                                          Icons.arrow_forward_ios_outlined,
-                                          color: Colors.grey,
-                                          size: 16,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const Divider(
-                                  height: 0,
-                                ),
-                                InkWell(
-                                  onTap: controller.restorePurchasesButtonClick,
-                                  child: const SizedBox(
-                                    height: 50,
-                                    child: Row(
-                                      children: [
-                                        Text('恢復訂閱資格'),
                                         Spacer(),
                                         Icon(
                                           Icons.arrow_forward_ios_outlined,

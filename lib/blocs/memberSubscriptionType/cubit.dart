@@ -33,29 +33,26 @@ class MemberSubscriptionTypeCubit extends Cubit<MemberSubscriptionTypeState>
         MemberService memberService = MemberService();
         MemberIdAndSubscriptionType? memberIdAndSubscriptionType =
             await memberService.checkSubscriptionType(auth.currentUser!);
+
+        subscriptionType = memberIdAndSubscriptionType?.subscriptionType ??
+            SubscriptionType.none;
+
         emit(MemberSubscriptionTypeLoadedState(
             subscriptionType: subscriptionType));
-        if (memberIdAndSubscriptionType != null) {
-          subscriptionType = memberIdAndSubscriptionType.subscriptionType;
-          if (isNavigateToMagazine) {
-            if (subscriptionType != null) {
-              RouteGenerator.navigateToMagazine(subscriptionType);
-            } else {
-              RouteGenerator.navigateToLogin(
-                routeName: RouteGenerator.magazine,
-                routeArguments: {
-                  'subscriptionType': subscriptionType,
-                },
-              );
-            }
-          }
-        }
 
+        if (isNavigateToMagazine) {
+          RouteGenerator.navigateToMagazine(subscriptionType);
+        }
       } catch (e) {
         // fetch member subscription type fail
         debugLog(e.toString());
+        subscriptionType ??= SubscriptionType.none;
         emit(MemberSubscriptionTypeLoadedState(
             subscriptionType: subscriptionType));
+
+        if (isNavigateToMagazine) {
+          RouteGenerator.navigateToMagazine(subscriptionType);
+        }
       }
     }
   }
