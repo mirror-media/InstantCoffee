@@ -1,8 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:readr_app/blocs/login/bloc.dart';
 import 'package:readr_app/blocs/login/events.dart';
 import 'package:readr_app/blocs/login/states.dart';
@@ -10,6 +9,7 @@ import 'package:readr_app/blocs/memberCenter/memberDetail/member_detail_cubit.da
 import 'package:readr_app/blocs/memberCenter/paymentRecord/payment_record_bloc.dart';
 import 'package:readr_app/blocs/memberCenter/subscribedArticles/subscribed_articles_cubit.dart';
 import 'package:readr_app/helpers/data_constants.dart';
+import 'package:readr_app/helpers/environment.dart';
 import 'package:readr_app/helpers/remote_config_helper.dart';
 import 'package:readr_app/helpers/route_generator.dart';
 import 'package:readr_app/models/member_subscription_type.dart';
@@ -21,6 +21,7 @@ import 'package:readr_app/pages/memberCenter/subscriptionDetail/member_subscript
 import 'package:readr_app/pages/passwordUpdate/password_update_page.dart';
 import 'package:readr_app/pages/shared/member_subscription_type_title_widget.dart';
 import 'package:readr_app/services/login_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MemberWidget extends StatefulWidget {
   final String israfelId;
@@ -55,6 +56,23 @@ class MemberWidgetState extends State<MemberWidget> {
     context.read<LoginBloc>().add(SignOut());
   }
 
+  Future<void> _refreshSubscriptionStatus() async {
+    final loginBloc = context.read<LoginBloc>();
+
+    final waitForNextState = loginBloc.stream
+        .firstWhere((state) =>
+            state is LoginSuccess ||
+            state is LoginFail ||
+            state is LoginInitState)
+        .timeout(const Duration(seconds: 20));
+
+    loginBloc.add(CheckIsLoginOrNot());
+
+    try {
+      await waitForNextState;
+    } catch (_) {}
+  }
+
   // 檢查 isFreePremium 功能
   bool _isFreePremiumEnabled() {
     try {
@@ -80,57 +98,36 @@ class MemberWidgetState extends State<MemberWidget> {
                 children: [
                   Container(
                     color: Colors.grey[300],
-                    child: ListView(
-                      children: [
-                        Container(
-                          color: Colors.white,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 48),
-                              Obx(() {
-                                final loginType = controller
-                                    .authInfoProvider.rxnLoginType.value;
-                                return _memberLevelBlock(
-                                    widget.subscriptionType,
-                                    loginType: loginType);
-                              }),
-                              const SizedBox(height: 24),
-                            ],
-                          ),
-                        ),
-                        if (widget.subscriptionType != SubscriptionType.staff)
+                    child: RefreshIndicator(
+                      onRefresh: _refreshSubscriptionStatus,
+                      child: ListView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        children: [
                           Container(
                             color: Colors.white,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _horizontalDivider(width),
-                                _memberSubscriptionDetailButton(
-                                    widget.subscriptionType),
-                                if ((widget.subscriptionType ==
-                                            SubscriptionType.none ||
-                                        widget.subscriptionType ==
-                                            SubscriptionType
-                                                .subscribe_one_time) &&
-                                    !_isFreePremiumEnabled()) ...[
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        24.0, 0.0, 24.0, 0.0),
-                                    child: _horizontalDivider(width),
-                                  ),
-                                  _memberSubscribedArticleButton(),
-                                ],
-                                if (widget.subscriptionType !=
-                                        SubscriptionType.marketing &&
-                                    widget.subscriptionType !=
-                                        SubscriptionType.subscribe_group) ...[
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        24.0, 0.0, 24.0, 0.0),
-                                    child: _horizontalDivider(width),
-                                  ),
-                                  _memberPaymentRecordButton(
+                                const SizedBox(height: 48),
+                                Obx(() {
+                                  final loginType = controller
+                                      .authInfoProvider.rxnLoginType.value;
+                                  return _memberLevelBlock(
+                                      widget.subscriptionType,
+                                      loginType: loginType);
+                                }),
+                                const SizedBox(height: 24),
+                              ],
+                            ),
+                          ),
+                          if (widget.subscriptionType != SubscriptionType.staff)
+                            Container(
+                              color: Colors.white,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _horizontalDivider(width),
+                                  _memberSubscriptionDetailButton(
                                       widget.subscriptionType),
                                   if ((widget.subscriptionType ==
                                               SubscriptionType.none ||
@@ -143,80 +140,90 @@ class MemberWidgetState extends State<MemberWidget> {
                                           24.0, 0.0, 24.0, 0.0),
                                       child: _horizontalDivider(width),
                                     ),
-                                    _subscriptionSelectButton(
-                                        widget.subscriptionType),
+                                    _memberSubscribedArticleButton(),
+                                  ],
+                                  if (widget.subscriptionType !=
+                                          SubscriptionType.marketing &&
+                                      widget.subscriptionType !=
+                                          SubscriptionType.subscribe_group) ...[
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           24.0, 0.0, 24.0, 0.0),
                                       child: _horizontalDivider(width),
                                     ),
+                                    _memberPaymentRecordButton(
+                                        widget.subscriptionType),
+                                    if ((widget.subscriptionType ==
+                                                SubscriptionType.none ||
+                                            widget.subscriptionType ==
+                                                SubscriptionType
+                                                    .subscribe_one_time) &&
+                                        !_isFreePremiumEnabled()) ...[
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            24.0, 0.0, 24.0, 0.0),
+                                        child: _horizontalDivider(width),
+                                      ),
+                                      _subscriptionSelectButton(
+                                          widget.subscriptionType),
+                                    ],
                                   ],
-                                  if (!_isFreePremiumEnabled())
-                                    _navigateButton('恢復訂閱資格', () async {
-                                      controller.rxIsLoading.value = true;
-                                      await InAppPurchase.instance
-                                          .restorePurchases();
-
-                                      await Future.delayed(
-                                          const Duration(seconds: 20));
-                                      controller.rxIsLoading.value = false;
-                                    }),
                                 ],
-                              ],
-                            ),
-                          ),
-                        const SizedBox(height: 36),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 24.0, right: 24.0),
-                          child: Text(
-                            '會員檔案',
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Container(
-                          color: Colors.white,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _memberProfileButton(),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    24.0, 0.0, 24.0, 0.0),
-                                child: _horizontalDivider(width),
                               ),
-                              if (LoginServices
-                                  .checkIsEmailAndPasswordLogin()) ...[
-                                _changePasswordButton(),
+                            ),
+                          const SizedBox(height: 36),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 24.0, right: 24.0),
+                            child: Text(
+                              '會員檔案',
+                              style: TextStyle(
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Container(
+                            color: Colors.white,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _memberProfileButton(),
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(
                                       24.0, 0.0, 24.0, 0.0),
                                   child: _horizontalDivider(width),
                                 ),
+                                if (LoginServices
+                                    .checkIsEmailAndPasswordLogin()) ...[
+                                  _changePasswordButton(),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        24.0, 0.0, 24.0, 0.0),
+                                    child: _horizontalDivider(width),
+                                  ),
+                                ],
+                                _memberContactInfoButton(),
                               ],
-                              _memberContactInfoButton(),
-                            ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 48),
-                        Container(
-                          color: Colors.white,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _logoutButton(width),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    24.0, 0.0, 24.0, 0.0),
-                                child: _horizontalDivider(width),
-                              ),
-                              _deleteMemberButton(width),
-                            ],
+                          const SizedBox(height: 48),
+                          Container(
+                            color: Colors.white,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _logoutButton(width),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      24.0, 0.0, 24.0, 0.0),
+                                  child: _horizontalDivider(width),
+                                ),
+                                _deleteMemberButton(width),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   isLoading
@@ -322,30 +329,9 @@ class MemberWidgetState extends State<MemberWidget> {
   Widget _subscriptionSelectButton(SubscriptionType subscriptionType) {
     return _navigateButton(
       '升級 Premium 會員',
-      () async {
-        await Navigator.of(context).pushNamed(
-          RouteGenerator.subscriptionSelect,
-          arguments: {'storySlug': ''},
-        );
-
-        await _refreshMemberData();
-      },
+      () => launchUrl(Uri.parse(Environment().config.subscriptionLink),
+          mode: LaunchMode.externalApplication),
     );
-  }
-
-  Future<void> _refreshMemberData() async {
-    try {
-      final auth = FirebaseAuth.instance;
-      if (auth.currentUser != null) {
-        await auth.currentUser!.reload();
-      }
-
-      if (context.mounted) {
-        context.read<LoginBloc>().add(CheckIsLoginOrNot());
-      }
-    } catch (e) {
-      debugPrint('Error refreshing member data: $e');
-    }
   }
 
   Widget _memberProfileButton() {

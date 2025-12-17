@@ -102,7 +102,9 @@ class _TabContentState extends State<TabContent> with Logger {
                         vertical: 12, horizontal: 37.5),
                     child: Image.asset(subscribeBannerJpg),
                   ),
-                  onTap: () => RouteGenerator.navigateToSubscriptionSelect(),
+                  onTap: () => launchUrl(
+                      Uri.parse(Environment().config.subscriptionLink),
+                      mode: LaunchMode.externalApplication),
                 ),
               Expanded(
                 child: BlocBuilder<TabContentBloc, TabContentState>(

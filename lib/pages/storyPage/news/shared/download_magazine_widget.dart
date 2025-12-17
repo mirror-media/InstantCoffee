@@ -111,7 +111,7 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
         margin: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(children: [
           const Text(
-            '月費、年費會員免費線上閱讀動態雜誌',
+            '即時新鮮事，精選獨家動態雜誌線上閱讀',
             style: TextStyle(
               fontSize: 20,
               color: Colors.white,
