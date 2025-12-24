@@ -84,6 +84,16 @@ class MemberWidgetState extends State<MemberWidget> {
     }
   }
 
+  bool _isShowSubEnabled() {
+    try {
+      final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+      return remoteConfigHelper.isShowSub;
+    } catch (e) {
+      // RemoteConfig 未初始化時回傳 false（依需求：false 隱藏）
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -327,6 +337,9 @@ class MemberWidgetState extends State<MemberWidget> {
   }
 
   Widget _subscriptionSelectButton(SubscriptionType subscriptionType) {
+    if (!_isShowSubEnabled()) {
+      return const SizedBox.shrink();
+    }
     return _navigateButton(
       '升級 Premium 會員',
       () => launchUrl(Uri.parse(Environment().config.subscriptionLink),
