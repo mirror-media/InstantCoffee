@@ -55,6 +55,8 @@ class RemoteConfigHelper with Logger {
 
   bool get isAndroidSubEnabled => _remoteConfig.getBool('isAndroidSubEnabled');
 
+  bool get isShowSub => _remoteConfig.getBool('isShowSub');
+
   String get subNoticeTitle => _remoteConfig.getString('subNoticeTitle');
 
   String get subNoticeContent => _remoteConfig.getString('subNoticeContent');
