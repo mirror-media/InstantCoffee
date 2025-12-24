@@ -17,7 +17,7 @@ class BuildStoryPage extends StatefulWidget {
   const BuildStoryPage({key, required this.isMemberCheck}) : super(key: key);
 
   @override
-  _BuildStoryPageState createState() => _BuildStoryPageState();
+  State<BuildStoryPage> createState() => _BuildStoryPageState();
 }
 
 class _BuildStoryPageState extends State<BuildStoryPage> with Logger {
@@ -67,6 +67,7 @@ class _BuildStoryPageState extends State<BuildStoryPage> with Logger {
             return PremiumStoryWidget(
               isLogin: storyRes.isMember,
               story: storyRes.story,
+              isMemberCheck: widget.isMemberCheck,
             );
           }
 
@@ -83,6 +84,7 @@ class _BuildStoryPageState extends State<BuildStoryPage> with Logger {
               return PremiumStoryWidget(
                 isLogin: storyRes.isMember,
                 story: storyRes.story,
+                isMemberCheck: widget.isMemberCheck,
               );
             } else {
               return StoryWidget(

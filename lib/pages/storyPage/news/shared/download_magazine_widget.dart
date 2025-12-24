@@ -32,8 +32,23 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
     }
   }
 
+  bool _isShowSubEnabled() {
+    try {
+      final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+      return remoteConfigHelper.isShowSub;
+    } catch (e) {
+      // RemoteConfig 未初始化時返回 false
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // isShowSub 為 false 時，隱藏整個組件
+    if (!_isShowSubEnabled()) {
+      return const SizedBox.shrink();
+    }
+
     // 如果 isFreePremium 為 true，隱藏整個組件
     if (_isFreePremiumEnabled()) {
       return const SizedBox.shrink();
