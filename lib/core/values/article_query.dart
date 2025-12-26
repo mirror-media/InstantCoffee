@@ -55,6 +55,10 @@ class ArticleQueryDB {
             slug
             type
             name
+            posts(take:1000, orderBy:{publishedDate:desc}) {
+               title
+               publishedDate
+            }
             heroUrl
             isFeatured
             tags{
@@ -416,3 +420,4 @@ class ArticleQueryDB {
         }
   ''';
 }
+

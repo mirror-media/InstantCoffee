@@ -1,22 +1,29 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:readr_app/helpers/crypto_utils.dart' as crypto_helper;
 import 'package:readr_app/models/firebase_login_status.dart';
+import 'package:readr_app/models/sign_in_method_status.dart';
+import 'package:readr_app/services/email_sign_in_service.dart';
 import 'package:readr_app/widgets/logger.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:readr_app/helpers/crypto_utils.dart' as crypto_helper;
 
 abstract class LoginRepos {
   Future<FirebaseLoginStatus> signInWithGoogle();
   Future<FirebaseLoginStatus> signInWithFacebook();
   Future<FirebaseLoginStatus> signInWithApple();
-  Future<List<String>> fetchSignInMethodsForEmail(String email);
+  Future<SignInMethodStatus> checkSignInMethod(String email);
   Future<void> signOut();
 }
 
 class LoginServices with Logger implements LoginRepos {
+  static const String providerConflictMessage = 'login-provider-conflict';
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
@@ -30,6 +37,14 @@ class LoginServices with Logger implements LoginRepos {
         message: 'Google sign in cancel',
       );
     }
+
+    if (await _shouldBlockGoogleLogin(googleUser.email)) {
+      return FirebaseLoginStatus(
+        status: FirebaseStatus.Error,
+        message: providerConflictMessage,
+      );
+    }
+
     // Obtain the auth details from the request
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
@@ -178,14 +193,8 @@ class LoginServices with Logger implements LoginRepos {
   }
 
   @override
-  Future<List<String>> fetchSignInMethodsForEmail(String email) async {
-    List<String> resultList = [];
-    try {
-      resultList = await _auth.fetchSignInMethodsForEmail(email);
-    } catch (onError) {
-      debugLog('Fetch sign in methods for email: $onError');
-    }
-    return resultList;
+  Future<SignInMethodStatus> checkSignInMethod(String email) {
+    return EmailSignInServices().checkSignInMethod(email);
   }
 
   @override
@@ -208,5 +217,64 @@ class LoginServices with Logger implements LoginRepos {
     }
 
     return false;
+  }
+
+  Future<bool> _shouldBlockGoogleLogin(String? email) async {
+    if (email == null || email.isEmpty) {
+      return false;
+    }
+    try {
+      final providers = await _fetchProvidersByIdentityToolkit(email);
+      if (providers.isEmpty) {
+        return false;
+      }
+
+      final hasFacebook = providers.contains('facebook.com');
+      final hasGoogle = providers.contains('google.com');
+
+      return hasFacebook && !hasGoogle;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<List<String>> _fetchProvidersByIdentityToolkit(String email) async {
+    final apiKey = Firebase.app().options.apiKey;
+    final uri = Uri.parse(
+        'https://identitytoolkit.googleapis.com/v1/accounts:createAuthUri?key=$apiKey');
+
+    final payload = jsonEncode({
+      'identifier': email,
+      'continueUri': 'https://firebaseappcheck.googleapis.com'
+    });
+
+    final response = await http
+        .post(
+          uri,
+          headers: {'Content-Type': 'application/json'},
+          body: payload,
+        )
+        .timeout(const Duration(seconds: 10));
+
+    if (response.statusCode != 200) {
+      return [];
+    }
+
+    final decoded = jsonDecode(response.body);
+    if (decoded is! Map<String, dynamic>) {
+      return [];
+    }
+
+    final providers = decoded['allProviders'];
+    if (providers is List) {
+      return providers.whereType<String>().toList();
+    }
+
+    final registered = decoded['registered'];
+    if (registered is bool && !registered) {
+      return [];
+    }
+
+    return [];
   }
 }

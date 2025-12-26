@@ -77,9 +77,12 @@ class _TabContentState extends State<TabContent> with Logger {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        if (widget.needCarousel || widget.section.title == '熱門') {
+        if (widget.needCarousel ||
+            widget.section.title == '熱門' ||
+            widget.section.name == 'member') {
           try {
             await _remoteConfigHelper.refresh();
+            setState(() {});
 
             if (Get.isRegistered<TopIframeController>()) {
               final topIframeController = Get.find<TopIframeController>();
@@ -95,14 +98,17 @@ class _TabContentState extends State<TabContent> with Logger {
         children: [
           Column(
             children: [
-              if (widget.section.name == 'member')
+              if (widget.section.name == 'member' &&
+                  _remoteConfigHelper.isShowSub)
                 GestureDetector(
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                         vertical: 12, horizontal: 37.5),
                     child: Image.asset(subscribeBannerJpg),
                   ),
-                  onTap: () => RouteGenerator.navigateToSubscriptionSelect(),
+                  onTap: () => launchUrl(
+                      Uri.parse(Environment().config.subscriptionLink),
+                      mode: LaunchMode.externalApplication),
                 ),
               Expanded(
                 child: BlocBuilder<TabContentBloc, TabContentState>(

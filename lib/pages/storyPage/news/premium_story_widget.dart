@@ -30,11 +30,14 @@ import 'package:readr_app/helpers/remote_config_helper.dart';
 class PremiumStoryWidget extends StatelessWidget {
   final bool isLogin;
   final Story story;
+  final bool isMemberCheck;
 
   const PremiumStoryWidget({
+    Key? key,
     required this.isLogin,
     required this.story,
-  });
+    required this.isMemberCheck,
+  }) : super(key: key);
 
   _fetchPublishedStoryBySlug(
       BuildContext context, String? storySlug, bool isMemberCheck) {
@@ -75,6 +78,19 @@ class PremiumStoryWidget extends StatelessWidget {
     }
   }
 
+  Future<void> _onRefresh(BuildContext context) async {
+    try {
+      final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+      await remoteConfigHelper.refresh();
+    } catch (_) {}
+
+    try {
+      context.read<MemberBloc>().add(RefreshMemberStatus());
+    } catch (_) {}
+
+    _fetchPublishedStoryBySlug(context, story.slug, isMemberCheck);
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -102,46 +118,55 @@ class PremiumStoryWidget extends StatelessWidget {
         isAdsActivated = false;
       }
     }
-    return Stack(
-      children: [
-        Column(
-          children: [
-            Expanded(
-                child: _buildStoryWidget(
-                    context, width, height, story, isAdsActivated)),
-            if (isWineCategory)
-              Container(
-                color: Colors.black,
-                height: 90,
-                width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 31, vertical: 22),
-                child: Image.asset(
-                  "assets/image/wine_warning.png",
+    return StatefulBuilder(builder: (context, setState) {
+      return Stack(
+        children: [
+          Column(
+            children: [
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    await _onRefresh(context);
+                    setState(() {});
+                  },
+                  child: _buildStoryWidget(
+                      context, width, height, story, isAdsActivated),
                 ),
               ),
-          ],
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: SafeArea(
-            child: StatefulBuilder(builder: (context, setState) {
-              return isAdsActivated && !isWineCategory
-                  ? SizedBox(
-                      height: AdSize.banner.height.toDouble(),
-                      width: AdSize.banner.width.toDouble(),
-                      child: MMAdBanner(
-                        adUnitId: story.storyAd!.stUnitId,
-                        adSize: AdSize.banner,
-                        isKeepAlive: true,
-                      ),
-                    )
-                  : const SizedBox.shrink();
-            }),
+              if (isWineCategory)
+                Container(
+                  color: Colors.black,
+                  height: 90,
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 31, vertical: 22),
+                  child: Image.asset(
+                    "assets/image/wine_warning.png",
+                  ),
+                ),
+            ],
           ),
-        ),
-      ],
-    );
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: SafeArea(
+              child: StatefulBuilder(builder: (context, setState) {
+                return isAdsActivated && !isWineCategory
+                    ? SizedBox(
+                        height: AdSize.banner.height.toDouble(),
+                        width: AdSize.banner.width.toDouble(),
+                        child: MMAdBanner(
+                          adUnitId: story.storyAd!.stUnitId,
+                          adSize: AdSize.banner,
+                          isKeepAlive: true,
+                        ),
+                      )
+                    : const SizedBox.shrink();
+              }),
+            ),
+          ),
+        ],
+      );
+    });
   }
 
   Widget _buildStoryWidget(BuildContext context, double width, double height,
@@ -153,6 +178,7 @@ class PremiumStoryWidget extends StatelessWidget {
 
     return ListView(
       padding: const EdgeInsets.only(top: 24),
+      physics: const AlwaysScrollableScrollPhysics(),
       children: [
         if (isAdsActivated) ...[
           MMAdBanner(
@@ -654,12 +680,9 @@ class PremiumStoryWidget extends StatelessWidget {
   Widget _downloadMagazinesWidget() {
     return BlocProvider(
       create: (BuildContext context) => MemberSubscriptionTypeCubit(),
-      child: const Padding(
-        padding: EdgeInsets.only(left: 24.0, right: 24.0),
-        child: DownloadMagazineWidget(
-          isMemberContent: true,
-        ),
-      ),
+      child: Padding(
+          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+          child: DownloadMagazineWidget(isMemberContent: true)),
     );
   }
 
