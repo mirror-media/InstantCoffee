@@ -57,6 +57,11 @@ class MemberWidgetState extends State<MemberWidget> {
   }
 
   Future<void> _refreshSubscriptionStatus() async {
+    try {
+      final RemoteConfigHelper remoteConfigHelper = RemoteConfigHelper();
+      await remoteConfigHelper.refresh();
+    } catch (_) {}
+
     final loginBloc = context.read<LoginBloc>();
 
     final waitForNextState = loginBloc.stream
@@ -71,6 +76,9 @@ class MemberWidgetState extends State<MemberWidget> {
     try {
       await waitForNextState;
     } catch (_) {}
+
+    if (!mounted) return;
+    setState(() {});
   }
 
   // 檢查 isFreePremium 功能
@@ -144,7 +152,8 @@ class MemberWidgetState extends State<MemberWidget> {
                                           widget.subscriptionType ==
                                               SubscriptionType
                                                   .subscribe_one_time) &&
-                                      !_isFreePremiumEnabled()) ...[
+                                      !_isFreePremiumEnabled() &&
+                                      _isShowSubEnabled()) ...[
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           24.0, 0.0, 24.0, 0.0),
@@ -155,7 +164,8 @@ class MemberWidgetState extends State<MemberWidget> {
                                   if (widget.subscriptionType !=
                                           SubscriptionType.marketing &&
                                       widget.subscriptionType !=
-                                          SubscriptionType.subscribe_group) ...[
+                                          SubscriptionType.subscribe_group &&
+                                      _isShowSubEnabled()) ...[
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           24.0, 0.0, 24.0, 0.0),
@@ -313,6 +323,9 @@ class MemberWidgetState extends State<MemberWidget> {
   }
 
   Widget _memberSubscribedArticleButton() {
+    if (!_isShowSubEnabled()) {
+      return const SizedBox.shrink();
+    }
     return _navigateButton(
       '訂閱中的文章',
       () => Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -325,6 +338,9 @@ class MemberWidgetState extends State<MemberWidget> {
   }
 
   Widget _memberPaymentRecordButton(SubscriptionType subscriptionType) {
+    if (!_isShowSubEnabled()) {
+      return const SizedBox.shrink();
+    }
     return _navigateButton(
       '付款紀錄',
       () => Navigator.push(context, MaterialPageRoute(builder: (context) {
