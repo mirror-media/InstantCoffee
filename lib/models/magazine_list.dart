@@ -12,12 +12,11 @@ class MagazineList extends CustomizedList<Magazine> {
   factory MagazineList.fromJson(List<dynamic> parsedJson, String type,
       {bool isK6 = false}) {
     MagazineList magazines = MagazineList();
-    List parseList = parsedJson
-        .map((i) =>
-            isK6 ? Magazine.fromJsonK6(i, type) : Magazine.fromJson(i, type))
-        .toList();
-    for (var element in parseList) {
-      magazines.l.add(element);
+    for (final i in parsedJson) {
+      if (i == null) continue;
+      final Magazine magazine =
+          isK6 ? Magazine.fromJsonK6(i, type) : Magazine.fromJson(i, type);
+      magazines.l.add(magazine);
     }
 
     return magazines;

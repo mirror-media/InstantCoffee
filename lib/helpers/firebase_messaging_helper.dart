@@ -31,9 +31,11 @@ class FirebaseMessangingHelper with Logger {
       debugLog('User granted permission: ${settings.authorizationStatus}');
     }
 
-    FirebaseMessaging.instance
-        .getInitialMessage()
-        .then((initialMessage) => _navigateToStoryPage(initialMessage));
+    FirebaseMessaging.instance.getInitialMessage().then((initialMessage) {
+      if (initialMessage != null) {
+        _navigateToStoryPage(initialMessage);
+      }
+    });
 
     // Also handle any interaction when the app is in the background via a
     // Stream listener
@@ -43,30 +45,24 @@ class FirebaseMessangingHelper with Logger {
   }
 
   void _navigateToStoryPage(RemoteMessage? message) {
-    if (message != null) {
-      FcmData? fcmData;
-      try {
-        fcmData = FcmData.fromJson(message.data);
+    if (message == null) return;
+    FcmData? fcmData;
+    try {
+      fcmData = FcmData.fromJson(message.data);
 
-        if (fcmData.slug != null) {
-          if (fcmData.isListeningPage) {
-            RouteGenerator.navigateToListeningStory(fcmData.slug!);
-          } else {
-            RouteGenerator.navigateToStory(fcmData.slug!);
-          }
+      if (fcmData.slug != null) {
+        if (fcmData.isListeningPage) {
+          RouteGenerator.navigateToListeningStory(fcmData.slug!);
+        } else {
+          RouteGenerator.navigateToStory(fcmData.slug!);
         }
-      } catch (e, s) {
-        String? slug = fcmData?.slug;
-        ErrorLogHelper().record(
-            Exception(
-                '[Firebase Messaging NavigateToStoryPage] fcmDataSlug: $slug'),
-            s);
       }
-    } else {
+    } catch (e, s) {
+      String? slug = fcmData?.slug;
       ErrorLogHelper().record(
           Exception(
-              '[Firebase Messaging NavigateToStoryPage] RemoteMessage is null'),
-          StackTrace.current);
+              '[Firebase Messaging NavigateToStoryPage] fcmDataSlug: $slug'),
+          s);
     }
   }
 

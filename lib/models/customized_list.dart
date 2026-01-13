@@ -2,6 +2,13 @@ import 'dart:collection';
 
 abstract class CustomizedList<E> extends ListBase<E> {
   List<E> l = [];
+
+  @override
+  void add(E value) => l.add(value);
+
+  @override
+  void addAll(Iterable<E> iterable) => l.addAll(iterable);
+
   @override
   set length(int newLength) {
     l.length = newLength;

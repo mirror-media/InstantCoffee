@@ -83,7 +83,7 @@ class _DownloadMagazineWidgetState extends State<DownloadMagazineWidget> {
         margin: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const Text(
-            '月費、年費會員免費線上閱讀動態雜誌',
+            '即時享受所有文章的無限閱讀，零限制探索知識的邊界。',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 20,

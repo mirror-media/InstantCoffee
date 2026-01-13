@@ -20,6 +20,8 @@ class Magazine {
   });
 
   factory Magazine.fromJsonK6(Map<String, dynamic> json, String type) {
+    final String actualType = json['type']?.toString() ?? type;
+
     String photoUrl = '';
     if (json.containsKey('coverPhoto') &&
         json['coverPhoto'] != null &&
@@ -35,9 +37,20 @@ class Magazine {
         json['pdfFile']['url'] != null) {
       pdfUrl = json['pdfFile']['url'];
     }
+    if (pdfUrl == '' &&
+        json.containsKey('urlOriginal') &&
+        json['urlOriginal'] != null) {
+      pdfUrl = json['urlOriginal'];
+    }
+
+    if (pdfUrl.startsWith('/')) {
+      final Uri staticsUri =
+          Uri.parse(Environment().config.mirrorMediaNotImageUrl);
+      pdfUrl = Uri.parse('${staticsUri.origin}/').resolve(pdfUrl).toString();
+    }
 
     String onlineReadingUrl = '';
-    if (type == 'weekly') {
+    if (actualType == 'weekly') {
       String issue = json['slug'];
       String book;
       String periodsString;
@@ -51,12 +64,11 @@ class Magazine {
         periodsString = 'B$periodsString';
       }
       onlineReadingUrl =
-      '${Environment().config.onlineMagazineUrl}/$book/$periodsString-Publish/index.html#p=1';
-
+          '${Environment().config.onlineMagazineUrl}/$book/$periodsString-Publish/index.html#p=1';
     }
 
     return Magazine(
-      type: type,
+      type: actualType,
       issue: json['slug'],
       title: json['title'],
       publishedDate: json['publishedDate'],
@@ -65,7 +77,6 @@ class Magazine {
       onlineReadingUrl: onlineReadingUrl,
     );
   }
-
 
   factory Magazine.fromJson(Map<String, dynamic> json, String type) {
     String photoUrl = '';
