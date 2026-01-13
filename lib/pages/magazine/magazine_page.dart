@@ -57,7 +57,6 @@ class _MagazinePageState extends State<MagazinePage> {
                     MagazineBloc(magazineRepos: MagazineServices()),
                 child: WeeklyMagazineWidget(),
               ),
-              OnlineMagazineWidget(),
               BlocProvider(
                 create: (context) =>
                     MagazineBloc(magazineRepos: MagazineServices()),
@@ -65,6 +64,7 @@ class _MagazinePageState extends State<MagazinePage> {
                   listviewController: _listviewController,
                 ),
               ),
+              OnlineMagazineWidget(),
             ],
           ),
           if (!hasPermission)
