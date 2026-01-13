@@ -370,7 +370,7 @@ class ArticleQueryDB {
   static const String getMagazinesList = '''
   query {
     magazines(
-      take: 8, 
+      take: %d, 
       skip: %d,
       orderBy:{publishedDate:desc},
       where:{type:{equals:"%s"}},
