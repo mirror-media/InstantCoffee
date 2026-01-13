@@ -17,6 +17,7 @@ class MagazineServices implements MagazineRepos {
   Future<MagazineList> fetchMagazineListByType(
     String type,
   ) async {
+    _page = 1;
     MagazineList magazineList =
         await articlesApiProvider.getMagazinesList(type);
     return magazineList;

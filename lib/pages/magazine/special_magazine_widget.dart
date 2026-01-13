@@ -21,26 +21,41 @@ class _SpecialMagazineWidgetState extends State<SpecialMagazineWidget>
     with AutomaticKeepAliveClientMixin, Logger {
   bool _isLoadingMoreDone = false;
   bool _isLoading = true;
+  bool _requestedLoadMore = false;
+  int _lastLength = 0;
+  MagazineList? _lastSuccessMagazineList;
 
   @override
   bool get wantKeepAlive => true;
 
+  void _onScroll() {
+    if (!mounted) return;
+    if (!widget.listviewController.hasClients) return;
+
+    final position = widget.listviewController.position;
+    final bool isNearBottom = position.extentAfter < 200;
+    if (!_isLoadingMoreDone &&
+        !_isLoading &&
+        !_requestedLoadMore &&
+        isNearBottom) {
+      _isLoading = true;
+      _requestedLoadMore = true;
+      _fetchNextMagazineListPageBySpecialType();
+    }
+  }
+
   @override
   void initState() {
     _fetchMagazineListBySpecialType();
-    widget.listviewController.addListener(() {
-      if (!_isLoadingMoreDone &&
-          !_isLoading &&
-          widget.listviewController.position.pixels ==
-              widget.listviewController.position.maxScrollExtent) {
-        _isLoading = true;
-        _fetchNextMagazineListPageBySpecialType();
-      }
-    });
+    widget.listviewController.addListener(_onScroll);
     super.initState();
   }
 
   _fetchMagazineListBySpecialType() {
+    _isLoadingMoreDone = false;
+    _isLoading = true;
+    _requestedLoadMore = false;
+    _lastLength = 0;
     context
         .read<MagazineBloc>()
         .add(FetchMagazineListByType('special', maxResult: 6));
@@ -60,14 +75,28 @@ class _SpecialMagazineWidgetState extends State<SpecialMagazineWidget>
       if (state is MagazineError) {
         final error = state.error;
         debugLog('SpecialMagazineError: ${error.message}');
+        _isLoading = false;
+        _requestedLoadMore = false;
+        if (_lastSuccessMagazineList != null) {
+          return SpecialMagazineListWidget(
+            magazineList: _lastSuccessMagazineList!,
+            magazineState: state,
+            isLoadingMoreDone: _isLoadingMoreDone,
+          );
+        }
         return Container();
       }
 
       if (state is MagazineLoaded) {
         MagazineList magazineList = state.magazineList;
-        if (magazineList.length >= magazineList.total) {
-          _isLoadingMoreDone = true;
+        _lastSuccessMagazineList = magazineList;
+        if (_requestedLoadMore) {
+          if (magazineList.length == _lastLength) {
+            _isLoadingMoreDone = true;
+          }
+          _requestedLoadMore = false;
         }
+        _lastLength = magazineList.length;
         _isLoading = false;
 
         return SpecialMagazineListWidget(
@@ -78,6 +107,7 @@ class _SpecialMagazineWidgetState extends State<SpecialMagazineWidget>
       }
 
       if (state is MagazineLoadingMore) {
+        _lastSuccessMagazineList = state.magazineList;
         return SpecialMagazineListWidget(
           magazineList: state.magazineList,
           magazineState: state,

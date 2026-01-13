@@ -373,6 +373,7 @@ class ArticleQueryDB {
       take: 8, 
       skip: %d,
       orderBy:{publishedDate:desc},
+      where:{type:{equals:"%s"}},
     ) 
     {
         slug
@@ -420,4 +421,3 @@ class ArticleQueryDB {
         }
   ''';
 }
-
