@@ -265,7 +265,7 @@ class ArticlesApiProvider extends GetConnect {
   }
 
   Future<MagazineList> getMagazinesList(String type, {int page = 1}) async {
-    final int take = type == 'weekly' ? 10 : 8;
+    final int take = type == 'weekly' ? 20 : 8;
     final int skip = (page - 1) * take;
     final String queryString =
         ArticleQueryDB.getMagazinesList.format([take, skip, type]);
