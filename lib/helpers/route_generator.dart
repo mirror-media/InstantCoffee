@@ -309,9 +309,6 @@ class RouteGenerator {
   }
 
   static void navigateToSearch() {
-
-
-
     navigatorKey.currentState!.pushNamed(search);
   }
 
@@ -491,11 +488,12 @@ class RouteGenerator {
     // There is a issue when opening pdf file in webview on android,
     // so change to launch URL on android.
     if (magazine.type != null) {
-      String url = magazine.type! == 'weekly'
-          ? magazine.onlineReadingUrl!
-          : magazine.pdfUrl!;
+      final String? rawUrl = magazine.type! == 'weekly'
+          ? magazine.onlineReadingUrl
+          : magazine.pdfUrl;
+      final String? url = rawUrl?.trim();
 
-      if (url == '') {
+      if (url == null || url.isEmpty) {
         Fluttertoast.showToast(
             msg: '下載失敗，請再試一次',
             toastLength: Toast.LENGTH_SHORT,
@@ -534,11 +532,28 @@ class RouteGenerator {
             throw 'Could not launch $url';
           }
         } else {
-          navigatorKey.currentState!.pushNamed(
-            magazineBrowser,
-            arguments: {
-              'magazine': magazine,
-            },
+          // iOS: open PDF in InAppBrowser to avoid about:blank WebKitErrorDomain(101)
+          // when pdf url is invalid in embedded webview.
+          InAppBrowser browser = InAppBrowser();
+          browser.openUrlRequest(
+            urlRequest: URLRequest(
+              url: WebUri(url),
+            ),
+            options: InAppBrowserClassOptions(
+              crossPlatform: InAppBrowserOptions(
+                hideUrlBar: true,
+                toolbarTopBackgroundColor: appColor,
+                hideToolbarTop: Platform.isAndroid,
+              ),
+              ios: IOSInAppBrowserOptions(
+                hideToolbarBottom: true,
+                closeButtonColor: Colors.white,
+              ),
+              android: AndroidInAppBrowserOptions(
+                closeOnCannotGoBack: false,
+                shouldCloseOnBackButtonPressed: true,
+              ),
+            ),
           );
         }
       }

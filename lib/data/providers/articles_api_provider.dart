@@ -265,14 +265,20 @@ class ArticlesApiProvider extends GetConnect {
   }
 
   Future<MagazineList> getMagazinesList(String type, {int page = 1}) async {
-    String queryString = ArticleQueryDB.getMagazinesList.format([page * 8]);
+    final int take = type == 'weekly' ? 20 : 8;
+    final int skip = (page - 1) * take;
+    final String queryString =
+        ArticleQueryDB.getMagazinesList.format([take, skip, type]);
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     if (result == null ||
         result.data == null ||
         !result.data!.containsKey('magazines')) return MagazineList();
 
-    return MagazineList.fromJson(result.data!['magazines'], type, isK6: true);
+    final dynamic raw = result.data!['magazines'];
+    if (raw is! List) return MagazineList();
+    final List<dynamic> cleaned = raw.where((e) => e != null).toList();
+    return MagazineList.fromJson(cleaned, type, isK6: true);
   }
 
   Future<List<Record>> getNewsletterList() async {
