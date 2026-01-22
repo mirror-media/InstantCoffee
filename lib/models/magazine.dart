@@ -5,6 +5,7 @@ class Magazine {
   final String? issue;
   final String? title;
   final String? publishedDate;
+  final String? state;
   final String? photoUrl;
   final String? pdfUrl;
   final String? onlineReadingUrl;
@@ -14,6 +15,7 @@ class Magazine {
     this.issue,
     this.title,
     this.publishedDate,
+    this.state,
     this.photoUrl,
     this.pdfUrl,
     this.onlineReadingUrl,
@@ -72,6 +74,7 @@ class Magazine {
       issue: json['slug'],
       title: json['title'],
       publishedDate: json['publishedDate'],
+      state: json['state'],
       photoUrl: photoUrl,
       pdfUrl: pdfUrl,
       onlineReadingUrl: onlineReadingUrl,
@@ -120,6 +123,7 @@ class Magazine {
       issue: json['issue'],
       title: json['title'],
       publishedDate: json['publishedDate'],
+      state: json['state'],
       photoUrl: photoUrl,
       pdfUrl: pdfUrl,
       onlineReadingUrl: onlineReadingUrl,
