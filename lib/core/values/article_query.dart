@@ -379,6 +379,7 @@ class ArticleQueryDB {
         slug
         title
         publishedDate
+        state
         type
         urlOriginal
         coverPhoto

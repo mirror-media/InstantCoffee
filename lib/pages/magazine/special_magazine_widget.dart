@@ -115,13 +115,8 @@ class _SpecialMagazineWidgetState extends State<SpecialMagazineWidget>
       }
 
       // state is Init, Loading
-      return _loadingWidget();
+      // Avoid duplicate loading indicators with weekly list.
+      return const SizedBox.shrink();
     });
-  }
-
-  Widget _loadingWidget() {
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
   }
 }
