@@ -24,8 +24,9 @@ class MagazineBloc extends Bloc<MagazineEvents, MagazineState> with Logger {
             magazineList = await magazineRepos.fetchMagazineListByType(
               event.type,
             );
-            final MagazineList filtered =
-                await _filterVisibleMagazines(magazineList);
+            final MagazineList filtered = event.type == 'weekly'
+                ? await _loadWeeklyVisibleList(magazineList)
+                : await _filterVisibleMagazines(magazineList);
             magazineList = filtered;
             emit(MagazineLoaded(magazineList: filtered));
           }
@@ -61,6 +62,26 @@ class MagazineBloc extends Bloc<MagazineEvents, MagazineState> with Logger {
       }
     }
     return filtered;
+  }
+
+  Future<MagazineList> _loadWeeklyVisibleList(MagazineList initialList,
+      {int targetCount = 20, int maxPages = 10}) async {
+    MagazineList visible = await _filterVisibleMagazines(initialList);
+    int pagesFetched = 1;
+    while (visible.length < targetCount && pagesFetched < maxPages) {
+      MagazineList nextPage =
+          await magazineRepos.fetchNextMagazineListPageByType('weekly');
+      pagesFetched++;
+      if (nextPage.isEmpty) {
+        break;
+      }
+      MagazineList nextVisible = await _filterVisibleMagazines(nextPage);
+      visible.addAll(nextVisible);
+    }
+    if (visible.length > targetCount) {
+      visible.length = targetCount;
+    }
+    return visible;
   }
 
   bool _shouldShowMagazine(Magazine magazine, DateTime nowUtc) {
