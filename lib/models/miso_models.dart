@@ -23,7 +23,6 @@ class MisoProduct {
       final s = productId.substring(prefix.length);
       return s.isEmpty ? null : s;
     }
-    // 如果你只搜尋 story，其實也可以直接 return productId
     return productId.isEmpty ? null : productId;
   }
   factory MisoProduct.fromJson(Map<String, dynamic> json) {
