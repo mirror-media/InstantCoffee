@@ -108,11 +108,18 @@ android {
     }
 
     buildTypes {
+        debug {
+            productFlavors.dev.signingConfig signingConfigs.dev
+            productFlavors.prod.signingConfig signingConfigs.prod
+        }
+
         release {
             productFlavors.dev.signingConfig signingConfigs.dev
             productFlavors.prod.signingConfig signingConfigs.prod
-            shrinkResources false
-            minifyEnabled false
+
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
@@ -124,4 +131,5 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
     implementation 'com.android.billingclient:billing:7.0.0'
+    implementation 'com.google.android.play:feature-delivery:2.1.0'
 }
