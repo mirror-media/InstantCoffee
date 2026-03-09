@@ -53,7 +53,7 @@ dependencies:
   flutter_embedded_webview:
     git:
       url: https://github.com/mirror-media/flutter_embedded_webview.git
-      ref: master
+      ref: 6581fff7a02cadb954e288db4e4e130a5f9b5920
       version: ^0.6.4
   # local storage
   localstorage: ^4.0.0+1
