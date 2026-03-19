@@ -17,7 +17,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # iOS and android is the same version
 
-version: 6.9.70+527
+version: 6.9.71+528
 
 environment:
   sdk: ">=3.4.0 <4.0.0"
@@ -53,7 +53,7 @@ dependencies:
   flutter_embedded_webview:
     git:
       url: https://github.com/mirror-media/flutter_embedded_webview.git
-      ref: 6581fff7a02cadb954e288db4e4e130a5f9b5920
+      ref: master
       version: ^0.6.4
   # local storage
   localstorage: ^4.0.0+1
@@ -126,7 +126,7 @@ dependencies:
   # google sign in
   google_sign_in: ^5.2.2
   # facebook sign in
-  flutter_facebook_auth: 7.1.1
+  flutter_facebook_auth: 7.1.5
   permission_handler: ^11.3.1
 
   # apple sign in
@@ -152,7 +152,7 @@ dependencies:
   audio_session: ^0.1.18
 
   file: ^6.1.2
-  intl: ^0.19.0
+  intl: ^0.20.2
   get: ^4.6.3
   visibility_detector: ^0.3.3
   percent_indicator: ^4.2.2

@@ -57,11 +57,12 @@ class _MirrorMediaAppState extends State<MirrorMediaApp> {
           DefaultCupertinoLocalizations.delegate,
         ],
         builder: (context, widget) {
+          final mediaQuery = MediaQuery.of(context);
+          final currentScale = mediaQuery.textScaler.scale(14) / 14;
+          final clampedScale = currentScale.clamp(1.0, 1.1).toDouble();
           return MediaQuery(
-            data: MediaQuery.of(context).copyWith(
-              textScaler: MediaQuery.of(context)
-                  .textScaler
-                  .clamp(minScaleFactor: 1.0, maxScaleFactor: 1.1),
+            data: mediaQuery.copyWith(
+              textScaler: TextScaler.linear(clampedScale),
             ),
             child: widget ?? Container(),
           );

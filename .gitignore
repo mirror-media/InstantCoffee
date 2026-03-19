@@ -57,6 +57,7 @@ ios/Runner.xcodeproj/xcuserdata/
 ios/Runner.xcworkspace/xcshareddata/swiftpm/
 ios/Flutter/Flutter.framework/
 ios/Flutter/Flutter.podspec
+ios/Flutter/ephemeral/
 ios/Pods/
 ios/Podfile.lock
 
