@@ -17,7 +17,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # iOS and android is the same version
 
-version: 6.9.71+528
+version: 6.9.71+529
 
 environment:
   sdk: ">=3.4.0 <4.0.0"
@@ -53,7 +53,7 @@ dependencies:
   flutter_embedded_webview:
     git:
       url: https://github.com/mirror-media/flutter_embedded_webview.git
-      ref: master
+      ref: flutter-3-41
       version: ^0.6.4
   # local storage
   localstorage: ^4.0.0+1
@@ -168,6 +168,7 @@ dependencies:
   crypto: ^3.0.6
 dependency_overrides:
   web: ^1.0.0
+  webview_flutter_wkwebview: ^3.24.3
 
 dev_dependencies:
   flutter_test:
