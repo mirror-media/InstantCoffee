@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localstorage/localstorage.dart';
@@ -50,6 +51,12 @@ class OnBoardingBloc extends Bloc<OnBoardingEvents, OnBoardingState> {
   }
 
   Future<bool> getOnBoardingFromStorage() async {
+    if (kDebugMode &&
+        const String.fromEnvironment('TOP_IFRAME_PREVIEW_URL').isNotEmpty) {
+      // Skip hints during local iframe previews without changing stored settings.
+      return false;
+    }
+
     if (await _storage.ready) {
       if (_storage.getItem("onBoarding") == null) {
         await setOnBoardingToStorage(true);

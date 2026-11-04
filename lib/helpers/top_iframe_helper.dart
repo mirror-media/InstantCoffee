@@ -1,75 +1,244 @@
 import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
+class TopIframeContentSize {
+  const TopIframeContentSize({required this.width, required this.height});
+
+  final double? width;
+  final double height;
+}
+
 class TopIframeHelper {
-  static const String _heightDetectionScript = '''
-    (function() {
-      try {
-        // 移除不必要的空白元素
-        var emptyElements = document.querySelectorAll('div:empty, p:empty, span:empty');
-        for (var i = 0; i < emptyElements.length; i++) {
-          var elem = emptyElements[i];
-          if (elem.offsetHeight === 0 && elem.offsetWidth === 0) {
-            elem.style.display = 'none';
-          }
-        }
-        
-        // 檢測實際內容高度
-        var body = document.body;
-        var html = document.documentElement;
-        
-        // 找到所有有內容的元素，包含表格和圖片
-        var elements = document.querySelectorAll('table, div, p, span, h1, h2, h3, h4, h5, h6, img, canvas, svg');
-        var maxBottom = 0;
-        var minTop = Infinity;
-        
-        for (var i = 0; i < elements.length; i++) {
-          var element = elements[i];
-          var rect = element.getBoundingClientRect();
-          var computedStyle = window.getComputedStyle(element);
-          
-          // 跳過隱藏的元素
-          if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden') {
-            continue;
-          }
-          
-          // 只考慮可見且有內容的元素
-          if (rect.height > 0 && rect.width > 0) {
-            var top = rect.top + window.pageYOffset;
-            var bottom = rect.bottom + window.pageYOffset;
-            
-            if (top < minTop) {
-              minTop = top;
-            }
-            if (bottom > maxBottom) {
-              maxBottom = bottom;
-            }
-          }
-        }
-        
-        // 計算實際內容高度
-        var contentHeight = maxBottom - Math.max(0, minTop);
-        
-        // 如果找到內容，使用實際高度；否則使用文檔高度
-        if (contentHeight > 0 && maxBottom > 0) {
-          return Math.min(contentHeight + 3, 500);
-        } else {
-          // 備用方法：使用文檔高度
-          var docHeight = Math.max(
-            body.scrollHeight, body.offsetHeight,
-            html.clientHeight, html.scrollHeight, html.offsetHeight
-          );
-          return Math.min(docHeight, 500);
-        }
-      } catch (e) {
-        return 300; // 發生錯誤時返回預設值
+  static const String contentSizeHandlerName = 'TopIframeContentSize';
+  static const String dropdownStateHandlerName = 'TopIframeDropdownState';
+  static int _nextWebViewKey = 0;
+
+  // Measure an authored content root rather than the WebView's viewport. The
+  // election page's section, for example, is narrower than its #__next host.
+  static const String _contentSizeFunctions = r'''
+  function visibleContentChildren(element) {
+    return Array.from(element.children).filter(function(child) {
+      if (/^(SCRIPT|STYLE|LINK|META|NOSCRIPT|TEMPLATE)$/.test(child.tagName)) {
+        return false;
       }
-    })();
-  ''';
+      var style = window.getComputedStyle(child);
+      var rect = child.getBoundingClientRect();
+      return style.display !== 'none' && style.visibility !== 'hidden' &&
+        style.position !== 'fixed' && rect.width > 0 && rect.height > 0;
+    });
+  }
+
+  function findContentRoot() {
+    var hosts = ['__next', 'root', 'app'];
+    for (var i = 0; i < hosts.length; i++) {
+      var host = document.getElementById(hosts[i]);
+      if (!host) continue;
+      var children = visibleContentChildren(host);
+      if (children.length === 1) return children[0];
+    }
+    return null;
+  }
+
+  function measureContentSize(root) {
+    var body = document.body;
+    if (!body) return null;
+    if (root) {
+      var rect = root.getBoundingClientRect();
+      if (Number.isFinite(rect.width) && rect.width > 0 &&
+          Number.isFinite(rect.height) && rect.height > 0) {
+        return {width: rect.width, height: rect.height};
+      }
+    }
+
+    // For an arbitrary URL, keep the available width and measure visible
+    // content without including html.clientHeight or document scrollHeight.
+    var bottom = 0;
+    visibleContentChildren(body).forEach(function(child) {
+      var rect = child.getBoundingClientRect();
+      var margin = parseFloat(window.getComputedStyle(child).marginBottom) || 0;
+      bottom = Math.max(bottom, rect.bottom + window.scrollY + margin);
+    });
+    Array.from(body.childNodes).forEach(function(node) {
+      if (node.nodeType !== Node.TEXT_NODE || !node.textContent.trim()) return;
+      var range = document.createRange();
+      range.selectNodeContents(node);
+      var rect = range.getBoundingClientRect();
+      bottom = Math.max(bottom, rect.bottom + window.scrollY);
+    });
+    if (bottom > 0) {
+      var bodyStyle = window.getComputedStyle(body);
+      bottom += (parseFloat(bodyStyle.paddingBottom) || 0) +
+        (parseFloat(bodyStyle.marginBottom) || 0);
+    }
+    return {width: null, height: bottom > 0 ? Math.min(bottom, 800) : 350};
+  }
+''';
+
+  static const String contentSizeDetectionScript = '''
+(function() {
+  var observer = window.__topIframeContentSizeObserver;
+  if (observer && observer.measure) return observer.measure();
+  $_contentSizeFunctions
+  return measureContentSize(findContentRoot());
+})();
+''';
+
+  static String contentSizeObserverScript(String observationToken) => '''
+(function(token) {
+  var previous = window.__topIframeContentSizeObserver;
+  if (previous && previous.dispose) previous.dispose();
+  $_contentSizeFunctions
+
+  var disposed = false;
+  var timer = null;
+  var maxWaitTimer = null;
+  var observed = [];
+  var lastSize = null;
+  var resizeObserver = typeof ResizeObserver === 'function'
+    ? new ResizeObserver(schedule) : null;
+
+  function updateObservedElements(root) {
+    var next = root ? [root] : visibleContentChildren(document.body);
+    if (!next.length && document.body) next = [document.body];
+    if (next.length === observed.length && next.every(function(element, i) {
+      return element === observed[i];
+    })) return;
+    if (resizeObserver) {
+      resizeObserver.disconnect();
+      next.forEach(function(element) { resizeObserver.observe(element); });
+    }
+    observed = next;
+  }
+
+  function measure() {
+    if (disposed || !document.body) return null;
+    var root = findContentRoot();
+    updateObservedElements(root);
+    var size = measureContentSize(root);
+    if (size) size.token = token;
+    return size;
+  }
+
+  function report() {
+    if (timer !== null) window.clearTimeout(timer);
+    if (maxWaitTimer !== null) window.clearTimeout(maxWaitTimer);
+    timer = null;
+    maxWaitTimer = null;
+    if (disposed) return;
+    var size = measure();
+    if (!size) return;
+    if (lastSize && lastSize.width === size.width &&
+        Math.abs(lastSize.height - size.height) < 0.5) return;
+    var bridge = window.flutter_inappwebview;
+    if (!bridge || typeof bridge.callHandler !== 'function') return;
+    lastSize = size;
+    Promise.resolve(bridge.callHandler('$contentSizeHandlerName', size))
+      .catch(function() {});
+  }
+
+  function schedule() {
+    if (disposed) return;
+    if (timer !== null) window.clearTimeout(timer);
+    timer = window.setTimeout(report, 60);
+    if (maxWaitTimer === null) maxWaitTimer = window.setTimeout(report, 250);
+  }
+
+  var mutationObserver = typeof MutationObserver === 'function'
+    ? new MutationObserver(schedule) : null;
+  if (mutationObserver && document.body) {
+    mutationObserver.observe(document.body, {
+      childList: true, subtree: true, characterData: true, attributes: true,
+      attributeFilter: ['class', 'style', 'hidden']
+    });
+  }
+  window.addEventListener('resize', schedule);
+  window.addEventListener('flutterInAppWebViewPlatformReady', schedule);
+  document.addEventListener('load', schedule, true);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(schedule).catch(function() {});
+  }
+
+  window.__topIframeContentSizeObserver = {
+    measure: measure,
+    dispose: function() {
+      disposed = true;
+      if (timer !== null) window.clearTimeout(timer);
+      if (maxWaitTimer !== null) window.clearTimeout(maxWaitTimer);
+      if (resizeObserver) resizeObserver.disconnect();
+      if (mutationObserver) mutationObserver.disconnect();
+      window.removeEventListener('resize', schedule);
+      window.removeEventListener('flutterInAppWebViewPlatformReady', schedule);
+      document.removeEventListener('load', schedule, true);
+    }
+  };
+  schedule();
+})(${jsonEncode(observationToken)});
+''';
+
+  // Radix Select portals its listbox into body. Watch that document as well as
+  // the trigger, independently of the debounced content-size measurements.
+  static String dropdownStateObserverScript(String observationToken) => '''
+(function(token) {
+  var previous = window.__topIframeDropdownObserver;
+  if (previous && previous.dispose) previous.dispose();
+  var disposed = false;
+  var lastOpen = null;
+
+  function isVisible(element) {
+    if (element.closest('[hidden], [aria-hidden="true"]')) return false;
+    var style = window.getComputedStyle(element);
+    var rect = element.getBoundingClientRect();
+    return style.display !== 'none' && style.visibility !== 'hidden' &&
+      rect.width > 0 && rect.height > 0;
+  }
+
+  function report() {
+    if (disposed) return;
+    var open = Array.from(document.querySelectorAll(
+      '[role="combobox"][aria-expanded="true"], ' +
+      '[aria-haspopup="listbox"][aria-expanded="true"], ' +
+      '[role="listbox"]:not([data-state="closed"])'
+    )).some(isVisible);
+    if (lastOpen === open) return;
+    var bridge = window.flutter_inappwebview;
+    if (!bridge || typeof bridge.callHandler !== 'function') return;
+    lastOpen = open;
+    Promise.resolve(bridge.callHandler('$dropdownStateHandlerName', {
+      token: token, open: open
+    })).catch(function() { lastOpen = null; });
+  }
+
+  var observer = typeof MutationObserver === 'function'
+    ? new MutationObserver(report) : null;
+  if (observer && document.documentElement) {
+    observer.observe(document.documentElement, {
+      childList: true, subtree: true, attributes: true,
+      attributeFilter: [
+        'aria-expanded', 'aria-hidden', 'data-state', 'role',
+        'class', 'style', 'hidden'
+      ]
+    });
+  }
+  window.addEventListener('resize', report);
+  window.addEventListener('flutterInAppWebViewPlatformReady', report);
+  window.__topIframeDropdownObserver = {
+    dispose: function() {
+      disposed = true;
+      if (observer) observer.disconnect();
+      window.removeEventListener('resize', report);
+      window.removeEventListener('flutterInAppWebViewPlatformReady', report);
+    }
+  };
+  report();
+})(${jsonEncode(observationToken)});
+''';
 
   static InAppWebViewSettings createWebViewSettings() {
     return InAppWebViewSettings(
       javaScriptEnabled: true,
+      useHybridComposition: true,
       mediaPlaybackRequiresUserGesture: false,
       allowsInlineMediaPlayback: true,
       transparentBackground: true,
@@ -89,38 +258,106 @@ class TopIframeHelper {
     );
   }
 
-  static Future<double?> detectHeight(InAppWebViewController controller) async {
-    try {
-      final result =
-          await controller.evaluateJavascript(source: _heightDetectionScript);
-      if (result != null && result > 0) {
-        double jsHeight = double.tryParse(result.toString()) ?? 0;
-        if (jsHeight > 100) {
-          return jsHeight > 500 ? 500 : jsHeight;
-        }
+  static TopIframeContentSize? parseContentSize(dynamic value) {
+    if (value is String) {
+      try {
+        value = jsonDecode(value);
+      } on FormatException {
+        return null;
       }
-    } catch (e) {}
-    return null;
+    }
+    if (value is! Map) return null;
+
+    final height = _positiveFiniteDouble(value['height']);
+    if (height == null) return null;
+    final rawWidth = value['width'];
+    final width = _positiveFiniteDouble(rawWidth);
+    if (rawWidth != null && width == null) return null;
+    return TopIframeContentSize(width: width, height: height);
+  }
+
+  static double? _positiveFiniteDouble(dynamic value) {
+    final number = value is num
+        ? value.toDouble()
+        : value is String
+            ? double.tryParse(value)
+            : null;
+    return number != null && number.isFinite && number > 0 ? number : null;
+  }
+
+  static Future<void> installContentObservers(
+    InAppWebViewController controller, {
+    required String observationToken,
+  }) async {
+    await controller.evaluateJavascript(
+      source: '${contentSizeObserverScript(observationToken)}\n'
+          '${dropdownStateObserverScript(observationToken)}',
+    );
+  }
+
+  static Future<TopIframeContentSize?> detectContentSize(
+    InAppWebViewController controller,
+  ) async {
+    try {
+      final result = await controller.evaluateJavascript(
+        source: contentSizeDetectionScript,
+      );
+      return parseContentSize(result);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static Future<double?> detectHeight(InAppWebViewController controller) async {
+    return (await detectContentSize(controller))?.height;
   }
 
   static String generateWebViewKey(String url) {
-    return '${url}_${DateTime.now().millisecondsSinceEpoch}';
+    return '${url}_${DateTime.now().microsecondsSinceEpoch}_${_nextWebViewKey++}';
   }
 
   static bool shouldUpdateHeight(double currentHeight, double newHeight) {
-    return (newHeight - currentHeight).abs() > 10;
+    return newHeight.isFinite &&
+        newHeight > 0 &&
+        (newHeight - currentHeight).abs() >= 1;
   }
 
   static double calculateContentHeight(double contentHeight) {
-    if (contentHeight <= 0) return 300;
-    return contentHeight > 500 ? 500 : contentHeight;
+    if (!contentHeight.isFinite || contentHeight <= 0) return 350;
+    return contentHeight.ceilToDouble();
   }
 
+  // The widget owns the native WebView. Only detach our observer and handler
+  // here, so late messages cannot reach the controller for a different URL.
   static void safeDisposeWebView(InAppWebViewController? controller) {
-    if (controller != null) {
+    if (controller == null) return;
+    for (final handlerName in [
+      contentSizeHandlerName,
+      dropdownStateHandlerName,
+    ]) {
       try {
-        controller.dispose();
-      } catch (e) {}
+        controller.removeJavaScriptHandler(handlerName: handlerName);
+      } catch (_) {}
     }
+    unawaited(_disconnectContentSizeObserver(controller));
+  }
+
+  static Future<void> _disconnectContentSizeObserver(
+    InAppWebViewController controller,
+  ) async {
+    try {
+      await controller.evaluateJavascript(
+        source: '''
+(function() {
+  var observer = window.__topIframeContentSizeObserver;
+  if (observer && observer.dispose) observer.dispose();
+  delete window.__topIframeContentSizeObserver;
+  var dropdownObserver = window.__topIframeDropdownObserver;
+  if (dropdownObserver && dropdownObserver.dispose) dropdownObserver.dispose();
+  delete window.__topIframeDropdownObserver;
+})();
+''',
+      );
+    } catch (_) {}
   }
 }
