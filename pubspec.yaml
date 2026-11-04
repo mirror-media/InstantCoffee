@@ -172,7 +172,8 @@ dependencies:
   crypto: ^3.0.6
 dependency_overrides:
   web: ^1.0.0
-  webview_flutter_wkwebview: ^3.24.3
+  # Flutter 3.41 lacks the native registrar API used by webview 3.26+.
+  webview_flutter_wkwebview: 3.25.1
 
 dev_dependencies:
   flutter_test:
