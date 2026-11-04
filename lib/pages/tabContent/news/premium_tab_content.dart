@@ -46,6 +46,7 @@ class PremiumTabContent extends StatefulWidget {
 
 class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
   final RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
+  final String _topIframeControllerTag = 'top_iframe_${UniqueKey()}';
   final HomeController controller = Get.find();
 
   _fetchFirstRecordList() {
@@ -75,8 +76,12 @@ class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
           try {
             await _remoteConfigHelper.refresh();
 
-            if (Get.isRegistered<TopIframeController>()) {
-              final topIframeController = Get.find<TopIframeController>();
+            if (Get.isRegistered<TopIframeController>(
+              tag: _topIframeControllerTag,
+            )) {
+              final topIframeController = Get.find<TopIframeController>(
+                tag: _topIframeControllerTag,
+              );
               topIframeController.checkVisibility();
             }
 
@@ -184,12 +189,9 @@ class _PremiumTabContentState extends State<PremiumTabContent> with Logger {
                           height: 16.0,
                         ),
                       ],
-                      const TopIframeWidget(
-                        height: 300,
-                        refreshInterval: Duration(minutes: 1),
-                        autoHeight: true,
+                      TopIframeWidget(
+                        controllerTag: _topIframeControllerTag,
                       ),
-                      const SizedBox(height: 16.0),
                       _buildEditorChoiceList(),
                       if (widget.section.key ==
                           Environment().config.latestSectionKey) ...[

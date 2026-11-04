@@ -1,0 +1,252 @@
+import 'package:firebase_core/firebase_core.dart';
+// ignore: depend_on_referenced_packages
+import 'package:firebase_core_platform_interface/test.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:readr_app/controllers/top_iframe_controller.dart';
+import 'package:readr_app/helpers/top_iframe_helper.dart';
+
+class _TestTopIframeController extends TopIframeController {
+  @override
+  void initialize({
+    Duration refreshInterval = const Duration(minutes: 1),
+    bool autoHeight = true,
+    double initialHeight = 300,
+    bool waitForHeightDetection = false,
+  }) {
+    // Set up the visible iframe without fetching Remote Config or scheduling
+    // automatic refreshes. Firebase Core is initialized with its test mock.
+    this.refreshInterval = refreshInterval;
+    this.autoHeight = autoHeight;
+    this.initialHeight = initialHeight;
+    currentUrl.value = 'https://example.com/iframe';
+    webViewKey.value = 'active-instance';
+    isVisible.value = true;
+    currentHeight.value = 200;
+  }
+}
+
+class _FakeWebViewPlatformController extends PlatformInAppWebViewController {
+  _FakeWebViewPlatformController(String id)
+      : super.implementation(
+          PlatformInAppWebViewControllerCreationParams(id: id),
+        );
+
+  final evaluatedSources = <String>[];
+  final handlers = <String, JavaScriptHandlerCallback>{};
+
+  String get observationToken => RegExp(
+        r'\}\)\("([^"]+)"\);',
+      ).firstMatch(evaluatedSources.first)!.group(1)!;
+
+  void reportDropdown(bool open, {String? token}) {
+    handlers[TopIframeHelper.dropdownStateHandlerName]!([
+      {'token': token ?? observationToken, 'open': open},
+    ]);
+  }
+
+  @override
+  Future<dynamic> evaluateJavascript({
+    required String source,
+    ContentWorld? contentWorld,
+  }) async {
+    evaluatedSources.add(source);
+    return {'width': 320, 'height': 330};
+  }
+
+  @override
+  void addJavaScriptHandler({
+    required String handlerName,
+    required JavaScriptHandlerCallback callback,
+  }) {
+    handlers[handlerName] = callback;
+  }
+
+  @override
+  JavaScriptHandlerCallback? removeJavaScriptHandler({
+    required String handlerName,
+  }) =>
+      handlers.remove(handlerName);
+}
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setupFirebaseCoreMocks();
+
+  setUpAll(() async {
+    await Firebase.initializeApp();
+  });
+
+  late _TestTopIframeController controller;
+  late _FakeWebViewPlatformController platform;
+  late InAppWebViewController createdWrapper;
+
+  setUp(() {
+    controller = _TestTopIframeController()..onInit();
+    platform = _FakeWebViewPlatformController('native-webview');
+    createdWrapper = InAppWebViewController.fromPlatform(platform: platform);
+    controller.onWebViewCreated(
+      createdWrapper,
+      instanceKey: controller.webViewKey.value,
+    );
+  });
+
+  tearDown(() {
+    controller.onClose();
+  });
+
+  test(
+    'load callbacks accept a new Dart wrapper for the same native view',
+    () async {
+      final callbackWrapper = InAppWebViewController.fromPlatform(
+        platform: platform,
+      );
+      expect(identical(createdWrapper, callbackWrapper), isFalse);
+
+      controller.onLoadStart(
+        webController: callbackWrapper,
+        instanceKey: controller.webViewKey.value,
+      );
+      await controller.onLoadStop(
+        webController: callbackWrapper,
+        instanceKey: controller.webViewKey.value,
+      );
+
+      expect(controller.isLoading.value, isFalse);
+      expect(controller.loadingTimeoutTimer, isNull);
+      expect(controller.hasError.value, isFalse);
+      expect(controller.currentWidth.value, 320);
+      expect(controller.currentHeight.value, 330);
+      expect(controller.hasDetectedHeight.value, isTrue);
+      expect(platform.evaluatedSources, isNotEmpty);
+    },
+  );
+
+  test(
+    'load stop ignores another platform controller with the same native id',
+    () async {
+      final unrelatedPlatform = _FakeWebViewPlatformController(platform.id);
+      final unrelatedWrapper = InAppWebViewController.fromPlatform(
+        platform: unrelatedPlatform,
+      );
+
+      await controller.onLoadStop(
+        webController: unrelatedWrapper,
+        instanceKey: controller.webViewKey.value,
+      );
+
+      expect(controller.isLoading.value, isTrue);
+      expect(controller.loadingTimeoutTimer?.isActive, isTrue);
+      expect(controller.currentWidth.value, isNull);
+      expect(controller.currentHeight.value, 200);
+      expect(controller.hasDetectedHeight.value, isFalse);
+      expect(unrelatedPlatform.evaluatedSources, isEmpty);
+      expect(platform.evaluatedSources, isEmpty);
+    },
+  );
+
+  test(
+    'load stop ignores a stale key even for the current native view',
+    () async {
+      final callbackWrapper = InAppWebViewController.fromPlatform(
+        platform: platform,
+      );
+
+      await controller.onLoadStop(
+        webController: callbackWrapper,
+        instanceKey: 'previous-instance',
+      );
+
+      expect(controller.isLoading.value, isTrue);
+      expect(controller.loadingTimeoutTimer?.isActive, isTrue);
+      expect(controller.currentWidth.value, isNull);
+      expect(controller.currentHeight.value, 200);
+      expect(controller.hasDetectedHeight.value, isFalse);
+      expect(platform.evaluatedSources, isEmpty);
+    },
+  );
+
+  group('dropdown interaction messages', () {
+    setUp(() async {
+      await controller.onLoadStop();
+    });
+
+    test('accepts open and close only for the active document', () {
+      expect(controller.isDropdownOpen, isFalse);
+      platform.reportDropdown(true, token: 'previous-document');
+      expect(controller.isDropdownOpen, isFalse);
+
+      platform.reportDropdown(true);
+      expect(controller.isDropdownOpen, isTrue);
+      for (final message in [
+        null,
+        {'token': platform.observationToken, 'open': 'false'},
+        {'token': platform.observationToken},
+      ]) {
+        platform.handlers[TopIframeHelper.dropdownStateHandlerName]!([message]);
+        expect(controller.isDropdownOpen, isTrue);
+      }
+      platform.reportDropdown(false);
+      expect(controller.isDropdownOpen, isFalse);
+    });
+
+    test(
+      'navigation clears state and ignores messages from the old page',
+      () async {
+        platform.reportDropdown(true);
+        final oldToken = platform.observationToken;
+        controller.onLoadStart();
+        expect(controller.isDropdownOpen, isFalse);
+        platform.reportDropdown(true, token: oldToken);
+        expect(controller.isDropdownOpen, isFalse);
+
+        await controller.onLoadStop();
+        platform.reportDropdown(true, token: oldToken);
+        expect(controller.isDropdownOpen, isFalse);
+        final source = platform.evaluatedSources.firstWhere(
+          (source) =>
+              source.contains('TopIframeDropdownState') &&
+              !source.contains('"$oldToken"'),
+        );
+        final newToken = RegExp(
+          r'\}\)\("([^"]+)"\);',
+        ).firstMatch(source)!.group(1)!;
+        platform.reportDropdown(true, token: newToken);
+        expect(controller.isDropdownOpen, isTrue);
+      },
+    );
+
+    test('errors clear state and reject further open messages', () {
+      platform.reportDropdown(true);
+      controller.onLoadError('Failed to load');
+      expect(controller.isDropdownOpen, isFalse);
+      platform.reportDropdown(true);
+      expect(controller.isDropdownOpen, isFalse);
+    });
+
+    test(
+      'refresh detaches the handler and ignores a queued stale callback',
+      () {
+        platform.reportDropdown(true);
+        final callback =
+            platform.handlers[TopIframeHelper.dropdownStateHandlerName]!;
+        final oldToken = platform.observationToken;
+        controller.resetWebViewState();
+        expect(controller.isDropdownOpen, isFalse);
+        expect(platform.handlers, isEmpty);
+        callback([
+          {'token': oldToken, 'open': true},
+        ]);
+        expect(controller.isDropdownOpen, isFalse);
+      },
+    );
+
+    test('hiding and detaching a view clears dropdown state', () {
+      platform.reportDropdown(true);
+      controller.isVisible.value = false;
+      controller.resetWebViewState();
+      expect(controller.isDropdownOpen, isFalse);
+      expect(platform.handlers, isEmpty);
+    });
+  });
+}

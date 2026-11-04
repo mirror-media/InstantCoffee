@@ -1,8 +1,21 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:readr_app/widgets/logger.dart';
 
 class RemoteConfigHelper with Logger {
   final FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
+
+  // Explicit local preview values only apply to debug builds.
+  static const _previewUrl = String.fromEnvironment('TOP_IFRAME_PREVIEW_URL');
+  static const String? _previewTitle =
+      bool.hasEnvironment('TOP_IFRAME_PREVIEW_TITLE')
+          ? String.fromEnvironment('TOP_IFRAME_PREVIEW_TITLE')
+          : null;
+  static const String? _previewShowMoreUrl =
+      bool.hasEnvironment('TOP_IFRAME_PREVIEW_MORE_URL')
+          ? String.fromEnvironment('TOP_IFRAME_PREVIEW_MORE_URL')
+          : null;
+  bool get _isLocalIframePreview => kDebugMode && _previewUrl.isNotEmpty;
 
   Future<bool> initialize({
     Duration fetchTimeout = const Duration(seconds: 10),
@@ -41,13 +54,46 @@ class RemoteConfigHelper with Logger {
 
   bool get isAnonymousShow => _remoteConfig.getBool('isAnonymousShow');
 
-  bool get isTopIframeShow => _remoteConfig.getBool('isTopIframeShow');
+  bool get isTopIframeShow =>
+      _isLocalIframePreview || _remoteConfig.getBool('isTopIframeShow');
 
-  String get topIframeUrl => _remoteConfig.getString('topIframeUrl');
+  String get topIframeUrl => _isLocalIframePreview
+      ? _previewUrl
+      : _remoteConfig.getString('topIframeUrl');
 
-  String get iframeTitle => _remoteConfig.getString('iframeTitle');
+  String get iframeTitle => _isLocalIframePreview && _previewTitle != null
+      ? _previewTitle!
+      : _remoteConfig.getString('iframeTitle');
 
-  String get iframeShowMoreUrl => _remoteConfig.getString('iframeShowMoreUrl');
+  String get iframeShowMoreUrl =>
+      _isLocalIframePreview && _previewShowMoreUrl != null
+          ? _previewShowMoreUrl!
+          : _remoteConfig.getString('iframeShowMoreUrl');
+
+  // This namespace is independent of the four legacy iframe parameters.
+  // Preserve explicit debug previews without forcing production visibility.
+  bool get homepageEmbedEnabled =>
+      _isLocalIframePreview || _remoteConfig.getBool('homepageEmbedEnabled');
+
+  String get homepageEmbedUrl => _isLocalIframePreview
+      ? _previewUrl
+      : _remoteConfig.getString('homepageEmbedUrl');
+
+  String get homepageEmbedTitle => _isLocalIframePreview
+      ? _previewTitle ?? ''
+      : _remoteConfig.getString('homepageEmbedTitle');
+
+  String get homepageEmbedShowMoreUrl => _isLocalIframePreview
+      ? _previewShowMoreUrl ?? ''
+      : _remoteConfig.getString('homepageEmbedShowMoreUrl');
+
+  String get homepageEmbedStartAt => _isLocalIframePreview
+      ? ''
+      : _remoteConfig.getString('homepageEmbedStartAt');
+
+  String get homepageEmbedEndAt => _isLocalIframePreview
+      ? ''
+      : _remoteConfig.getString('homepageEmbedEndAt');
 
   double get textScale => _remoteConfig.getDouble('text_scale');
 
