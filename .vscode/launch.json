@@ -23,6 +23,17 @@
                 "--flavor",
                 "dev"
             ]
+        },
+        {
+            "name": "Run dev (election iframe preview)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_dev.dart",
+            "args": [
+                "--flavor",
+                "dev",
+                "--dart-define=TOP_IFRAME_PREVIEW_URL=https://dev.mnews.tw/projects/election2026-homepage/index.html"
+            ]
         }
     ]
 }

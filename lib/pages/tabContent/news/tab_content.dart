@@ -50,6 +50,7 @@ class TabContent extends StatefulWidget {
 
 class _TabContentState extends State<TabContent> with Logger {
   final RemoteConfigHelper _remoteConfigHelper = RemoteConfigHelper();
+  final String _topIframeControllerTag = 'top_iframe_${UniqueKey()}';
   late SectionAd? _sectionAd;
   final HomeController controller = Get.find();
 
@@ -84,8 +85,12 @@ class _TabContentState extends State<TabContent> with Logger {
             await _remoteConfigHelper.refresh();
             setState(() {});
 
-            if (Get.isRegistered<TopIframeController>()) {
-              final topIframeController = Get.find<TopIframeController>();
+            if (Get.isRegistered<TopIframeController>(
+              tag: _topIframeControllerTag,
+            )) {
+              final topIframeController = Get.find<TopIframeController>(
+                tag: _topIframeControllerTag,
+              );
               topIframeController.checkVisibility();
             }
 
@@ -251,12 +256,9 @@ class _TabContentState extends State<TabContent> with Logger {
                           height: 16.0,
                         ),
                       ],
-                      const TopIframeWidget(
-                        height: 300,
-                        refreshInterval: Duration(minutes: 1),
-                        autoHeight: true,
+                      TopIframeWidget(
+                        controllerTag: _topIframeControllerTag,
                       ),
-                      const SizedBox(height: 16.0),
                       _buildEditorChoiceList(),
                       if (isTabContentAdsActivated && _sectionAd != null) ...[
                         const SizedBox(

@@ -94,19 +94,28 @@ class PremiumHomePage extends GetView<HomeController> {
       ),
       bottomNavigationBar: Obx(() {
         final selectIndex = controller.rxSelectedIndex.value;
-        return BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: appColor,
-          unselectedItemColor: Colors.white,
-          selectedItemColor: const Color(0xff1B455C),
-          currentIndex: selectIndex,
-          onTap: controller.onItemTapped,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: '首頁'),
-            BottomNavigationBarItem(icon: Icon(Icons.search), label: '搜尋'),
-            BottomNavigationBarItem(icon: Icon(Icons.star), label: '動態雜誌'),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: '會員中心')
-          ],
+        return Theme(
+          data: ThemeData.from(
+            colorScheme: Theme.of(context).colorScheme,
+            textTheme: Theme.of(context).textTheme,
+            useMaterial3: false,
+          ),
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: appColor,
+            unselectedItemColor: Colors.white,
+            selectedItemColor: const Color(0xff1B455C),
+            selectedFontSize: 14,
+            unselectedFontSize: 12,
+            currentIndex: selectIndex,
+            onTap: controller.onItemTapped,
+            items: const [
+              BottomNavigationBarItem(icon: Icon(Icons.home), label: '首頁'),
+              BottomNavigationBarItem(icon: Icon(Icons.search), label: '搜尋'),
+              BottomNavigationBarItem(icon: Icon(Icons.star), label: '動態雜誌'),
+              BottomNavigationBarItem(icon: Icon(Icons.person), label: '會員中心')
+            ],
+          ),
         );
       }),
     );
