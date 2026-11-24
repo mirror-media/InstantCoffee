@@ -32,6 +32,9 @@ target 'Runner' do
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   pod 'GoogleUtilities'
+  # Firebase Auth 在 prod 專案對 email/密碼登入開啟了 reCAPTCHA Enterprise（ENFORCE），
+  # iOS 必須連結此 SDK，否則 signInWithEmailAndPassword 會回 recaptcha-sdk-not-linked。
+  pod 'RecaptchaEnterprise', '~> 18.9'
 end
 
 target 'InstantCoffee Watch App' do
